@@ -1,0 +1,154 @@
+﻿using System;
+using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
+
+namespace QTextAux {    
+    public static class Settings {
+
+        public static bool CarbonCopyCreateFolder {
+            get { return Medo.Configuration.Settings.Read("CarbonCopyCreateFolder", true); }
+            set { Medo.Configuration.Settings.Write("CarbonCopyCreateFolder", value); }
+        }
+
+        public static string CarbonCopyFolder {
+            get { return Medo.Configuration.Settings.Read("CarbonCopyFolder", ""); }
+            set {
+                if (FilesLocation == null) { return; }
+                if ((string.Compare(value.Trim(), FilesLocation.Trim(), true) == 0)) { return; }
+                Medo.Configuration.Settings.Write("CarbonCopyFolder", value);
+                if (string.IsNullOrEmpty(value)) { CarbonCopyUse = false; }
+            }
+        }
+
+        public static bool CarbonCopyIgnoreErrors {
+            get { return Medo.Configuration.Settings.Read("CarbonCopyIgnoreErrors", true); }
+            set { Medo.Configuration.Settings.Write("CarbonCopyIgnoreErrors", value); }
+        }
+
+        public static bool CarbonCopyUse {
+            get { return Medo.Configuration.Settings.Read("CarbonCopyUse", false); }
+            set { Medo.Configuration.Settings.Write("CarbonCopyUse", value); }
+        }
+
+        public static Color DisplayBackgroundColor {
+            get {
+                try {
+                    return Color.FromArgb(Medo.Configuration.Settings.Read("DisplayBackgroundColor", SystemColors.Window.ToArgb()));
+                } catch {
+                    return SystemColors.Window;
+                }
+            }
+            set { Medo.Configuration.Settings.Write("DisplayBackgroundColor", value.ToArgb()); }
+        }
+
+        public static Font DisplayFont {
+            get {
+                string tmpFamilyName = Medo.Configuration.Settings.Read("DisplayFont_FamilyName", SystemFonts.MessageBoxFont.Name);
+                double tmpSize = Medo.Configuration.Settings.Read("DisplayFont_Size", SystemFonts.MessageBoxFont.Size);
+                int tmpStyle = Medo.Configuration.Settings.Read("DisplayFont_Style", (Int32)SystemFonts.MessageBoxFont.Style);
+                try {
+                    return new Font(tmpFamilyName, Convert.ToSingle(tmpSize), (FontStyle)tmpStyle);
+                } catch (Exception) {
+                    return SystemFonts.MessageBoxFont;
+                }
+            }
+            set {
+                Medo.Configuration.Settings.Write("DisplayFont_FamilyName", value.Name);
+                Medo.Configuration.Settings.Write("DisplayFont_Size", value.Size);
+                Medo.Configuration.Settings.Write("DisplayFont_Style", (Int32)value.Style);
+            }
+        }
+
+        public static Color DisplayForegroundColor {
+            get {
+                try {
+                    return Color.FromArgb(Medo.Configuration.Settings.Read("DisplayForegroundColor", SystemColors.WindowText.ToArgb()));
+                } catch (Exception) {
+                    return System.Drawing.SystemColors.WindowText;
+                }
+            }
+            set { global::Medo.Configuration.Settings.Write("DisplayForegroundColor", value.ToArgb()); }
+        }
+
+        public static ScrollBars DisplayScrollbars {
+            get {
+                try {
+                    return (ScrollBars)Medo.Configuration.Settings.Read("DisplayScrollbars", Convert.ToInt32(ScrollBars.Vertical));
+                } catch (Exception) {
+                    return ScrollBars.Vertical;
+                }
+            }
+            set { Medo.Configuration.Settings.Write("DisplayScrollbars", Convert.ToInt32(value)); }
+        }
+
+        public static int DisplayTabWidth {
+            get { return Medo.Configuration.Settings.Read("DisplayTabWidth", 4); }
+            set {
+                if ((value >= 1) && (value <= 16)) {
+                    Medo.Configuration.Settings.Write("DisplayTabWidth", value);
+                }
+            }
+        }
+
+        public static bool DisplayUnderlineURLs {
+            get { return Medo.Configuration.Settings.Read("DisplayUnderlineURLs", true); }
+            set { Medo.Configuration.Settings.Write("DisplayUnderlineURLs", value); }
+        }
+
+        public static bool DisplayWordWrap {
+            get { return (DisplayScrollbars == ScrollBars.Vertical); }
+        }
+
+        public static bool FilesDeleteToRecycleBin {
+            get { return Medo.Configuration.Settings.Read("FilesDeleteToRecycleBin", true); }
+            set { Medo.Configuration.Settings.Write("FilesDeleteToRecycleBin", value); }
+        }
+
+        public static string FilesLocation {
+            get { return Medo.Configuration.Settings.Read("DataPath", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Medo.Reflection.EntryAssembly.Company + "\\" + Medo.Reflection.EntryAssembly.Name)); }
+            set { Medo.Configuration.Settings.Write("DataPath", value); }
+        }
+
+        public static bool FilesPreload {
+            get { return Medo.Configuration.Settings.Read("FilesPreload", false); }
+            set { Medo.Configuration.Settings.Write("FilesPreload", value); }
+        }
+
+        public static bool FollowURLs {
+            get { return Medo.Configuration.Settings.Read("FollowURLs", true); }
+            set { Medo.Configuration.Settings.Write("FollowURLs", value); }
+        }
+
+        public static bool ForceTextCopyPaste {
+            get { return Medo.Configuration.Settings.Read("ForceTextCopyPaste", false); }
+            set { Medo.Configuration.Settings.Write("ForceTextCopyPaste", value); }
+        }
+
+        public static bool IsRichTextFileDefault {
+            get { return Medo.Configuration.Settings.Read("IsRichTextFileDefault", false); }
+            set { Medo.Configuration.Settings.Write("IsRichTextFileDefault", value); }
+        }
+
+        public static bool LegacySettingsCopied {
+            get { return Medo.Configuration.Settings.Read("LegacySettingsCopied", false); }
+            set { Medo.Configuration.Settings.Write("LegacySettingsCopied", value); }
+        }
+
+        public static bool LogUnhandledErrorsToTemp {
+            get { return Medo.Configuration.Settings.Read("LogUnhandledErrorsToTemp", true); }
+            set { Medo.Configuration.Settings.Write("LogUnhandledErrorsToTemp", value); }
+        }
+
+        public static bool PrintApplicationName {
+            get { return Medo.Configuration.Settings.Read("PrintApplicationName", false); }
+            set { Medo.Configuration.Settings.Write("PrintApplicationName", value); }
+        }
+
+        public static bool ZoomToolbarWithDpiChange {
+            get { return Medo.Configuration.Settings.Read("ZoomToolbarWithDpiChange", true); }
+            set { Medo.Configuration.Settings.Write("ZoomToolbarWithDpiChange", value); }
+        }
+
+    }
+}
