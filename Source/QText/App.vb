@@ -1,6 +1,7 @@
 Friend Class App
 
-    Friend Shared _form As MainForm
+    Friend Shared Form As MainForm
+    Friend Shared Tray As QTextAux.Tray
 
     Friend Shared Hotkey As New Medo.Windows.Forms.Hotkey
     Private Shared _setupMutex As System.Threading.Mutex
@@ -40,7 +41,7 @@ Friend Class App
 
         LegacySettingsCopy.CopyIfNeeded()
 
-        _form = New MainForm()
+        App.Form = New MainForm()
 
         AddHandler Global.Medo.Application.SingleInstance.NewInstanceDetected, AddressOf NewInstanceDetected
         Global.Medo.Application.SingleInstance.Attach()
@@ -64,7 +65,7 @@ Friend Class App
             End Select
         End Try
 
-        Tray.Init()
+        App.Tray = New QTextAux.Tray(App.Form)
         If (Settings.StartupShow = False) Then
             Tray.Show()
         End If
@@ -79,7 +80,7 @@ Friend Class App
         End If
 
 
-        If (Settings.StartupShow) Then App._form.Show()
+        If (Settings.StartupShow) Then App.Form.Show()
 
 
 
@@ -106,11 +107,11 @@ Friend Class App
 
     Private Shared Sub NewInstanceDetected(ByVal sender As Object, ByVal e As Global.Medo.Application.NewInstanceEventArgs)
         Try
-            _form.CreateControl()
-            App._form.Handle.GetType()
+            App.Form.CreateControl()
+            App.Form.Handle.GetType()
 
             Dim method As New NewInstanceDetectedProcDelegate(AddressOf NewInstanceDetectedProc)
-            _form.Invoke(method)
+            App.Form.Invoke(method)
         Catch ex As Exception
         End Try
     End Sub
@@ -120,24 +121,22 @@ Friend Class App
 
     Private Shared Sub NewInstanceDetectedProc()
         If (Settings.StartupShow = False) Then
-            Tray.Init()
-            Tray.Show()
+            App.Tray.Show()
         End If
 
-        If (_form.WindowState = FormWindowState.Minimized) Then _form.WindowState = FormWindowState.Normal
-        _form.Show()
-        _form.Activate()
+        If (App.Form.WindowState = FormWindowState.Minimized) Then App.Form.WindowState = FormWindowState.Normal
+        App.Form.Show()
+        App.Form.Activate()
     End Sub
 
     Private Shared Sub Hotkey_HotkeyActivated(ByVal sender As Object, ByVal e As System.EventArgs)
         If (Settings.StartupShow = False) Then
-            Tray.Init()
-            Tray.Show()
+            App.Tray.Show()
         End If
 
-        If (_form.WindowState = FormWindowState.Minimized) Then _form.WindowState = FormWindowState.Normal
-        _form.Show()
-        _form.Activate()
+        If (App.Form.WindowState = FormWindowState.Minimized) Then App.Form.WindowState = FormWindowState.Normal
+        App.Form.Show()
+        App.Form.Activate()
     End Sub
 
 

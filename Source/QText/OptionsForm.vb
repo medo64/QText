@@ -48,7 +48,7 @@
         txtHotkey.Text = GetKeyString(Settings.ActivationHotkey)
         txtHotkey.Tag = Settings.ActivationHotkey
         chkMinimizeToTray.Checked = Settings.TrayOnMinimize
-        chkSingleClickTrayActivation.Checked = Settings.TrayOneClickActivation
+        chkSingleClickTrayActivation.Checked = QTextAux.Settings.TrayOneClickActivation
         chkRunAtStartup.Checked = Settings.StartupRun
         chkShowOnStartup.Checked = Settings.StartupShow
 
@@ -105,7 +105,7 @@
         'Behavior
         Settings.ActivationHotkey = DirectCast(txtHotkey.Tag, Keys)
         Settings.TrayOnMinimize = chkMinimizeToTray.Checked
-        Settings.TrayOneClickActivation = chkSingleClickTrayActivation.Checked
+        QTextAux.Settings.TrayOneClickActivation = chkSingleClickTrayActivation.Checked
         Settings.StartupRun = chkRunAtStartup.Checked
         Settings.StartupShow = chkShowOnStartup.Checked
 

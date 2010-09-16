@@ -145,6 +145,11 @@ namespace QTextAux {
             set { Medo.Configuration.Settings.Write("PrintApplicationName", value); }
         }
 
+        public static bool TrayOneClickActivation {
+            get { return Medo.Configuration.Settings.Read("TrayOneClickActivation", true); }
+            set { Medo.Configuration.Settings.Write("TrayOneClickActivation", value); }
+        }
+
         public static bool ZoomToolbarWithDpiChange {
             get { return Medo.Configuration.Settings.Read("ZoomToolbarWithDpiChange", true); }
             set { Medo.Configuration.Settings.Write("ZoomToolbarWithDpiChange", value); }

@@ -119,7 +119,6 @@
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="App.vb" />
     <Compile Include="Settings.vb" />
-    <Compile Include="Tray.vb" />
     <Compile Include="MainForm.Designer.vb">
       <DependentUpon>MainForm.vb</DependentUpon>
     </Compile>

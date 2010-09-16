@@ -928,9 +928,9 @@ Friend Class MainForm
                 Try
                     Dim t As TabFile
                     If (frm.IsRichText) Then
-                        t = New TabFile(System.IO.Path.Combine(QTextAux.Settings.FilesLocation, frm.FileName) + ".rtf", App._form.mnxTextBox, True)
+                        t = New TabFile(System.IO.Path.Combine(QTextAux.Settings.FilesLocation, frm.FileName) + ".rtf", App.Form.mnxTextBox, True)
                     Else
-                        t = New TabFile(System.IO.Path.Combine(QTextAux.Settings.FilesLocation, frm.FileName) + ".txt", App._form.mnxTextBox, True)
+                        t = New TabFile(System.IO.Path.Combine(QTextAux.Settings.FilesLocation, frm.FileName) + ".txt", App.Form.mnxTextBox, True)
                     End If
                     tabFiles.TabPages.Add(t)
                     tabFiles.SelectedTab = t
@@ -1260,7 +1260,7 @@ Friend Class MainForm
             If (Settings.StartupRememberSelectedFile) AndAlso ((String.IsNullOrEmpty(selectedTitle)) OrElse (selectedTitle = "*")) Then selectedTitle = fo.SelectedTitle
             Dim fs As String() = fo.GetFiles
             For i As Integer = 0 To fs.Length - 1
-                Dim t As New TabFile(fs(i), App._form.mnxTextBox)
+                Dim t As New TabFile(fs(i), App.Form.mnxTextBox)
                 tabFiles.TabPages.Add(t)
             Next
 
@@ -1508,9 +1508,9 @@ Friend Class MainForm
             Call mnuViewRefresh_Click(Nothing, Nothing)
             If (frm.ShowDialog(Me) = Windows.Forms.DialogResult.OK) Then
                 If (Settings.StartupShow = False) Then
-                    Tray.Show()
+                    App.Tray.Show()
                 Else
-                    Tray.Hide()
+                    App.Tray.Hide()
                 End If
                 mnu.Visible = Settings.ShowMenu
                 tabFiles.Multiline = Settings.DisplayMultilineTabHeader

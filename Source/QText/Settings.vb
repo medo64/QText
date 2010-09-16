@@ -428,18 +428,18 @@
     '    End Set
     'End Property
 
-    <System.ComponentModel.Category("Tray")> _
-    <System.ComponentModel.DisplayName("One-click activation")> _
-    <System.ComponentModel.Description("If true, program will be activated when user does click on tray icon. If false, double-click is needed.")> _
-    <System.ComponentModel.DefaultValue(True)> _
-    Public Shared Property TrayOneClickActivation() As Boolean
-        Get
-            Return Global.Medo.Configuration.Settings.Read("TrayOneClickActivation", True)
-        End Get
-        Set(ByVal value As Boolean)
-            Global.Medo.Configuration.Settings.Write("TrayOneClickActivation", value)
-        End Set
-    End Property
+    '<System.ComponentModel.Category("Tray")> _
+    '<System.ComponentModel.DisplayName("One-click activation")> _
+    '<System.ComponentModel.Description("If true, program will be activated when user does click on tray icon. If false, double-click is needed.")> _
+    '<System.ComponentModel.DefaultValue(True)> _
+    'Public Shared Property TrayOneClickActivation() As Boolean
+    '    Get
+    '        Return Global.Medo.Configuration.Settings.Read("TrayOneClickActivation", True)
+    '    End Get
+    '    Set(ByVal value As Boolean)
+    '        Global.Medo.Configuration.Settings.Write("TrayOneClickActivation", value)
+    '    End Set
+    'End Property
 
     <System.ComponentModel.Category("Tray")> _
     <System.ComponentModel.DisplayName("Minimize to tray")> _

@@ -6,6 +6,6 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyCompany("Josip Medved")> 
 <Assembly: AssemblyCopyright("Copyright (c) 2004-2010 Josip Medved <jmedved@jmedved.com>")> 
 
-<Assembly: AssemblyVersion("2.30.11546.21261")> 
+<Assembly: AssemblyVersion("2.30.11554.00212")> 
 <Assembly: AssemblyInformationalVersion("2.30")> 
-<Assembly: AssemblyFileVersion("2.30.11546.21261")> 
+<Assembly: AssemblyFileVersion("2.30.11554.00212")> 
