@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 
 namespace QTextAux {
-    internal class Tray {
+    public class Tray {
 
         private MenuItem mnxNotifyShow = new MenuItem("&Show");
         private MenuItem mnxNotifyShowOnPrimary = new MenuItem("&Show on primary screen");

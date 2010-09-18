@@ -149,9 +149,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LegacySettingsCopy.vb" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="My Project\App.snk" />
     <None Include="My Project\app.manifest" />
   </ItemGroup>

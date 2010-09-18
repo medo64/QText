@@ -1,60 +1,23 @@
 Friend Class App
 
-    Friend Shared Form As MainForm
-    Friend Shared Tray As QTextAux.Tray
-
-    Friend Shared Hotkey As New Medo.Windows.Forms.Hotkey
-    Private Shared _setupMutex As System.Threading.Mutex
-
     Friend Shared Sub Main()
-        _setupMutex = New System.Threading.Mutex(False, "Global\JosipMedved_QText")
-
-        If (Not QTextAux.Settings.LegacySettingsCopied) Then
-            Dim currProcess As Process = Process.GetCurrentProcess()
-            Dim currProcessId As Integer = currProcess.Id
-            Dim currProcessName As String = currProcess.ProcessName
-            Dim currProcessFileName As String = currProcess.MainModule.FileName
-            For Each iProcess As Process In Process.GetProcesses()
-                Debug.WriteLine(iProcess.ProcessName)
-                Try
-                    If (iProcess.ProcessName = "QText") Then
-                        'If (iProcess.Id <> currProcessId) AndAlso (iProcess.MainModule.FileName = currProcessFileName) Then
-                        If (iProcess.Id <> currProcessId) Then
-                            iProcess.Kill()
-                        End If
-                    End If
-                Catch ex As System.ComponentModel.Win32Exception
-                End Try
-            Next
-        End If
+        QTextAux.App.Main()
 
 
-        System.Windows.Forms.Application.EnableVisualStyles()
-        System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(False)
-        System.Threading.Thread.CurrentThread.CurrentUICulture = New System.Globalization.CultureInfo(Global.Medo.Configuration.Settings.Read("CultureName", "en-US"))
+        QTextAux.App.Form = New MainForm()
 
-        AddHandler Global.Medo.Application.UnhandledCatch.ThreadException, AddressOf UnhandledException
-        Global.Medo.Application.UnhandledCatch.Attach()
-
-        AddHandler System.Windows.Forms.Application.ApplicationExit, AddressOf ApplicationExit
-
-
-        LegacySettingsCopy.CopyIfNeeded()
-
-        App.Form = New MainForm()
-
-        AddHandler Global.Medo.Application.SingleInstance.NewInstanceDetected, AddressOf NewInstanceDetected
-        Global.Medo.Application.SingleInstance.Attach()
+        AddHandler Medo.Application.SingleInstance.NewInstanceDetected, AddressOf NewInstanceDetected
+        Medo.Application.SingleInstance.Attach()
 
 
         Try
-            QTextAux.Helper.Path.Create(QTextAux.Settings.FilesLocation)
+            QTextAux.Helper.Path.CreatePath(QTextAux.Settings.FilesLocation)
         Catch ex As Exception
             Select Case Global.Medo.MessageBox.ShowQuestion(Nothing, ex.Message + Environment.NewLine + "Do you wish to try using default location instead?", MessageBoxButtons.YesNo)
                 Case DialogResult.Yes
                     Try
-                        Dim defaultPath As String = Settings.DefaultFilesLocation
-                        QTextAux.Helper.Path.Create(defaultPath)
+                        Dim defaultPath As String = QTextAux.Settings.DefaultFilesLocation
+                        QTextAux.Helper.Path.CreatePath(defaultPath)
                         QTextAux.Settings.FilesLocation = defaultPath
                     Catch ex2 As Exception
                         Global.Medo.MessageBox.ShowError(Nothing, ex2.Message, MessageBoxButtons.OK)
@@ -65,53 +28,39 @@ Friend Class App
             End Select
         End Try
 
-        App.Tray = New QTextAux.Tray(App.Form)
+        QTextAux.App.Tray = New QTextAux.Tray(QTextAux.App.Form)
         If (Settings.StartupShow = False) Then
-            Tray.Show()
+            QTextAux.App.Tray.Show()
         End If
 
-        AddHandler Hotkey.HotkeyActivated, AddressOf Hotkey_HotkeyActivated
+        AddHandler QTextAux.App.Hotkey.HotkeyActivated, AddressOf Hotkey_HotkeyActivated
         If (Settings.ActivationHotkey <> Keys.None) Then
             Try
-                App.Hotkey.Register(Settings.ActivationHotkey)
+                QTextAux.App.Hotkey.Register(Settings.ActivationHotkey)
             Catch ex As InvalidOperationException
                 Medo.MessageBox.ShowWarning(Nothing, "Hotkey is already in use.")
             End Try
         End If
 
 
-        If (Settings.StartupShow) Then App.Form.Show()
+        If (Settings.StartupShow) Then QTextAux.App.Form.Show()
 
 
 
         Application.Run()
 
 
-        System.GC.KeepAlive(_setupMutex)
+        System.GC.KeepAlive(QTextAux.App.SetupMutex)
     End Sub
 
-
-    Private Shared Sub UnhandledException(ByVal sender As Object, ByVal e As System.Threading.ThreadExceptionEventArgs)
-        Global.Medo.Diagnostics.ErrorReport.SaveToTemp(e.Exception)
-#If CONFIG = "Release" Then
-        Medo.Diagnostics.ErrorReport.ShowDialog(Nothing, e.Exception, New Uri("http://jmedved.com/ErrorReport/"))
-#Else
-        Throw e.Exception
-#End If
-    End Sub
-
-    Private Shared Sub ApplicationExit(ByVal sender As Object, ByVal e As EventArgs)
-        Tray.Hide()
-        System.Environment.Exit(0)
-    End Sub
 
     Private Shared Sub NewInstanceDetected(ByVal sender As Object, ByVal e As Global.Medo.Application.NewInstanceEventArgs)
         Try
-            App.Form.CreateControl()
-            App.Form.Handle.GetType()
+            QTextAux.App.Form.CreateControl()
+            QTextAux.App.Form.Handle.GetType()
 
             Dim method As New NewInstanceDetectedProcDelegate(AddressOf NewInstanceDetectedProc)
-            App.Form.Invoke(method)
+            QTextAux.App.Form.Invoke(method)
         Catch ex As Exception
         End Try
     End Sub
@@ -121,22 +70,22 @@ Friend Class App
 
     Private Shared Sub NewInstanceDetectedProc()
         If (Settings.StartupShow = False) Then
-            App.Tray.Show()
+            QTextAux.App.Tray.Show()
         End If
 
-        If (App.Form.WindowState = FormWindowState.Minimized) Then App.Form.WindowState = FormWindowState.Normal
-        App.Form.Show()
-        App.Form.Activate()
+        If (QTextAux.App.Form.WindowState = FormWindowState.Minimized) Then QTextAux.App.Form.WindowState = FormWindowState.Normal
+        QTextAux.App.Form.Show()
+        QTextAux.App.Form.Activate()
     End Sub
 
     Private Shared Sub Hotkey_HotkeyActivated(ByVal sender As Object, ByVal e As System.EventArgs)
         If (Settings.StartupShow = False) Then
-            App.Tray.Show()
+            QTextAux.App.Tray.Show()
         End If
 
-        If (App.Form.WindowState = FormWindowState.Minimized) Then App.Form.WindowState = FormWindowState.Normal
-        App.Form.Show()
-        App.Form.Activate()
+        If (QTextAux.App.Form.WindowState = FormWindowState.Minimized) Then QTextAux.App.Form.WindowState = FormWindowState.Normal
+        QTextAux.App.Form.Show()
+        QTextAux.App.Form.Activate()
     End Sub
 
 

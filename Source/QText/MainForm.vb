@@ -7,6 +7,7 @@ Friend Class MainForm
     Friend _dpiX As Single, _dpiY As Single
     Friend _dpiRatioX As Single, _dpiRatioY As Single
     Friend _findForm As FindForm
+    Friend FileOrder As New QTextAux.FileOrder
 
     Public Sub New()
         ' This call is required by the Windows Form Designer.
@@ -91,7 +92,8 @@ Friend Class MainForm
         Call mnu_Leave(Nothing, Nothing)
         Try
             If (Settings.SaveOnHide) Then SaveAllChanged()
-            SaveFileOrder(e.CloseReason = CloseReason.WindowsShutDown)
+            tabFiles.SaveAll()
+            Me.FileOrder.Save(tabFiles, e.CloseReason = CloseReason.WindowsShutDown)
         Catch ex As Exception
             Global.Medo.MessageBox.ShowWarning(Me, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK)
         End Try
@@ -365,7 +367,8 @@ Friend Class MainForm
         ElseIf (Settings.TrayOnMinimize) Then 'window has been minimized
             If (Settings.SaveOnHide) Then SaveAllChanged()
             Me.Hide()
-            SaveFileOrder(True)
+            tabFiles.SaveAll()
+            Me.FileOrder.Save(tabFiles, True)
         End If
 
         frmMain_Resize_Reentry = False
@@ -493,7 +496,7 @@ Friend Class MainForm
     End Sub
 
     Private Sub tabFiles_ChangedOrder(ByVal sender As Object, ByVal e As System.EventArgs) Handles tabFiles.ChangedOrder
-        SaveFileOrder(True)
+        Me.FileOrder.Save(tabFiles, True)
     End Sub
 
     Private Sub tabFiles_MouseDown(ByVal sender As System.Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles tabFiles.MouseDown
@@ -578,36 +581,6 @@ Friend Class MainForm
         Return Nothing
     End Function
 
-
-    Private Sub SaveFileOrder(ByVal dontThrowExceptions As Boolean)
-        Try
-            Using xw As New Global.Medo.Xml.XmlTagWriter(System.IO.Path.Combine(QTextAux.Settings.FilesLocation, "QText.xml"), New System.Text.UTF8Encoding(False))
-
-                xw.XmlTextWriter.WriteStartDocument()
-
-                xw.StartTag("QText") '<QText>
-
-                If (Me.tabFiles.SelectedTab IsNot Nothing) Then
-                    xw.StartTag("FileOrder", "selectedTitle", DirectCast(tabFiles.SelectedTab, QTextAux.TabFile).Title, "selectedFileName", DirectCast(tabFiles.SelectedTab, QTextAux.TabFile).FileName) '<FileOrder>
-                Else
-                    xw.StartTag("FileOrder") '<FileOrder>
-                End If
-
-                For i As Integer = 0 To tabFiles.TabPages.Count - 1
-                    Dim tf As QTextAux.TabFile = DirectCast(tabFiles.TabPages(i), QTextAux.TabFile)
-                    'tf.Save()
-                    xw.WriteTag("File", "title", tf.Title, "fileName", tf.FileName)
-                Next
-
-                xw.EndTag() '</FileOrder>
-
-                xw.EndTag()    '</QText>
-            End Using
-        Catch
-            If (dontThrowExceptions = False) Then Throw
-        End Try
-    End Sub
-
     Private Sub tmrUpdateToolbar_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles tmrUpdateToolbar.Tick
         If (Not Me.Created) Then Exit Sub
 
@@ -673,17 +646,12 @@ Friend Class MainForm
 
     Private Sub SaveAllChanged()
         fswLocationTxt.EnableRaisingEvents = False
-        For i As Integer = 0 To tabFiles.TabPages.Count - 1
-            Try
-                Dim tf As QTextAux.TabFile = DirectCast(tabFiles.TabPages(i), QTextAux.TabFile)
-                If (tf.IsChanged) Then
-                    tf.Save()
-                End If
-            Catch ex As Exception
-                Global.Medo.MessageBox.ShowWarning(Me, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK)
-            End Try
-        Next
-        SaveFileOrder(True)
+        Try
+            tabFiles.SaveAll()
+        Catch ex As Exception
+            Global.Medo.MessageBox.ShowWarning(Me, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK)
+        End Try
+        Me.FileOrder.Save(tabFiles, True)
         fswLocationTxt.EnableRaisingEvents = True
     End Sub
 
@@ -921,16 +889,16 @@ Friend Class MainForm
 
     Private Sub mnuFileNew_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileNew.Click
         fswLocationTxt.EnableRaisingEvents = False
-        SaveFileOrder(True)
+        Me.FileOrder.Save(tabFiles, True)
 
         Using frm As New QTextAux.NewFileForm("")
             If (frm.ShowDialog(Me) = Windows.Forms.DialogResult.OK) Then
                 Try
                     Dim t As TabFile
                     If (frm.IsRichText) Then
-                        t = New TabFile(System.IO.Path.Combine(QTextAux.Settings.FilesLocation, frm.FileName) + ".rtf", App.Form.mnxTextBox, True)
+                        t = New TabFile(System.IO.Path.Combine(QTextAux.Settings.FilesLocation, frm.FileName) + ".rtf", DirectCast(QTextAux.App.Form, MainForm).mnxTextBox, True)
                     Else
-                        t = New TabFile(System.IO.Path.Combine(QTextAux.Settings.FilesLocation, frm.FileName) + ".txt", App.Form.mnxTextBox, True)
+                        t = New TabFile(System.IO.Path.Combine(QTextAux.Settings.FilesLocation, frm.FileName) + ".txt", DirectCast(QTextAux.App.Form, MainForm).mnxTextBox, True)
                     End If
                     tabFiles.TabPages.Add(t)
                     tabFiles.SelectedTab = t
@@ -940,13 +908,13 @@ Friend Class MainForm
             End If
         End Using
 
-        SaveFileOrder(True)
+        Me.FileOrder.Save(tabFiles, True)
         fswLocationTxt.EnableRaisingEvents = True
     End Sub
 
     Private Sub mnuFileReopen_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileReopen.Click
         fswLocationTxt.EnableRaisingEvents = False
-        SaveFileOrder(True)
+        Me.FileOrder.Save(tabFiles, True)
 
         If (tabFiles.SelectedTab IsNot Nothing) Then
             Dim tf As TabFile = DirectCast(tabFiles.SelectedTab, TabFile)
@@ -970,8 +938,8 @@ Friend Class MainForm
         If (tabFiles.SelectedTab IsNot Nothing) Then
             If Global.Medo.MessageBox.ShowQuestion(Me, "Conversion will remove all formating (font, style, etc.). Do you want to continue?", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
                 Dim tf As TabFile = DirectCast(tabFiles.SelectedTab, TabFile)
-                tf.ConvertToPlainText(New FileOrder())
-                SaveFileOrder(True)
+                tf.ConvertToPlainText(Me.FileOrder)
+                Me.FileOrder.Save(tabFiles, True)
             End If
         End If
     End Sub
@@ -979,20 +947,20 @@ Friend Class MainForm
     Private Sub mnuFileConvertToRichText_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileConvertToRichText.Click
         If (tabFiles.SelectedTab IsNot Nothing) Then
             Dim tf As TabFile = DirectCast(tabFiles.SelectedTab, TabFile)
-            tf.ConvertToRichText(New FileOrder())
-            SaveFileOrder(True)
+            tf.ConvertToRichText(Me.FileOrder)
+            Me.FileOrder.Save(tabFiles, True)
         End If
     End Sub
 
     Private Sub mnuFileSaveNow_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileSaveNow.Click
         fswLocationTxt.EnableRaisingEvents = False
-        SaveFileOrder(True)
+        Me.FileOrder.Save(tabFiles, True)
 
         If (tabFiles.SelectedTab IsNot Nothing) Then
             Try
                 Dim tf As TabFile = DirectCast(tabFiles.SelectedTab, TabFile)
                 tf.Save()
-                SaveFileOrder(True)
+                Me.FileOrder.Save(tabFiles, True)
             Catch ex As Exception
                 Global.Medo.MessageBox.ShowWarning(Me, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK)
             End Try
@@ -1003,23 +971,20 @@ Friend Class MainForm
 
     Private Sub mnuFileSaveAll_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileSaveAll.Click
         fswLocationTxt.EnableRaisingEvents = False
-        SaveFileOrder(True)
+        Me.FileOrder.Save(tabFiles, True)
 
-        For i As Integer = 0 To tabFiles.TabPages.Count - 1
-            Try
-                Dim tf As TabFile = DirectCast(tabFiles.TabPages(i), TabFile)
-                tf.Save()
-            Catch ex As Exception
-                Global.Medo.MessageBox.ShowWarning(Me, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message)
-            End Try
-        Next
+        Try
+            tabFiles.SaveAll()
+        Catch ex As Exception
+            Global.Medo.MessageBox.ShowWarning(Me, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message)
+        End Try
 
         fswLocationTxt.EnableRaisingEvents = True
     End Sub
 
     Private Sub mnuFileDelete_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileDelete.Click
         fswLocationTxt.EnableRaisingEvents = False
-        SaveFileOrder(True)
+        Me.FileOrder.Save(tabFiles, True)
 
         If (tabFiles.SelectedTab IsNot Nothing) Then
             Dim tf As TabFile = DirectCast(tabFiles.SelectedTab, TabFile)
@@ -1051,7 +1016,7 @@ Friend Class MainForm
 
     Private Sub mnuFileRename_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileRename.Click
         fswLocationTxt.EnableRaisingEvents = False
-        SaveFileOrder(True)
+        Me.FileOrder.Save(tabFiles, True)
 
         If (tabFiles.SelectedTab IsNot Nothing) Then
             Dim tf As TabFile = DirectCast(tabFiles.SelectedTab, TabFile)
@@ -1061,6 +1026,7 @@ Friend Class MainForm
                         tf.Rename(frm.Title)
                     End If
                 End Using
+                Me.FileOrder.Save(tabFiles, True)
             Catch ex As Exception
                 Global.Medo.MessageBox.ShowWarning(Me, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK)
             End Try
@@ -1105,7 +1071,7 @@ Friend Class MainForm
     Private Sub mnuFileClose_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileClose.Click
         If (Settings.SaveOnHide) Then SaveAllChanged()
         Me.Hide()
-        SaveFileOrder(True)
+        Me.FileOrder.Save(tabFiles, True)
     End Sub
 
     Private Sub mnuFileExit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuFileExit.Click
@@ -1248,7 +1214,7 @@ Friend Class MainForm
             fswLocationTxt.EnableRaisingEvents = True
         End If
 
-        If (sender IsNot Nothing) Then SaveFileOrder(True)
+        If (sender IsNot Nothing) Then Me.FileOrder.Save(tabFiles, True)
 
         Dim selectedTitle As String = "*"
         If (tabFiles.SelectedTab IsNot Nothing) Then selectedTitle = DirectCast(tabFiles.SelectedTab, TabFile).Title
@@ -1256,11 +1222,11 @@ Friend Class MainForm
         tabFiles.Visible = False
         tabFiles.TabPages.Clear()
         Try 'if files cannot be found
-            Dim fo As New FileOrder()
-            If (Settings.StartupRememberSelectedFile) AndAlso ((String.IsNullOrEmpty(selectedTitle)) OrElse (selectedTitle = "*")) Then selectedTitle = fo.SelectedTitle
-            Dim fs As String() = fo.GetFiles
+            Me.FileOrder.Reload()
+            If (Settings.StartupRememberSelectedFile) AndAlso ((String.IsNullOrEmpty(selectedTitle)) OrElse (selectedTitle = "*")) Then selectedTitle = Me.FileOrder.SelectedTitle
+            Dim fs As String() = Me.FileOrder.Files
             For i As Integer = 0 To fs.Length - 1
-                Dim t As New TabFile(fs(i), App.Form.mnxTextBox)
+                Dim t As New TabFile(fs(i), DirectCast(QTextAux.App.Form, MainForm).mnxTextBox)
                 tabFiles.TabPages.Add(t)
             Next
 
@@ -1503,14 +1469,14 @@ Friend Class MainForm
             fswLocationTxt.EnableRaisingEvents = False
             tmrQuickAutoSave.Enabled = False
             SaveAllChanged()
-            SaveFileOrder(True)
+            Me.FileOrder.Save(tabFiles, True)
             Me.tmrUpdateToolbar.Enabled = False
             Call mnuViewRefresh_Click(Nothing, Nothing)
             If (frm.ShowDialog(Me) = Windows.Forms.DialogResult.OK) Then
                 If (Settings.StartupShow = False) Then
-                    App.Tray.Show()
+                    QTextAux.App.Tray.Show()
                 Else
-                    App.Tray.Hide()
+                    QTextAux.App.Tray.Hide()
                 End If
                 mnu.Visible = Settings.ShowMenu
                 tabFiles.Multiline = Settings.DisplayMultilineTabHeader

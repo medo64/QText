@@ -77,5 +77,11 @@ namespace QTextAux {
             return null;
         }
 
+        public void SaveAll() {
+            foreach (TabFile file in this.TabPages) {
+                file.Save();
+            }
+        }
+
     }
 }

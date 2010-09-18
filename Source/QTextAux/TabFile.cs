@@ -123,7 +123,7 @@ namespace QTextAux {
             this._fileName = newFileName;
             Save();
             Reopen();
-            fileOrder.Rename(oldFileName, newFileName);
+            //fileOrder.Rename(oldFileName, newFileName); //TODO
         }
 
         public void ConvertToRichText(FileOrder fileOrder) {
@@ -138,7 +138,7 @@ namespace QTextAux {
             this._fileName = newFileName;
             Save();
             Reopen();
-            fileOrder.Rename(oldFileName, newFileName);
+            //fileOrder.Rename(oldFileName, newFileName); //TODO
         }
 
         public bool IsRichTextFormat {
@@ -195,7 +195,7 @@ namespace QTextAux {
             string destFile = null;
             try {
                 if ((!Directory.Exists(Settings.CarbonCopyFolder)) && (Settings.CarbonCopyCreateFolder)) {
-                    Helper.Path.Create(Settings.CarbonCopyFolder);
+                    Helper.Path.CreatePath(Settings.CarbonCopyFolder);
                 }
 
                 var fiBase = new FileInfo(this._fileName);

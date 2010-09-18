@@ -3,7 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-namespace QTextAux {    
+namespace QTextAux {
     public static class Settings {
 
         public static bool CarbonCopyCreateFolder {
@@ -29,6 +29,10 @@ namespace QTextAux {
         public static bool CarbonCopyUse {
             get { return Medo.Configuration.Settings.Read("CarbonCopyUse", false); }
             set { Medo.Configuration.Settings.Write("CarbonCopyUse", value); }
+        }
+
+        public static string DefaultFilesLocation {
+            get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Medo.Reflection.EntryAssembly.Company + @"\" + Medo.Reflection.EntryAssembly.Name); }
         }
 
         public static Color DisplayBackgroundColor {

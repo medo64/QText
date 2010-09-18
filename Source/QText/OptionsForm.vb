@@ -1,11 +1,11 @@
 ﻿Friend Class OptionsForm
 
     Private Sub OptionsForm_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
-        If (Settings.ActivationHotkey <> App.Hotkey.Key) Then
-            If (App.Hotkey.IsRegistered) Then App.Hotkey.Unregister()
+        If (Settings.ActivationHotkey <> QTextAux.App.Hotkey.Key) Then
+            If (QTextAux.App.Hotkey.IsRegistered) Then QTextAux.App.Hotkey.Unregister()
             If (Settings.ActivationHotkey <> Keys.None) Then
                 Try
-                    App.Hotkey.Register(Settings.ActivationHotkey)
+                    QTextAux.App.Hotkey.Register(Settings.ActivationHotkey)
                 Catch ex As InvalidOperationException
                     Medo.MessageBox.ShowWarning(Nothing, "Hotkey is already in use.")
                 End Try
@@ -63,7 +63,7 @@
         chbUseBackup.Enabled = False
         Call chbUseBackup_CheckedChanged(Nothing, Nothing)
 
-        If (App.Hotkey.IsRegistered) Then App.Hotkey.Unregister()
+        If (QTextAux.App.Hotkey.IsRegistered) Then QTextAux.App.Hotkey.Unregister()
         tab.TabPages.Remove(tab_pagBackup)
     End Sub
 
@@ -416,7 +416,7 @@
 
                     Dim isOK As Boolean = True
                     Try
-                        QTextAux.Helper.Path.Create(newPath)
+                        QTextAux.Helper.Path.CreatePath(newPath)
                         Try
                             Dim oldFiles As String() = System.IO.Directory.GetFiles(QTextAux.Settings.FilesLocation, "*.txt")
                             If (oldFiles.Length > 0) Then
