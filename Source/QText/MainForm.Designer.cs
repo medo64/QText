@@ -203,7 +203,7 @@
             this.tlbHelpReportABug,
             this.tls_btnOptions,
             this.ToolStripSeparator2});
-            this.tls.Location = new System.Drawing.Point(0, 28);
+            this.tls.Location = new System.Drawing.Point(0, 0);
             this.tls.Name = "tls";
             this.tls.Size = new System.Drawing.Size(542, 25);
             this.tls.TabIndex = 1;
