@@ -142,6 +142,7 @@
             this.ToolStripMenuItem17 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuViewZoomIn = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewZoomOut = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuViewZoomReset = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem11 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuViewRefresh = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFormat = new System.Windows.Forms.ToolStripMenuItem();
@@ -203,7 +204,7 @@
             this.tlbHelpReportABug,
             this.tls_btnOptions,
             this.ToolStripSeparator2});
-            this.tls.Location = new System.Drawing.Point(0, 0);
+            this.tls.Location = new System.Drawing.Point(0, 28);
             this.tls.Name = "tls";
             this.tls.Size = new System.Drawing.Size(542, 25);
             this.tls.TabIndex = 1;
@@ -811,6 +812,8 @@
             this.mnu.Size = new System.Drawing.Size(542, 28);
             this.mnu.TabIndex = 4;
             this.mnu.Visible = false;
+            this.mnu.VisibleChanged += new System.EventHandler(this.mnu_VisibleChanged);
+            this.mnu.Leave += new System.EventHandler(this.mnu_Leave);
             // 
             // mnuFile
             // 
@@ -991,6 +994,7 @@
             this.mnuEdit.Name = "mnuEdit";
             this.mnuEdit.Size = new System.Drawing.Size(47, 24);
             this.mnuEdit.Text = "&Edit";
+            this.mnuEdit.DropDownOpening += new System.EventHandler(this.mnuEdit_DropDownOpening);
             // 
             // mnuEditUndo
             // 
@@ -1000,6 +1004,7 @@
             this.mnuEditUndo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
             this.mnuEditUndo.Size = new System.Drawing.Size(190, 24);
             this.mnuEditUndo.Text = "&Undo";
+            this.mnuEditUndo.Click += new System.EventHandler(this.mnuEditUndo_Click);
             // 
             // mnuEditRedo
             // 
@@ -1009,6 +1014,7 @@
             this.mnuEditRedo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
             this.mnuEditRedo.Size = new System.Drawing.Size(190, 24);
             this.mnuEditRedo.Text = "&Redo";
+            this.mnuEditRedo.Click += new System.EventHandler(this.mnuEditRedo_Click);
             // 
             // ToolStripMenuItem7
             // 
@@ -1022,6 +1028,7 @@
             this.mnuEditCut.Name = "mnuEditCut";
             this.mnuEditCut.Size = new System.Drawing.Size(190, 24);
             this.mnuEditCut.Text = "Cu&t";
+            this.mnuEditCut.Click += new System.EventHandler(this.mnuEditCut_Click);
             // 
             // mnuEditCopy
             // 
@@ -1030,6 +1037,7 @@
             this.mnuEditCopy.Name = "mnuEditCopy";
             this.mnuEditCopy.Size = new System.Drawing.Size(190, 24);
             this.mnuEditCopy.Text = "&Copy";
+            this.mnuEditCopy.Click += new System.EventHandler(this.mnuEditCopy_Click);
             // 
             // mnuEditPaste
             // 
@@ -1038,6 +1046,7 @@
             this.mnuEditPaste.Name = "mnuEditPaste";
             this.mnuEditPaste.Size = new System.Drawing.Size(190, 24);
             this.mnuEditPaste.Text = "&Paste";
+            this.mnuEditPaste.Click += new System.EventHandler(this.mnuEditPaste_Click);
             // 
             // mnuEditDelete
             // 
@@ -1046,6 +1055,7 @@
             this.mnuEditDelete.Name = "mnuEditDelete";
             this.mnuEditDelete.Size = new System.Drawing.Size(190, 24);
             this.mnuEditDelete.Text = "&Delete";
+            this.mnuEditDelete.Click += new System.EventHandler(this.mnuEditDelete_Click);
             // 
             // ToolStripMenuItem8
             // 
@@ -1058,6 +1068,7 @@
             this.mnuEditSelectAll.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
             this.mnuEditSelectAll.Size = new System.Drawing.Size(190, 24);
             this.mnuEditSelectAll.Text = "Select &all";
+            this.mnuEditSelectAll.Click += new System.EventHandler(this.mnuEditSelectAll_Click);
             // 
             // ToolStripMenuItem12
             // 
@@ -1071,6 +1082,7 @@
             this.mnuEditFind.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
             this.mnuEditFind.Size = new System.Drawing.Size(190, 24);
             this.mnuEditFind.Text = "&Find";
+            this.mnuEditFind.Click += new System.EventHandler(this.mnuEditFind_Click);
             // 
             // mnuEditFindNext
             // 
@@ -1079,6 +1091,7 @@
             this.mnuEditFindNext.ShortcutKeys = System.Windows.Forms.Keys.F3;
             this.mnuEditFindNext.Size = new System.Drawing.Size(190, 24);
             this.mnuEditFindNext.Text = "Find &next";
+            this.mnuEditFindNext.Click += new System.EventHandler(this.mnuEditFindNext_Click);
             // 
             // mnuView
             // 
@@ -1090,11 +1103,13 @@
             this.ToolStripMenuItem17,
             this.mnuViewZoomIn,
             this.mnuViewZoomOut,
+            this.mnuViewZoomReset,
             this.ToolStripMenuItem11,
             this.mnuViewRefresh});
             this.mnuView.Name = "mnuView";
             this.mnuView.Size = new System.Drawing.Size(53, 24);
             this.mnuView.Text = "&View";
+            this.mnuView.DropDownOpening += new System.EventHandler(this.mnuView_DropDownOpening);
             // 
             // mnuViewAlwaysOnTop
             // 
@@ -1105,6 +1120,7 @@
             this.mnuViewAlwaysOnTop.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
             this.mnuViewAlwaysOnTop.Size = new System.Drawing.Size(222, 24);
             this.mnuViewAlwaysOnTop.Text = "Always on &top";
+            this.mnuViewAlwaysOnTop.Click += new System.EventHandler(this.mnuViewAlwaysOnTop_Click);
             // 
             // ToolStripMenuItem10
             // 
@@ -1117,6 +1133,7 @@
             this.mnuViewMenu.Name = "mnuViewMenu";
             this.mnuViewMenu.Size = new System.Drawing.Size(222, 24);
             this.mnuViewMenu.Text = "&Menu";
+            this.mnuViewMenu.Click += new System.EventHandler(this.mnuViewMenu_Click);
             // 
             // mnuViewToolbar
             // 
@@ -1124,6 +1141,7 @@
             this.mnuViewToolbar.Name = "mnuViewToolbar";
             this.mnuViewToolbar.Size = new System.Drawing.Size(222, 24);
             this.mnuViewToolbar.Text = "&Toolbar";
+            this.mnuViewToolbar.Click += new System.EventHandler(this.mnuViewToolbar_Click);
             // 
             // ToolStripMenuItem17
             // 
@@ -1135,12 +1153,21 @@
             this.mnuViewZoomIn.Name = "mnuViewZoomIn";
             this.mnuViewZoomIn.Size = new System.Drawing.Size(222, 24);
             this.mnuViewZoomIn.Text = "Zoom in";
+            this.mnuViewZoomIn.Click += new System.EventHandler(this.mnuViewZoomIn_Click);
             // 
             // mnuViewZoomOut
             // 
             this.mnuViewZoomOut.Name = "mnuViewZoomOut";
             this.mnuViewZoomOut.Size = new System.Drawing.Size(222, 24);
             this.mnuViewZoomOut.Text = "Zoom out";
+            this.mnuViewZoomOut.Click += new System.EventHandler(this.mnuViewZoomOut_Click);
+            // 
+            // mnuViewZoomReset
+            // 
+            this.mnuViewZoomReset.Name = "mnuViewZoomReset";
+            this.mnuViewZoomReset.Size = new System.Drawing.Size(222, 24);
+            this.mnuViewZoomReset.Text = "Reset zoom";
+            this.mnuViewZoomReset.Click += new System.EventHandler(this.mnuViewZoomReset_Click);
             // 
             // ToolStripMenuItem11
             // 
@@ -1155,6 +1182,7 @@
             this.mnuViewRefresh.ShortcutKeys = System.Windows.Forms.Keys.F5;
             this.mnuViewRefresh.Size = new System.Drawing.Size(222, 24);
             this.mnuViewRefresh.Text = "&Refresh";
+            this.mnuViewRefresh.Click += new System.EventHandler(this.mnuViewRefresh_Click);
             // 
             // mnuFormat
             // 
@@ -1175,6 +1203,7 @@
             this.mnuFormat.Name = "mnuFormat";
             this.mnuFormat.Size = new System.Drawing.Size(68, 24);
             this.mnuFormat.Text = "F&ormat";
+            this.mnuFormat.DropDownOpening += new System.EventHandler(this.mnuFormat_DropDownOpening);
             // 
             // mnuFormatFont
             // 
@@ -1183,6 +1212,7 @@
             this.mnuFormatFont.Name = "mnuFormatFont";
             this.mnuFormatFont.Size = new System.Drawing.Size(344, 24);
             this.mnuFormatFont.Text = "&Font";
+            this.mnuFormatFont.Click += new System.EventHandler(this.mnuFormatFont_Click);
             // 
             // mnuFormatBold
             // 
@@ -1192,6 +1222,7 @@
             this.mnuFormatBold.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
             this.mnuFormatBold.Size = new System.Drawing.Size(344, 24);
             this.mnuFormatBold.Text = "&Bold";
+            this.mnuFormatBold.Click += new System.EventHandler(this.mnuFormatBold_Click);
             // 
             // mnuFormatItalic
             // 
@@ -1201,6 +1232,7 @@
             this.mnuFormatItalic.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
             this.mnuFormatItalic.Size = new System.Drawing.Size(344, 24);
             this.mnuFormatItalic.Text = "&Italic";
+            this.mnuFormatItalic.Click += new System.EventHandler(this.mnuFormatItalic_Click);
             // 
             // mnuFormatUnderline
             // 
@@ -1209,6 +1241,7 @@
             this.mnuFormatUnderline.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U)));
             this.mnuFormatUnderline.Size = new System.Drawing.Size(344, 24);
             this.mnuFormatUnderline.Text = "&Underline";
+            this.mnuFormatUnderline.Click += new System.EventHandler(this.mnuFormatUnderline_Click);
             // 
             // mnuFormatStrikeout
             // 
@@ -1216,6 +1249,7 @@
             this.mnuFormatStrikeout.Name = "mnuFormatStrikeout";
             this.mnuFormatStrikeout.Size = new System.Drawing.Size(344, 24);
             this.mnuFormatStrikeout.Text = "&Strikeout";
+            this.mnuFormatStrikeout.Click += new System.EventHandler(this.mnuFormatStrikeout_Click);
             // 
             // mnuFormatRtfSeparator
             // 
@@ -1227,12 +1261,14 @@
             this.mnuFormatSortAscending.Name = "mnuFormatSortAscending";
             this.mnuFormatSortAscending.Size = new System.Drawing.Size(344, 24);
             this.mnuFormatSortAscending.Text = "Sort &ascending";
+            this.mnuFormatSortAscending.Click += new System.EventHandler(this.mnuFormatSortAscending_Click);
             // 
             // mnuFormatSortDescending
             // 
             this.mnuFormatSortDescending.Name = "mnuFormatSortDescending";
             this.mnuFormatSortDescending.Size = new System.Drawing.Size(344, 24);
             this.mnuFormatSortDescending.Text = "Sort &descending";
+            this.mnuFormatSortDescending.Click += new System.EventHandler(this.mnuFormatSortDescending_Click);
             // 
             // ToolStripMenuItem13
             // 
@@ -1244,24 +1280,28 @@
             this.mnuFormatConvertToLower.Name = "mnuFormatConvertToLower";
             this.mnuFormatConvertToLower.Size = new System.Drawing.Size(344, 24);
             this.mnuFormatConvertToLower.Text = "Convert to &lower case";
+            this.mnuFormatConvertToLower.Click += new System.EventHandler(this.mnuFormatConvertToLower_Click);
             // 
             // mnuFormatConvertToUpper
             // 
             this.mnuFormatConvertToUpper.Name = "mnuFormatConvertToUpper";
             this.mnuFormatConvertToUpper.Size = new System.Drawing.Size(344, 24);
             this.mnuFormatConvertToUpper.Text = "Convert to &upper case";
+            this.mnuFormatConvertToUpper.Click += new System.EventHandler(this.mnuFormatConvertToUpper_Click);
             // 
             // mnuFormatConvertToTitleCase
             // 
             this.mnuFormatConvertToTitleCase.Name = "mnuFormatConvertToTitleCase";
             this.mnuFormatConvertToTitleCase.Size = new System.Drawing.Size(344, 24);
             this.mnuFormatConvertToTitleCase.Text = "Convert to &title case";
+            this.mnuFormatConvertToTitleCase.Click += new System.EventHandler(this.mnuFormatConvertToTitleCase_Click);
             // 
             // mnuFormatConvertToTitleCaseDrGrammar
             // 
             this.mnuFormatConvertToTitleCaseDrGrammar.Name = "mnuFormatConvertToTitleCaseDrGrammar";
             this.mnuFormatConvertToTitleCaseDrGrammar.Size = new System.Drawing.Size(344, 24);
             this.mnuFormatConvertToTitleCaseDrGrammar.Text = "Convert to title case (Dr. &Grammar rules)";
+            this.mnuFormatConvertToTitleCaseDrGrammar.Click += new System.EventHandler(this.mnuFormatConvertToTitleCaseDrGrammar_Click);
             // 
             // mnuTools
             // 
@@ -1276,8 +1316,9 @@
             this.mnuToolsOptions.Image = ((System.Drawing.Image)(resources.GetObject("mnuToolsOptions.Image")));
             this.mnuToolsOptions.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnuToolsOptions.Name = "mnuToolsOptions";
-            this.mnuToolsOptions.Size = new System.Drawing.Size(130, 24);
+            this.mnuToolsOptions.Size = new System.Drawing.Size(152, 24);
             this.mnuToolsOptions.Text = "&Options";
+            this.mnuToolsOptions.Click += new System.EventHandler(this.mnuToolsOptions_Click);
             // 
             // mnuHelp
             // 
@@ -1295,6 +1336,7 @@
             this.mnuHelpReportABug.Name = "mnuHelpReportABug";
             this.mnuHelpReportABug.Size = new System.Drawing.Size(165, 24);
             this.mnuHelpReportABug.Text = "Report a bug";
+            this.mnuHelpReportABug.Click += new System.EventHandler(this.mnuHelpReportABug_Click);
             // 
             // mnuHelp0
             // 
@@ -1308,6 +1350,7 @@
             this.mnuHelpAbout.Name = "mnuHelpAbout";
             this.mnuHelpAbout.Size = new System.Drawing.Size(165, 24);
             this.mnuHelpAbout.Text = "&About";
+            this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
             // 
             // tabFiles
             // 
@@ -1318,6 +1361,9 @@
             this.tabFiles.SelectedIndex = 0;
             this.tabFiles.Size = new System.Drawing.Size(320, 197);
             this.tabFiles.TabIndex = 0;
+            this.tabFiles.ChangedOrder += new QText.TabControlDnD.ChangedOrderEventHandler(this.tabFiles_ChangedOrder);
+            this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
+            this.tabFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabFiles_MouseDown);
             // 
             // MainForm
             // 
@@ -1333,6 +1379,14 @@
             this.MinimumSize = new System.Drawing.Size(320, 200);
             this.Name = "MainForm";
             this.Text = "QText";
+            this.Activated += new System.EventHandler(this.MainForm_Activated);
+            this.Deactivate += new System.EventHandler(this.MainForm_Deactivate);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Shown += new System.EventHandler(this.MainForm_Shown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyUp);
+            this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.tls.ResumeLayout(false);
             this.tls.PerformLayout();
             this.mnxTextBox.ResumeLayout(false);
@@ -1487,5 +1541,6 @@
         internal System.Windows.Forms.ToolStripSeparator mnuHelp0;
         internal System.Windows.Forms.ToolStripMenuItem mnuHelpAbout;
         internal TabControlDnD tabFiles;
+        private System.Windows.Forms.ToolStripMenuItem mnuViewZoomReset;
     }
 }

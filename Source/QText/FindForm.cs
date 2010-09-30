@@ -92,5 +92,9 @@ namespace QText {
         }
 
 
+        internal void FindNext() {
+            btnFind_Click(null, null);
+        }
+
     }
 }
