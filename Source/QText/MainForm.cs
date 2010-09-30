@@ -418,14 +418,6 @@ namespace QText {
             frmMain_Resize_Reentry = false;
         }
 
-        private void MainForm_Shown(object sender, EventArgs e) {
-            try {
-                fswLocationTxt.Path = Settings.FilesLocation;
-                fswLocationTxt.NotifyFilter = System.IO.NotifyFilters.FileName | System.IO.NotifyFilters.LastWrite;
-                fswLocationTxt.EnableRaisingEvents = true;
-            } catch { }
-        }
-
         private void MainForm_VisibleChanged(object sender, EventArgs e) {
             if ((_findForm == null) || (_findForm.IsDisposed) || (_findForm.Visible == false)) {
             } else {
@@ -521,7 +513,6 @@ namespace QText {
         }
 
         private void mnuFileNew_Click(object sender, EventArgs e) {
-            fswLocationTxt.EnableRaisingEvents = false;
             this.FileOrder.Save(tabFiles, true);
 
             using (NewFileForm frm = new NewFileForm("")) {
@@ -542,11 +533,9 @@ namespace QText {
             }
 
             this.FileOrder.Save(tabFiles, true);
-            fswLocationTxt.EnableRaisingEvents = true;
         }
 
         private void mnuFileReopen_Click(object sender, EventArgs e) {
-            fswLocationTxt.EnableRaisingEvents = false;
             this.FileOrder.Save(tabFiles, true);
 
             if (tabFiles.SelectedTab != null) {
@@ -567,8 +556,6 @@ namespace QText {
                     tabFiles.SelectedTab.Reopen();
                 }
             }
-
-            fswLocationTxt.EnableRaisingEvents = true;
         }
 
         private void mnuFileConvertToPlainText_Click(object sender, EventArgs e) {
@@ -588,7 +575,6 @@ namespace QText {
         }
 
         private void mnuFileSaveNow_Click(object sender, EventArgs e) {
-            fswLocationTxt.EnableRaisingEvents = false;
             this.FileOrder.Save(tabFiles, true);
 
             if (tabFiles.SelectedTab != null) {
@@ -599,12 +585,9 @@ namespace QText {
                     Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
                 }
             }
-
-            fswLocationTxt.EnableRaisingEvents = true;
         }
 
         private void mnuFileSaveAll_Click(object sender, EventArgs e) {
-            fswLocationTxt.EnableRaisingEvents = false;
             this.FileOrder.Save(tabFiles, true);
 
             try {
@@ -612,19 +595,15 @@ namespace QText {
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message);
             }
-
-            fswLocationTxt.EnableRaisingEvents = true;
         }
 
         private void mnuFileDelete_Click(object sender, EventArgs e) {
-            fswLocationTxt.EnableRaisingEvents = false;
             this.FileOrder.Save(tabFiles, true);
-
             if (tabFiles.SelectedTab != null) {
-                if (tabFiles.SelectedTab.TextBox.Text.Length > 0) {
-                    switch (Medo.MessageBox.ShowQuestion(this, "Are you sure?", global::Medo.Reflection.EntryAssembly.Title + " : Delete", MessageBoxButtons.YesNo, MessageBoxDefaultButton.Button2)) {
-                        case DialogResult.Yes: break;
-                        case DialogResult.No: return;
+                var currTab = tabFiles.SelectedTab;
+                if (currTab.TextBox.Text.Length > 0) {
+                    if (Medo.MessageBox.ShowQuestion(this, "Are you sure?", Medo.Reflection.EntryAssembly.Title + " : Delete", MessageBoxButtons.YesNo, MessageBoxDefaultButton.Button2) == DialogResult.No) {
+                        return;
                     }
                 }
                 try {
@@ -636,23 +615,20 @@ namespace QText {
                         tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[tindex];
                     }
 
-                    tabFiles.SelectedTab.Delete();
-                    tabFiles.TabPages.Remove(tabFiles.SelectedTab);
+                    currTab.Delete();
+                    tabFiles.TabPages.Remove(currTab);
                 } catch (Exception ex) {
                     Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
                 }
             }
-
-            fswLocationTxt.EnableRaisingEvents = true;
         }
 
         private void mnuFileRename_Click(object sender, EventArgs e) {
-            fswLocationTxt.EnableRaisingEvents = false;
             this.FileOrder.Save(tabFiles, true);
 
-            if ((tabFiles.SelectedTab != null)) {
+            if (tabFiles.SelectedTab != null) {
                 try {
-                    using (RenameFileForm frm = new RenameFileForm(tabFiles.SelectedTab.Title)) {
+                    using (var frm = new RenameFileForm(tabFiles.SelectedTab.Title)) {
                         if (frm.ShowDialog(this) == DialogResult.OK) {
                             tabFiles.SelectedTab.Rename(frm.Title);
                         }
@@ -662,8 +638,6 @@ namespace QText {
                     Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
                 }
             }
-
-            fswLocationTxt.EnableRaisingEvents = true;
         }
 
         private void mnuFilePrintPreview_Click(object sender, EventArgs e) {
@@ -873,9 +847,8 @@ namespace QText {
             }
 
             if (unsaved) {
-                fswLocationTxt.EnableRaisingEvents = false;
-                switch (global::Medo.MessageBox.ShowQuestion(this, "Content of unsaved files will be lost if not saved. Do you with to save it now?", MessageBoxButtons.YesNo)) {
-                    case System.Windows.Forms.DialogResult.Yes:
+                switch (Medo.MessageBox.ShowQuestion(this, "Content of unsaved files will be lost if not saved. Do you with to save it now?", MessageBoxButtons.YesNo)) {
+                    case DialogResult.Yes:
                         for (int i = 0; i <= tabFiles.TabPages.Count - 1; i++) {
                             TabFile tf = (TabFile)tabFiles.TabPages[i];
                             if (tf.IsChanged) {
@@ -885,7 +858,6 @@ namespace QText {
 
                         break;
                 }
-                fswLocationTxt.EnableRaisingEvents = true;
             }
 
             if (sender != null) { this.FileOrder.Save(tabFiles, true); }
@@ -1150,7 +1122,6 @@ namespace QText {
 
         private void mnuToolsOptions_Click(object sender, EventArgs e) {
             using (var frm = new OptionsForm()) {
-                fswLocationTxt.EnableRaisingEvents = false;
                 tmrQuickAutoSave.Enabled = false;
                 SaveAllChanged();
                 this.FileOrder.Save(tabFiles, true);
@@ -1179,8 +1150,6 @@ namespace QText {
                     MainForm_Resize(null, null);
                     this.tmrUpdateToolbar.Enabled = Settings.DisplayShowToolbar;
                     tmrQuickAutoSave.Interval = Settings.QuickAutoSaveSeconds * 1000;
-                    fswLocationTxt.Path = Settings.FilesLocation;
-                    fswLocationTxt.EnableRaisingEvents = true;
 
                     if ((Settings.CarbonCopyUse)) {
                         for (int i = 0; i <= tabFiles.TabPages.Count - 1; i++) {
@@ -1369,14 +1338,12 @@ namespace QText {
         }
 
         private void SaveAllChanged() {
-            fswLocationTxt.EnableRaisingEvents = false;
             try {
                 tabFiles.SaveAll();
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
             }
             this.FileOrder.Save(tabFiles, true);
-            fswLocationTxt.EnableRaisingEvents = true;
         }
 
         private static void ToogleStyle(RichTextBoxEx richTextBox, FontStyle fontStyle) {
@@ -1452,7 +1419,6 @@ namespace QText {
         #region Timers
 
         private void tmrAutoSave_Tick(object sender, EventArgs e) {
-            fswLocationTxt.EnableRaisingEvents = false;
             for (int i = 0; i <= tabFiles.TabPages.Count - 1; i++) {
                 try {
                     TabFile tf = (TabFile)tabFiles.TabPages[i];
@@ -1469,7 +1435,6 @@ namespace QText {
         private void tmrQuickAutoSave_Tick(object sender, EventArgs e) {
             tmrQuickAutoSave.Enabled = false;
             Debug.WriteLine("QText: QuickAutoSave");
-            fswLocationTxt.EnableRaisingEvents = false;
             for (int i = 0; i <= tabFiles.TabPages.Count - 1; i++) {
                 try {
                     TabFile tf = (TabFile)tabFiles.TabPages[i];
@@ -1481,7 +1446,6 @@ namespace QText {
                     }
                 } catch (Exception) {}
             }
-            fswLocationTxt.EnableRaisingEvents = true;
         }
 
         private void tmrUpdateToolbar_Tick(object sender, EventArgs e) {

@@ -84,7 +84,6 @@
             this.mnxTextBoxConvertCaseToTitleCapitalizeAll = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextBoxConvertCaseToTitleDrGrammar = new System.Windows.Forms.ToolStripMenuItem();
             this.tmrAutoSave = new System.Windows.Forms.Timer(this.components);
-            this.fswLocationTxt = new System.IO.FileSystemWatcher();
             this.mnxTab = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnxTabNew = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTab0 = new System.Windows.Forms.ToolStripSeparator();
@@ -168,7 +167,6 @@
             this.tabFiles = new QText.TabControlDnD();
             this.tls.SuspendLayout();
             this.mnxTextBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.fswLocationTxt)).BeginInit();
             this.mnxTab.SuspendLayout();
             this.mnu.SuspendLayout();
             this.SuspendLayout();
@@ -721,13 +719,6 @@
             this.tmrAutoSave.Enabled = true;
             this.tmrAutoSave.Interval = 1000;
             this.tmrAutoSave.Tick += new System.EventHandler(this.tmrAutoSave_Tick);
-            // 
-            // fswLocationTxt
-            // 
-            this.fswLocationTxt.EnableRaisingEvents = true;
-            this.fswLocationTxt.NotifyFilter = System.IO.NotifyFilters.LastWrite;
-            this.fswLocationTxt.SynchronizingObject = this;
-            this.fswLocationTxt.Changed += new System.IO.FileSystemEventHandler(this.fswLocationTxt_Changed);
             // 
             // mnxTab
             // 
@@ -1379,7 +1370,7 @@
             this.mnuToolsOptions.Image = ((System.Drawing.Image)(resources.GetObject("mnuToolsOptions.Image")));
             this.mnuToolsOptions.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnuToolsOptions.Name = "mnuToolsOptions";
-            this.mnuToolsOptions.Size = new System.Drawing.Size(152, 24);
+            this.mnuToolsOptions.Size = new System.Drawing.Size(130, 24);
             this.mnuToolsOptions.Text = "&Options";
             this.mnuToolsOptions.Click += new System.EventHandler(this.mnuToolsOptions_Click);
             // 
@@ -1446,7 +1437,6 @@
             this.Deactivate += new System.EventHandler(this.MainForm_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
-            this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.VisibleChanged += new System.EventHandler(this.MainForm_VisibleChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyUp);
@@ -1455,7 +1445,6 @@
             this.tls.ResumeLayout(false);
             this.tls.PerformLayout();
             this.mnxTextBox.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.fswLocationTxt)).EndInit();
             this.mnxTab.ResumeLayout(false);
             this.mnu.ResumeLayout(false);
             this.mnu.PerformLayout();
@@ -1525,7 +1514,6 @@
         internal System.Windows.Forms.ToolStripMenuItem mnxTextBoxConvertCaseToTitleCapitalizeAll;
         internal System.Windows.Forms.ToolStripMenuItem mnxTextBoxConvertCaseToTitleDrGrammar;
         internal System.Windows.Forms.Timer tmrAutoSave;
-        internal System.IO.FileSystemWatcher fswLocationTxt;
         internal System.Windows.Forms.ContextMenuStrip mnxTab;
         internal System.Windows.Forms.ToolStripMenuItem mnxTabNew;
         internal System.Windows.Forms.ToolStripSeparator mnxTab0;

@@ -493,13 +493,17 @@ namespace QText {
         }
 
         public void ZoomReset() {
-            this.TextBox.ZoomFactor = 2.1f;
+            this.TextBox.ZoomFactor = 2.1f; //TODO: Blog about this
             this.TextBox.Refresh();
             this.TextBox.ZoomFactor = 1.0f;
             this.TextBox.Refresh();
-            //this.TextBox.Visible = false;
-            //this.TextBox.Visible = true;
         }
+
+
+        public override string ToString() {
+            return this.Title;
+        }
+
 
         private class NativeMethods {
 
