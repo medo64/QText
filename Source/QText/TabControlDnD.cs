@@ -78,7 +78,7 @@ namespace QText {
         }
 
         public void SaveAll() {
-            foreach (TabFile file in this.TabPages) {
+            foreach (QText.TabFile file in this.TabPages) {
                 file.Save();
             }
         }
@@ -86,7 +86,7 @@ namespace QText {
         internal new TabFile SelectedTab {
             get {
                 if (base.SelectedTab == null) { return null; }
-                return base.SelectedTab as TabFile;
+                return base.SelectedTab as QText.TabFile;
             }
             set {
                 base.SelectedTab = value;
