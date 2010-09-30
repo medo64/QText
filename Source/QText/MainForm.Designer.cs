@@ -204,10 +204,11 @@
             this.tlbHelpReportABug,
             this.tls_btnOptions,
             this.ToolStripSeparator2});
-            this.tls.Location = new System.Drawing.Point(0, 28);
+            this.tls.Location = new System.Drawing.Point(0, 0);
             this.tls.Name = "tls";
             this.tls.Size = new System.Drawing.Size(542, 25);
             this.tls.TabIndex = 1;
+            this.tls.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tls_MouseClick);
             // 
             // tls_btnNew
             // 
@@ -218,6 +219,7 @@
             this.tls_btnNew.Size = new System.Drawing.Size(23, 22);
             this.tls_btnNew.Text = "New...";
             this.tls_btnNew.ToolTipText = "New tab (Ctrl+N)";
+            this.tls_btnNew.Click += new System.EventHandler(this.mnuFileNew_Click);
             // 
             // tls_btnSaveNow
             // 
@@ -228,6 +230,7 @@
             this.tls_btnSaveNow.Size = new System.Drawing.Size(23, 22);
             this.tls_btnSaveNow.Text = "Save now";
             this.tls_btnSaveNow.ToolTipText = "Save now (Ctrl+S)";
+            this.tls_btnSaveNow.Click += new System.EventHandler(this.mnuFileSaveNow_Click);
             // 
             // tls_btnRename
             // 
@@ -238,6 +241,7 @@
             this.tls_btnRename.Size = new System.Drawing.Size(23, 22);
             this.tls_btnRename.Text = "Rename";
             this.tls_btnRename.ToolTipText = "Rename tab (F2)";
+            this.tls_btnRename.Click += new System.EventHandler(this.mnuFileRename_Click);
             // 
             // tls_0
             // 
@@ -253,6 +257,7 @@
             this.tls_btnPrintPreview.Size = new System.Drawing.Size(23, 22);
             this.tls_btnPrintPreview.Text = "Print preview";
             this.tls_btnPrintPreview.ToolTipText = "Print preview";
+            this.tls_btnPrintPreview.Click += new System.EventHandler(this.mnuFilePrintPreview_Click);
             // 
             // tls_btnPrint
             // 
@@ -263,6 +268,7 @@
             this.tls_btnPrint.Size = new System.Drawing.Size(23, 22);
             this.tls_btnPrint.Text = "Print";
             this.tls_btnPrint.ToolTipText = "Print (Ctrl+P)";
+            this.tls_btnPrint.Click += new System.EventHandler(this.mnuFilePrint_Click);
             // 
             // tls_1
             // 
@@ -278,6 +284,7 @@
             this.tls_btnCut.Size = new System.Drawing.Size(23, 22);
             this.tls_btnCut.Text = "Cut";
             this.tls_btnCut.ToolTipText = "Cut (Ctrl+X)";
+            this.tls_btnCut.Click += new System.EventHandler(this.mnuEditCut_Click);
             // 
             // tls_btnCopy
             // 
@@ -288,6 +295,7 @@
             this.tls_btnCopy.Size = new System.Drawing.Size(23, 22);
             this.tls_btnCopy.Text = "Copy";
             this.tls_btnCopy.ToolTipText = "Copy (Ctrl+C)";
+            this.tls_btnCopy.Click += new System.EventHandler(this.mnuEditCopy_Click);
             // 
             // tls_btnPaste
             // 
@@ -298,6 +306,7 @@
             this.tls_btnPaste.Size = new System.Drawing.Size(23, 22);
             this.tls_btnPaste.Text = "Paste";
             this.tls_btnPaste.ToolTipText = "Paste (Ctrl+V)";
+            this.tls_btnPaste.Click += new System.EventHandler(this.mnuEditPaste_Click);
             // 
             // ToolStripSeparator1
             // 
@@ -312,6 +321,7 @@
             this.tls_btnFont.Name = "tls_btnFont";
             this.tls_btnFont.Size = new System.Drawing.Size(23, 22);
             this.tls_btnFont.Text = "Font";
+            this.tls_btnFont.Click += new System.EventHandler(this.mnuFormatFont_Click);
             // 
             // tls_btnBold
             // 
@@ -322,6 +332,7 @@
             this.tls_btnBold.Size = new System.Drawing.Size(23, 22);
             this.tls_btnBold.Text = "Bold";
             this.tls_btnBold.ToolTipText = "Bold (Ctrl+B)";
+            this.tls_btnBold.Click += new System.EventHandler(this.mnuFormatBold_Click);
             // 
             // tls_btnItalic
             // 
@@ -332,6 +343,7 @@
             this.tls_btnItalic.Size = new System.Drawing.Size(23, 22);
             this.tls_btnItalic.Text = "Italic";
             this.tls_btnItalic.ToolTipText = "Italic (Ctrl+I)";
+            this.tls_btnItalic.Click += new System.EventHandler(this.mnuFormatItalic_Click);
             // 
             // tls_btnUnderline
             // 
@@ -342,6 +354,7 @@
             this.tls_btnUnderline.Size = new System.Drawing.Size(23, 22);
             this.tls_btnUnderline.Text = "Underline";
             this.tls_btnUnderline.ToolTipText = "Underline (Ctrl+U)";
+            this.tls_btnUnderline.Click += new System.EventHandler(this.mnuFormatUnderline_Click);
             // 
             // tls_btnStrikeout
             // 
@@ -351,6 +364,7 @@
             this.tls_btnStrikeout.Name = "tls_btnStrikeout";
             this.tls_btnStrikeout.Size = new System.Drawing.Size(23, 22);
             this.tls_btnStrikeout.Text = "Strikeout";
+            this.tls_btnStrikeout.Click += new System.EventHandler(this.mnuFormatStrikeout_Click);
             // 
             // tls_RtfSeparator
             // 
@@ -366,6 +380,7 @@
             this.tls_btnUndo.Size = new System.Drawing.Size(23, 22);
             this.tls_btnUndo.Text = "Undo";
             this.tls_btnUndo.ToolTipText = "Undo (Ctrl+Z)";
+            this.tls_btnUndo.Click += new System.EventHandler(this.mnuEditUndo_Click);
             // 
             // tls_btnRedo
             // 
@@ -376,6 +391,7 @@
             this.tls_btnRedo.Size = new System.Drawing.Size(23, 22);
             this.tls_btnRedo.Text = "Redo";
             this.tls_btnRedo.ToolTipText = "Redo (Ctrl+Y)";
+            this.tls_btnRedo.Click += new System.EventHandler(this.mnuEditRedo_Click);
             // 
             // ToolStripSeparator3
             // 
@@ -391,6 +407,7 @@
             this.tls_btnFind.Size = new System.Drawing.Size(23, 22);
             this.tls_btnFind.Text = "Find";
             this.tls_btnFind.ToolTipText = "Find (Ctrl+F)";
+            this.tls_btnFind.Click += new System.EventHandler(this.mnuEditFind_Click);
             // 
             // tls_btnAlwaysOnTop
             // 
@@ -402,6 +419,7 @@
             this.tls_btnAlwaysOnTop.Size = new System.Drawing.Size(23, 22);
             this.tls_btnAlwaysOnTop.Text = "Always on top";
             this.tls_btnAlwaysOnTop.ToolTipText = "Always on top (Ctrl+T)";
+            this.tls_btnAlwaysOnTop.Click += new System.EventHandler(this.tls_btnAlwaysOnTop_Click);
             // 
             // tlbHelpAbout
             // 
@@ -412,6 +430,7 @@
             this.tlbHelpAbout.Name = "tlbHelpAbout";
             this.tlbHelpAbout.Size = new System.Drawing.Size(23, 22);
             this.tlbHelpAbout.Text = "About";
+            this.tlbHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
             // 
             // tlbHelpReportABug
             // 
@@ -422,6 +441,7 @@
             this.tlbHelpReportABug.Name = "tlbHelpReportABug";
             this.tlbHelpReportABug.Size = new System.Drawing.Size(23, 22);
             this.tlbHelpReportABug.Text = "Report a bug";
+            this.tlbHelpReportABug.Click += new System.EventHandler(this.mnuHelpReportABug_Click);
             // 
             // tls_btnOptions
             // 
@@ -433,12 +453,21 @@
             this.tls_btnOptions.Size = new System.Drawing.Size(23, 22);
             this.tls_btnOptions.Text = "Options";
             this.tls_btnOptions.ToolTipText = "Options";
+            this.tls_btnOptions.Click += new System.EventHandler(this.mnuToolsOptions_Click);
             // 
             // ToolStripSeparator2
             // 
             this.ToolStripSeparator2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.ToolStripSeparator2.Name = "ToolStripSeparator2";
             this.ToolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tmrUpdateToolbar
+            // 
+            this.tmrUpdateToolbar.Tick += new System.EventHandler(this.tmrUpdateToolbar_Tick);
+            // 
+            // tmrQuickAutoSave
+            // 
+            this.tmrQuickAutoSave.Tick += new System.EventHandler(this.tmrQuickAutoSave_Tick);
             // 
             // mnxTextBox
             // 
@@ -465,6 +494,7 @@
             this.mnxTextBoxFormat});
             this.mnxTextBox.Name = "mnxTextBox";
             this.mnxTextBox.Size = new System.Drawing.Size(323, 394);
+            this.mnxTextBox.Opening += new System.ComponentModel.CancelEventHandler(this.mnxTextBox_Opening);
             // 
             // mnxTextBoxUndo
             // 
@@ -474,6 +504,7 @@
             this.mnxTextBoxUndo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
             this.mnxTextBoxUndo.Size = new System.Drawing.Size(322, 24);
             this.mnxTextBoxUndo.Text = "&Undo";
+            this.mnxTextBoxUndo.Click += new System.EventHandler(this.mnuEditUndo_Click);
             // 
             // mnxTextBoxRedo
             // 
@@ -483,6 +514,7 @@
             this.mnxTextBoxRedo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
             this.mnxTextBoxRedo.Size = new System.Drawing.Size(322, 24);
             this.mnxTextBoxRedo.Text = "&Redo";
+            this.mnxTextBoxRedo.Click += new System.EventHandler(this.mnuEditRedo_Click);
             // 
             // mnxTextBox0
             // 
@@ -497,6 +529,7 @@
             this.mnxTextBoxCut.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
             this.mnxTextBoxCut.Size = new System.Drawing.Size(322, 24);
             this.mnxTextBoxCut.Text = "Cu&t";
+            this.mnxTextBoxCut.Click += new System.EventHandler(this.mnuEditCut_Click);
             // 
             // mnxTextBoxCopy
             // 
@@ -506,6 +539,7 @@
             this.mnxTextBoxCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
             this.mnxTextBoxCopy.Size = new System.Drawing.Size(322, 24);
             this.mnxTextBoxCopy.Text = "&Copy";
+            this.mnxTextBoxCopy.Click += new System.EventHandler(this.mnuEditCopy_Click);
             // 
             // mnxTextBoxPaste
             // 
@@ -515,6 +549,7 @@
             this.mnxTextBoxPaste.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
             this.mnxTextBoxPaste.Size = new System.Drawing.Size(322, 24);
             this.mnxTextBoxPaste.Text = "&Paste";
+            this.mnxTextBoxPaste.Click += new System.EventHandler(this.mnuEditPaste_Click);
             // 
             // mnxTextBoxCutCopyPasteAsTextSeparator
             // 
@@ -529,6 +564,7 @@
                         | System.Windows.Forms.Keys.X)));
             this.mnxTextBoxCutAsText.Size = new System.Drawing.Size(322, 24);
             this.mnxTextBoxCutAsText.Text = "Cut without formatting";
+            this.mnxTextBoxCutAsText.Click += new System.EventHandler(this.mnxTextBoxCutAsText_Click);
             // 
             // mnxTextBoxCopyAsText
             // 
@@ -538,6 +574,7 @@
                         | System.Windows.Forms.Keys.C)));
             this.mnxTextBoxCopyAsText.Size = new System.Drawing.Size(322, 24);
             this.mnxTextBoxCopyAsText.Text = "Copy without formatting";
+            this.mnxTextBoxCopyAsText.Click += new System.EventHandler(this.mnxTextBoxCopyAsText_Click);
             // 
             // mnxTextBoxPasteAsText
             // 
@@ -547,6 +584,7 @@
                         | System.Windows.Forms.Keys.V)));
             this.mnxTextBoxPasteAsText.Size = new System.Drawing.Size(322, 24);
             this.mnxTextBoxPasteAsText.Text = "Paste without formatting";
+            this.mnxTextBoxPasteAsText.Click += new System.EventHandler(this.mnxTextBoxPasteAsText_Click);
             // 
             // ToolStripMenuItem16
             // 
@@ -559,6 +597,7 @@
             this.mnxTextBoxSelectAll.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
             this.mnxTextBoxSelectAll.Size = new System.Drawing.Size(322, 24);
             this.mnxTextBoxSelectAll.Text = "Select &all";
+            this.mnxTextBoxSelectAll.Click += new System.EventHandler(this.mnuEditSelectAll_Click);
             // 
             // ToolStripMenuItem4
             // 
@@ -572,6 +611,7 @@
             this.mnxTextBoxFont.Name = "mnxTextBoxFont";
             this.mnxTextBoxFont.Size = new System.Drawing.Size(322, 24);
             this.mnxTextBoxFont.Text = "&Font...";
+            this.mnxTextBoxFont.Click += new System.EventHandler(this.mnuFormatFont_Click);
             // 
             // mnxTextBoxBold
             // 
@@ -581,6 +621,7 @@
             this.mnxTextBoxBold.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
             this.mnxTextBoxBold.Size = new System.Drawing.Size(322, 24);
             this.mnxTextBoxBold.Text = "&Bold";
+            this.mnxTextBoxBold.Click += new System.EventHandler(this.mnuFormatBold_Click);
             // 
             // mnxTextBoxItalic
             // 
@@ -590,6 +631,7 @@
             this.mnxTextBoxItalic.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
             this.mnxTextBoxItalic.Size = new System.Drawing.Size(322, 24);
             this.mnxTextBoxItalic.Text = "&Italic";
+            this.mnxTextBoxItalic.Click += new System.EventHandler(this.mnuFormatItalic_Click);
             // 
             // mnxTextBoxUnderline
             // 
@@ -598,6 +640,7 @@
             this.mnxTextBoxUnderline.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U)));
             this.mnxTextBoxUnderline.Size = new System.Drawing.Size(322, 24);
             this.mnxTextBoxUnderline.Text = "&Underline";
+            this.mnxTextBoxUnderline.Click += new System.EventHandler(this.mnuFormatUnderline_Click);
             // 
             // mnxTextBoxStrikeout
             // 
@@ -605,6 +648,7 @@
             this.mnxTextBoxStrikeout.Name = "mnxTextBoxStrikeout";
             this.mnxTextBoxStrikeout.Size = new System.Drawing.Size(322, 24);
             this.mnxTextBoxStrikeout.Text = "&Strikeout";
+            this.mnxTextBoxStrikeout.Click += new System.EventHandler(this.mnuFormatStrikeout_Click);
             // 
             // mnxTextBoxRtfSeparator
             // 
@@ -630,12 +674,14 @@
             this.mnxTextBoxSortAZ.Name = "mnxTextBoxSortAZ";
             this.mnxTextBoxSortAZ.Size = new System.Drawing.Size(344, 24);
             this.mnxTextBoxSortAZ.Text = "Sort &ascending";
+            this.mnxTextBoxSortAZ.Click += new System.EventHandler(this.mnuFormatSortAscending_Click);
             // 
             // mnxTextBoxSortZA
             // 
             this.mnxTextBoxSortZA.Name = "mnxTextBoxSortZA";
             this.mnxTextBoxSortZA.Size = new System.Drawing.Size(344, 24);
             this.mnxTextBoxSortZA.Text = "Sort &descending";
+            this.mnxTextBoxSortZA.Click += new System.EventHandler(this.mnuFormatSortDescending_Click);
             // 
             // ToolStripMenuItem9
             // 
@@ -647,35 +693,41 @@
             this.mnxTextBoxConvertCaseToUpper.Name = "mnxTextBoxConvertCaseToUpper";
             this.mnxTextBoxConvertCaseToUpper.Size = new System.Drawing.Size(344, 24);
             this.mnxTextBoxConvertCaseToUpper.Text = "Convert to &upper case";
+            this.mnxTextBoxConvertCaseToUpper.Click += new System.EventHandler(this.mnuFormatConvertToUpper_Click);
             // 
             // mnxTextBoxConvertCaseToLower
             // 
             this.mnxTextBoxConvertCaseToLower.Name = "mnxTextBoxConvertCaseToLower";
             this.mnxTextBoxConvertCaseToLower.Size = new System.Drawing.Size(344, 24);
             this.mnxTextBoxConvertCaseToLower.Text = "Convert to &lower case";
+            this.mnxTextBoxConvertCaseToLower.Click += new System.EventHandler(this.mnuFormatConvertToLower_Click);
             // 
             // mnxTextBoxConvertCaseToTitleCapitalizeAll
             // 
             this.mnxTextBoxConvertCaseToTitleCapitalizeAll.Name = "mnxTextBoxConvertCaseToTitleCapitalizeAll";
             this.mnxTextBoxConvertCaseToTitleCapitalizeAll.Size = new System.Drawing.Size(344, 24);
             this.mnxTextBoxConvertCaseToTitleCapitalizeAll.Text = "Convert to &title case";
+            this.mnxTextBoxConvertCaseToTitleCapitalizeAll.Click += new System.EventHandler(this.mnuFormatConvertToTitleCase_Click);
             // 
             // mnxTextBoxConvertCaseToTitleDrGrammar
             // 
             this.mnxTextBoxConvertCaseToTitleDrGrammar.Name = "mnxTextBoxConvertCaseToTitleDrGrammar";
             this.mnxTextBoxConvertCaseToTitleDrGrammar.Size = new System.Drawing.Size(344, 24);
             this.mnxTextBoxConvertCaseToTitleDrGrammar.Text = "Convert to title case (Dr. &Grammar rules)";
+            this.mnxTextBoxConvertCaseToTitleDrGrammar.Click += new System.EventHandler(this.mnuFormatConvertToTitleCaseDrGrammar_Click);
             // 
             // tmrAutoSave
             // 
             this.tmrAutoSave.Enabled = true;
             this.tmrAutoSave.Interval = 1000;
+            this.tmrAutoSave.Tick += new System.EventHandler(this.tmrAutoSave_Tick);
             // 
             // fswLocationTxt
             // 
             this.fswLocationTxt.EnableRaisingEvents = true;
             this.fswLocationTxt.NotifyFilter = System.IO.NotifyFilters.LastWrite;
             this.fswLocationTxt.SynchronizingObject = this;
+            this.fswLocationTxt.Changed += new System.IO.FileSystemEventHandler(this.fswLocationTxt_Changed);
             // 
             // mnxTab
             // 
@@ -697,6 +749,7 @@
             this.mnxTabOpenContainingFolder});
             this.mnxTab.Name = "mnxTab";
             this.mnxTab.Size = new System.Drawing.Size(233, 274);
+            this.mnxTab.Opening += new System.ComponentModel.CancelEventHandler(this.mnxTab_Opening);
             // 
             // mnxTabNew
             // 
@@ -704,7 +757,8 @@
             this.mnxTabNew.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTabNew.Name = "mnxTabNew";
             this.mnxTabNew.Size = new System.Drawing.Size(232, 24);
-            this.mnxTabNew.Text = "&New...";
+            this.mnxTabNew.Text = "&New";
+            this.mnxTabNew.Click += new System.EventHandler(this.mnuFileNew_Click);
             // 
             // mnxTab0
             // 
@@ -717,6 +771,7 @@
             this.mnxTabReopen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
             this.mnxTabReopen.Size = new System.Drawing.Size(232, 24);
             this.mnxTabReopen.Text = "Re&open";
+            this.mnxTabReopen.Click += new System.EventHandler(this.mnuFileReopen_Click);
             // 
             // mnxTabSaveNow
             // 
@@ -726,6 +781,7 @@
             this.mnxTabSaveNow.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.mnxTabSaveNow.Size = new System.Drawing.Size(232, 24);
             this.mnxTabSaveNow.Text = "&Save";
+            this.mnxTabSaveNow.Click += new System.EventHandler(this.mnuFileSaveNow_Click);
             // 
             // mnxTab1
             // 
@@ -739,6 +795,7 @@
             this.mnxTabDelete.Name = "mnxTabDelete";
             this.mnxTabDelete.Size = new System.Drawing.Size(232, 24);
             this.mnxTabDelete.Text = "&Delete";
+            this.mnxTabDelete.Click += new System.EventHandler(this.mnuFileDelete_Click);
             // 
             // mnxTabRename
             // 
@@ -747,6 +804,7 @@
             this.mnxTabRename.ShortcutKeys = System.Windows.Forms.Keys.F2;
             this.mnxTabRename.Size = new System.Drawing.Size(232, 24);
             this.mnxTabRename.Text = "&Rename...";
+            this.mnxTabRename.Click += new System.EventHandler(this.mnuFileRename_Click);
             // 
             // mnxTab2
             // 
@@ -760,6 +818,7 @@
             this.mnxTabPrintPreview.Name = "mnxTabPrintPreview";
             this.mnxTabPrintPreview.Size = new System.Drawing.Size(232, 24);
             this.mnxTabPrintPreview.Text = "Prin&t preview...";
+            this.mnxTabPrintPreview.Click += new System.EventHandler(this.mnuFilePrintPreview_Click);
             // 
             // mnxTabPrint
             // 
@@ -768,6 +827,7 @@
             this.mnxTabPrint.Name = "mnxTabPrint";
             this.mnxTabPrint.Size = new System.Drawing.Size(232, 24);
             this.mnxTabPrint.Text = "&Print...";
+            this.mnxTabPrint.Click += new System.EventHandler(this.mnuFilePrint_Click);
             // 
             // mnxConvertTo
             // 
@@ -779,12 +839,14 @@
             this.mnxTabConvertToPlainText.Name = "mnxTabConvertToPlainText";
             this.mnxTabConvertToPlainText.Size = new System.Drawing.Size(232, 24);
             this.mnxTabConvertToPlainText.Text = "Convert to plain text";
+            this.mnxTabConvertToPlainText.Click += new System.EventHandler(this.mnuFileConvertToPlainText_Click);
             // 
             // mnxTabConvertToRichText
             // 
             this.mnxTabConvertToRichText.Name = "mnxTabConvertToRichText";
             this.mnxTabConvertToRichText.Size = new System.Drawing.Size(232, 24);
             this.mnxTabConvertToRichText.Text = "Convert to rich text";
+            this.mnxTabConvertToRichText.Click += new System.EventHandler(this.mnuFileConvertToRichText_Click);
             // 
             // ToolStripMenuItem14
             // 
@@ -796,6 +858,7 @@
             this.mnxTabOpenContainingFolder.Name = "mnxTabOpenContainingFolder";
             this.mnxTabOpenContainingFolder.Size = new System.Drawing.Size(232, 24);
             this.mnxTabOpenContainingFolder.Text = "Open containing folder";
+            this.mnxTabOpenContainingFolder.Click += new System.EventHandler(this.mnxTabOpenContainingFolder_Click);
             // 
             // mnu
             // 
@@ -1316,7 +1379,7 @@
             this.mnuToolsOptions.Image = ((System.Drawing.Image)(resources.GetObject("mnuToolsOptions.Image")));
             this.mnuToolsOptions.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnuToolsOptions.Name = "mnuToolsOptions";
-            this.mnuToolsOptions.Size = new System.Drawing.Size(152, 24);
+            this.mnuToolsOptions.Size = new System.Drawing.Size(130, 24);
             this.mnuToolsOptions.Text = "&Options";
             this.mnuToolsOptions.Click += new System.EventHandler(this.mnuToolsOptions_Click);
             // 
@@ -1384,8 +1447,10 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
+            this.VisibleChanged += new System.EventHandler(this.MainForm_VisibleChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyUp);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MainForm_MouseDown);
             this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.tls.ResumeLayout(false);
             this.tls.PerformLayout();

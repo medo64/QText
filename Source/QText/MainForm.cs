@@ -357,9 +357,22 @@ namespace QText {
             }
         }
 
+        private void MainForm_MouseDown(object sender, MouseEventArgs e) {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right) {
+                if ((tabFiles.TabPages.Count == 0) || ((e.Y >= tabFiles.GetTabRect(0).Y) && (e.Y <= (tabFiles.GetTabRect(0).Y + tabFiles.GetTabRect(0).Height)) && (e.X >= tabFiles.GetTabRect(0).X))) {
+                    mnxTabNew.Enabled = true;
+                    mnxTabReopen.Enabled = false;
+                    mnxTabSaveNow.Enabled = false;
+                    mnxTabDelete.Enabled = false;
+                    mnxTabRename.Enabled = false;
+                    mnxTabPrintPreview.Enabled = false;
+                    mnxTabPrint.Enabled = false;
+                    mnxTab.Show(tabFiles, e.X, e.Y);
+                }
+            }
+        }
 
         private bool frmMain_Resize_Reentry = false;
-
         private void MainForm_Resize(object sender, EventArgs e) {
             if (frmMain_Resize_Reentry) { return; }
             frmMain_Resize_Reentry = true;
@@ -411,6 +424,13 @@ namespace QText {
                 fswLocationTxt.NotifyFilter = System.IO.NotifyFilters.FileName | System.IO.NotifyFilters.LastWrite;
                 fswLocationTxt.EnableRaisingEvents = true;
             } catch { }
+        }
+
+        private void MainForm_VisibleChanged(object sender, EventArgs e) {
+            if ((_findForm == null) || (_findForm.IsDisposed) || (_findForm.Visible == false)) {
+            } else {
+                _findForm.Close();
+            }
         }
 
 
@@ -1192,6 +1212,145 @@ namespace QText {
 
         #endregion
 
+        #region Toolbar
+
+        private void tls_MouseClick(object sender, MouseEventArgs e) {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right) {
+                ToolStripItem tsi = tls.Items[tls.Items.Count - 1];
+                if (e.X > tsi.Bounds.Right) {
+                    //mnu.Show(tls, e.Location)
+                }
+            }
+        }
+
+        private void tls_btnAlwaysOnTop_Click(object sender, EventArgs e) {
+            Settings.DisplayAlwaysOnTop = tls_btnAlwaysOnTop.Checked;
+            this.TopMost = Settings.DisplayAlwaysOnTop;
+        }
+
+        #endregion
+
+
+        #region Tabs menu
+
+        private void mnxTab_Opening(object sender, CancelEventArgs e) {
+            mnxTabConvertToPlainText.Visible = true;
+            mnxTabConvertToRichText.Visible = true;
+            mnxTabConvertToPlainText.Enabled = true;
+            mnxTabConvertToRichText.Enabled = true;
+            if ((tabFiles.SelectedTab != null)) {
+                TabFile tf = tabFiles.SelectedTab;
+                mnxTabConvertToPlainText.Visible = tf.IsRichTextFormat;
+                mnxTabConvertToRichText.Visible = !tf.IsRichTextFormat;
+            } else {
+                mnxTabConvertToPlainText.Enabled = false;
+                mnxTabConvertToRichText.Enabled = false;
+            }
+        }
+
+        private void mnxTabOpenContainingFolder_Click(object sender, EventArgs e) {
+            if (tabFiles.SelectedTab != null) {
+                string file = tabFiles.SelectedTab.FullFileName;
+                var exe = new ProcessStartInfo("explorer.exe", "/select,\"" + file + "\"");
+                Process.Start(exe);
+            }
+        }
+
+        #endregion
+
+
+        #region TextBox menu
+
+        private void mnxTextBox_Opening(object sender, CancelEventArgs e) {
+            mnxTextBoxCutAsText.Visible = (!Settings.ForceTextCopyPaste);
+            mnxTextBoxCopyAsText.Visible = (!Settings.ForceTextCopyPaste);
+            mnxTextBoxPasteAsText.Visible = (!Settings.ForceTextCopyPaste);
+            mnxTextBoxCutCopyPasteAsTextSeparator.Visible = (!Settings.ForceTextCopyPaste);
+
+            mnxTextBoxFont.Visible = false;
+            mnxTextBoxBold.Visible = false;
+            mnxTextBoxItalic.Visible = false;
+            mnxTextBoxUnderline.Visible = false;
+            mnxTextBoxStrikeout.Visible = false;
+            mnxTextBoxRtfSeparator.Visible = false;
+
+            if (tabFiles.SelectedTab != null) {
+                TabFile tf = tabFiles.SelectedTab;
+
+                if (tf.IsRichTextFormat) {
+                    mnxTextBoxFont.Visible = true;
+                    mnxTextBoxBold.Visible = true;
+                    mnxTextBoxItalic.Visible = true;
+                    mnxTextBoxUnderline.Visible = true;
+                    mnxTextBoxStrikeout.Visible = true;
+                    mnxTextBoxRtfSeparator.Visible = false;
+
+                    mnxTextBoxBold.Checked = (tf.TextBox.SelectionFont != null) && (tf.TextBox.SelectionFont.Bold);
+                    mnxTextBoxItalic.Checked = (tf.TextBox.SelectionFont != null) && (tf.TextBox.SelectionFont.Italic);
+                    mnxTextBoxUnderline.Checked = (tf.TextBox.SelectionFont != null) && (tf.TextBox.SelectionFont.Underline);
+                    mnxTextBoxStrikeout.Checked = (tf.TextBox.SelectionFont != null) && (tf.TextBox.SelectionFont.Strikeout);
+                }
+
+                TextBoxBase txt = tf.TextBox;
+
+                mnxTextBoxUndo.Enabled = tf.CanUndo;
+                mnxTextBoxRedo.Enabled = tf.CanRedo;
+                mnxTextBoxCut.Enabled = tf.CanCopy;
+                mnxTextBoxCopy.Enabled = tf.CanCopy;
+                mnxTextBoxPaste.Enabled = tf.CanPaste;
+                mnxTextBoxCutAsText.Enabled = tf.CanCopy;
+                mnxTextBoxCopyAsText.Enabled = tf.CanCopy;
+                mnxTextBoxPasteAsText.Enabled = tf.CanPaste;
+                mnxTextBoxSelectAll.Enabled = (txt.Text.Length > 0);
+                mnxTextBoxFormat.Enabled = (txt.SelectedText.Length > 0);
+            } else {
+                mnxTextBoxUndo.Enabled = false;
+                mnxTextBoxRedo.Enabled = false;
+                mnxTextBoxCut.Enabled = false;
+                mnxTextBoxCopy.Enabled = false;
+                mnxTextBoxPaste.Enabled = false;
+                mnxTextBoxSelectAll.Enabled = false;
+                mnxTextBoxFormat.Enabled = false;
+            }
+        }
+
+        private void mnxTextBoxCutAsText_Click(object sender, EventArgs e) {
+            try {
+                if (tabFiles.SelectedTab != null) {
+                    tabFiles.SelectedTab.Cut(true);
+                }
+            } catch (Exception ex) {
+                Medo.MessageBox.ShowWarning(this, "Operation could not be completed." + Environment.NewLine + Environment.NewLine + ex.Message);
+            }
+        }
+
+        private void mnxTextBoxCopyAsText_Click(object sender, EventArgs e) {
+            try {
+                if (tabFiles.SelectedTab != null) {
+                    tabFiles.SelectedTab.Copy(true);
+                }
+            } catch (Exception ex) {
+                Medo.MessageBox.ShowWarning(this, "Operation could not be completed." + Environment.NewLine + Environment.NewLine + ex.Message);
+            }
+        }
+
+        private void mnxTextBoxPasteAsText_Click(object sender, EventArgs e) {
+            try {
+                if (tabFiles.SelectedTab != null) {
+                    tabFiles.SelectedTab.Paste(true);
+                }
+            } catch (Exception ex) {
+                Medo.MessageBox.ShowWarning(this, "Operation could not be completed." + Environment.NewLine + Environment.NewLine + ex.Message);
+            }
+        }
+
+        #endregion
+
+
+        private void fswLocationTxt_Changed(object sender, System.IO.FileSystemEventArgs e) {
+            //mnuViewRefresh_Click(null, null);
+        }
+
 
         #region Helpers
 
@@ -1289,6 +1448,105 @@ namespace QText {
             }
 
             this._PageNumber += 1;
+        }
+
+        #endregion
+
+        #region Timers
+
+        private void tmrAutoSave_Tick(object sender, EventArgs e) {
+            fswLocationTxt.EnableRaisingEvents = false;
+            for (int i = 0; i <= tabFiles.TabPages.Count - 1; i++) {
+                try {
+                    TabFile tf = (TabFile)tabFiles.TabPages[i];
+                    if (tf.GetIsEligibleForSave(Settings.FilesAutoSaveInterval)) {
+                        tf.Save();
+                    }
+                } catch (Exception ex) {
+                    Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
+                }
+            }
+            fswLocationTxt.EnableRaisingEvents = (tabFiles.TabPages.Count > 0);
+        }
+
+        private void tmrQuickAutoSave_Tick(object sender, EventArgs e) {
+            tmrQuickAutoSave.Enabled = false;
+            Debug.WriteLine("QText: QuickAutoSave");
+            fswLocationTxt.EnableRaisingEvents = false;
+            for (int i = 0; i <= tabFiles.TabPages.Count - 1; i++) {
+                try {
+                    TabFile tf = (TabFile)tabFiles.TabPages[i];
+                    if (tf.IsChanged) {
+                        tf.Save();
+                        Trace.WriteLine("QText: QuickAutoSave: Saved " + tf.Title + ".");
+                        tmrQuickAutoSave.Enabled = true;
+                        break;
+                    }
+                } catch (Exception) {}
+            }
+            fswLocationTxt.EnableRaisingEvents = true;
+        }
+
+        private void tmrUpdateToolbar_Tick(object sender, EventArgs e) {
+            if (!this.Created) { return; }
+
+            if (tabFiles.SelectedTab != null) {
+                tls_btnNew.Enabled = true;
+                tls_btnSaveNow.Enabled = tabFiles.SelectedTab.IsChanged;
+                tls_btnRename.Enabled = true;
+                tls_btnFind.Enabled = true;
+            } else {
+                tls_btnNew.Enabled = true;
+                tls_btnSaveNow.Enabled = false;
+                tls_btnRename.Enabled = false;
+                tls_btnFind.Enabled = false;
+            }
+            if ((tabFiles.SelectedTab != null)) {
+                TabFile tf = tabFiles.SelectedTab;
+
+                if ((tf.IsRichTextFormat)) {
+                    tls_btnFont.Visible = true;
+                    tls_btnBold.Visible = true;
+                    tls_btnItalic.Visible = true;
+                    tls_btnUnderline.Visible = true;
+                    tls_btnStrikeout.Visible = true;
+                    tls_RtfSeparator.Visible = true;
+
+                    tls_btnBold.Checked = (tf.TextBox.SelectionFont != null) && (tf.TextBox.SelectionFont.Bold);
+                    tls_btnItalic.Checked = (tf.TextBox.SelectionFont != null) && (tf.TextBox.SelectionFont.Italic);
+                    tls_btnUnderline.Checked = (tf.TextBox.SelectionFont != null) && (tf.TextBox.SelectionFont.Underline);
+                    tls_btnStrikeout.Checked = (tf.TextBox.SelectionFont != null) && (tf.TextBox.SelectionFont.Strikeout);
+                } else {
+                    tls_btnFont.Visible = false;
+                    tls_btnBold.Visible = false;
+                    tls_btnItalic.Visible = false;
+                    tls_btnUnderline.Visible = false;
+                    tls_btnStrikeout.Visible = false;
+                    tls_RtfSeparator.Visible = false;
+                }
+
+                //Dim txt As TextBoxBase = tf.TextBox
+
+                tls_btnUndo.Enabled = tf.CanUndo;
+                tls_btnRedo.Enabled = tf.CanRedo;
+                tls_btnCut.Enabled = tf.CanCopy;
+                tls_btnCopy.Enabled = tf.CanCopy;
+                tls_btnPaste.Enabled = tf.CanPaste;
+            } else {
+                tls_btnFont.Visible = false;
+                tls_btnBold.Visible = false;
+                tls_btnItalic.Visible = false;
+                tls_btnUnderline.Visible = false;
+                tls_btnStrikeout.Visible = false;
+                tls_RtfSeparator.Visible = false;
+
+                tls_btnUndo.Enabled = false;
+                tls_btnRedo.Enabled = false;
+                tls_btnCut.Enabled = false;
+                tls_btnCopy.Enabled = false;
+                tls_btnPaste.Enabled = false;
+            }
+            tls_btnAlwaysOnTop.Checked = Settings.DisplayAlwaysOnTop;
         }
 
         #endregion
