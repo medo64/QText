@@ -164,7 +164,7 @@
             this.mnuHelpReportABug = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp0 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabFiles = new TabControlDnD();
+            this.tabFiles = new QText.TabControlDnD();
             this.tls.SuspendLayout();
             this.mnxTextBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fswLocationTxt)).BeginInit();
@@ -203,7 +203,7 @@
             this.tlbHelpReportABug,
             this.tls_btnOptions,
             this.ToolStripSeparator2});
-            this.tls.Location = new System.Drawing.Point(0, 0);
+            this.tls.Location = new System.Drawing.Point(0, 28);
             this.tls.Name = "tls";
             this.tls.Size = new System.Drawing.Size(542, 25);
             this.tls.TabIndex = 1;
@@ -836,6 +836,7 @@
             this.mnuFile.Name = "mnuFile";
             this.mnuFile.Size = new System.Drawing.Size(44, 24);
             this.mnuFile.Text = "&File";
+            this.mnuFile.DropDownOpening += new System.EventHandler(this.mnuFile_DropDownOpening);
             // 
             // mnuFileNew
             // 
@@ -845,6 +846,7 @@
             this.mnuFileNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
             this.mnuFileNew.Size = new System.Drawing.Size(219, 24);
             this.mnuFileNew.Text = "&New";
+            this.mnuFileNew.Click += new System.EventHandler(this.mnuFileNew_Click);
             // 
             // ToolStripMenuItem1
             // 
@@ -857,6 +859,7 @@
             this.mnuFileReopen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
             this.mnuFileReopen.Size = new System.Drawing.Size(219, 24);
             this.mnuFileReopen.Text = "Re&open";
+            this.mnuFileReopen.Click += new System.EventHandler(this.mnuFileReopen_Click);
             // 
             // ToolStripMenuItem2
             // 
@@ -868,12 +871,14 @@
             this.mnuFileConvertToPlainText.Name = "mnuFileConvertToPlainText";
             this.mnuFileConvertToPlainText.Size = new System.Drawing.Size(219, 24);
             this.mnuFileConvertToPlainText.Text = "Convert to plain text";
+            this.mnuFileConvertToPlainText.Click += new System.EventHandler(this.mnuFileConvertToPlainText_Click);
             // 
             // mnuFileConvertToRichText
             // 
             this.mnuFileConvertToRichText.Name = "mnuFileConvertToRichText";
             this.mnuFileConvertToRichText.Size = new System.Drawing.Size(219, 24);
             this.mnuFileConvertToRichText.Text = "Convert to rich text";
+            this.mnuFileConvertToRichText.Click += new System.EventHandler(this.mnuFileConvertToRichText_Click);
             // 
             // ToolStripMenuItem15
             // 
@@ -888,6 +893,7 @@
             this.mnuFileSaveNow.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.mnuFileSaveNow.Size = new System.Drawing.Size(219, 24);
             this.mnuFileSaveNow.Text = "&Save";
+            this.mnuFileSaveNow.Click += new System.EventHandler(this.mnuFileSaveNow_Click);
             // 
             // mnuFileSaveAll
             // 
@@ -898,6 +904,7 @@
                         | System.Windows.Forms.Keys.S)));
             this.mnuFileSaveAll.Size = new System.Drawing.Size(219, 24);
             this.mnuFileSaveAll.Text = "Save &all";
+            this.mnuFileSaveAll.Click += new System.EventHandler(this.mnuFileSaveAll_Click);
             // 
             // ToolStripMenuItem3
             // 
@@ -911,6 +918,7 @@
             this.mnuFileDelete.Name = "mnuFileDelete";
             this.mnuFileDelete.Size = new System.Drawing.Size(219, 24);
             this.mnuFileDelete.Text = "&Delete";
+            this.mnuFileDelete.Click += new System.EventHandler(this.mnuFileDelete_Click);
             // 
             // mnuFileRename
             // 
@@ -919,6 +927,7 @@
             this.mnuFileRename.ShortcutKeys = System.Windows.Forms.Keys.F2;
             this.mnuFileRename.Size = new System.Drawing.Size(219, 24);
             this.mnuFileRename.Text = "&Rename";
+            this.mnuFileRename.Click += new System.EventHandler(this.mnuFileRename_Click);
             // 
             // ToolStripMenuItem5
             // 
@@ -932,6 +941,7 @@
             this.mnuFilePrintPreview.Name = "mnuFilePrintPreview";
             this.mnuFilePrintPreview.Size = new System.Drawing.Size(219, 24);
             this.mnuFilePrintPreview.Text = "Prin&t preview";
+            this.mnuFilePrintPreview.Click += new System.EventHandler(this.mnuFilePrintPreview_Click);
             // 
             // mnuFilePrint
             // 
@@ -941,6 +951,7 @@
             this.mnuFilePrint.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
             this.mnuFilePrint.Size = new System.Drawing.Size(219, 24);
             this.mnuFilePrint.Text = "&Print";
+            this.mnuFilePrint.Click += new System.EventHandler(this.mnuFilePrint_Click);
             // 
             // ToolStripMenuItem6
             // 
@@ -953,12 +964,14 @@
             this.mnuFileClose.ShortcutKeyDisplayString = "Escape";
             this.mnuFileClose.Size = new System.Drawing.Size(219, 24);
             this.mnuFileClose.Text = "&Close";
+            this.mnuFileClose.Click += new System.EventHandler(this.mnuFileClose_Click);
             // 
             // mnuFileExit
             // 
             this.mnuFileExit.Name = "mnuFileExit";
             this.mnuFileExit.Size = new System.Drawing.Size(219, 24);
             this.mnuFileExit.Text = "E&xit";
+            this.mnuFileExit.Click += new System.EventHandler(this.mnuFileExit_Click);
             // 
             // mnuEdit
             // 
