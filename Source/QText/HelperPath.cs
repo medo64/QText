@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Win32;
 
-namespace QTextAux {
+namespace QText {
     namespace Helper {
 
         public static class Path {
@@ -35,7 +35,7 @@ namespace QTextAux {
 
         public static class LegacySettings {
             public static void CopyLegacySettingsIfNeeded() {
-                if (QTextAux.Settings.LegacySettingsCopied == false) {
+                if (QText.Settings.LegacySettingsCopied == false) {
                     try {
                         var wasOldVersionInstalled = false;
                         var hasOldVersionDataPath = false;
@@ -77,7 +77,7 @@ namespace QTextAux {
                                 }
                                 foreach (var iSourceFileName in sourceFileNames) {
                                     var iSource = new System.IO.FileInfo(iSourceFileName);
-                                    var iDestinationFileName = System.IO.Path.Combine(QTextAux.Settings.FilesLocation, iSource.Name);
+                                    var iDestinationFileName = System.IO.Path.Combine(QText.Settings.FilesLocation, iSource.Name);
                                     System.IO.File.Copy(iSource.FullName, iDestinationFileName);
                                 }
                             } catch (Exception) {

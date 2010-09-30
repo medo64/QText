@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace QTextAux {
+namespace QText {
     public class Tray {
 
         private MenuItem mnxNotifyShow = new MenuItem("&Show");

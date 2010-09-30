@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 
-namespace QTextAux {
+namespace QText {
     internal partial class RenameFileForm : Form {
         public RenameFileForm(string name) {
             InitializeComponent();

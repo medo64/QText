@@ -1,4 +1,4 @@
-﻿namespace QTextAux {
+﻿namespace QText {
     partial class NewFileForm {
         /// <summary>
         /// Required designer variable.

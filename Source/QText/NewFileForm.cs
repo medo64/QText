@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 
-namespace QTextAux {
+namespace QText {
     internal partial class NewFileForm : Form {
         public NewFileForm(string fileName) {
             InitializeComponent();

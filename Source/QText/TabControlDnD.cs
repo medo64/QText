@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace QTextAux {
+namespace QText {
     public class TabControlDnD : TabControl {
 
         private TabPage _dragTabPage = null;
@@ -82,6 +82,17 @@ namespace QTextAux {
                 file.Save();
             }
         }
+
+        internal new TabFile SelectedTab {
+            get {
+                if (base.SelectedTab == null) { return null; }
+                return base.SelectedTab as TabFile;
+            }
+            set {
+                base.SelectedTab = value;
+            }
+        }
+
 
     }
 }

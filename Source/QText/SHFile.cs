@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace QTextAux {
+namespace QText {
     internal static class SHFile {
 
         /// <summary>

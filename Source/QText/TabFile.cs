@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
-namespace QTextAux {
+namespace QText {
 
     internal class TabFile : TabPage {
 
@@ -55,7 +55,7 @@ namespace QTextAux {
 
             base.Text = this.Title;
 
-            var tb = new QTextAux.RichTextBoxEx();
+            var tb = new QText.RichTextBoxEx();
             tb.AcceptsTab = true;
             tb.BackColor = Settings.DisplayBackgroundColor;
             tb.ContextMenuStrip = contextMenu;
@@ -301,7 +301,7 @@ namespace QTextAux {
 
                 case Keys.Control | Keys.X:
                 case Keys.Shift | Keys.Delete:
-                    this.Cut(QTextAux.Settings.ForceTextCopyPaste);
+                    this.Cut(QText.Settings.ForceTextCopyPaste);
                     e.IsInputKey = false;
 
                     break;
@@ -312,7 +312,7 @@ namespace QTextAux {
                     break;
                 case Keys.Control | Keys.C:
                 case Keys.Control | Keys.Insert:
-                    this.Copy(QTextAux.Settings.ForceTextCopyPaste);
+                    this.Copy(QText.Settings.ForceTextCopyPaste);
                     e.IsInputKey = false;
 
                     break;
@@ -323,7 +323,7 @@ namespace QTextAux {
                     break;
                 case Keys.Control | Keys.V:
                 case Keys.Shift | Keys.Insert:
-                    this.Paste(QTextAux.Settings.ForceTextCopyPaste);
+                    this.Paste(QText.Settings.ForceTextCopyPaste);
                     e.IsInputKey = false;
 
                     break;
@@ -485,6 +485,24 @@ namespace QTextAux {
             NativeMethods.SendMessage(this.TextBox.Handle, NativeMethods.EM_SETTABSTOPS, lot.Count, array[0]);
         }
 
+        public void ZoomIn() {
+            this.TextBox.ZoomFactor = (float)Math.Round(Math.Min(5.0f, this.TextBox.ZoomFactor + 0.1f), 1);
+            this.TextBox.Refresh();
+        }
+
+        public void ZoomOut() {
+            this.TextBox.ZoomFactor = (float)Math.Round(Math.Max(0.1f, this.TextBox.ZoomFactor - 0.1f), 1);
+            this.TextBox.Refresh();
+        }
+
+        public void ZoomReset() {
+            this.TextBox.ZoomFactor = 2.1f;
+            this.TextBox.Refresh();
+            this.TextBox.ZoomFactor = 1.0f;
+            this.TextBox.Refresh();
+            //this.TextBox.Visible = false;
+            //this.TextBox.Visible = true;
+        }
 
         private class NativeMethods {
 

@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace QTextAux {
+namespace QText {
     public class RichTextBoxEx : RichTextBox {
 
         private bool _useMultilineTab = true;

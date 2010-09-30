@@ -1,4 +1,4 @@
-﻿namespace QTextAux {
+﻿namespace QText {
     public static class SearchStatus {
 
         private static string _text;

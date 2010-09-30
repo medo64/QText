@@ -5,7 +5,7 @@ using System.Xml;
 using Medo.Xml;
 using System.Text;
 
-namespace QTextAux {
+namespace QText {
     public class FileOrder {
 
         private static readonly Encoding Encoding = new UTF8Encoding(false);
@@ -102,7 +102,7 @@ namespace QTextAux {
 
         public void Save(TabControlDnD tabControl, bool dontThrowExceptions) {
             try {
-                using (var xw = new XmlTagWriter(Path.Combine(QTextAux.Settings.FilesLocation, "QText.xml"), Encoding)) {
+                using (var xw = new XmlTagWriter(Path.Combine(QText.Settings.FilesLocation, "QText.xml"), Encoding)) {
                     xw.XmlTextWriter.WriteStartDocument();
 
                     xw.StartTag("QText"); //<QText>

@@ -3,8 +3,21 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-namespace QTextAux {
+namespace QText {
     public static class Settings {
+
+        public static Keys ActivationHotkey {
+            get { return (Keys)Medo.Configuration.Settings.Read("ActivationHotkey", Convert.ToInt32(Keys.Control | Keys.Shift | Keys.Q)); }
+            set {
+                Medo.Configuration.Settings.Write("ActivationHotkey", (int)value);
+                if (App.Hotkey.IsRegistered) {
+                    App.Hotkey.Unregister();
+                }
+                if (Settings.ActivationHotkey != Keys.None) {
+                    App.Hotkey.Register(Settings.ActivationHotkey);
+                }
+            }
+        }
 
         public static bool CarbonCopyCreateFolder {
             get { return Medo.Configuration.Settings.Read("CarbonCopyCreateFolder", true); }
@@ -33,6 +46,11 @@ namespace QTextAux {
 
         public static string DefaultFilesLocation {
             get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Medo.Reflection.EntryAssembly.Company + @"\" + Medo.Reflection.EntryAssembly.Name); }
+        }
+
+        public static bool DisplayAlwaysOnTop {
+            get { return Medo.Configuration.Settings.Read("DisplayAlwaysOnTop", false); }
+            set { Medo.Configuration.Settings.Write("DisplayAlwaysOnTop", value); }
         }
 
         public static Color DisplayBackgroundColor {
@@ -72,7 +90,17 @@ namespace QTextAux {
                     return System.Drawing.SystemColors.WindowText;
                 }
             }
-            set { global::Medo.Configuration.Settings.Write("DisplayForegroundColor", value.ToArgb()); }
+            set { Medo.Configuration.Settings.Write("DisplayForegroundColor", value.ToArgb()); }
+        }
+
+        public static bool DisplayMinimizeMaximizeButtons {
+            get { return Medo.Configuration.Settings.Read("DisplayMinimizeMaximizeButtons", true); }
+            set { Medo.Configuration.Settings.Write("DisplayMinimizeMaximizeButtons", value); }
+        }
+
+        public static bool DisplayMultilineTabHeader {
+            get { return Medo.Configuration.Settings.Read("DisplayMultilineTabHeader", false); }
+            set { Medo.Configuration.Settings.Write("DisplayMultilineTabHeader", value); }
         }
 
         public static ScrollBars DisplayScrollbars {
@@ -84,6 +112,16 @@ namespace QTextAux {
                 }
             }
             set { Medo.Configuration.Settings.Write("DisplayScrollbars", Convert.ToInt32(value)); }
+        }
+
+        public static bool DisplayShowInTaskbar {
+            get { return Medo.Configuration.Settings.Read("DisplayShowInTaskbar", false); }
+            set { Medo.Configuration.Settings.Write("DisplayShowInTaskbar", value); }
+        }
+
+        public static bool DisplayShowToolbar {
+            get { return Medo.Configuration.Settings.Read("DisplayShowToolbar", true); }
+            set { Medo.Configuration.Settings.Write("DisplayShowToolbar", value); }
         }
 
         public static int DisplayTabWidth {
@@ -102,6 +140,25 @@ namespace QTextAux {
 
         public static bool DisplayWordWrap {
             get { return (DisplayScrollbars == ScrollBars.Vertical); }
+        }
+
+        public static bool EnableQuickAutoSave {
+            get { return Medo.Configuration.Settings.Read("EnableQuickAutoSave", true); }
+            set { Medo.Configuration.Settings.Write("EnableQuickAutoSave", value); }
+        }
+
+        public static int FilesAutoSaveInterval {
+            get {
+                int value = Medo.Configuration.Settings.Read("FilesAutoSaveInterval", 60);
+                if (value < 15) { return 15; }
+                if (value > 300) { return 300; }
+                return value;
+            }
+            set {
+                if (value < 15) { value = 15; }
+                if (value > 300) { value = 300; }
+                Medo.Configuration.Settings.Write("FilesAutoSaveInterval", value);
+            }
         }
 
         public static bool FilesDeleteToRecycleBin {
@@ -147,6 +204,54 @@ namespace QTextAux {
         public static bool PrintApplicationName {
             get { return Medo.Configuration.Settings.Read("PrintApplicationName", false); }
             set { Medo.Configuration.Settings.Write("PrintApplicationName", value); }
+        }
+
+        public static int QuickAutoSaveSeconds {
+            get {
+                var value = Medo.Configuration.Settings.Read("QuickAutoSaveSeconds", 3);
+                if (value < 1) { return 1; }
+                if (value > 15) { return 15; }
+                return value;
+            }
+            set {
+                if (value < 1) { value = 1; }
+                if (value > 15) { value = 15; }
+                Medo.Configuration.Settings.Write("QuickAutoSaveSeconds", value);
+            }
+        }
+
+        public static bool SaveOnHide {
+            get { return Medo.Configuration.Settings.Read("FilesSaveOnClose", true); }
+            set { Medo.Configuration.Settings.Write("FilesSaveOnClose", value); }
+        }
+
+        public static bool ShowMenu {
+            get { return Medo.Configuration.Settings.Read("ShowMenu", false); }
+            set { Medo.Configuration.Settings.Write("ShowMenu", value); }
+        }
+
+        public static bool StartupRememberSelectedFile {
+            get { return Medo.Configuration.Settings.Read("StartupRememberSelectedFile", true); }
+            set { Medo.Configuration.Settings.Write("StartupRememberSelectedFile", value); }
+        }
+
+        public static bool StartupRun {
+            get { return Medo.Configuration.RunOnStartup.Current.RunForCurrentUser; }
+            set {
+                try {
+                    Medo.Configuration.RunOnStartup.Current.RunForCurrentUser = value;
+                } catch (Exception) {}
+            }
+        }
+
+        public static bool StartupShow {
+            get { return Medo.Configuration.Settings.Read("StartupShow", false); }
+            set { Medo.Configuration.Settings.Write("StartupShow", value); }
+        }
+
+        public static bool TrayOnMinimize {
+            get { return Medo.Configuration.Settings.Read("TrayOnMinimize", false); }
+            set { Medo.Configuration.Settings.Write("TrayOnMinimize", value); }
         }
 
         public static bool TrayOneClickActivation {
