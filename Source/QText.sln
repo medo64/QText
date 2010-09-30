@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QText", "QTextAux\QText.csproj", "{04547092-4BDC-4B6D-B39A-6473271FAF79}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QText", "QText\QText.csproj", "{04547092-4BDC-4B6D-B39A-6473271FAF79}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
