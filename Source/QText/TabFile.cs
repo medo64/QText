@@ -115,8 +115,6 @@ namespace QText {
             if (!this.IsRichTextFormat) { return; }
 
             Open();
-            string text = this.TextBox.Text;
-
             string oldFileName = this._fileName;
             string newFileName = Path.ChangeExtension(oldFileName, ".txt");
             File.Move(oldFileName, newFileName);
@@ -156,6 +154,7 @@ namespace QText {
                     this.TextBox.Text = File.ReadAllText(this._fileName);
                 }
             } else {
+                this.TextBox.ResetText();
                 this.TextBox.Text = File.ReadAllText(this._fileName);
             }
 
@@ -172,13 +171,11 @@ namespace QText {
             if (this.IsRichTextFormat) {
                 this.TextBox.SaveFile(this._fileName, RichTextBoxStreamType.RichText);
             } else {
-                using (var fileStream = new FileStream(this._fileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
-                using (var streamWriter = new StreamWriter(fileStream, Utf8EncodingWithoutBom)) {
-                    foreach (var line in this.TextBox.Lines) {
-                        streamWriter.WriteLine(line);
-                    }
+                using (var fileStream = new FileStream(this._fileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None)) {
+                    byte[] bytes = Utf8EncodingWithoutBom.GetBytes(this.TextBox.Text);
+                    fileStream.SetLength(0);
+                    fileStream.Write(bytes, 0, bytes.Length);
                 }
-                //File.WriteAllText(this._fileName, this.TextBox.Text);
             }
 
             this.TextBox.Tag = "";

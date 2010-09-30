@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System;
 
 namespace QText {
+
     public static class App {
 
         public static Mutex SetupMutex;
@@ -15,6 +16,7 @@ namespace QText {
         public static Medo.Windows.Forms.Hotkey Hotkey = new Medo.Windows.Forms.Hotkey();
 
 
+        [STAThread]
         public static void Main() {
             App.SetupMutex = new Mutex(false, @"Global\JosipMedved_QText");
 
@@ -74,9 +76,7 @@ namespace QText {
             }
 
             App.Tray = new Tray(App.Form);
-            if (Settings.StartupShow == false) {
-                App.Tray.Show();
-            }
+            App.Tray.Show();
 
             App.Hotkey.HotkeyActivated += new EventHandler<EventArgs>(Hotkey_HotkeyActivated);
             if ((Settings.ActivationHotkey != Keys.None)) {
@@ -85,11 +85,6 @@ namespace QText {
                 } catch (InvalidOperationException) {
                     Medo.MessageBox.ShowWarning(null, "Hotkey is already in use.");
                 }
-            }
-
-
-            if (Settings.StartupShow) {
-                App.Form.Show();
             }
 
 
@@ -113,34 +108,19 @@ namespace QText {
         private delegate void NewInstanceDetectedProcDelegate();
 
         private static void NewInstanceDetectedProc() {
-            if ((Settings.StartupShow == false)) {
-                App.Tray.Show();
-            }
-
-            if (App.Form.WindowState == FormWindowState.Minimized) {
-                App.Form.WindowState = FormWindowState.Normal;
-            }
+            App.Tray.Show();
+            if (App.Form.WindowState == FormWindowState.Minimized) { App.Form.WindowState = FormWindowState.Normal; }
             App.Form.Show();
             App.Form.Activate();
         }
 
         private static void Hotkey_HotkeyActivated(object sender, EventArgs e) {
-            if ((Settings.StartupShow == false)) {
-                App.Tray.Show();
-            }
-
-            if (App.Form.WindowState == FormWindowState.Minimized) {
-                App.Form.WindowState = FormWindowState.Normal;
-            }
-            App.Form.Show();
-            App.Form.Activate();
+            NewInstanceDetectedProc();
         }
 
 
         private static void ApplicationExit(object sender, System.EventArgs e) {
-            if (App.Tray != null) {
-                App.Tray.Hide();
-            }
+            if (App.Tray != null) { App.Tray.Hide(); }
             Environment.Exit(0);
         }
 

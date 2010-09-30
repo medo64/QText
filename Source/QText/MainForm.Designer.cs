@@ -803,7 +803,7 @@
             this.mnxTabRename.Name = "mnxTabRename";
             this.mnxTabRename.ShortcutKeys = System.Windows.Forms.Keys.F2;
             this.mnxTabRename.Size = new System.Drawing.Size(232, 24);
-            this.mnxTabRename.Text = "&Rename...";
+            this.mnxTabRename.Text = "&Rename";
             this.mnxTabRename.Click += new System.EventHandler(this.mnuFileRename_Click);
             // 
             // mnxTab2
@@ -817,7 +817,7 @@
             this.mnxTabPrintPreview.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTabPrintPreview.Name = "mnxTabPrintPreview";
             this.mnxTabPrintPreview.Size = new System.Drawing.Size(232, 24);
-            this.mnxTabPrintPreview.Text = "Prin&t preview...";
+            this.mnxTabPrintPreview.Text = "Prin&t preview";
             this.mnxTabPrintPreview.Click += new System.EventHandler(this.mnuFilePrintPreview_Click);
             // 
             // mnxTabPrint
@@ -826,7 +826,7 @@
             this.mnxTabPrint.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTabPrint.Name = "mnxTabPrint";
             this.mnxTabPrint.Size = new System.Drawing.Size(232, 24);
-            this.mnxTabPrint.Text = "&Print...";
+            this.mnxTabPrint.Text = "&Print";
             this.mnxTabPrint.Click += new System.EventHandler(this.mnuFilePrint_Click);
             // 
             // mnxConvertTo
@@ -1379,7 +1379,7 @@
             this.mnuToolsOptions.Image = ((System.Drawing.Image)(resources.GetObject("mnuToolsOptions.Image")));
             this.mnuToolsOptions.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnuToolsOptions.Name = "mnuToolsOptions";
-            this.mnuToolsOptions.Size = new System.Drawing.Size(130, 24);
+            this.mnuToolsOptions.Size = new System.Drawing.Size(152, 24);
             this.mnuToolsOptions.Text = "&Options";
             this.mnuToolsOptions.Click += new System.EventHandler(this.mnuToolsOptions_Click);
             // 

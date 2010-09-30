@@ -52,7 +52,6 @@ namespace QText {
             chkMinimizeToTray.Checked = Settings.TrayOnMinimize;
             chkSingleClickTrayActivation.Checked = Settings.TrayOneClickActivation;
             chkRunAtStartup.Checked = Settings.StartupRun;
-            chkShowOnStartup.Checked = Settings.StartupShow;
 
             //Carbon copy
             chbUseCarbonCopy.Checked = Settings.CarbonCopyUse;
@@ -326,7 +325,6 @@ namespace QText {
             Settings.TrayOnMinimize = chkMinimizeToTray.Checked;
             Settings.TrayOneClickActivation = chkSingleClickTrayActivation.Checked;
             Settings.StartupRun = chkRunAtStartup.Checked;
-            Settings.StartupShow = chkShowOnStartup.Checked;
 
             //Carbon copy
             Settings.CarbonCopyUse = chbUseCarbonCopy.Checked;

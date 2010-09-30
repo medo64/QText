@@ -23,7 +23,6 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.chkShowOnStartup = new System.Windows.Forms.CheckBox();
             this.tab = new System.Windows.Forms.TabControl();
             this.tab_pagAppearance = new System.Windows.Forms.TabPage();
             this.lblColorExample = new System.Windows.Forms.Label();
@@ -85,16 +84,6 @@
             this.tab_pagBehavior.SuspendLayout();
             this.tab_pagCarbonCopy.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // chkShowOnStartup
-            // 
-            this.chkShowOnStartup.AutoSize = true;
-            this.chkShowOnStartup.Location = new System.Drawing.Point(3, 122);
-            this.chkShowOnStartup.Name = "chkShowOnStartup";
-            this.chkShowOnStartup.Size = new System.Drawing.Size(132, 21);
-            this.chkShowOnStartup.TabIndex = 4;
-            this.chkShowOnStartup.Text = "Show on startup";
-            this.chkShowOnStartup.UseVisualStyleBackColor = true;
             // 
             // tab
             // 
@@ -529,7 +518,6 @@
             // 
             this.tab_pagBehavior.Controls.Add(this.txtHotkey);
             this.tab_pagBehavior.Controls.Add(this.lblHotkey);
-            this.tab_pagBehavior.Controls.Add(this.chkShowOnStartup);
             this.tab_pagBehavior.Controls.Add(this.chkRunAtStartup);
             this.tab_pagBehavior.Controls.Add(this.chkSingleClickTrayActivation);
             this.tab_pagBehavior.Controls.Add(this.chkMinimizeToTray);
@@ -745,7 +733,6 @@
 
         #endregion
 
-        internal System.Windows.Forms.CheckBox chkShowOnStartup;
         internal System.Windows.Forms.TabControl tab;
         internal System.Windows.Forms.TabPage tab_pagAppearance;
         internal System.Windows.Forms.Label lblColorExample;

@@ -88,13 +88,21 @@ namespace QText {
             //First files in order
             for (int i = 0; i <= orderedFileNames.Count - 1; i++) {
                 var fileName = Path.Combine(Settings.FilesLocation, orderedFileNames[i]);
-                if (files.Contains(fileName) == false) { files.Add(fileName); }
+                if (files.Contains(fileName) == false) {
+                    if (File.Exists(fileName)) {
+                        files.Add(fileName);
+                    }
+                }
             }
 
             //Then everything else
             foreach (var file in GetSortedFileNames()) {
                 var fileName = Path.Combine(Settings.FilesLocation, file);
-                if (files.Contains(fileName) == false) { files.Add(fileName); }
+                if (files.Contains(fileName) == false) {
+                    if (File.Exists(fileName)) {
+                        files.Add(fileName);
+                    }
+                }
             }
 
             this.Files = files.ToArray();

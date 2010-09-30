@@ -549,7 +549,7 @@ namespace QText {
             fswLocationTxt.EnableRaisingEvents = false;
             this.FileOrder.Save(tabFiles, true);
 
-            if ((tabFiles.SelectedTab != null)) {
+            if (tabFiles.SelectedTab != null) {
                 TabFile tf = tabFiles.SelectedTab;
                 if (tf.IsChanged) {
                     switch (Medo.MessageBox.ShowQuestion(this, "File is not saved. Are you sure?", global::Medo.Reflection.EntryAssembly.Title + ": Reload", MessageBoxButtons.YesNo, MessageBoxDefaultButton.Button2)) {
@@ -563,6 +563,8 @@ namespace QText {
                         case System.Windows.Forms.DialogResult.No:
                             break;
                     }
+                } else {
+                    tabFiles.SelectedTab.Reopen();
                 }
             }
 
@@ -1155,11 +1157,6 @@ namespace QText {
                 this.tmrUpdateToolbar.Enabled = false;
                 mnuViewRefresh_Click(null, null);
                 if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK) {
-                    if ((Settings.StartupShow == false)) {
-                        App.Tray.Show();
-                    } else {
-                        App.Tray.Hide();
-                    }
                     mnu.Visible = Settings.ShowMenu;
                     tabFiles.Multiline = Settings.DisplayMultilineTabHeader;
                     if (Settings.DisplayMinimizeMaximizeButtons) {
@@ -1466,7 +1463,7 @@ namespace QText {
                     Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
                 }
             }
-            fswLocationTxt.EnableRaisingEvents = (tabFiles.TabPages.Count > 0);
+            //TODO fswLocationTxt.EnableRaisingEvents = (tabFiles.TabPages.Count > 0);
         }
 
         private void tmrQuickAutoSave_Tick(object sender, EventArgs e) {

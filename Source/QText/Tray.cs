@@ -30,8 +30,8 @@ namespace QText {
 			    new MenuItem("-"),
 			    mnxNotifyExit
 		    });
-            notMain.Icon = global::Medo.Resources.ManifestResources.GetIcon("QText.App.ico", 16, 16);
-            notMain.Text = global::Medo.Reflection.EntryAssembly.Title;
+            notMain.Icon = Medo.Resources.ManifestResources.GetIcon("QText.Properties.App.ico", 16, 16);
+            notMain.Text = Medo.Reflection.EntryAssembly.Title;
             notMain.MouseClick += notMain_MouseClick;
             notMain.MouseDoubleClick += notMain_MouseDoubleClick;
         }

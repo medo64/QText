@@ -244,11 +244,6 @@ namespace QText {
             }
         }
 
-        public static bool StartupShow {
-            get { return Medo.Configuration.Settings.Read("StartupShow", false); }
-            set { Medo.Configuration.Settings.Write("StartupShow", value); }
-        }
-
         public static bool TrayOnMinimize {
             get { return Medo.Configuration.Settings.Read("TrayOnMinimize", false); }
             set { Medo.Configuration.Settings.Write("TrayOnMinimize", value); }
