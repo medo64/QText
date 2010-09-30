@@ -24,7 +24,6 @@ Name: "{userappdata}\Josip Medved\QText"; Flags: uninsalwaysuninstall
 
 [Files]
 Source: "QText.exe"; DestDir: "{app}"; Flags: ignoreversion;
-Source: "QTextAux.dll"; DestDir: "{app}"; Flags: ignoreversion;
 Source: "ReadMe.txt"; DestDir: "{app}"; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly;
 
 [Icons]
