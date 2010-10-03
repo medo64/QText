@@ -92,12 +92,14 @@
             this.mnxTab1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTabDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabRename = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnxTab2 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnxTabPrintPreview = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnxTabPrint = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnxConvertTo = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTabConvertToPlainText = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabConvertToRichText = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTab2 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnxTabHide = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTabShow = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem18 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnxTabPrintPreview = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTabPrint = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem14 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTabOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.mnu = new QText.MenuStripExOnMainForm();
@@ -105,15 +107,16 @@
             this.mnuFileNew = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileReopen = new System.Windows.Forms.ToolStripMenuItem();
-            this.ToolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuFileConvertToPlainText = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuFileConvertToRichText = new System.Windows.Forms.ToolStripMenuItem();
-            this.ToolStripMenuItem15 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileSaveNow = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileSaveAll = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileRename = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileConvertToPlainText = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileConvertToRichText = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuFileHide = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileShow = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFilePrintPreview = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFilePrint = new System.Windows.Forms.ToolStripMenuItem();
@@ -730,16 +733,18 @@
             this.mnxTab1,
             this.mnxTabDelete,
             this.mnxTabRename,
-            this.mnxTab2,
-            this.mnxTabPrintPreview,
-            this.mnxTabPrint,
-            this.mnxConvertTo,
             this.mnxTabConvertToPlainText,
             this.mnxTabConvertToRichText,
+            this.mnxTab2,
+            this.mnxTabHide,
+            this.mnxTabShow,
+            this.toolStripMenuItem18,
+            this.mnxTabPrintPreview,
+            this.mnxTabPrint,
             this.ToolStripMenuItem14,
             this.mnxTabOpenContainingFolder});
             this.mnxTab.Name = "mnxTab";
-            this.mnxTab.Size = new System.Drawing.Size(233, 274);
+            this.mnxTab.Size = new System.Drawing.Size(233, 322);
             this.mnxTab.Opening += new System.ComponentModel.CancelEventHandler(this.mnxTab_Opening);
             // 
             // mnxTabNew
@@ -797,10 +802,43 @@
             this.mnxTabRename.Text = "&Rename";
             this.mnxTabRename.Click += new System.EventHandler(this.mnuFileRename_Click);
             // 
+            // mnxTabConvertToPlainText
+            // 
+            this.mnxTabConvertToPlainText.Name = "mnxTabConvertToPlainText";
+            this.mnxTabConvertToPlainText.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabConvertToPlainText.Text = "Convert to plain text";
+            this.mnxTabConvertToPlainText.Click += new System.EventHandler(this.mnuFileConvertToPlainText_Click);
+            // 
+            // mnxTabConvertToRichText
+            // 
+            this.mnxTabConvertToRichText.Name = "mnxTabConvertToRichText";
+            this.mnxTabConvertToRichText.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabConvertToRichText.Text = "Convert to rich text";
+            this.mnxTabConvertToRichText.Click += new System.EventHandler(this.mnuFileConvertToRichText_Click);
+            // 
             // mnxTab2
             // 
             this.mnxTab2.Name = "mnxTab2";
             this.mnxTab2.Size = new System.Drawing.Size(229, 6);
+            // 
+            // mnxTabHide
+            // 
+            this.mnxTabHide.Name = "mnxTabHide";
+            this.mnxTabHide.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabHide.Text = "&Hide";
+            this.mnxTabHide.Click += new System.EventHandler(this.mnuFileHide_Click);
+            // 
+            // mnxTabShow
+            // 
+            this.mnxTabShow.Name = "mnxTabShow";
+            this.mnxTabShow.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabShow.Text = "Sho&w";
+            this.mnxTabShow.Click += new System.EventHandler(this.mnuFileShow_Click);
+            // 
+            // toolStripMenuItem18
+            // 
+            this.toolStripMenuItem18.Name = "toolStripMenuItem18";
+            this.toolStripMenuItem18.Size = new System.Drawing.Size(229, 6);
             // 
             // mnxTabPrintPreview
             // 
@@ -819,25 +857,6 @@
             this.mnxTabPrint.Size = new System.Drawing.Size(232, 24);
             this.mnxTabPrint.Text = "&Print";
             this.mnxTabPrint.Click += new System.EventHandler(this.mnuFilePrint_Click);
-            // 
-            // mnxConvertTo
-            // 
-            this.mnxConvertTo.Name = "mnxConvertTo";
-            this.mnxConvertTo.Size = new System.Drawing.Size(229, 6);
-            // 
-            // mnxTabConvertToPlainText
-            // 
-            this.mnxTabConvertToPlainText.Name = "mnxTabConvertToPlainText";
-            this.mnxTabConvertToPlainText.Size = new System.Drawing.Size(232, 24);
-            this.mnxTabConvertToPlainText.Text = "Convert to plain text";
-            this.mnxTabConvertToPlainText.Click += new System.EventHandler(this.mnuFileConvertToPlainText_Click);
-            // 
-            // mnxTabConvertToRichText
-            // 
-            this.mnxTabConvertToRichText.Name = "mnxTabConvertToRichText";
-            this.mnxTabConvertToRichText.Size = new System.Drawing.Size(232, 24);
-            this.mnxTabConvertToRichText.Text = "Convert to rich text";
-            this.mnxTabConvertToRichText.Click += new System.EventHandler(this.mnuFileConvertToRichText_Click);
             // 
             // ToolStripMenuItem14
             // 
@@ -875,15 +894,16 @@
             this.mnuFileNew,
             this.ToolStripMenuItem1,
             this.mnuFileReopen,
-            this.ToolStripMenuItem2,
-            this.mnuFileConvertToPlainText,
-            this.mnuFileConvertToRichText,
-            this.ToolStripMenuItem15,
             this.mnuFileSaveNow,
             this.mnuFileSaveAll,
             this.ToolStripMenuItem3,
             this.mnuFileDelete,
             this.mnuFileRename,
+            this.mnuFileConvertToPlainText,
+            this.mnuFileConvertToRichText,
+            this.toolStripSeparator4,
+            this.mnuFileHide,
+            this.mnuFileShow,
             this.ToolStripMenuItem5,
             this.mnuFilePrintPreview,
             this.mnuFilePrint,
@@ -917,30 +937,6 @@
             this.mnuFileReopen.Size = new System.Drawing.Size(219, 24);
             this.mnuFileReopen.Text = "Re&open";
             this.mnuFileReopen.Click += new System.EventHandler(this.mnuFileReopen_Click);
-            // 
-            // ToolStripMenuItem2
-            // 
-            this.ToolStripMenuItem2.Name = "ToolStripMenuItem2";
-            this.ToolStripMenuItem2.Size = new System.Drawing.Size(216, 6);
-            // 
-            // mnuFileConvertToPlainText
-            // 
-            this.mnuFileConvertToPlainText.Name = "mnuFileConvertToPlainText";
-            this.mnuFileConvertToPlainText.Size = new System.Drawing.Size(219, 24);
-            this.mnuFileConvertToPlainText.Text = "Convert to plain text";
-            this.mnuFileConvertToPlainText.Click += new System.EventHandler(this.mnuFileConvertToPlainText_Click);
-            // 
-            // mnuFileConvertToRichText
-            // 
-            this.mnuFileConvertToRichText.Name = "mnuFileConvertToRichText";
-            this.mnuFileConvertToRichText.Size = new System.Drawing.Size(219, 24);
-            this.mnuFileConvertToRichText.Text = "Convert to rich text";
-            this.mnuFileConvertToRichText.Click += new System.EventHandler(this.mnuFileConvertToRichText_Click);
-            // 
-            // ToolStripMenuItem15
-            // 
-            this.ToolStripMenuItem15.Name = "ToolStripMenuItem15";
-            this.ToolStripMenuItem15.Size = new System.Drawing.Size(216, 6);
             // 
             // mnuFileSaveNow
             // 
@@ -985,6 +981,39 @@
             this.mnuFileRename.Size = new System.Drawing.Size(219, 24);
             this.mnuFileRename.Text = "&Rename";
             this.mnuFileRename.Click += new System.EventHandler(this.mnuFileRename_Click);
+            // 
+            // mnuFileConvertToPlainText
+            // 
+            this.mnuFileConvertToPlainText.Name = "mnuFileConvertToPlainText";
+            this.mnuFileConvertToPlainText.Size = new System.Drawing.Size(219, 24);
+            this.mnuFileConvertToPlainText.Text = "Convert to plain text";
+            this.mnuFileConvertToPlainText.Click += new System.EventHandler(this.mnuFileConvertToPlainText_Click);
+            // 
+            // mnuFileConvertToRichText
+            // 
+            this.mnuFileConvertToRichText.Name = "mnuFileConvertToRichText";
+            this.mnuFileConvertToRichText.Size = new System.Drawing.Size(219, 24);
+            this.mnuFileConvertToRichText.Text = "Convert to rich text";
+            this.mnuFileConvertToRichText.Click += new System.EventHandler(this.mnuFileConvertToRichText_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(216, 6);
+            // 
+            // mnuFileHide
+            // 
+            this.mnuFileHide.Name = "mnuFileHide";
+            this.mnuFileHide.Size = new System.Drawing.Size(219, 24);
+            this.mnuFileHide.Text = "&Hide";
+            this.mnuFileHide.Click += new System.EventHandler(this.mnuFileHide_Click);
+            // 
+            // mnuFileShow
+            // 
+            this.mnuFileShow.Name = "mnuFileShow";
+            this.mnuFileShow.Size = new System.Drawing.Size(219, 24);
+            this.mnuFileShow.Text = "Sho&w";
+            this.mnuFileShow.Click += new System.EventHandler(this.mnuFileShow_Click);
             // 
             // ToolStripMenuItem5
             // 
@@ -1204,6 +1233,7 @@
             // 
             // mnuViewZoomIn
             // 
+            this.mnuViewZoomIn.Image = ((System.Drawing.Image)(resources.GetObject("mnuViewZoomIn.Image")));
             this.mnuViewZoomIn.Name = "mnuViewZoomIn";
             this.mnuViewZoomIn.Size = new System.Drawing.Size(222, 24);
             this.mnuViewZoomIn.Text = "Zoom in";
@@ -1211,6 +1241,7 @@
             // 
             // mnuViewZoomOut
             // 
+            this.mnuViewZoomOut.Image = ((System.Drawing.Image)(resources.GetObject("mnuViewZoomOut.Image")));
             this.mnuViewZoomOut.Name = "mnuViewZoomOut";
             this.mnuViewZoomOut.Size = new System.Drawing.Size(222, 24);
             this.mnuViewZoomOut.Text = "Zoom out";
@@ -1370,7 +1401,7 @@
             this.mnuToolsOptions.Image = ((System.Drawing.Image)(resources.GetObject("mnuToolsOptions.Image")));
             this.mnuToolsOptions.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnuToolsOptions.Name = "mnuToolsOptions";
-            this.mnuToolsOptions.Size = new System.Drawing.Size(130, 24);
+            this.mnuToolsOptions.Size = new System.Drawing.Size(152, 24);
             this.mnuToolsOptions.Text = "&Options";
             this.mnuToolsOptions.Click += new System.EventHandler(this.mnuToolsOptions_Click);
             // 
@@ -1525,7 +1556,6 @@
         internal System.Windows.Forms.ToolStripSeparator mnxTab2;
         internal System.Windows.Forms.ToolStripMenuItem mnxTabPrintPreview;
         internal System.Windows.Forms.ToolStripMenuItem mnxTabPrint;
-        internal System.Windows.Forms.ToolStripSeparator mnxConvertTo;
         internal System.Windows.Forms.ToolStripMenuItem mnxTabConvertToPlainText;
         internal System.Windows.Forms.ToolStripMenuItem mnxTabConvertToRichText;
         internal System.Windows.Forms.ToolStripSeparator ToolStripMenuItem14;
@@ -1535,10 +1565,8 @@
         internal System.Windows.Forms.ToolStripMenuItem mnuFileNew;
         internal System.Windows.Forms.ToolStripSeparator ToolStripMenuItem1;
         internal System.Windows.Forms.ToolStripMenuItem mnuFileReopen;
-        internal System.Windows.Forms.ToolStripSeparator ToolStripMenuItem2;
         internal System.Windows.Forms.ToolStripMenuItem mnuFileConvertToPlainText;
         internal System.Windows.Forms.ToolStripMenuItem mnuFileConvertToRichText;
-        internal System.Windows.Forms.ToolStripSeparator ToolStripMenuItem15;
         internal System.Windows.Forms.ToolStripMenuItem mnuFileSaveNow;
         internal System.Windows.Forms.ToolStripMenuItem mnuFileSaveAll;
         internal System.Windows.Forms.ToolStripSeparator ToolStripMenuItem3;
@@ -1595,5 +1623,11 @@
         internal System.Windows.Forms.ToolStripMenuItem mnuHelpAbout;
         internal TabControlDnD tabFiles;
         private System.Windows.Forms.ToolStripMenuItem mnuViewZoomReset;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileHide;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileShow;
+        private System.Windows.Forms.ToolStripMenuItem mnxTabHide;
+        private System.Windows.Forms.ToolStripMenuItem mnxTabShow;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem18;
     }
 }

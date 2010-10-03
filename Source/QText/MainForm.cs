@@ -105,9 +105,7 @@ namespace QText {
 
             mnu_Leave(null, null);
             try {
-                if (Settings.SaveOnHide) {
-                    SaveAllChanged();
-                }
+                if (Settings.SaveOnHide) { SaveAllChanged(); }
                 tabFiles.SaveAll();
                 this.FileOrder.Save(tabFiles, e.CloseReason == CloseReason.WindowsShutDown);
             } catch (Exception ex) {
@@ -116,6 +114,7 @@ namespace QText {
 
             if (e.Cancel) { return; }
 
+#if !DEBUG 
             if (e.CloseReason == CloseReason.UserClosing) {
                 e.Cancel = true;
                 this.Hide();
@@ -124,6 +123,9 @@ namespace QText {
                     Application.Exit();
                 } catch (Exception) { }
             }
+#else
+            Application.Exit();
+#endif
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e) {
@@ -359,15 +361,12 @@ namespace QText {
 
         private void MainForm_MouseDown(object sender, MouseEventArgs e) {
             if (e.Button == System.Windows.Forms.MouseButtons.Right) {
-                if ((tabFiles.TabPages.Count == 0) || ((e.Y >= tabFiles.GetTabRect(0).Y) && (e.Y <= (tabFiles.GetTabRect(0).Y + tabFiles.GetTabRect(0).Height)) && (e.X >= tabFiles.GetTabRect(0).X))) {
-                    mnxTabNew.Enabled = true;
-                    mnxTabReopen.Enabled = false;
-                    mnxTabSaveNow.Enabled = false;
-                    mnxTabDelete.Enabled = false;
-                    mnxTabRename.Enabled = false;
-                    mnxTabPrintPreview.Enabled = false;
-                    mnxTabPrint.Enabled = false;
-                    mnxTab.Show(tabFiles, e.X, e.Y);
+                Rectangle rect = tabFiles.ClientRectangle;
+                if (tabFiles.TabPages.Count > 0) { rect = tabFiles.GetTabRect(tabFiles.TabCount - 1); }
+                rect = new Rectangle(tabFiles.Left + rect.Left, tabFiles.Top + rect.Top, rect.Width, rect.Height);
+                if ((e.Y >= rect.Top) && (e.Y <= rect.Bottom) && (e.X >= rect.Right)) {
+                    tabFiles.SelectedTab = null;
+                    mnxTab.Show(tabFiles, e.X - tabFiles.Left, e.Y - tabFiles.Top);
                 }
             }
         }
@@ -435,17 +434,7 @@ namespace QText {
                 for (int i = 0; i <= tabFiles.TabPages.Count - 1; i++) {
                     if ((tabFiles.GetTabRect(i).Contains(e.X, e.Y))) {
                         tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[i];
-
-                        mnuFile_DropDownOpening(null, null);
-                        mnxTabNew.Enabled = mnuFileNew.Enabled;
-                        mnxTabReopen.Enabled = mnuFileReopen.Enabled;
-                        mnxTabSaveNow.Enabled = mnuFileSaveNow.Enabled;
-                        mnxTabDelete.Enabled = mnuFileDelete.Enabled;
-                        mnxTabRename.Enabled = mnuFileRename.Enabled;
-                        mnxTabPrintPreview.Enabled = mnuFilePrintPreview.Enabled;
-                        mnxTabPrint.Enabled = mnuFilePrint.Enabled;
                         mnxTab.Show(tabFiles, e.X, e.Y);
-
                         return;
                     }
                 }
@@ -482,34 +471,23 @@ namespace QText {
 
 
         private void mnuFile_DropDownOpening(object sender, EventArgs e) {
-            if (tabFiles.SelectedTab != null) {
-                TabFile tf = tabFiles.SelectedTab;
-                mnuFileNew.Enabled = true;
-                mnuFileReopen.Enabled = true;
-                mnuFileConvertToPlainText.Enabled = tf.IsRichTextFormat;
-                mnuFileConvertToRichText.Enabled = !tf.IsRichTextFormat;
-                mnuFileSaveNow.Enabled = true;
-                mnuFileSaveAll.Enabled = true;
-                mnuFileDelete.Enabled = true;
-                mnuFileRename.Enabled = true;
-                mnuFilePrintPreview.Enabled = true;
-                mnuFilePrint.Enabled = true;
-                mnuFileClose.Enabled = true;
-                mnuFileExit.Enabled = true;
-            } else {
-                mnuFileNew.Enabled = true;
-                mnuFileReopen.Enabled = false;
-                mnuFileConvertToPlainText.Enabled = false;
-                mnuFileConvertToRichText.Enabled = false;
-                mnuFileSaveNow.Enabled = false;
-                mnuFileSaveAll.Enabled = false;
-                mnuFileDelete.Enabled = false;
-                mnuFileRename.Enabled = false;
-                mnuFilePrintPreview.Enabled = false;
-                mnuFilePrint.Enabled = false;
-                mnuFileClose.Enabled = true;
-                mnuFileExit.Enabled = true;
-            }
+            bool isTabSelected = (tabFiles.SelectedTab != null);
+            bool isTabRichText = isTabSelected && tabFiles.SelectedTab.IsRichTextFormat;
+
+            mnuFileNew.Enabled = true;
+            mnuFileReopen.Enabled = isTabSelected;
+            mnuFileConvertToPlainText.Enabled = isTabSelected && isTabRichText;
+            mnuFileConvertToRichText.Enabled = isTabSelected && (isTabRichText == false);
+            mnuFileSaveNow.Enabled = isTabSelected;
+            mnuFileSaveAll.Enabled = isTabSelected;
+            mnuFileDelete.Enabled = isTabSelected;
+            mnuFileRename.Enabled = isTabSelected;
+            mnuFileHide.Enabled = isTabSelected;
+            mnuFileShow.Enabled = true;
+            mnuFilePrintPreview.Enabled = isTabSelected;
+            mnuFilePrint.Enabled = isTabSelected;
+            mnuFileClose.Enabled = true;
+            mnuFileExit.Enabled = true;
         }
 
         private void mnuFileNew_Click(object sender, EventArgs e) {
@@ -640,6 +618,14 @@ namespace QText {
             }
         }
 
+        private void mnuFileHide_Click(object sender, EventArgs e) {
+
+        }
+
+        private void mnuFileShow_Click(object sender, EventArgs e) {
+
+        }
+
         private void mnuFilePrintPreview_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 try {
@@ -683,29 +669,26 @@ namespace QText {
 
 
         private void mnuEdit_DropDownOpening(object sender, EventArgs e) {
-            if (tabFiles.SelectedTab != null) {
-                TabFile tf = tabFiles.SelectedTab;
-                TextBoxBase txt = tf.TextBox;
-                mnuEditUndo.Enabled = tf.CanUndo;
-                mnuEditRedo.Enabled = tf.CanRedo;
-                mnuEditCut.Enabled = tf.CanCopy;
-                mnuEditCopy.Enabled = tf.CanCopy;
-                mnuEditPaste.Enabled = tf.CanPaste;
-                mnuEditDelete.Enabled = (txt.SelectedText.Length > 0) || (txt.SelectionStart < txt.Text.Length);
-                mnuEditSelectAll.Enabled = (txt.Text.Length > 0);
-                mnuEditFind.Enabled = true;
-                mnuEditFindNext.Enabled = !string.IsNullOrEmpty(SearchStatus.Text);
-            } else {
-                mnuEditUndo.Enabled = false;
-                mnuEditRedo.Enabled = false;
-                mnuEditCut.Enabled = false;
-                mnuEditCopy.Enabled = false;
-                mnuEditPaste.Enabled = false;
-                mnuEditDelete.Enabled = false;
-                mnuEditSelectAll.Enabled = false;
-                mnuEditFind.Enabled = false;
-                mnuEditFindNext.Enabled = false;
-            }
+            bool isTabSelected = tabFiles.SelectedTab != null;
+            bool isTabRichText = isTabSelected && tabFiles.SelectedTab.IsRichTextFormat;
+            bool isTabPlainText = isTabSelected && (tabFiles.SelectedTab.IsRichTextFormat == false);
+            bool canUndo = isTabSelected && tabFiles.SelectedTab.CanUndo;
+            bool canRedo = isTabSelected && tabFiles.SelectedTab.CanRedo;
+            bool canCut = isTabSelected && tabFiles.SelectedTab.CanCopy;
+            bool canCopy = isTabSelected && tabFiles.SelectedTab.CanCopy;
+            bool canPaste = isTabSelected && tabFiles.SelectedTab.CanPaste;
+            bool canDelete = isTabSelected && (tabFiles.SelectedTab.TextBox.SelectedText.Length > 0) || (tabFiles.SelectedTab.TextBox.SelectionStart < tabFiles.SelectedTab.TextBox.Text.Length);
+            bool canSelectAll = isTabSelected && (tabFiles.SelectedTab.TextBox.Text.Length > 0);
+
+            mnuEditUndo.Enabled = canUndo;
+            mnuEditRedo.Enabled = canRedo;
+            mnuEditCut.Enabled = canCopy;
+            mnuEditCopy.Enabled = canCopy;
+            mnuEditPaste.Enabled = canPaste;
+            mnuEditDelete.Enabled = canDelete;
+            mnuEditSelectAll.Enabled = canSelectAll;
+            mnuEditFind.Enabled = isTabSelected;
+            mnuEditFindNext.Enabled = isTabSelected && (string.IsNullOrEmpty(SearchStatus.Text) == false);
         }
 
         private void mnuEditUndo_Click(object sender, EventArgs e) {
@@ -898,46 +881,33 @@ namespace QText {
 
 
         private void mnuFormat_DropDownOpening(object sender, EventArgs e) {
-            mnuFormatFont.Visible = false;
-            mnuFormatBold.Visible = false;
-            mnuFormatItalic.Visible = false;
-            mnuFormatUnderline.Visible = false;
-            mnuFormatStrikeout.Visible = false;
-            mnuFormatRtfSeparator.Visible = false;
+            bool isTabSelected = tabFiles.SelectedTab != null;
+            bool isTabRichText = isTabSelected && tabFiles.SelectedTab.IsRichTextFormat;
+            bool isTextSelected = isTabSelected &&  (tabFiles.SelectedTab.TextBox.SelectedText.Length > 0);
+            bool canFont = isTabRichText;
+            bool isBoldChecked = canFont && (tabFiles.SelectedTab.TextBox.SelectionFont != null) && (tabFiles.SelectedTab.TextBox.SelectionFont.Bold);
+            bool isItalicChecked = canFont && (tabFiles.SelectedTab.TextBox.SelectionFont != null) && (tabFiles.SelectedTab.TextBox.SelectionFont.Italic);
+            bool isUnderlineChecked = canFont && (tabFiles.SelectedTab.TextBox.SelectionFont != null) && (tabFiles.SelectedTab.TextBox.SelectionFont.Underline);
+            bool isStrikeoutChecked = canFont && (tabFiles.SelectedTab.TextBox.SelectionFont != null) && (tabFiles.SelectedTab.TextBox.SelectionFont.Strikeout);
 
-            if (tabFiles.SelectedTab != null) {
-                TabFile tf = tabFiles.SelectedTab;
+            mnuFormatFont.Visible = isTabRichText;
+            mnuFormatBold.Visible = isTabRichText;
+            mnuFormatItalic.Visible = isTabRichText;
+            mnuFormatUnderline.Visible = isTabRichText;
+            mnuFormatStrikeout.Visible = isTabRichText;
+            mnuFormatRtfSeparator.Visible = isTabRichText;
 
-                if (tf.IsRichTextFormat) {
-                    mnuFormatFont.Visible = true;
-                    mnuFormatBold.Visible = true;
-                    mnuFormatItalic.Visible = true;
-                    mnuFormatUnderline.Visible = true;
-                    mnuFormatStrikeout.Visible = true;
-                    mnuFormatRtfSeparator.Visible = true;
+            mnuFormatSortAscending.Enabled = isTextSelected;
+            mnuFormatSortDescending.Enabled = isTextSelected;
+            mnuFormatConvertToLower.Enabled = isTextSelected;
+            mnuFormatConvertToUpper.Enabled = isTextSelected;
+            mnuFormatConvertToTitleCase.Enabled = isTextSelected;
+            mnuFormatConvertToTitleCaseDrGrammar.Enabled = isTextSelected;
 
-                    mnuFormatBold.Checked = (tf.TextBox.SelectionFont != null) && (tf.TextBox.SelectionFont.Bold);
-                    mnuFormatItalic.Checked = (tf.TextBox.SelectionFont != null) && (tf.TextBox.SelectionFont.Italic);
-                    mnuFormatUnderline.Checked = (tf.TextBox.SelectionFont != null) && (tf.TextBox.SelectionFont.Underline);
-                    mnuFormatStrikeout.Checked = (tf.TextBox.SelectionFont != null) && (tf.TextBox.SelectionFont.Strikeout);
-                }
-
-                TextBoxBase txt = tf.TextBox;
-
-                mnuFormatSortAscending.Enabled = (txt.SelectedText.Length > 0);
-                mnuFormatSortDescending.Enabled = (txt.SelectedText.Length > 0);
-                mnuFormatConvertToLower.Enabled = (txt.SelectedText.Length > 0);
-                mnuFormatConvertToUpper.Enabled = (txt.SelectedText.Length > 0);
-                mnuFormatConvertToTitleCase.Enabled = (txt.SelectedText.Length > 0);
-                mnuFormatConvertToTitleCaseDrGrammar.Enabled = (txt.SelectedText.Length > 0);
-            } else {
-                mnuFormatSortAscending.Enabled = false;
-                mnuFormatSortDescending.Enabled = false;
-                mnuFormatConvertToLower.Enabled = false;
-                mnuFormatConvertToUpper.Enabled = false;
-                mnuFormatConvertToTitleCase.Enabled = false;
-                mnuFormatConvertToTitleCaseDrGrammar.Enabled = false;
-            }
+            mnuFormatBold.Checked = isBoldChecked;
+            mnuFormatItalic.Checked = isItalicChecked;
+            mnuFormatUnderline.Checked = isUnderlineChecked;
+            mnuFormatStrikeout.Checked = isStrikeoutChecked;
         }
 
         private void mnuFormatFont_Click(object sender, EventArgs e) {
@@ -1200,18 +1170,22 @@ namespace QText {
         #region Tabs menu
 
         private void mnxTab_Opening(object sender, CancelEventArgs e) {
-            mnxTabConvertToPlainText.Visible = true;
-            mnxTabConvertToRichText.Visible = true;
-            mnxTabConvertToPlainText.Enabled = true;
-            mnxTabConvertToRichText.Enabled = true;
-            if ((tabFiles.SelectedTab != null)) {
-                TabFile tf = tabFiles.SelectedTab;
-                mnxTabConvertToPlainText.Visible = tf.IsRichTextFormat;
-                mnxTabConvertToRichText.Visible = !tf.IsRichTextFormat;
-            } else {
-                mnxTabConvertToPlainText.Enabled = false;
-                mnxTabConvertToRichText.Enabled = false;
-            }
+            mnuFile_DropDownOpening(null, null);
+
+            mnxTabNew.Enabled = mnuFileNew.Enabled;
+            mnxTabReopen.Enabled = mnuFileReopen.Enabled;
+            mnxTabSaveNow.Enabled = mnuFileSaveNow.Enabled;
+            mnxTabDelete.Enabled = mnuFileDelete.Enabled;
+            mnxTabRename.Enabled = mnuFileRename.Enabled;
+            mnxTabPrintPreview.Enabled = mnuFilePrintPreview.Enabled;
+            mnxTabPrint.Enabled = mnuFilePrint.Enabled;
+            mnxTabConvertToPlainText.Visible = mnuFileConvertToPlainText.Enabled;
+            mnxTabConvertToRichText.Visible = mnuFileConvertToRichText.Enabled;
+            mnxTabHide.Enabled = mnuFileHide.Enabled;
+            mnxTabShow.Enabled = mnuFileShow.Enabled;
+            mnxTabPrintPreview.Enabled = mnuFilePrintPreview.Enabled;
+            mnxTabPrint.Enabled = mnuFilePrint.Enabled;
+            mnxTabOpenContainingFolder.Enabled = mnuFileReopen.Enabled;
         }
 
         private void mnxTabOpenContainingFolder_Click(object sender, EventArgs e) {
@@ -1228,56 +1202,44 @@ namespace QText {
         #region TextBox menu
 
         private void mnxTextBox_Opening(object sender, CancelEventArgs e) {
-            mnxTextBoxCutAsText.Visible = (!Settings.ForceTextCopyPaste);
-            mnxTextBoxCopyAsText.Visible = (!Settings.ForceTextCopyPaste);
-            mnxTextBoxPasteAsText.Visible = (!Settings.ForceTextCopyPaste);
-            mnxTextBoxCutCopyPasteAsTextSeparator.Visible = (!Settings.ForceTextCopyPaste);
+            mnuEdit_DropDownOpening(null, null);
+            mnuFormat_DropDownOpening(null, null);
 
-            mnxTextBoxFont.Visible = false;
-            mnxTextBoxBold.Visible = false;
-            mnxTextBoxItalic.Visible = false;
-            mnxTextBoxUnderline.Visible = false;
-            mnxTextBoxStrikeout.Visible = false;
-            mnxTextBoxRtfSeparator.Visible = false;
+            bool isTabSelected = (tabFiles.SelectedTab != null);
+            bool isTabRichText = isTabSelected && tabFiles.SelectedTab.IsRichTextFormat;
 
-            if (tabFiles.SelectedTab != null) {
-                TabFile tf = tabFiles.SelectedTab;
+            mnxTextBoxCutAsText.Visible = isTabRichText && (Settings.ForceTextCopyPaste==false);
+            mnxTextBoxCopyAsText.Visible = isTabRichText && (Settings.ForceTextCopyPaste == false);
+            mnxTextBoxPasteAsText.Visible = isTabRichText && (Settings.ForceTextCopyPaste == false);
+            mnxTextBoxCutCopyPasteAsTextSeparator.Visible = isTabRichText && (Settings.ForceTextCopyPaste == false);
 
-                if (tf.IsRichTextFormat) {
-                    mnxTextBoxFont.Visible = true;
-                    mnxTextBoxBold.Visible = true;
-                    mnxTextBoxItalic.Visible = true;
-                    mnxTextBoxUnderline.Visible = true;
-                    mnxTextBoxStrikeout.Visible = true;
-                    mnxTextBoxRtfSeparator.Visible = false;
+            mnxTextBoxFont.Visible = mnuFormatFont.Visible;
+            mnxTextBoxBold.Visible = mnuFormatBold.Visible;
+            mnxTextBoxItalic.Visible = mnuFormatItalic.Visible;
+            mnxTextBoxUnderline.Visible = mnuFormatUnderline.Visible;
+            mnxTextBoxStrikeout.Visible = mnuFormatStrikeout.Visible;
+            mnxTextBoxRtfSeparator.Visible = mnuFormatRtfSeparator.Visible;
 
-                    mnxTextBoxBold.Checked = (tf.TextBox.SelectionFont != null) && (tf.TextBox.SelectionFont.Bold);
-                    mnxTextBoxItalic.Checked = (tf.TextBox.SelectionFont != null) && (tf.TextBox.SelectionFont.Italic);
-                    mnxTextBoxUnderline.Checked = (tf.TextBox.SelectionFont != null) && (tf.TextBox.SelectionFont.Underline);
-                    mnxTextBoxStrikeout.Checked = (tf.TextBox.SelectionFont != null) && (tf.TextBox.SelectionFont.Strikeout);
-                }
+            mnxTextBoxUndo.Enabled = mnuEditUndo.Enabled;
+            mnxTextBoxRedo.Enabled = mnuEditRedo.Enabled;
+            mnxTextBoxCut.Enabled = mnuEditCut.Enabled;
+            mnxTextBoxCopy.Enabled = mnuEditCopy.Enabled;
+            mnxTextBoxPaste.Enabled = mnuEditPaste.Enabled;
+            mnxTextBoxCutAsText.Enabled = mnuEditCut.Enabled;
+            mnxTextBoxCopyAsText.Enabled = mnuEditCopy.Enabled;
+            mnxTextBoxPasteAsText.Enabled = mnuEditPaste.Enabled;
+            mnxTextBoxSelectAll.Enabled = mnuEditSelectAll.Enabled;
+            mnxTextBoxFont.Enabled = mnuFormatFont.Enabled;
+            mnxTextBoxBold.Enabled = mnuFormatBold.Enabled;
+            mnxTextBoxItalic.Enabled = mnuFormatItalic.Enabled;
+            mnxTextBoxUnderline.Enabled = mnuFormatUnderline.Enabled;
+            mnxTextBoxStrikeout.Enabled = mnuFormatStrikeout.Enabled;
+            mnxTextBoxFormat.Enabled = mnuFormatConvertToLower.Enabled;
 
-                TextBoxBase txt = tf.TextBox;
-
-                mnxTextBoxUndo.Enabled = tf.CanUndo;
-                mnxTextBoxRedo.Enabled = tf.CanRedo;
-                mnxTextBoxCut.Enabled = tf.CanCopy;
-                mnxTextBoxCopy.Enabled = tf.CanCopy;
-                mnxTextBoxPaste.Enabled = tf.CanPaste;
-                mnxTextBoxCutAsText.Enabled = tf.CanCopy;
-                mnxTextBoxCopyAsText.Enabled = tf.CanCopy;
-                mnxTextBoxPasteAsText.Enabled = tf.CanPaste;
-                mnxTextBoxSelectAll.Enabled = (txt.Text.Length > 0);
-                mnxTextBoxFormat.Enabled = (txt.SelectedText.Length > 0);
-            } else {
-                mnxTextBoxUndo.Enabled = false;
-                mnxTextBoxRedo.Enabled = false;
-                mnxTextBoxCut.Enabled = false;
-                mnxTextBoxCopy.Enabled = false;
-                mnxTextBoxPaste.Enabled = false;
-                mnxTextBoxSelectAll.Enabled = false;
-                mnxTextBoxFormat.Enabled = false;
-            }
+            mnxTextBoxBold.Checked = mnuFormatBold.Checked;
+            mnxTextBoxItalic.Checked = mnuFormatItalic.Checked;
+            mnxTextBoxUnderline.Checked = mnuFormatUnderline.Checked;
+            mnxTextBoxStrikeout.Checked = mnuFormatStrikeout.Checked;
         }
 
         private void mnxTextBoxCutAsText_Click(object sender, EventArgs e) {
@@ -1444,70 +1406,50 @@ namespace QText {
                         tmrQuickAutoSave.Enabled = true;
                         break;
                     }
-                } catch (Exception) {}
+                } catch (Exception) { }
             }
         }
 
         private void tmrUpdateToolbar_Tick(object sender, EventArgs e) {
-            if (!this.Created) { return; }
+            mnuFile_DropDownOpening(null, null);
+            mnuEdit_DropDownOpening(null, null);
+            mnuView_DropDownOpening(null, null);
+            mnuFormat_DropDownOpening(null, null);
 
-            if (tabFiles.SelectedTab != null) {
-                tls_btnNew.Enabled = true;
-                tls_btnSaveNow.Enabled = tabFiles.SelectedTab.IsChanged;
-                tls_btnRename.Enabled = true;
-                tls_btnFind.Enabled = true;
-            } else {
-                tls_btnNew.Enabled = true;
-                tls_btnSaveNow.Enabled = false;
-                tls_btnRename.Enabled = false;
-                tls_btnFind.Enabled = false;
-            }
-            if ((tabFiles.SelectedTab != null)) {
-                TabFile tf = tabFiles.SelectedTab;
+            tls_btnFont.Visible = mnuFormatFont.Visible;
+            tls_btnBold.Visible = mnuFormatBold.Visible;
+            tls_btnItalic.Visible = mnuFormatItalic.Visible;
+            tls_btnUnderline.Visible = mnuFormatUnderline.Visible;
+            tls_btnStrikeout.Visible = mnuFormatStrikeout.Visible;
+            tls_RtfSeparator.Visible = mnuFormatRtfSeparator.Visible;
 
-                if ((tf.IsRichTextFormat)) {
-                    tls_btnFont.Visible = true;
-                    tls_btnBold.Visible = true;
-                    tls_btnItalic.Visible = true;
-                    tls_btnUnderline.Visible = true;
-                    tls_btnStrikeout.Visible = true;
-                    tls_RtfSeparator.Visible = true;
+            tls_btnNew.Enabled = mnuFileNew.Enabled;
+            tls_btnSaveNow.Enabled = mnuFileSaveNow.Enabled;
+            tls_btnRename.Enabled = mnuFileRename.Enabled;
+            tls_btnPrintPreview.Enabled = mnuFilePrintPreview.Enabled;
+            tls_btnPrint.Enabled = mnuFilePrint.Enabled;
 
-                    tls_btnBold.Checked = (tf.TextBox.SelectionFont != null) && (tf.TextBox.SelectionFont.Bold);
-                    tls_btnItalic.Checked = (tf.TextBox.SelectionFont != null) && (tf.TextBox.SelectionFont.Italic);
-                    tls_btnUnderline.Checked = (tf.TextBox.SelectionFont != null) && (tf.TextBox.SelectionFont.Underline);
-                    tls_btnStrikeout.Checked = (tf.TextBox.SelectionFont != null) && (tf.TextBox.SelectionFont.Strikeout);
-                } else {
-                    tls_btnFont.Visible = false;
-                    tls_btnBold.Visible = false;
-                    tls_btnItalic.Visible = false;
-                    tls_btnUnderline.Visible = false;
-                    tls_btnStrikeout.Visible = false;
-                    tls_RtfSeparator.Visible = false;
-                }
+            tls_btnCut.Enabled = mnuEditCut.Enabled;
+            tls_btnCopy.Enabled = mnuEditCopy.Enabled;
+            tls_btnPaste.Enabled = mnuEditPaste.Enabled;
 
-                //Dim txt As TextBoxBase = tf.TextBox
+            tls_btnFont.Enabled = mnuFormatFont.Enabled;
+            tls_btnBold.Enabled = mnuFormatBold.Enabled;
+            tls_btnItalic.Enabled = mnuFormatItalic.Enabled;
+            tls_btnUnderline.Enabled = mnuFormatUnderline.Enabled;
+            tls_btnStrikeout.Enabled = mnuFormatStrikeout.Enabled;
 
-                tls_btnUndo.Enabled = tf.CanUndo;
-                tls_btnRedo.Enabled = tf.CanRedo;
-                tls_btnCut.Enabled = tf.CanCopy;
-                tls_btnCopy.Enabled = tf.CanCopy;
-                tls_btnPaste.Enabled = tf.CanPaste;
-            } else {
-                tls_btnFont.Visible = false;
-                tls_btnBold.Visible = false;
-                tls_btnItalic.Visible = false;
-                tls_btnUnderline.Visible = false;
-                tls_btnStrikeout.Visible = false;
-                tls_RtfSeparator.Visible = false;
+            tls_btnUndo.Enabled = mnuEditUndo.Enabled;
+            tls_btnRedo.Enabled = mnuEditRedo.Enabled;
 
-                tls_btnUndo.Enabled = false;
-                tls_btnRedo.Enabled = false;
-                tls_btnCut.Enabled = false;
-                tls_btnCopy.Enabled = false;
-                tls_btnPaste.Enabled = false;
-            }
-            tls_btnAlwaysOnTop.Checked = Settings.DisplayAlwaysOnTop;
+            tls_btnFind.Enabled = mnuEditFind.Enabled;
+            tls_btnAlwaysOnTop.Enabled = mnuViewAlwaysOnTop.Enabled;
+
+            tls_btnBold.Checked = mnuFormatBold.Checked;
+            tls_btnItalic.Checked = mnuFormatItalic.Checked;
+            tls_btnUnderline.Checked = mnuFormatUnderline.Checked;
+            tls_btnStrikeout.Checked = mnuFormatStrikeout.Checked;
+            tls_btnAlwaysOnTop.Checked = mnuViewAlwaysOnTop.Checked;
         }
 
         #endregion
