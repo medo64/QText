@@ -12,6 +12,7 @@ namespace QText {
     internal class TabFile : TabPage {
 
         private string _fileName;
+        public DateTime LastWriteTimeUtc { get; private set; }
         private DateTime _lastSaveTime;
         private static readonly UTF8Encoding Utf8EncodingWithoutBom = new UTF8Encoding(false);
 
@@ -50,6 +51,7 @@ namespace QText {
             }
 
             this._fileName = fileName;
+            this.LastWriteTimeUtc = fileInfo.LastWriteTimeUtc;
             this.Title = fileTitle;
             this._lastSaveTime = System.DateTime.Now;
 
@@ -158,6 +160,7 @@ namespace QText {
                 this.TextBox.Text = File.ReadAllText(this._fileName);
             }
 
+            this.LastWriteTimeUtc = new FileInfo(this._fileName).LastWriteTimeUtc;
             this.TextBox.Tag = "";
             base.Text = this.Title;
             this.TextBox.SelectionStart = 0;
@@ -178,6 +181,7 @@ namespace QText {
                 }
             }
 
+            this.LastWriteTimeUtc = new FileInfo(this._fileName).LastWriteTimeUtc;
             this.TextBox.Tag = "";
             this._lastSaveTime = DateTime.Now;
             base.Text = this.Title;
@@ -237,6 +241,7 @@ namespace QText {
             } else {
                 File.Move(oldInfo.FullName, newInfo.FullName);
                 this._fileName = newInfo.FullName;
+                this.LastWriteTimeUtc = new FileInfo(this._fileName).LastWriteTimeUtc;
 
                 this.Title = newInfo.Name.Remove(newInfo.Name.Length - newInfo.Extension.Length, newInfo.Extension.Length);
                 if ((this.IsChanged == true)) {

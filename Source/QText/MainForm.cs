@@ -484,7 +484,7 @@ namespace QText {
             mnuFileDelete.Enabled = isTabSelected;
             mnuFileRename.Enabled = isTabSelected;
             mnuFileHide.Enabled = isTabSelected;
-            mnuFileShow.Enabled = true;
+            mnuFileUnhide.Enabled = true;
             mnuFilePrintPreview.Enabled = isTabSelected;
             mnuFilePrint.Enabled = isTabSelected;
             mnuFileClose.Enabled = true;
@@ -632,8 +632,8 @@ namespace QText {
             }
         }
 
-        private void mnuFileShow_Click(object sender, EventArgs e) {
-            using (var frm = new FileShowForm()) {
+        private void mnuFileUnhide_Click(object sender, EventArgs e) {
+            using (var frm = new UnhideFileForm()) {
                 if (frm.ShowDialog(this) == DialogResult.OK) {
                     mnuViewRefresh_Click(null, null);
                 }
@@ -897,7 +897,7 @@ namespace QText {
         private void mnuFormat_DropDownOpening(object sender, EventArgs e) {
             bool isTabSelected = tabFiles.SelectedTab != null;
             bool isTabRichText = isTabSelected && tabFiles.SelectedTab.IsRichTextFormat;
-            bool isTextSelected = isTabSelected &&  (tabFiles.SelectedTab.TextBox.SelectedText.Length > 0);
+            bool isTextSelected = isTabSelected && (tabFiles.SelectedTab.TextBox.SelectedText.Length > 0);
             bool canFont = isTabRichText;
             bool isBoldChecked = canFont && (tabFiles.SelectedTab.TextBox.SelectionFont != null) && (tabFiles.SelectedTab.TextBox.SelectionFont.Bold);
             bool isItalicChecked = canFont && (tabFiles.SelectedTab.TextBox.SelectionFont != null) && (tabFiles.SelectedTab.TextBox.SelectionFont.Italic);
@@ -1200,7 +1200,7 @@ namespace QText {
             mnxTabPrintPreview.Enabled = mnuFilePrintPreview.Enabled;
             mnxTabPrint.Enabled = mnuFilePrint.Enabled;
             mnxTabHide.Enabled = mnuFileHide.Enabled;
-            mnxTabShow.Enabled = mnuFileShow.Enabled;
+            mnxTabUnhide.Enabled = mnuFileUnhide.Enabled;
             mnxTabPrintPreview.Enabled = mnuFilePrintPreview.Enabled;
             mnxTabPrint.Enabled = mnuFilePrint.Enabled;
             mnxTabOpenContainingFolder.Enabled = mnuFileReopen.Enabled;
@@ -1471,6 +1471,27 @@ namespace QText {
             tls_btnUnderline.Checked = mnuFormatUnderline.Checked;
             tls_btnStrikeout.Checked = mnuFormatStrikeout.Checked;
             tls_btnAlwaysOnTop.Checked = mnuViewAlwaysOnTop.Checked;
+        }
+
+
+        int nextIndexToCheck = 0;
+
+        private void tmrCheckFileUpdate_Tick(object sender, EventArgs e) {
+            if (tabFiles.TabCount > 0) {
+                nextIndexToCheck = nextIndexToCheck % tabFiles.TabPages.Count;
+                var currTab = (TabFile)tabFiles.TabPages[nextIndexToCheck];
+                var fi = new FileInfo(currTab.FullFileName);
+                if (fi.LastWriteTimeUtc != currTab.LastWriteTimeUtc) { //change
+                    if (currTab.IsChanged) {
+                        currTab.Save();
+                    } else {
+                        currTab.Reopen();
+                    }
+                }
+                nextIndexToCheck += 1;
+            } else {
+                nextIndexToCheck = 0;
+            }
         }
 
         #endregion

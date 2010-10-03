@@ -96,7 +96,7 @@
             this.mnxTabConvertToRichText = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTab2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTabHide = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnxTabShow = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTabUnhide = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem18 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTabPrintPreview = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabPrint = new System.Windows.Forms.ToolStripMenuItem();
@@ -116,7 +116,7 @@
             this.mnuFileConvertToRichText = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileHide = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuFileShow = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileUnhide = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFilePrintPreview = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFilePrint = new System.Windows.Forms.ToolStripMenuItem();
@@ -168,6 +168,7 @@
             this.mnuHelp0 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.tabFiles = new QText.TabControlDnD();
+            this.tmrCheckFileUpdate = new System.Windows.Forms.Timer(this.components);
             this.tls.SuspendLayout();
             this.mnxTextBox.SuspendLayout();
             this.mnxTab.SuspendLayout();
@@ -205,7 +206,7 @@
             this.tlbHelpReportABug,
             this.tls_btnOptions,
             this.ToolStripSeparator2});
-            this.tls.Location = new System.Drawing.Point(0, 0);
+            this.tls.Location = new System.Drawing.Point(0, 28);
             this.tls.Name = "tls";
             this.tls.Size = new System.Drawing.Size(542, 25);
             this.tls.TabIndex = 1;
@@ -737,7 +738,7 @@
             this.mnxTabConvertToRichText,
             this.mnxTab2,
             this.mnxTabHide,
-            this.mnxTabShow,
+            this.mnxTabUnhide,
             this.toolStripMenuItem18,
             this.mnxTabPrintPreview,
             this.mnxTabPrint,
@@ -828,12 +829,12 @@
             this.mnxTabHide.Text = "&Hide";
             this.mnxTabHide.Click += new System.EventHandler(this.mnuFileHide_Click);
             // 
-            // mnxTabShow
+            // mnxTabUnhide
             // 
-            this.mnxTabShow.Name = "mnxTabShow";
-            this.mnxTabShow.Size = new System.Drawing.Size(232, 24);
-            this.mnxTabShow.Text = "Sho&w";
-            this.mnxTabShow.Click += new System.EventHandler(this.mnuFileShow_Click);
+            this.mnxTabUnhide.Name = "mnxTabUnhide";
+            this.mnxTabUnhide.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabUnhide.Text = "&Unhide";
+            this.mnxTabUnhide.Click += new System.EventHandler(this.mnuFileUnhide_Click);
             // 
             // toolStripMenuItem18
             // 
@@ -903,7 +904,7 @@
             this.mnuFileConvertToRichText,
             this.toolStripSeparator4,
             this.mnuFileHide,
-            this.mnuFileShow,
+            this.mnuFileUnhide,
             this.ToolStripMenuItem5,
             this.mnuFilePrintPreview,
             this.mnuFilePrint,
@@ -1008,12 +1009,12 @@
             this.mnuFileHide.Text = "&Hide";
             this.mnuFileHide.Click += new System.EventHandler(this.mnuFileHide_Click);
             // 
-            // mnuFileShow
+            // mnuFileUnhide
             // 
-            this.mnuFileShow.Name = "mnuFileShow";
-            this.mnuFileShow.Size = new System.Drawing.Size(219, 24);
-            this.mnuFileShow.Text = "Sho&w";
-            this.mnuFileShow.Click += new System.EventHandler(this.mnuFileShow_Click);
+            this.mnuFileUnhide.Name = "mnuFileUnhide";
+            this.mnuFileUnhide.Size = new System.Drawing.Size(219, 24);
+            this.mnuFileUnhide.Text = "&Unhide";
+            this.mnuFileUnhide.Click += new System.EventHandler(this.mnuFileUnhide_Click);
             // 
             // ToolStripMenuItem5
             // 
@@ -1401,7 +1402,7 @@
             this.mnuToolsOptions.Image = ((System.Drawing.Image)(resources.GetObject("mnuToolsOptions.Image")));
             this.mnuToolsOptions.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnuToolsOptions.Name = "mnuToolsOptions";
-            this.mnuToolsOptions.Size = new System.Drawing.Size(152, 24);
+            this.mnuToolsOptions.Size = new System.Drawing.Size(130, 24);
             this.mnuToolsOptions.Text = "&Options";
             this.mnuToolsOptions.Click += new System.EventHandler(this.mnuToolsOptions_Click);
             // 
@@ -1449,6 +1450,11 @@
             this.tabFiles.ChangedOrder += new QText.TabControlDnD.ChangedOrderEventHandler(this.tabFiles_ChangedOrder);
             this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
             this.tabFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabFiles_MouseDown);
+            // 
+            // tmrCheckFileUpdate
+            // 
+            this.tmrCheckFileUpdate.Enabled = true;
+            this.tmrCheckFileUpdate.Tick += new System.EventHandler(this.tmrCheckFileUpdate_Tick);
             // 
             // MainForm
             // 
@@ -1625,9 +1631,10 @@
         private System.Windows.Forms.ToolStripMenuItem mnuViewZoomReset;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem mnuFileHide;
-        private System.Windows.Forms.ToolStripMenuItem mnuFileShow;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileUnhide;
         private System.Windows.Forms.ToolStripMenuItem mnxTabHide;
-        private System.Windows.Forms.ToolStripMenuItem mnxTabShow;
+        private System.Windows.Forms.ToolStripMenuItem mnxTabUnhide;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem18;
+        private System.Windows.Forms.Timer tmrCheckFileUpdate;
     }
 }

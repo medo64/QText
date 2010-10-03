@@ -8,8 +8,8 @@ using System.Windows.Forms;
 using System.IO;
 
 namespace QText {
-    public partial class FileShowForm : Form {
-        public FileShowForm() {
+    public partial class UnhideFileForm : Form {
+        public UnhideFileForm() {
             InitializeComponent();
             this.Font = System.Drawing.SystemFonts.MessageBoxFont;
         }

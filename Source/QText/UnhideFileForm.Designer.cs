@@ -1,5 +1,5 @@
 ﻿namespace QText {
-    partial class FileShowForm {
+    partial class UnhideFileForm {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -79,7 +79,7 @@
             this.lblNoHiddenFiles.Text = "No hidden files";
             this.lblNoHiddenFiles.Visible = false;
             // 
-            // FileShowForm
+            // UnhideFileForm
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -93,11 +93,11 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "FileShowForm";
+            this.Name = "UnhideFileForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Show";
+            this.Text = "Unhide";
             this.Load += new System.EventHandler(this.FileShowForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

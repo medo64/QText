@@ -51,6 +51,7 @@ Version history
    Version 2.30 (beta 3)
 
       o  All text is now internally handled via RichTextBox.
+      o  Files can be hidden.
       o  QText updates files when another process changes them.
       o  Lot of minor improvements.
       o  Fix: Cursor does not reset position upon save.

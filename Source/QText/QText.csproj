@@ -85,11 +85,11 @@
     <Compile Include="%28Medo%29\Hotkey [001].cs" />
     <Compile Include="App.cs" />
     <Compile Include="FileOrder.cs" />
-    <Compile Include="FileShowForm.cs">
+    <Compile Include="UnhideFileForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FileShowForm.Designer.cs">
-      <DependentUpon>FileShowForm.cs</DependentUpon>
+    <Compile Include="UnhideFileForm.Designer.cs">
+      <DependentUpon>UnhideFileForm.cs</DependentUpon>
     </Compile>
     <Compile Include="FindForm.cs">
       <SubType>Form</SubType>
@@ -151,8 +151,8 @@
     <None Include="Properties\App.snk" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="FileShowForm.resx">
-      <DependentUpon>FileShowForm.cs</DependentUpon>
+    <EmbeddedResource Include="UnhideFileForm.resx">
+      <DependentUpon>UnhideFileForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FindForm.resx">
       <DependentUpon>FindForm.cs</DependentUpon>
