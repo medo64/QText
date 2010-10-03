@@ -60,6 +60,7 @@
             this.listHiddenFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.listHiddenFiles.CheckOnClick = true;
             this.listHiddenFiles.IntegralHeight = false;
             this.listHiddenFiles.Location = new System.Drawing.Point(12, 12);
             this.listHiddenFiles.Name = "listHiddenFiles";
