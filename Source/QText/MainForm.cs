@@ -9,6 +9,7 @@ using System.Security.Permissions;
 using System.Diagnostics;
 using System.Collections;
 using System.Threading;
+using System.IO;
 
 namespace QText {
     public partial class MainForm : Form {
@@ -619,7 +620,16 @@ namespace QText {
         }
 
         private void mnuFileHide_Click(object sender, EventArgs e) {
-
+            if (tabFiles.SelectedTab != null) {
+                var currTab = tabFiles.SelectedTab;
+                try {
+                    var currAttributes = File.GetAttributes(tabFiles.SelectedTab.FullFileName);
+                    File.SetAttributes(tabFiles.SelectedTab.FullFileName, currAttributes & FileAttributes.Hidden);
+                    tabFiles.TabPages.Remove(currTab);
+                } catch (Exception ex) {
+                    Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
+                }
+            }
         }
 
         private void mnuFileShow_Click(object sender, EventArgs e) {
