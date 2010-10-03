@@ -90,13 +90,15 @@ namespace QText {
                 var fileName = Path.Combine(Settings.FilesLocation, orderedFileNames[i]);
                 if (files.Contains(fileName) == false) {
                     if (File.Exists(fileName)) {
-                        files.Add(fileName);
+                        if ((File.GetAttributes(fileName) & FileAttributes.Hidden) != FileAttributes.Hidden) {
+                            files.Add(fileName);
+                        }
                     }
                 }
             }
 
             //Then everything else
-            foreach (var file in GetSortedFileNames()) {
+            foreach (var file in GetSortedFileNames(false)) {
                 var fileName = Path.Combine(Settings.FilesLocation, file);
                 if (files.Contains(fileName) == false) {
                     if (File.Exists(fileName)) {
@@ -163,7 +165,7 @@ namespace QText {
             }
         }
 
-        private static IList<string> GetSortedFileNames() {
+        internal static IList<string> GetSortedFileNames(bool includeHidden) {
             var filesAll = new List<string>();
             filesAll.AddRange(Directory.GetFiles(Settings.FilesLocation, "*.txt"));
             filesAll.AddRange(Directory.GetFiles(Settings.FilesLocation, "*.rtf"));
@@ -171,8 +173,10 @@ namespace QText {
             var files = new List<string>();
             foreach (var fileNameA in filesAll) {
                 var fi = new FileInfo(fileNameA);
-                if ((fi.Attributes & FileAttributes.System) == FileAttributes.System) { //System
-                } else if ((fi.Attributes & FileAttributes.Temporary) == FileAttributes.Temporary) { //Temporary
+                if ((fi.Attributes & FileAttributes.System) == FileAttributes.System) {
+                } else if ((fi.Attributes & FileAttributes.Temporary) == FileAttributes.Temporary) {
+                } else if ((fi.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden) {
+                    if (includeHidden) { files.Add(fi.Name); }
                 } else {
                     files.Add(fi.Name);
                 }

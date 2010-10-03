@@ -624,7 +624,7 @@ namespace QText {
                 var currTab = tabFiles.SelectedTab;
                 try {
                     var currAttributes = File.GetAttributes(tabFiles.SelectedTab.FullFileName);
-                    File.SetAttributes(tabFiles.SelectedTab.FullFileName, currAttributes & FileAttributes.Hidden);
+                    File.SetAttributes(tabFiles.SelectedTab.FullFileName, currAttributes | FileAttributes.Hidden);
                     tabFiles.TabPages.Remove(currTab);
                 } catch (Exception ex) {
                     Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
@@ -633,7 +633,11 @@ namespace QText {
         }
 
         private void mnuFileShow_Click(object sender, EventArgs e) {
-
+            using (var frm = new FileShowForm()) {
+                if (frm.ShowDialog(this) == DialogResult.OK) {
+                    mnuViewRefresh_Click(null, null);
+                }
+            }
         }
 
         private void mnuFilePrintPreview_Click(object sender, EventArgs e) {
@@ -687,7 +691,7 @@ namespace QText {
             bool canCut = isTabSelected && tabFiles.SelectedTab.CanCopy;
             bool canCopy = isTabSelected && tabFiles.SelectedTab.CanCopy;
             bool canPaste = isTabSelected && tabFiles.SelectedTab.CanPaste;
-            bool canDelete = isTabSelected && (tabFiles.SelectedTab.TextBox.SelectedText.Length > 0) || (tabFiles.SelectedTab.TextBox.SelectionStart < tabFiles.SelectedTab.TextBox.Text.Length);
+            bool canDelete = isTabSelected && ((tabFiles.SelectedTab.TextBox.SelectedText.Length > 0) || (tabFiles.SelectedTab.TextBox.SelectionStart < tabFiles.SelectedTab.TextBox.Text.Length));
             bool canSelectAll = isTabSelected && (tabFiles.SelectedTab.TextBox.Text.Length > 0);
 
             mnuEditUndo.Enabled = canUndo;
