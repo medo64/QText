@@ -1172,6 +1172,12 @@ namespace QText {
         private void mnxTab_Opening(object sender, CancelEventArgs e) {
             mnuFile_DropDownOpening(null, null);
 
+            bool isTabSelected = (tabFiles.SelectedTab != null);
+            bool isTabRichText = isTabSelected && tabFiles.SelectedTab.IsRichTextFormat;
+
+            mnxTabConvertToPlainText.Visible = isTabRichText;
+            mnxTabConvertToRichText.Visible = (isTabRichText == false);
+
             mnxTabNew.Enabled = mnuFileNew.Enabled;
             mnxTabReopen.Enabled = mnuFileReopen.Enabled;
             mnxTabSaveNow.Enabled = mnuFileSaveNow.Enabled;
@@ -1179,8 +1185,6 @@ namespace QText {
             mnxTabRename.Enabled = mnuFileRename.Enabled;
             mnxTabPrintPreview.Enabled = mnuFilePrintPreview.Enabled;
             mnxTabPrint.Enabled = mnuFilePrint.Enabled;
-            mnxTabConvertToPlainText.Visible = mnuFileConvertToPlainText.Enabled;
-            mnxTabConvertToRichText.Visible = mnuFileConvertToRichText.Enabled;
             mnxTabHide.Enabled = mnuFileHide.Enabled;
             mnxTabShow.Enabled = mnuFileShow.Enabled;
             mnxTabPrintPreview.Enabled = mnuFilePrintPreview.Enabled;
@@ -1208,17 +1212,17 @@ namespace QText {
             bool isTabSelected = (tabFiles.SelectedTab != null);
             bool isTabRichText = isTabSelected && tabFiles.SelectedTab.IsRichTextFormat;
 
-            mnxTextBoxCutAsText.Visible = isTabRichText && (Settings.ForceTextCopyPaste==false);
+            mnxTextBoxCutAsText.Visible = isTabRichText && (Settings.ForceTextCopyPaste == false);
             mnxTextBoxCopyAsText.Visible = isTabRichText && (Settings.ForceTextCopyPaste == false);
             mnxTextBoxPasteAsText.Visible = isTabRichText && (Settings.ForceTextCopyPaste == false);
             mnxTextBoxCutCopyPasteAsTextSeparator.Visible = isTabRichText && (Settings.ForceTextCopyPaste == false);
 
-            mnxTextBoxFont.Visible = mnuFormatFont.Visible;
-            mnxTextBoxBold.Visible = mnuFormatBold.Visible;
-            mnxTextBoxItalic.Visible = mnuFormatItalic.Visible;
-            mnxTextBoxUnderline.Visible = mnuFormatUnderline.Visible;
-            mnxTextBoxStrikeout.Visible = mnuFormatStrikeout.Visible;
-            mnxTextBoxRtfSeparator.Visible = mnuFormatRtfSeparator.Visible;
+            mnxTextBoxFont.Visible = isTabRichText;
+            mnxTextBoxBold.Visible = isTabRichText;
+            mnxTextBoxItalic.Visible = isTabRichText;
+            mnxTextBoxUnderline.Visible = isTabRichText;
+            mnxTextBoxStrikeout.Visible = isTabRichText;
+            mnxTextBoxRtfSeparator.Visible = isTabRichText;
 
             mnxTextBoxUndo.Enabled = mnuEditUndo.Enabled;
             mnxTextBoxRedo.Enabled = mnuEditRedo.Enabled;
@@ -1416,12 +1420,15 @@ namespace QText {
             mnuView_DropDownOpening(null, null);
             mnuFormat_DropDownOpening(null, null);
 
-            tls_btnFont.Visible = mnuFormatFont.Visible;
-            tls_btnBold.Visible = mnuFormatBold.Visible;
-            tls_btnItalic.Visible = mnuFormatItalic.Visible;
-            tls_btnUnderline.Visible = mnuFormatUnderline.Visible;
-            tls_btnStrikeout.Visible = mnuFormatStrikeout.Visible;
-            tls_RtfSeparator.Visible = mnuFormatRtfSeparator.Visible;
+            bool isTabSelected = (tabFiles.SelectedTab != null);
+            bool isTabRichText = isTabSelected && tabFiles.SelectedTab.IsRichTextFormat;
+
+            tls_btnFont.Visible = isTabRichText;
+            tls_btnBold.Visible = isTabRichText;
+            tls_btnItalic.Visible = isTabRichText;
+            tls_btnUnderline.Visible = isTabRichText;
+            tls_btnStrikeout.Visible = isTabRichText;
+            tls_RtfSeparator.Visible = isTabRichText;
 
             tls_btnNew.Enabled = mnuFileNew.Enabled;
             tls_btnSaveNow.Enabled = mnuFileSaveNow.Enabled;
