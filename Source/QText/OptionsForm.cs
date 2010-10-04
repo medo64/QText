@@ -177,22 +177,27 @@ namespace QText {
                         try {
                             Helper.Path.CreatePath(newPath);
                             try {
-                                string[] oldFiles = System.IO.Directory.GetFiles(Settings.FilesLocation, "*.txt");
-                                if ((oldFiles.Length > 0)) {
-                                    switch (global::Medo.MessageBox.ShowQuestion(this, "Do you want to copy existing files to new location?", MessageBoxButtons.YesNo)) {
+                                var oldFiles = new List<string>();
+                                oldFiles.AddRange(System.IO.Directory.GetFiles(Settings.FilesLocation, "*.txt"));
+                                oldFiles.AddRange(System.IO.Directory.GetFiles(Settings.FilesLocation, "*.rtf"));
+                                if ((oldFiles.Count > 0)) {
+                                    switch (Medo.MessageBox.ShowQuestion(this, "Do you want to copy existing files to new location?", MessageBoxButtons.YesNo)) {
                                         case DialogResult.Yes:
                                             try {
                                                 System.IO.File.Copy(System.IO.Path.Combine(Settings.FilesLocation, "QText.xml"), System.IO.Path.Combine(newPath, "QText.xml"));
                                             } catch (Exception) { }
-                                            for (int i = 0; i <= oldFiles.Length - 1; i++) {
+                                            for (int i = 0; i <= oldFiles.Count - 1; i++) {
                                                 try {
                                                     string oldFile = oldFiles[i];
                                                     System.IO.FileInfo oldFI = new System.IO.FileInfo(oldFile);
                                                     string newFile = System.IO.Path.Combine(newPath, oldFI.Name);
                                                     if (System.IO.File.Exists(newFile)) {
-                                                        switch (global::Medo.MessageBox.ShowQuestion(this, "File \"" + oldFI.Name + "\" already exists at destination. Do you want to overwrite?", MessageBoxButtons.YesNoCancel)) {
+                                                        switch (Medo.MessageBox.ShowQuestion(this, "File \"" + oldFI.Name + "\" already exists at destination. Do you want to overwrite?", MessageBoxButtons.YesNoCancel)) {
                                                             case DialogResult.Yes:
+                                                                var oldAttr = File.GetAttributes(oldFile);
+                                                                File.SetAttributes(newFile, FileAttributes.Normal);
                                                                 File.Copy(oldFile, newFile, true);
+                                                                File.SetAttributes(newFile, oldAttr);
                                                                 break;
                                                             case DialogResult.No:
                                                                 continue;
@@ -213,7 +218,7 @@ namespace QText {
                                 }
                                 this.DialogResult = System.Windows.Forms.DialogResult.OK;
                             } catch (Exception ex) {
-                                global::Medo.MessageBox.ShowWarning(this, "Error retrieving old path." + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
+                                Medo.MessageBox.ShowWarning(this, "Error retrieving old path." + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
                                 isOK = false;
                             }
                             if (isOK) {
