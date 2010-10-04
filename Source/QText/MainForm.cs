@@ -1477,6 +1477,7 @@ namespace QText {
         int nextIndexToCheck = 0;
 
         private void tmrCheckFileUpdate_Tick(object sender, EventArgs e) {
+            tmrCheckFileUpdate.Enabled = false;
             if (tabFiles.TabCount > 0) {
                 nextIndexToCheck = nextIndexToCheck % tabFiles.TabPages.Count;
                 var currTab = (TabFile)tabFiles.TabPages[nextIndexToCheck];
@@ -1492,6 +1493,7 @@ namespace QText {
             } else {
                 nextIndexToCheck = 0;
             }
+            tmrCheckFileUpdate.Enabled = true;
         }
 
         #endregion
