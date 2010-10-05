@@ -630,6 +630,12 @@ namespace QText {
             using (var frm = new UnhideFileForm()) {
                 if (frm.ShowDialog(this) == DialogResult.OK) {
                     mnuViewRefresh_Click(null, null);
+                    foreach (TabFile iTab in tabFiles.TabPages) {
+                        if (string.CompareOrdinal(iTab.Title, frm.LastTitle) == 0) {
+                            tabFiles.SelectedTab = iTab;
+                            break;
+                        }
+                    }
                 }
             }
         }

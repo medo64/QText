@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using System.IO;
 
 namespace QText {
-    public partial class UnhideFileForm : Form {
+    internal partial class UnhideFileForm : Form {
         public UnhideFileForm() {
             InitializeComponent();
             this.Font = System.Drawing.SystemFonts.MessageBoxFont;
@@ -40,8 +40,13 @@ namespace QText {
                 this.FileInfo = fileInfo;
             }
 
+            public string Title { get {
+                    return this.FileInfo.Name.Substring(0, this.FileInfo.Name.Length - this.FileInfo.Extension.Length);
+                }
+            }
+
             public override string ToString() {
-                return this.FileInfo.Name.Substring(0, this.FileInfo.Name.Length - this.FileInfo.Extension.Length);
+                return this.Title;
             }
 
         }
@@ -50,8 +55,12 @@ namespace QText {
             foreach (HiddenFile file in listHiddenFiles.CheckedItems) {
                 var currAttributes = File.GetAttributes(file.FileInfo.FullName);
                 File.SetAttributes(file.FileInfo.FullName, currAttributes ^ FileAttributes.Hidden);
+                this.LastTitle = file.Title;
             }
         }
+
+
+        public string LastTitle { get; private set; }
 
     }
 }
