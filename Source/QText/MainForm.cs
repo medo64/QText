@@ -586,14 +586,7 @@ namespace QText {
                     }
                 }
                 try {
-                    int tindex = tabFiles.TabPages.IndexOf(tabFiles.SelectedTab) + 1; //select next tab
-                    if (tindex >= tabFiles.TabPages.Count) {
-                        tindex -= 2; //go to one in front of it
-                    }
-                    if ((tindex > 0) && (tindex < tabFiles.TabPages.Count)) {
-                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[tindex];
-                    }
-
+                    tabFiles.SelectedTab = GetNextTab();
                     currTab.Delete();
                     tabFiles.TabPages.Remove(currTab);
                 } catch (Exception ex) {
@@ -625,6 +618,7 @@ namespace QText {
                 try {
                     var currAttributes = File.GetAttributes(tabFiles.SelectedTab.FullFileName);
                     File.SetAttributes(tabFiles.SelectedTab.FullFileName, currAttributes | FileAttributes.Hidden);
+                    tabFiles.SelectedTab = GetNextTab();
                     tabFiles.TabPages.Remove(currTab);
                 } catch (Exception ex) {
                     Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
@@ -1313,6 +1307,17 @@ namespace QText {
                 if (tabFiles.TabPages.Contains(this._PrevSelectedTab)) {
                     return this._PrevSelectedTab;
                 }
+            }
+            return null;
+        }
+
+        private TabFile GetNextTab() {
+            int tindex = tabFiles.TabPages.IndexOf(tabFiles.SelectedTab) + 1; //select next tab
+            if (tindex >= tabFiles.TabPages.Count) {
+                tindex -= 2; //go to one in front of it
+            }
+            if ((tindex > 0) && (tindex < tabFiles.TabPages.Count)) {
+                return (TabFile)tabFiles.TabPages[tindex];
             }
             return null;
         }
