@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Diagnostics;
 using System.ComponentModel;
 using System;
+using System.Runtime.InteropServices;
 
 namespace QText {
 
@@ -35,6 +36,17 @@ namespace QText {
             App.Form = new MainForm();
 
             Medo.Application.SingleInstance.NewInstanceDetected += new EventHandler<Medo.Application.NewInstanceEventArgs>(SingleInstance_NewInstanceDetected);
+            if (Medo.Application.SingleInstance.IsOtherInstanceRunning) {
+                var currProcess = Process.GetCurrentProcess();
+                foreach (var iProcess in Process.GetProcessesByName(currProcess.ProcessName)) {
+                    try {
+                        if (iProcess.Id != currProcess.Id) {
+                            NativeMethods.AllowSetForegroundWindow(iProcess.Id);
+                            break;
+                        }
+                    } catch (Win32Exception) { }
+                }
+            }
             Medo.Application.SingleInstance.Attach();
 
 
@@ -80,7 +92,7 @@ namespace QText {
 
         private static void SingleInstance_NewInstanceDetected(object sender, Medo.Application.NewInstanceEventArgs e) {
             try {
-                if ((App.Form != null) && (App.Form.IsHandleCreated == false)) {
+                if (App.Form.IsHandleCreated == false) {
                     App.Form.CreateControl();
                     App.Form.Handle.GetType();
                 }
@@ -116,6 +128,15 @@ namespace QText {
 #else
             throw e.Exception;
 #endif
+        }
+
+
+        private static class NativeMethods {
+
+            [DllImportAttribute("user32.dll", EntryPoint = "AllowSetForegroundWindow")]
+            [return: MarshalAsAttribute(UnmanagedType.Bool)]
+            public static extern bool AllowSetForegroundWindow(int dwProcessId);
+
         }
 
     }

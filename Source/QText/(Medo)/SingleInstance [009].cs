@@ -8,21 +8,20 @@
 //2008-04-10: NewInstanceEventArgs is not nested class anymore.
 //2008-04-11: Cleaned code to match FxCop 1.36 beta 2 (SpecifyMarshalingForPInvokeStringArguments, NestedTypesShouldNotBeVisible).
 //2008-11-14: Reworked code to use SafeHandle.
+//2010-10-07: Added IsOtherInstanceRunning method.
 
 
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace Medo.Application
-{
+namespace Medo.Application {
 
     /// <summary>
     /// Handles detection and communication of programs multiple instances.
     /// This class is thread safe.
     /// </summary>
-    public static class SingleInstance
-    {
+    public static class SingleInstance {
 
         private static Mutex _mtxFirstInstance;
         private static Thread _thread;
@@ -35,8 +34,7 @@ namespace Medo.Application
         /// Another instance is contacted via named pipe.
         /// </summary>
         /// <exception cref="System.InvalidOperationException">API call failed.</exception>
-        public static bool Attach()
-        {
+        public static bool Attach() {
             return Attach(false);
         }
 
@@ -47,22 +45,17 @@ namespace Medo.Application
         /// <param name="noAutoExit">If true, application will exit after informing another instance.</param>
         /// <exception cref="System.InvalidOperationException">API call failed.</exception>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Needs to be cought all in order not to break in any case.")]
-        public static bool Attach(bool noAutoExit)
-        {
-            lock (_syncRoot)
-            {
+        public static bool Attach(bool noAutoExit) {
+            lock (_syncRoot) {
                 NativeMethods.FileSafeHandle handle = null;
                 bool isFirstInstance = false;
-                try
-                {
+                try {
                     _mtxFirstInstance = new Mutex(true, MutexName, out isFirstInstance);
-                    if (!isFirstInstance)
-                    { //we need to contact previous instance.
+                    if (isFirstInstance == false) { //we need to contact previous instance.
                         _mtxFirstInstance = null;
 
                         byte[] buffer;
-                        using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
-                        {
+                        using (System.IO.MemoryStream ms = new System.IO.MemoryStream()) {
                             System.Runtime.Serialization.Formatters.Binary.BinaryFormatter bf = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
                             bf.Serialize(ms, new NewInstanceEventArgs(System.Environment.CommandLine, System.Environment.GetCommandLineArgs()));
                             ms.Flush();
@@ -72,23 +65,19 @@ namespace Medo.Application
                         //open pipe
                         if (!NativeMethods.WaitNamedPipe(NamedPipeName, NativeMethods.NMPWAIT_USE_DEFAULT_WAIT)) { throw new System.InvalidOperationException(Resources.ExceptionWaitNamedPipeFailed); }
                         handle = NativeMethods.CreateFile(NamedPipeName, NativeMethods.GENERIC_READ | NativeMethods.GENERIC_WRITE, 0, System.IntPtr.Zero, NativeMethods.OPEN_EXISTING, NativeMethods.FILE_ATTRIBUTE_NORMAL, System.IntPtr.Zero);
-                        if (handle.IsInvalid)
-                        {
+                        if (handle.IsInvalid) {
                             throw new System.InvalidOperationException(Resources.ExceptionCreateFileFailed);
                         }
 
                         //send bytes
                         uint written = 0;
                         NativeOverlapped overlapped = new NativeOverlapped();
-                        if (!NativeMethods.WriteFile(handle, buffer, (uint)buffer.Length, ref written, ref overlapped))
-                        {
+                        if (!NativeMethods.WriteFile(handle, buffer, (uint)buffer.Length, ref written, ref overlapped)) {
                             throw new System.InvalidOperationException(Resources.ExceptionWriteFileFailed);
                         }
                         if (written != buffer.Length) { throw new System.InvalidOperationException(Resources.ExceptionWriteFileWroteUnexpectedNumberOfBytes); }
 
-                    }
-                    else
-                    {  //there is no application already running.
+                    } else {  //there is no application already running.
 
                         _thread = new Thread(Run);
                         _thread.Name = "Medo.Application.SingleInstance.0";
@@ -97,25 +86,19 @@ namespace Medo.Application
 
                     }
 
-                }
-                catch (System.Exception ex)
-                {
+                } catch (System.Exception ex) {
                     System.Diagnostics.Trace.TraceWarning(ex.Message + "  {Medo.Application.SingleInstance}");
 
-                }
-                finally
-                {
-                    if (handle != null && (!(handle.IsClosed || handle.IsInvalid)))
-                    {
-                        handle.Close();
-                    }
-                    //if (!handle.Equals(System.IntPtr.Zero)) {
-                    //    NativeMethods.CloseHandle(handle);
+                } finally {
+                    //if (handle != null && (!(handle.IsClosed || handle.IsInvalid))) {
+                    //    handle.Close();
                     //}
+                    if (handle != null) {
+                        handle.Dispose();
+                    }
                 }
 
-                if ((isFirstInstance == false) && (noAutoExit == false))
-                {
+                if ((isFirstInstance == false) && (noAutoExit == false)) {
                     System.Diagnostics.Trace.TraceInformation("Exit(E_ABORT): Another instance is running.  {Medo.Application.SingleInstance}");
                     System.Environment.Exit(unchecked((int)0x80004004)); //E_ABORT(0x80004004)
                 }
@@ -125,27 +108,26 @@ namespace Medo.Application
         }
 
         private static string _mutexName;
-        private static string MutexName
-        {
-            get
-            {
-                lock (_syncRoot)
-                {
-                    if (_mutexName == null)
-                    {
+        private static string MutexName {
+            get {
+                lock (_syncRoot) {
+                    if (_mutexName == null) {
                         System.Text.StringBuilder sbComponents = new System.Text.StringBuilder();
                         sbComponents.AppendLine(System.Environment.MachineName);
                         sbComponents.AppendLine(System.Environment.UserName);
                         sbComponents.AppendLine(System.Reflection.Assembly.GetEntryAssembly().FullName);
                         sbComponents.AppendLine(System.Reflection.Assembly.GetEntryAssembly().CodeBase);
-                        byte[] hash = System.Security.Cryptography.SHA1Managed.Create().ComputeHash(System.Text.Encoding.Unicode.GetBytes(sbComponents.ToString()));
+                        
+                        byte[] hash;
+                        using (var sha1 =System.Security.Cryptography.SHA1Managed.Create()){
+                            hash = sha1.ComputeHash(System.Text.Encoding.Unicode.GetBytes(sbComponents.ToString()));
+                        }
 
                         System.Text.StringBuilder sbFinal = new System.Text.StringBuilder();
                         string assName = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
                         sbFinal.Append(assName, 0, System.Math.Min(assName.Length, 64));
                         sbFinal.Append('.');
-                        for (int i = 0; i < hash.Length; ++i)
-                        {
+                        for (int i = 0; i < hash.Length; ++i) {
                             sbFinal.AppendFormat("{0:X2}", hash[i]);
                         }
                         _mutexName = sbFinal.ToString();
@@ -156,6 +138,24 @@ namespace Medo.Application
         }
         private static string NamedPipeName = @"\\.\pipe\" + MutexName;
 
+        /// <summary>
+        /// Gets whether there is another instance running.
+        /// It temporary creates mutex.
+        /// </summary>
+        public static bool IsOtherInstanceRunning {
+            get {
+                lock (_syncRoot) {
+                    if (_mtxFirstInstance != null) {
+                        return false; //no other instance is running
+                    } else {
+                        bool isFirstInstance = false;
+                        var tempInstance = new Mutex(true, MutexName, out isFirstInstance);
+                        tempInstance.Close();
+                        return (isFirstInstance == false);
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Occurs in first instance when new instance is detected.
@@ -167,24 +167,19 @@ namespace Medo.Application
         /// Thread function.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Needs to be cought all in order not to break in any case.")]
-        private static void Run()
-        {
-            while (_mtxFirstInstance != null)
-            {
+        private static void Run() {
+            while (_mtxFirstInstance != null) {
                 IntPtr handle = IntPtr.Zero;
-                try
-                {
+                try {
                     handle = NativeMethods.CreateNamedPipe(NamedPipeName, NativeMethods.PIPE_ACCESS_DUPLEX, NativeMethods.PIPE_TYPE_BYTE | NativeMethods.PIPE_READMODE_BYTE | NativeMethods.PIPE_WAIT, NativeMethods.PIPE_UNLIMITED_INSTANCES, 4096, 4096, NativeMethods.NMPWAIT_USE_DEFAULT_WAIT, System.IntPtr.Zero);
                     if (handle.Equals(IntPtr.Zero)) { throw new System.InvalidOperationException(Resources.ExceptionCreateNamedPipeFailed); }
                     bool connected = NativeMethods.ConnectNamedPipe(handle, System.IntPtr.Zero);
                     if (!connected) { throw new System.InvalidOperationException(Resources.ExceptionConnectNamedPipeFailed); }
 
                     uint available = 0;
-                    while (available == 0)
-                    {
+                    while (available == 0) {
                         uint bytesRead = 0, thismsg = 0;
-                        if (!NativeMethods.PeekNamedPipe(handle, null, 0, ref bytesRead, ref available, ref thismsg))
-                        {
+                        if (!NativeMethods.PeekNamedPipe(handle, null, 0, ref bytesRead, ref available, ref thismsg)) {
                             Thread.Sleep(100);
                             available = 0;
                         }
@@ -192,39 +187,30 @@ namespace Medo.Application
                     byte[] buffer = new byte[available];
                     uint read = 0;
                     NativeOverlapped overlapped = new NativeOverlapped();
-                    if (!NativeMethods.ReadFile(handle, buffer, (uint)buffer.Length, ref read, ref overlapped))
-                    {
+                    if (!NativeMethods.ReadFile(handle, buffer, (uint)buffer.Length, ref read, ref overlapped)) {
                         throw new System.InvalidOperationException(Resources.ExceptionReadFileFailed);
                     }
-                    if (read != available)
-                    {
+                    if (read != available) {
                         throw new System.InvalidOperationException(Resources.ExceptionReadFileReturnedUnexpectedNumberOfBytes);
                     }
 
-                    using (System.IO.MemoryStream ms = new System.IO.MemoryStream(buffer))
-                    {
+                    using (System.IO.MemoryStream ms = new System.IO.MemoryStream(buffer)) {
                         System.Runtime.Serialization.Formatters.Binary.BinaryFormatter bf = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
                         if (NewInstanceDetected != null) { NewInstanceDetected(null, (NewInstanceEventArgs)bf.Deserialize(ms)); }
                     }
 
-                }
-                catch (System.Exception ex)
-                {
+                } catch (System.Exception ex) {
                     System.Diagnostics.Trace.TraceWarning(ex.Message + "  {Medo.Application.SingleInstance");
                     Thread.Sleep(1000);
-                }
-                finally
-                { //closing native resources.
-                    if (!handle.Equals(System.IntPtr.Zero))
-                    {
+                } finally { //closing native resources.
+                    if (!handle.Equals(System.IntPtr.Zero)) {
                         NativeMethods.CloseHandle(handle);
                     }
                 }//try
             }//while
         }
 
-        private static class Resources
-        {
+        private static class Resources {
 
             internal static string ExceptionWaitNamedPipeFailed { get { return "WaitNamedPipe failed."; } }
 
@@ -244,8 +230,7 @@ namespace Medo.Application
 
         }
 
-        private static class NativeMethods
-        {
+        private static class NativeMethods {
 
             public const uint FILE_ATTRIBUTE_NORMAL = 0;
             public const uint GENERIC_READ = 0x80000000;
@@ -260,28 +245,23 @@ namespace Medo.Application
             public const uint PIPE_WAIT = 0x00000000;
 
 
-            public class FileSafeHandle : SafeHandle
-            {
+            public class FileSafeHandle : SafeHandle {
                 private static IntPtr minusOne = new IntPtr(-1);
 
 
                 public FileSafeHandle()
-                    : base(minusOne, true)
-                { }
+                    : base(minusOne, true) { }
 
 
-                public override bool IsInvalid
-                {
+                public override bool IsInvalid {
                     get { return (this.IsClosed) || (base.handle == minusOne); }
                 }
 
-                protected override bool ReleaseHandle()
-                {
+                protected override bool ReleaseHandle() {
                     return CloseHandle(this.handle);
                 }
 
-                public override string ToString()
-                {
+                public override string ToString() {
                     return this.handle.ToString();
                 }
 
@@ -325,22 +305,19 @@ namespace Medo.Application
 }
 
 
-namespace Medo.Application
-{
+namespace Medo.Application {
 
     /// <summary>
     /// Arguments for newly detected application instance.
     /// </summary>
     [System.Serializable()]
-    public class NewInstanceEventArgs : System.EventArgs
-    {
+    public class NewInstanceEventArgs : System.EventArgs {
         /// <summary>
         /// Creates new instance.
         /// </summary>
         /// <param name="commandLine">Command line.</param>
         /// <param name="commandLineArgs">String array containing the command line arguments.</param>
-        public NewInstanceEventArgs(string commandLine, string[] commandLineArgs)
-        {
+        public NewInstanceEventArgs(string commandLine, string[] commandLineArgs) {
             this._commandLine = commandLine;
             this._commandLineArgs = commandLineArgs;
         }
@@ -349,8 +326,7 @@ namespace Medo.Application
         /// <summary>
         /// Gets the command line.
         /// </summary>
-        public string CommandLine
-        {
+        public string CommandLine {
             get { return this._commandLine; }
         }
 
@@ -358,8 +334,7 @@ namespace Medo.Application
         /// <summary>
         /// Returns a string array containing the command line arguments.
         /// </summary>
-        public string[] GetCommandLineArgs()
-        {
+        public string[] GetCommandLineArgs() {
             return this._commandLineArgs;
         }
 
