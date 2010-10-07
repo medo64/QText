@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Win32;
+using System.Diagnostics;
+using System.ComponentModel;
 
 namespace QText {
     namespace Helper {
@@ -36,6 +38,24 @@ namespace QText {
         public static class LegacySettings {
             public static void CopyLegacySettingsIfNeeded() {
                 if (QText.Settings.LegacySettingsCopied == false) {
+
+                    //kill old process
+                    var currProcess = Process.GetCurrentProcess();
+                    var currProcessId = currProcess.Id;
+                    var currProcessName = currProcess.ProcessName;
+                    var currProcessFileName = currProcess.MainModule.FileName;
+                    foreach (var iProcess in Process.GetProcesses()) {
+                        Debug.WriteLine(iProcess.ProcessName);
+                        try {
+                            if (string.CompareOrdinal(iProcess.ProcessName, "QText") == 0) {
+                                if (iProcess.Id != currProcessId) {
+                                    iProcess.Kill();
+                                }
+                            }
+                        } catch (Win32Exception) { }
+                    }
+
+                    //copy registry
                     try {
                         var wasOldVersionInstalled = false;
                         var hasOldVersionDataPath = false;
@@ -54,7 +74,9 @@ namespace QText {
                         }
                         using (var rkSource = Registry.CurrentUser.OpenSubKey(@"Software\jmedved", true)) {
                             if (rkSource != null) {
-                                rkSource.DeleteSubKeyTree("QText");
+                                try {
+                                    rkSource.DeleteSubKeyTree("QText");
+                                } catch (ArgumentException) { }
                             }
                         }
                         using (var rkSource = Registry.CurrentUser.OpenSubKey("Software", true)) {

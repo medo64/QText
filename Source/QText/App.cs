@@ -24,27 +24,10 @@ namespace QText {
             Application.SetCompatibleTextRenderingDefault(false);
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(Medo.Configuration.Settings.Read("CultureName", "en-US"));
 
-            if (Settings.LegacySettingsCopied == false) {
-                var currProcess = Process.GetCurrentProcess();
-                var currProcessId = currProcess.Id;
-                var currProcessName = currProcess.ProcessName;
-                var currProcessFileName = currProcess.MainModule.FileName;
-                foreach (var iProcess in Process.GetProcesses()) {
-                    Debug.WriteLine(iProcess.ProcessName);
-                    try {
-                        if (string.CompareOrdinal(iProcess.ProcessName, "QText") == 0) {
-                            if (iProcess.Id != currProcessId) {
-                                iProcess.Kill();
-                            }
-                        }
-                    } catch (Win32Exception) { }
-                }
-            }
+            Helper.LegacySettings.CopyLegacySettingsIfNeeded();
 
             Medo.Application.UnhandledCatch.ThreadException += new System.EventHandler<ThreadExceptionEventArgs>(UnhandledException);
             Medo.Application.UnhandledCatch.Attach();
-
-            Helper.LegacySettings.CopyLegacySettingsIfNeeded();
 
             Application.ApplicationExit += new System.EventHandler(ApplicationExit);
 
@@ -97,8 +80,10 @@ namespace QText {
 
         private static void SingleInstance_NewInstanceDetected(object sender, Medo.Application.NewInstanceEventArgs e) {
             try {
-                App.Form.CreateControl();
-                App.Form.Handle.GetType();
+                if ((App.Form != null) && (App.Form.IsHandleCreated == false)) {
+                    App.Form.CreateControl();
+                    App.Form.Handle.GetType();
+                }
 
                 NewInstanceDetectedProcDelegate method = new NewInstanceDetectedProcDelegate(NewInstanceDetectedProc);
                 App.Form.Invoke(method);
