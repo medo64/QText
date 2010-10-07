@@ -220,11 +220,6 @@ namespace QText {
             }
         }
 
-        public static bool SaveOnHide {
-            get { return Medo.Configuration.Settings.Read("FilesSaveOnClose", true); }
-            set { Medo.Configuration.Settings.Write("FilesSaveOnClose", value); }
-        }
-
         public static bool ShowMenu {
             get { return Medo.Configuration.Settings.Read("ShowMenu", false); }
             set { Medo.Configuration.Settings.Write("ShowMenu", value); }

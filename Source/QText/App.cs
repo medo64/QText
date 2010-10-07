@@ -109,8 +109,8 @@ namespace QText {
 
         private static void NewInstanceDetectedProc() {
             App.Tray.Show();
-            if (App.Form.WindowState == FormWindowState.Minimized) { App.Form.WindowState = FormWindowState.Normal; }
             App.Form.Show();
+            if (App.Form.WindowState == FormWindowState.Minimized) { App.Form.WindowState = FormWindowState.Normal; }
             App.Form.Activate();
         }
 

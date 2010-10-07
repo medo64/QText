@@ -50,7 +50,6 @@
             this.nudQuickAutoSaveSeconds = new System.Windows.Forms.NumericUpDown();
             this.chbEnableQuickAutoSave = new System.Windows.Forms.CheckBox();
             this.btnOpenLocationFolder = new System.Windows.Forms.Button();
-            this.chbFilesSaveOnHide = new System.Windows.Forms.CheckBox();
             this.lblFilesAutoSaveIntervalSeconds = new System.Windows.Forms.Label();
             this.nudFilesAutoSaveInterval = new System.Windows.Forms.NumericUpDown();
             this.lblFilesAutoSaveInterval = new System.Windows.Forms.Label();
@@ -351,7 +350,6 @@
             this.tab_pagFiles.Controls.Add(this.nudQuickAutoSaveSeconds);
             this.tab_pagFiles.Controls.Add(this.chbEnableQuickAutoSave);
             this.tab_pagFiles.Controls.Add(this.btnOpenLocationFolder);
-            this.tab_pagFiles.Controls.Add(this.chbFilesSaveOnHide);
             this.tab_pagFiles.Controls.Add(this.lblFilesAutoSaveIntervalSeconds);
             this.tab_pagFiles.Controls.Add(this.nudFilesAutoSaveInterval);
             this.tab_pagFiles.Controls.Add(this.lblFilesAutoSaveInterval);
@@ -421,16 +419,6 @@
             this.btnOpenLocationFolder.UseVisualStyleBackColor = true;
             this.btnOpenLocationFolder.Click += new System.EventHandler(this.btnOpenLocationFolder_Click);
             // 
-            // chbFilesSaveOnHide
-            // 
-            this.chbFilesSaveOnHide.AutoSize = true;
-            this.chbFilesSaveOnHide.Location = new System.Drawing.Point(3, 59);
-            this.chbFilesSaveOnHide.Name = "chbFilesSaveOnHide";
-            this.chbFilesSaveOnHide.Size = new System.Drawing.Size(113, 21);
-            this.chbFilesSaveOnHide.TabIndex = 6;
-            this.chbFilesSaveOnHide.Text = "Save on hide";
-            this.chbFilesSaveOnHide.UseVisualStyleBackColor = true;
-            // 
             // lblFilesAutoSaveIntervalSeconds
             // 
             this.lblFilesAutoSaveIntervalSeconds.AutoSize = true;
@@ -475,7 +463,7 @@
             // chkDeleteToRecycleBin
             // 
             this.chkDeleteToRecycleBin.AutoSize = true;
-            this.chkDeleteToRecycleBin.Location = new System.Drawing.Point(3, 119);
+            this.chkDeleteToRecycleBin.Location = new System.Drawing.Point(3, 89);
             this.chkDeleteToRecycleBin.Name = "chkDeleteToRecycleBin";
             this.chkDeleteToRecycleBin.Size = new System.Drawing.Size(159, 21);
             this.chkDeleteToRecycleBin.TabIndex = 8;
@@ -485,7 +473,7 @@
             // chkPreloadFilesOnStartup
             // 
             this.chkPreloadFilesOnStartup.AutoSize = true;
-            this.chkPreloadFilesOnStartup.Location = new System.Drawing.Point(3, 89);
+            this.chkPreloadFilesOnStartup.Location = new System.Drawing.Point(3, 59);
             this.chkPreloadFilesOnStartup.Name = "chkPreloadFilesOnStartup";
             this.chkPreloadFilesOnStartup.Size = new System.Drawing.Size(176, 21);
             this.chkPreloadFilesOnStartup.TabIndex = 7;
@@ -495,7 +483,7 @@
             // chkRememberSelectedFile
             // 
             this.chkRememberSelectedFile.AutoSize = true;
-            this.chkRememberSelectedFile.Location = new System.Drawing.Point(3, 149);
+            this.chkRememberSelectedFile.Location = new System.Drawing.Point(3, 119);
             this.chkRememberSelectedFile.Name = "chkRememberSelectedFile";
             this.chkRememberSelectedFile.Size = new System.Drawing.Size(178, 21);
             this.chkRememberSelectedFile.TabIndex = 9;
@@ -760,7 +748,6 @@
         internal System.Windows.Forms.NumericUpDown nudQuickAutoSaveSeconds;
         internal System.Windows.Forms.CheckBox chbEnableQuickAutoSave;
         internal System.Windows.Forms.Button btnOpenLocationFolder;
-        internal System.Windows.Forms.CheckBox chbFilesSaveOnHide;
         internal System.Windows.Forms.Label lblFilesAutoSaveIntervalSeconds;
         internal System.Windows.Forms.NumericUpDown nudFilesAutoSaveInterval;
         internal System.Windows.Forms.Label lblFilesAutoSaveInterval;

@@ -41,7 +41,6 @@ namespace QText {
             chkPreloadFilesOnStartup.Checked = Settings.FilesPreload;
             chkDeleteToRecycleBin.Checked = Settings.FilesDeleteToRecycleBin;
             nudFilesAutoSaveInterval.Value = Settings.FilesAutoSaveInterval;
-            chbFilesSaveOnHide.Checked = Settings.SaveOnHide;
             chbEnableQuickAutoSave.Checked = Settings.EnableQuickAutoSave;
             nudQuickAutoSaveSeconds.Value = Settings.QuickAutoSaveSeconds;
             chbEnableQuickAutoSave_CheckedChanged(null, null);
@@ -321,7 +320,6 @@ namespace QText {
             Settings.FilesPreload = chkPreloadFilesOnStartup.Checked;
             Settings.FilesDeleteToRecycleBin = chkDeleteToRecycleBin.Checked;
             Settings.FilesAutoSaveInterval = Convert.ToInt32(nudFilesAutoSaveInterval.Value);
-            Settings.SaveOnHide = chbFilesSaveOnHide.Checked;
             Settings.EnableQuickAutoSave = chbEnableQuickAutoSave.Checked;
             Settings.QuickAutoSaveSeconds = Convert.ToInt32(nudQuickAutoSaveSeconds.Value);
 

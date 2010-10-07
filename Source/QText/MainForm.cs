@@ -12,6 +12,7 @@ using System.Threading;
 using System.IO;
 
 namespace QText {
+    [System.Runtime.InteropServices.GuidAttribute("6A2DF16A-9F7B-4610-9D79-E381199C73C7")]
     public partial class MainForm : Form {
 
         internal bool _suppressMenuKey = false;
@@ -91,7 +92,6 @@ namespace QText {
 
         private void MainForm_Deactivate(object sender, EventArgs e) {
             mnu.Visible = Settings.ShowMenu; //TODO: Check this on XP when compiled
-            Medo.Windows.Forms.State.Save(this);
             this.tmrUpdateToolbar.Enabled = false;
         }
 
@@ -102,31 +102,37 @@ namespace QText {
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
-            Medo.Windows.Forms.State.Save(this);
-
             mnu_Leave(null, null);
+
+            //if (e.Cancel) { return; }
+
             try {
-                if (Settings.SaveOnHide) { SaveAllChanged(); }
+                SaveAllChanged();
                 tabFiles.SaveAll();
-                this.FileOrder.Save(tabFiles, e.CloseReason == CloseReason.WindowsShutDown);
             } catch (Exception ex) {
-                Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
+                Medo.MessageBox.ShowWarning(null, "QText : File saving failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
             }
 
-            if (e.Cancel) { return; }
+            this.FileOrder.Save(tabFiles, true);
 
-#if !DEBUG 
-            if (e.CloseReason == CloseReason.UserClosing) {
-                e.Cancel = true;
-                this.Hide();
-            } else {
-                try {
-                    Application.Exit();
-                } catch (Exception) { }
+#if !DEBUG
+            switch (e.CloseReason) {
+                case CloseReason.ApplicationExitCall:
+                case CloseReason.TaskManagerClosing:
+                case CloseReason.WindowsShutDown:
+                    break;
+
+                default:
+                    e.Cancel = true;
+                    this.Hide();
+                    //this.Visible = false;
+                    break;
             }
-#else
-            Application.Exit();
 #endif
+        }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e) {
+            Application.Exit();
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e) {
@@ -216,7 +222,8 @@ namespace QText {
                     break;
 
                 case Keys.Escape:
-                    mnuFileClose_Click(null, null);
+                    //mnuFileClose_Click(null, null);
+                    this.Close();
                     e.Handled = true;
                     e.SuppressKeyPress = true;
                     break;
@@ -372,13 +379,17 @@ namespace QText {
             }
         }
 
+        private void MainForm_Move(object sender, EventArgs e) {
+            if (this.Visible && (this.WindowState == FormWindowState.Normal)) { Medo.Windows.Forms.State.Save(this); }
+        }
+
         private bool frmMain_Resize_Reentry = false;
         private void MainForm_Resize(object sender, EventArgs e) {
             if (frmMain_Resize_Reentry) { return; }
             frmMain_Resize_Reentry = true;
 
-            if (this.Visible) { Medo.Windows.Forms.State.Save(this); }
             if (this.WindowState != FormWindowState.Minimized) {
+                if (this.Visible) { Medo.Windows.Forms.State.Save(this); }
                 tls.Visible = Settings.DisplayShowToolbar;
 
                 int newTop = 0;
@@ -407,12 +418,10 @@ namespace QText {
                     tabFiles.Width = this.ClientRectangle.Width;
                     tabFiles.Height = this.ClientRectangle.Height - tabFiles.Top;
                 }
-                //window has been minimized
-            } else if (Settings.TrayOnMinimize) {
-                if (Settings.SaveOnHide) { SaveAllChanged(); }
-                this.Hide();
-                tabFiles.SaveAll();
-                this.FileOrder.Save(tabFiles, true);
+            } else if (Settings.TrayOnMinimize) { //Window has been minimized.
+                this.Visible = false;
+                //this.WindowState = FormWindowState.Normal;
+                this.Close();
             }
 
             frmMain_Resize_Reentry = false;
@@ -423,6 +432,11 @@ namespace QText {
             } else {
                 _findForm.Close();
             }
+
+            tmrAutoSave.Enabled = this.Visible;
+            tmrCheckFileUpdate.Enabled = this.Visible;
+            tmrQuickAutoSave.Enabled = this.Visible;
+            tmrUpdateToolbar.Enabled = this.Visible;
         }
 
 
@@ -672,9 +686,10 @@ namespace QText {
         }
 
         private void mnuFileClose_Click(object sender, EventArgs e) {
-            if (Settings.SaveOnHide) { SaveAllChanged(); }
-            this.Hide();
-            this.FileOrder.Save(tabFiles, true);
+            //if (Settings.SaveOnHide) { SaveAllChanged(); }
+            //this.Hide();
+            //this.FileOrder.Save(tabFiles, true);
+            this.Close();
         }
 
         private void mnuFileExit_Click(object sender, EventArgs e) {
