@@ -459,12 +459,17 @@ namespace QText {
 
         private void tabFiles_SelectedIndexChanged(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
-                TextBoxBase txt = tabFiles.SelectedTab.TextBox;
-                txt.Refresh();
-                txt.Select();
-                txt.Focus();
+                try {
+                    TextBoxBase txt = tabFiles.SelectedTab.TextBox;
+                    txt.Refresh();
+                    txt.Select();
+                    txt.Focus();
+                    SetSelectedTab(tabFiles.SelectedTab);
+                } catch (IOException ex) {
+                    Medo.MessageBox.ShowError(this, "Cannot open file!\n\n" + ex.Message);
+                    tabFiles.SelectedTab = this._CurrSelectedTab;
+                }
             }
-            SetSelectedTab(tabFiles.SelectedTab);
         }
 
 
