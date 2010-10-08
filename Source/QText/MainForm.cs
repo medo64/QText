@@ -657,13 +657,15 @@ namespace QText {
         private void mnuFilePrintPreview_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 try {
-                    Medo.Drawing.Printing.FullText ol = new Medo.Drawing.Printing.FullText(tabFiles.SelectedTab.Title, 10.0f, 10.0f, 20.0f, 10.0f);
-                    ol.BeginPrint += Document_BeginPrint;
-                    ol.StartPrintPage += Document_PrintPage;
-                    ol.Font = Settings.DisplayFont;
-                    ol.Text = tabFiles.SelectedTab.TextBox.Text;
-                    Medo.Windows.Forms.PrintPreviewDialog x = new Medo.Windows.Forms.PrintPreviewDialog(ol.Document);
-                    x.ShowDialog(this);
+                    using (var ol = new Medo.Drawing.Printing.FullText(tabFiles.SelectedTab.Title, 10.0f, 10.0f, 20.0f, 10.0f)) {
+                        ol.BeginPrint += Document_BeginPrint;
+                        ol.StartPrintPage += Document_PrintPage;
+                        ol.Font = Settings.DisplayFont;
+                        ol.Text = tabFiles.SelectedTab.TextBox.Text;
+                        using (var f = new Medo.Windows.Forms.PrintPreviewDialog(ol.Document)) {
+                            f.ShowDialog(this);
+                        }
+                    }
                 } catch (Exception ex) {
                     Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
                 }
@@ -673,12 +675,13 @@ namespace QText {
         private void mnuFilePrint_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 try {
-                    Medo.Drawing.Printing.FullText ol = new Medo.Drawing.Printing.FullText(tabFiles.SelectedTab.Title, 10.0f, 10.0f, 20.0f, 10.0f);
-                    ol.BeginPrint += Document_BeginPrint;
-                    ol.StartPrintPage += Document_PrintPage;
-                    ol.Font = Settings.DisplayFont;
-                    ol.Text = tabFiles.SelectedTab.TextBox.Text;
-                    ol.Print();
+                    using (var ol = new Medo.Drawing.Printing.FullText(tabFiles.SelectedTab.Title, 10.0f, 10.0f, 20.0f, 10.0f)) {
+                        ol.BeginPrint += Document_BeginPrint;
+                        ol.StartPrintPage += Document_PrintPage;
+                        ol.Font = Settings.DisplayFont;
+                        ol.Text = tabFiles.SelectedTab.TextBox.Text;
+                        ol.Print();
+                    }
                 } catch (Exception ex) {
                     Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
                 }

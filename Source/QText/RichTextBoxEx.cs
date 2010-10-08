@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Security.Permissions;
 
 namespace QText {
     public class RichTextBoxEx : RichTextBox {
@@ -82,6 +83,7 @@ namespace QText {
         /// <param name="msg">A System.Windows.Forms.Message, passed by reference, that represents the window message to process.</param> 
         /// <param name="keyData">One of the System.Windows.Forms.Keys values that represents the key to process.</param> 
         /// <returns>True if the character was processed by the control; otherwise, false.</returns> 
+        [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
         protected override bool ProcessCmdKey(ref System.Windows.Forms.Message msg, System.Windows.Forms.Keys keyData) {
             switch (keyData) {
                 case System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Back:
