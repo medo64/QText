@@ -79,7 +79,7 @@
     <Compile Include="%28Medo%29\RunOnStartup [003].cs" />
     <Compile Include="%28Medo%29\Settings [010].cs" />
     <Compile Include="%28Medo%29\SingleInstance [009].cs" />
-    <Compile Include="%28Medo%29\State [013].cs" />
+    <Compile Include="%28Medo%29\State [014].cs" />
     <Compile Include="%28Medo%29\UnhandledCatch [006].cs" />
     <Compile Include="%28Medo%29\XmlTagWriter [002].cs" />
     <Compile Include="%28Medo%29\Hotkey [001].cs" />

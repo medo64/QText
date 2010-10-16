@@ -14,14 +14,18 @@
 //2008-07-10: Fixed resize on load when window is maximized.
 //2008-12-27: Added LoadNowAndSaveOnClose method.
 //2009-07-04: Compatibility with Mono 2.4.
+//2010-10-17: Limited all loaded forms to screen's working area.
+//            Changed LoadNowAndSaveOnClose to use SetupOnLoadAndClose.
 
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Security;
 using System.Windows.Forms;
+using System.Collections.Generic;
 using Microsoft.Win32;
+using System.IO;
+using System;
+using System.Security;
+using System.Globalization;
+using System.Drawing;
 
 namespace Medo.Windows.Forms {
 
@@ -77,24 +81,54 @@ namespace Medo.Windows.Forms {
         /// Loads previous state.
         /// Supported controls are Form, PropertyGrid, ListView and SplitContainer.
         /// </summary>
-        /// <param name="closeHandlerForm">Form on which's FormClosing handler this function will attach. State will not be altered for this parameter.</param>
+        /// <param name="form">Form on which's FormClosing handler this function will attach. State will not be altered for this parameter.</param>
         /// <param name="controls">Controls to load and to save.</param>
+        /// <exception cref="System.ArgumentNullException">Form is null.</exception>
         /// <exception cref="System.NotSupportedException">This control's parents cannot be resolved using Name property.</exception>
         /// <exception cref="System.ArgumentException">Form already used.</exception>
-        public static void LoadNowAndSaveOnClose(Form closeHandlerForm, params Control[] controls) {
-            if (_closeHandlerForms.ContainsKey(closeHandlerForm)) { throw new System.ArgumentException("Form already used.", "closeHandlerForm"); }
-            Load(controls);
-            _closeHandlerForms.Add(closeHandlerForm, controls);
-            closeHandlerForm.FormClosing += new FormClosingEventHandler(closeHandlerForm_FormClosing);
+        [Obsolete("Use SetupOnLoadAndClose instead.")]
+        public static void LoadNowAndSaveOnClose(Form form, params Control[] controls) {
+            SetupOnLoadAndClose(form, controls);
         }
 
-        private static Dictionary<Form, Control[]> _closeHandlerForms = new Dictionary<Form, Control[]>();
+        /// <summary>
+        /// Loads previous state.
+        /// Supported controls are Form, PropertyGrid, ListView and SplitContainer.
+        /// </summary>
+        /// <param name="form">Form on which's FormClosing handler this function will attach. State will not be altered for this parameter.</param>
+        /// <param name="controls">Controls to load and to save.</param>
+        /// <exception cref="System.ArgumentNullException">Form is null.</exception>
+        /// <exception cref="System.NotSupportedException">This control's parents cannot be resolved using Name property.</exception>
+        /// <exception cref="System.ArgumentException">Form setup already done.</exception>
+        public static void SetupOnLoadAndClose(Form form, params Control[] controls) {
+            if (form == null) { throw new ArgumentNullException("form", "Form is null."); }
 
-        private static void closeHandlerForm_FormClosing(object sender, FormClosingEventArgs e) {
+            if (formSetup.ContainsKey(form)) { throw new System.ArgumentException("Form setup already done.", "form"); }
+
+            Load(form);
+            if (controls != null) { Load(controls); }
+
+            formSetup.Add(form, controls);
+            form.Load += new EventHandler(form_Load);
+            form.FormClosed += new FormClosedEventHandler(form_FormClosed);
+        }
+
+        private static Dictionary<Form, Control[]> formSetup = new Dictionary<Form, Control[]>();
+
+        private static void form_Load(object sender, EventArgs e) {
             var form = sender as Form;
-            if (_closeHandlerForms.ContainsKey(form)) {
-                Save(_closeHandlerForms[form]);
-                _closeHandlerForms.Remove(form);
+            if (formSetup.ContainsKey(form)) {
+                Load(form);
+                Load(formSetup[form]);
+            }
+        }
+
+        private static void form_FormClosed(object sender, FormClosedEventArgs e) {
+            var form = sender as Form;
+            if (formSetup.ContainsKey(form)) {
+                Save(form);
+                Save(formSetup[form]);
+                formSetup.Remove(form);
             }
         }
 
@@ -177,8 +211,11 @@ namespace Medo.Windows.Forms {
         /// Saves Form state (Left,Top,Width,Height,WindowState).
         /// </summary>
         /// <param name="form">Form.</param>
+        /// <exception cref="System.ArgumentNullException">Form is null.</exception>
         /// <exception cref="System.NotSupportedException">This control's parents cannot be resolved using Name property.</exception>
         public static void Save(System.Windows.Forms.Form form) {
+            if (form == null) { throw new ArgumentNullException("form", "Form is null."); }
+
             string baseValueName = Helper.GetControlPath(form);
 
             Helper.Write(baseValueName + ".WindowState", System.Convert.ToInt32(form.WindowState, System.Globalization.CultureInfo.InvariantCulture));
@@ -200,8 +237,11 @@ namespace Medo.Windows.Forms {
         /// If StartupPosition value is Manual, saved settings are used, for other types, it tryes to resemble original behaviour.
         /// </summary>
         /// <param name="form">Form.</param>
+        /// <exception cref="System.ArgumentNullException">Form is null.</exception>
         /// <exception cref="System.NotSupportedException">This control's parents cannot be resolved using Name property.</exception>
         public static void Load(System.Windows.Forms.Form form) {
+            if (form == null) { throw new ArgumentNullException("form", "Form is null."); }
+
             string baseValueName = Helper.GetControlPath(form);
 
             int currWindowState = System.Convert.ToInt32(form.WindowState, System.Globalization.CultureInfo.InvariantCulture);
@@ -230,46 +270,40 @@ namespace Medo.Windows.Forms {
             }
 
             System.Windows.Forms.Screen screen = System.Windows.Forms.Screen.FromRectangle(new System.Drawing.Rectangle(newLeft, newTop, newWidth, newHeight));
-            if (newWidth <= 0) { newWidth = currWidth; }
-            if (newHeight <= 0) { newHeight = currHeight; }
-            if (newWidth > screen.Bounds.Width) { newWidth = screen.Bounds.Width; }
-            if (newHeight > screen.Bounds.Height) { newHeight = screen.Bounds.Height; }
-            if (newLeft + newWidth > screen.Bounds.Right) { newLeft = screen.Bounds.Left + (screen.Bounds.Width - newWidth); }
-            if (newTop + newHeight > screen.Bounds.Bottom) { newTop = screen.Bounds.Top + (screen.Bounds.Height - newHeight); }
-            if (newLeft < screen.Bounds.Left) { newLeft = screen.Bounds.Left; }
-            if (newTop < screen.Bounds.Top) { newTop = screen.Bounds.Top; }
-
-
-            form.Width = newWidth;
-            form.Height = newHeight;
 
             switch (form.StartPosition) {
 
-                case System.Windows.Forms.FormStartPosition.CenterParent:
-                    if (form.Parent != null) {
-                        form.Left = form.Parent.Left + (form.Parent.Width - form.Width) / 2;
-                        form.Top = form.Parent.Top + (form.Parent.Height - form.Height) / 2;
-                    } else if (form.Owner != null) {
-                        form.Left = form.Owner.Left + (form.Owner.Width - form.Width) / 2;
-                        form.Top = form.Owner.Top + (form.Owner.Height - form.Height) / 2;
-                    } else {
-                        form.Left = screen.Bounds.Left + (screen.Bounds.Left - form.Width) / 2;
-                        form.Top = screen.Bounds.Top + (screen.Bounds.Top - form.Height) / 2;
-                    }
-                    break;
+                case System.Windows.Forms.FormStartPosition.CenterParent: {
+                        if (form.Parent != null) {
+                            newLeft = form.Parent.Left + (form.Parent.Width - newWidth) / 2;
+                            newTop = form.Parent.Top + (form.Parent.Height - newHeight) / 2;
+                        } else if (form.Owner != null) {
+                            newLeft = form.Owner.Left + (form.Owner.Width - newWidth) / 2;
+                            newTop = form.Owner.Top + (form.Owner.Height - newHeight) / 2;
+                        } else {
+                            newLeft = screen.WorkingArea.Left + (screen.WorkingArea.Width - newWidth) / 2;
+                            newTop = screen.WorkingArea.Top + (screen.WorkingArea.Height - newHeight) / 2;
+                        }
+                    } break;
 
-                case System.Windows.Forms.FormStartPosition.CenterScreen:
-                    form.Left = screen.Bounds.Left + (screen.Bounds.Width - form.Width) / 2;
-                    form.Top = screen.Bounds.Top + (screen.Bounds.Height - form.Height) / 2;
-                    break;
-
-                default:
-                    form.Left = newLeft;
-                    form.Top = newTop;
-                    break;
+                case System.Windows.Forms.FormStartPosition.CenterScreen: {
+                        newLeft = screen.WorkingArea.Left + (screen.WorkingArea.Width - newWidth) / 2;
+                        newTop = screen.WorkingArea.Top + (screen.WorkingArea.Height - newHeight) / 2;
+                    } break;
 
             }
 
+            if (newWidth <= 0) { newWidth = currWidth; }
+            if (newHeight <= 0) { newHeight = currHeight; }
+            if (newWidth > screen.WorkingArea.Width) { newWidth = screen.WorkingArea.Width; }
+            if (newHeight > screen.WorkingArea.Height) { newHeight = screen.WorkingArea.Height; }
+            if (newLeft + newWidth > screen.WorkingArea.Right) { newLeft = screen.WorkingArea.Left + (screen.WorkingArea.Width - newWidth); }
+            if (newTop + newHeight > screen.WorkingArea.Bottom) { newTop = screen.WorkingArea.Top + (screen.WorkingArea.Height - newHeight); }
+            if (newLeft < screen.WorkingArea.Left) { newLeft = screen.WorkingArea.Left; }
+            if (newTop < screen.WorkingArea.Top) { newTop = screen.WorkingArea.Top; }
+
+            form.Location = new Point(newLeft, newTop);
+            form.Size = new Size(newWidth, newHeight);
 
             if (newWindowState == System.Convert.ToInt32(System.Windows.Forms.FormWindowState.Maximized, System.Globalization.CultureInfo.InvariantCulture)) {
                 form.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -283,18 +317,21 @@ namespace Medo.Windows.Forms {
         /// <summary>
         /// Loads previous PropertyGrid state (LabelWidth, PropertySort).
         /// </summary>
-        /// <param name="propertyGrid">PropertyGrid.</param>
+        /// <param name="control">PropertyGrid.</param>
+        /// <exception cref="System.ArgumentNullException">Control is null.</exception>
         /// <exception cref="System.NotSupportedException">This control's parents cannot be resolved using Name property.</exception>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "PropertyGrid is passed because of reflection upon its member.")]
-        public static void Load(System.Windows.Forms.PropertyGrid propertyGrid) {
-            string baseValueName = Helper.GetControlPath(propertyGrid);
+        public static void Load(PropertyGrid control) {
+            if (control == null) { throw new ArgumentNullException("control", "Control is null."); }
+
+            string baseValueName = Helper.GetControlPath(control);
 
             try {
-                propertyGrid.PropertySort = (System.Windows.Forms.PropertySort)(Helper.Read(baseValueName + ".PropertySort", System.Convert.ToInt32(propertyGrid.PropertySort, System.Globalization.CultureInfo.InvariantCulture)));
+                control.PropertySort = (System.Windows.Forms.PropertySort)(Helper.Read(baseValueName + ".PropertySort", System.Convert.ToInt32(control.PropertySort, System.Globalization.CultureInfo.InvariantCulture)));
             } catch (System.ComponentModel.InvalidEnumArgumentException) { }
 
-            System.Reflection.FieldInfo fieldGridView = propertyGrid.GetType().GetField("gridView", System.Reflection.BindingFlags.GetField | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            object gridViewObject = fieldGridView.GetValue(propertyGrid);
+            System.Reflection.FieldInfo fieldGridView = control.GetType().GetField("gridView", System.Reflection.BindingFlags.GetField | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            object gridViewObject = fieldGridView.GetValue(control);
             if (gridViewObject != null) {
                 int currentlabelWidth = 0;
                 System.Reflection.PropertyInfo propertyInternalLabelWidth = gridViewObject.GetType().GetProperty("InternalLabelWidth", System.Reflection.BindingFlags.InvokeMethod | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
@@ -305,7 +342,7 @@ namespace Medo.Windows.Forms {
                     }
                 }
                 int labelWidth = Helper.Read(baseValueName + ".LabelWidth", currentlabelWidth);
-                if ((labelWidth > 0) && (labelWidth < propertyGrid.Width)) {
+                if ((labelWidth > 0) && (labelWidth < control.Width)) {
                     System.Reflection.BindingFlags methodMoveSplitterToFlags = System.Reflection.BindingFlags.InvokeMethod | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
                     System.Reflection.MethodInfo methodMoveSplitterTo = gridViewObject.GetType().GetMethod("MoveSplitterTo", methodMoveSplitterToFlags);
                     if (methodMoveSplitterTo != null) {
@@ -318,16 +355,19 @@ namespace Medo.Windows.Forms {
         /// <summary>
         /// Saves PropertyGrid state (LabelWidth).
         /// </summary>
-        /// <param name="propertyGrid">PropertyGrid.</param>
+        /// <param name="control">PropertyGrid.</param>
+        /// <exception cref="System.ArgumentNullException">Control is null.</exception>
         /// <exception cref="System.NotSupportedException">This control's parents cannot be resolved using Name property.</exception>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "PropertyGrid is passed because of reflection upon its member.")]
-        public static void Save(System.Windows.Forms.PropertyGrid propertyGrid) {
-            string baseValueName = Helper.GetControlPath(propertyGrid);
+        public static void Save(System.Windows.Forms.PropertyGrid control) {
+            if (control == null) { throw new ArgumentNullException("control", "Control is null."); }
 
-            Helper.Write(baseValueName + ".PropertySort", System.Convert.ToInt32(propertyGrid.PropertySort, System.Globalization.CultureInfo.InvariantCulture));
+            string baseValueName = Helper.GetControlPath(control);
 
-            System.Reflection.FieldInfo fieldGridView = propertyGrid.GetType().GetField("gridView", System.Reflection.BindingFlags.GetField | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            object gridViewObject = fieldGridView.GetValue(propertyGrid);
+            Helper.Write(baseValueName + ".PropertySort", System.Convert.ToInt32(control.PropertySort, System.Globalization.CultureInfo.InvariantCulture));
+
+            System.Reflection.FieldInfo fieldGridView = control.GetType().GetField("gridView", System.Reflection.BindingFlags.GetField | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            object gridViewObject = fieldGridView.GetValue(control);
             if (gridViewObject != null) {
                 System.Reflection.PropertyInfo propertyInternalLabelWidth = gridViewObject.GetType().GetProperty("InternalLabelWidth", System.Reflection.BindingFlags.InvokeMethod | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
                 if (propertyInternalLabelWidth != null) {
@@ -347,7 +387,10 @@ namespace Medo.Windows.Forms {
         /// Loads previous ListView state (Column header width).
         /// </summary>
         /// <param name="control">ListView.</param>
+        /// <exception cref="System.ArgumentNullException">Control is null.</exception>
         public static void Load(System.Windows.Forms.ListView control) {
+            if (control == null) { throw new ArgumentNullException("control", "Control is null."); }
+
             string baseValueName = Helper.GetControlPath(control);
 
             for (int i = 0; i < control.Columns.Count; i++) {
@@ -361,7 +404,10 @@ namespace Medo.Windows.Forms {
         /// Saves ListView state (Column header width).
         /// </summary>
         /// <param name="control">ListView.</param>
+        /// <exception cref="System.ArgumentNullException">Control is null.</exception>
         public static void Save(System.Windows.Forms.ListView control) {
+            if (control == null) { throw new ArgumentNullException("control", "Control is null."); }
+
             string baseValueName = Helper.GetControlPath(control);
 
             for (int i = 0; i < control.Columns.Count; i++) {
@@ -377,7 +423,10 @@ namespace Medo.Windows.Forms {
         /// Loads previous SplitContainer state.
         /// </summary>
         /// <param name="control">SplitContainer.</param>
-        public static void Load(System.Windows.Forms.SplitContainer control) {
+        /// <exception cref="System.ArgumentNullException">Control is null.</exception>
+        public static void Load(SplitContainer control) {
+            if (control == null) { throw new ArgumentNullException("control", "Control is null."); }
+
             string baseValueName = Helper.GetControlPath(control);
 
             try {
@@ -395,7 +444,10 @@ namespace Medo.Windows.Forms {
         /// Saves SplitContainer state.
         /// </summary>
         /// <param name="control">SplitContainer.</param>
+        /// <exception cref="System.ArgumentNullException">Control is null.</exception>
         public static void Save(System.Windows.Forms.SplitContainer control) {
+            if (control == null) { throw new ArgumentNullException("control", "Control is null."); }
+
             string baseValueName = Helper.GetControlPath(control);
 
             Helper.Write(baseValueName + ".Orientation", System.Convert.ToInt32(control.Orientation, System.Globalization.CultureInfo.InvariantCulture));
