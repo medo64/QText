@@ -30,7 +30,7 @@ Source: "ReadMe.txt"; DestDir: "{app}"; Attribs: readonly; Flags: overwritereado
 Name: "{userstartmenu}\QText"; Filename: "{app}\QText.exe"
 
 [Registry]
-Root: HKCU; Subkey: "Software\Josip Medved\QText"; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Josip Medved\QText"; ValueType: dword; ValueName: "Installed"; ValueData: "1"; Flags: uninsdeletekey
 Root: HKCU; Subkey: "Software\Josip Medved"; Flags: uninsdeletekeyifempty
 Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "QText"; ValueData: "{app}\QText.exe"; Flags: uninsdeletevalue;
 
