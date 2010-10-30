@@ -177,7 +177,6 @@
             // 
             // tls
             // 
-            this.tls.CanOverflow = false;
             this.tls.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.tls.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tls_btnNew,
