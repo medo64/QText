@@ -16,6 +16,7 @@
 //2009-07-04: Compatibility with Mono 2.4.
 //2010-10-17: Limited all loaded forms to screen's working area.
 //            Changed LoadNowAndSaveOnClose to use SetupOnLoadAndClose.
+//2010-10-31: Added option to skip registry writes (NoRegistryWrites).
 
 
 using System.Windows.Forms;
@@ -74,6 +75,12 @@ namespace Medo.Windows.Forms {
             }
             set { _subkeyPath = value; }
         }
+
+        /// <summary>
+        /// Gets/sets whether settings should be written to registry.
+        /// </summary>
+        public static bool NoRegistryWrites { get; set; }
+
 
         #region Load Save - All
 
@@ -460,15 +467,17 @@ namespace Medo.Windows.Forms {
         private static class Helper {
 
             internal static void Write(string valueName, int value) {
-                try {
-                    if (State.SubkeyPath.Length == 0) { return; }
-                    using (RegistryKey rk = Registry.CurrentUser.CreateSubKey(State.SubkeyPath)) {
-                        if (rk != null) {
-                            rk.SetValue(valueName, value, RegistryValueKind.DWord);
+                if (State.NoRegistryWrites == false) {
+                    try {
+                        if (State.SubkeyPath.Length == 0) { return; }
+                        using (RegistryKey rk = Registry.CurrentUser.CreateSubKey(State.SubkeyPath)) {
+                            if (rk != null) {
+                                rk.SetValue(valueName, value, RegistryValueKind.DWord);
+                            }
                         }
-                    }
-                } catch (IOException) { //key is deleted. 
-                } catch (UnauthorizedAccessException) { } //key is write protected. 
+                    } catch (IOException) { //key is deleted. 
+                    } catch (UnauthorizedAccessException) { } //key is write protected. 
+                }
             }
 
             internal static int Read(string valueName, int defaultValue) {
@@ -476,6 +485,7 @@ namespace Medo.Windows.Forms {
                     using (RegistryKey rk = Registry.CurrentUser.OpenSubKey(State.SubkeyPath, false)) {
                         if (rk != null) {
                             object value = rk.GetValue(valueName, null);
+                            if (value == null) { return defaultValue; }
                             var valueKind = RegistryValueKind.DWord;
                             if (!State.Helper.IsRunningOnMono) { valueKind = rk.GetValueKind(valueName); }
                             if ((value != null) && (valueKind == RegistryValueKind.DWord)) {

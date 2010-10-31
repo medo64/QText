@@ -22,6 +22,9 @@
 //2010-02-13: Send button is disabled if there is neither exception nor message.
 //            Log file is now ErrorReport "[{application}].log" and "ErrorReport [{application}] {time}.log".
 //2010-02-13: Added TopMost.
+//2010-03-02: Line wrapping at 72nd character.
+//2010-03-07: Changed Math.* to System.Math.*.
+//2010-10-30: Fixed bug with sending error report.
 
 
 using System;
@@ -289,7 +292,7 @@ namespace Medo.Diagnostics {
                     dluH = (int)System.Math.Ceiling(fewCharSize.Height);
                 }
 
-                form.ClientSize = new Size(Math.Min(36 * dluW, Screen.GetWorkingArea(form).Width - 4 * dluH), Math.Min(5 * dluH, Screen.GetWorkingArea(form).Height - 4 * dluH));
+                form.ClientSize = new Size(System.Math.Min(36 * dluW, Screen.GetWorkingArea(form).Width - 4 * dluH), System.Math.Min(5 * dluH, Screen.GetWorkingArea(form).Height - 4 * dluH));
 
                 //label
                 label.AutoEllipsis = true;
@@ -395,6 +398,7 @@ namespace Medo.Diagnostics {
                     textMessage.Tag = sendButton;
                     textMessage.TextChanged += new EventHandler(textMessage_TextChanged);
                 }
+                textMessage.PreviewKeyDown += new PreviewKeyDownEventHandler(text_PreviewKeyDown);
 
                 //labelEmail
                 labelEmail.AutoEllipsis = true;
@@ -409,11 +413,13 @@ namespace Medo.Diagnostics {
                 //textEmail
                 textEmail.Location = new Point(7 + System.Math.Max(labelEmail.Width, labelName.Width) + 7, 7 + labelHelp.Height + 14 + labelMessage.Height + textMessage.Height + 7);
                 textEmail.Width = form.ClientRectangle.Width - textEmail.Location.X - 7;
+                textEmail.PreviewKeyDown += new PreviewKeyDownEventHandler(text_PreviewKeyDown);
                 labelEmail.Location = new Point(7, textEmail.Top + (textEmail.Height - labelEmail.Height) / 2);
 
                 //textName
                 textName.Location = new Point(7 + System.Math.Max(labelEmail.Width, labelName.Width) + 7, 7 + labelHelp.Height + 14 + labelMessage.Height + textMessage.Height + 7 + textEmail.Height + 7);
                 textName.Width = form.ClientRectangle.Width - textName.Location.X - 7; ;
+                textName.PreviewKeyDown += new PreviewKeyDownEventHandler(text_PreviewKeyDown);
                 labelName.Location = new Point(7, textName.Top + (textName.Height - labelName.Height) / 2);
 
                 //labelReport
@@ -423,12 +429,14 @@ namespace Medo.Diagnostics {
                 labelReport.Location = new Point(7, 7 + labelHelp.Height + 14 + labelMessage.Height + textMessage.Height + 7 + textEmail.Height + 7 + textName.Height + 14);
 
                 //textReport
+                textReport.Font = new Font(FontFamily.GenericMonospace, form.Font.Size * 1F, FontStyle.Regular, form.Font.Unit);
                 textReport.Multiline = true;
                 textReport.ReadOnly = true;
                 textReport.ScrollBars = ScrollBars.Vertical;
                 textReport.Text = LogBufferGetString();
                 textReport.Location = new Point(7, 7 + labelHelp.Height + 14 + labelMessage.Height + textMessage.Height + 7 + textEmail.Height + 7 + textName.Height + 7 + labelReport.Height + 7);
                 textReport.Size = new Size(form.ClientRectangle.Width - 14, form.ClientRectangle.Height - (7 + labelHelp.Height + 14 + labelMessage.Height + textMessage.Height + 7 + textEmail.Height + 7 + textName.Height + 7 + labelReport.Height + 14 + 14 + sendButton.Height + 7));
+                textReport.PreviewKeyDown += new PreviewKeyDownEventHandler(text_PreviewKeyDown);
 
                 //sendButton
                 sendButton.AutoEllipsis = true;
@@ -475,12 +483,22 @@ namespace Medo.Diagnostics {
             }
         }
 
-        static void textMessage_TextChanged(object sender, EventArgs e) {
-            var senderTextBox = sender as TextBox ;
-            if (senderTextBox != null){
+        private static void textMessage_TextChanged(object sender, EventArgs e) {
+            var senderTextBox = sender as TextBox;
+            if (senderTextBox != null) {
                 var button = senderTextBox.Tag as Button;
                 if (button != null) {
                     button.Enabled = senderTextBox.Text.Length > 0;
+                }
+            }
+        }
+
+        private static void text_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) {
+            var senderTextBox = sender as TextBox;
+            if (senderTextBox != null) {
+                if (e.KeyData == (Keys.Control | Keys.A)) {
+                    senderTextBox.SelectAll();
+                    e.IsInputKey = false;
                 }
             }
         }
@@ -515,7 +533,7 @@ namespace Medo.Diagnostics {
                     dluH = (int)System.Math.Ceiling(fewCharSize.Height);
                 }
 
-                form.ClientSize = new Size(Math.Min(36 * dluW, Screen.GetWorkingArea(form).Width - 4 * dluH), Math.Min(4 * dluH, Screen.GetWorkingArea(form).Height - 4 * dluH));
+                form.ClientSize = new Size(System.Math.Min(36 * dluW, Screen.GetWorkingArea(form).Width - 4 * dluH), System.Math.Min(4 * dluH, Screen.GetWorkingArea(form).Height - 4 * dluH));
 
                 //label
                 label.AutoEllipsis = true;
@@ -635,53 +653,60 @@ namespace Medo.Diagnostics {
         private static void LogBufferFillFromException(Exception exception, params string[] additionalInformation) {
             if (_logBuffer.Length != 0) { _logBuffer.Length = 0; }
 
-            _logBuffer.AppendLine("[Environment]");
+            AppendLine("Environment", _logBuffer);
+            AppendLine("", _logBuffer);
+            AppendLine(_infoAssemblyFullName, _logBuffer, 1, true);
+            AppendLine(_infoOsVersion, _logBuffer, 1, true);
+            AppendLine(_infoFrameworkVersion, _logBuffer, 1, true);
             if (!(exception is OutOfMemoryException)) {
-                _logBuffer.AppendLine(DateTime.Now.ToString(@"yyyy\-MM\-dd\THH\:mm\:ssK", System.Globalization.CultureInfo.InvariantCulture)); //it will fail in OutOfMemory situation
+                AppendLine("Local time is " + DateTime.Now.ToString(@"yyyy\-MM\-dd\THH\:mm\:ssK", System.Globalization.CultureInfo.InvariantCulture), _logBuffer, 1, true); //it will fail in OutOfMemory situation
             }
-            _logBuffer.AppendLine(_infoAssemblyFullName);
-            _logBuffer.AppendLine(_infoOsVersion);
-            _logBuffer.AppendLine(_infoFrameworkVersion);
 
             if (exception != null) {
-                _logBuffer.AppendLine();
-                _logBuffer.AppendLine("[Referenced assemblies]");
-                for (int i = 0; i < _infoReferencedAssemblies.Length; ++i) {
-                    _logBuffer.AppendLine(_infoReferencedAssemblies[i]);
-                }
-
-                _logBuffer.AppendLine();
+                AppendLine("", _logBuffer);
                 Exception ex = exception;
                 int exLevel = 0;
                 while (ex != null) {
-                    if (exLevel > 0) { _logBuffer.AppendLine(); }
+                    AppendLine("", _logBuffer);
 
                     if (exLevel == 0) {
-                        _logBuffer.AppendLine("[Exception]");
+                        AppendLine("Exception", _logBuffer);
                     } else if (exLevel == 1) {
-                        _logBuffer.AppendLine("[Inner exception (1)]");
+                        AppendLine("Inner exception (1)", _logBuffer);
                     } else if (exLevel == 2) {
-                        _logBuffer.AppendLine("[Inner exception (2)]");
+                        AppendLine("Inner exception (2)", _logBuffer);
                     } else {
-                        _logBuffer.AppendLine("[Inner exception (...)]");
+                        AppendLine("Inner exception (...)", _logBuffer);
                     }
-                    _logBuffer.AppendLine(ex.Message);
-                    _logBuffer.AppendLine(ex.GetType().ToString());
-
+                    AppendLine("", _logBuffer);
+                    if (!(exception is OutOfMemoryException)) {
+                        AppendLine(ex.GetType().ToString(), _logBuffer, 1, true);
+                    }
+                    AppendLine(ex.Message, _logBuffer, 1, true);
                     if (!string.IsNullOrEmpty(ex.StackTrace)) {
-                        _logBuffer.AppendLine(ex.StackTrace);
+                        AppendLine(ex.StackTrace, _logBuffer, 2, false);
                     }
 
                     ex = ex.InnerException;
                     exLevel += 1;
                 }
+
+                AppendLine("", _logBuffer);
+                AppendLine("", _logBuffer);
+                AppendLine("Referenced assemblies", _logBuffer);
+                AppendLine("", _logBuffer);
+                for (int i = 0; i < _infoReferencedAssemblies.Length; ++i) {
+                    AppendLine(_infoReferencedAssemblies[i], _logBuffer, 1, true);
+                }
             }
 
             if ((additionalInformation != null) && (additionalInformation.Length > 0)) {
-                _logBuffer.AppendLine();
-                _logBuffer.AppendLine("[Additional information]");
+                AppendLine("", _logBuffer);
+                AppendLine("", _logBuffer);
+                AppendLine("Additional information", _logBuffer);
+                AppendLine("", _logBuffer);
                 for (int i = 0; i < additionalInformation.Length; ++i) {
-                    _logBuffer.AppendLine(additionalInformation[i]);
+                    AppendLine(additionalInformation[i], _logBuffer, 1, true);
                 }
             }
         }
@@ -689,18 +714,21 @@ namespace Medo.Diagnostics {
         private static string LogBufferGetStringWithUserInformation(string message, string name, string email) {
             var sb = new StringBuilder();
             if (!string.IsNullOrEmpty(message)) {
-                sb.AppendLine(message);
-                sb.AppendLine();
+                AppendLine(message, sb);
+                AppendLine("", sb);
+                AppendLine("", sb);
             }
             if (!string.IsNullOrEmpty(name) || !string.IsNullOrEmpty(email)) {
-                sb.AppendLine("[User information]");
+                AppendLine("User information", sb);
+                AppendLine("", sb);
                 if (!string.IsNullOrEmpty(name)) {
-                    sb.AppendLine("Name: " + name);
+                    AppendLine("Name: " + name, sb, 1, true);
                 }
                 if (!string.IsNullOrEmpty(email)) {
-                    sb.AppendLine("E-mail: " + email);
+                    AppendLine("E-mail: " + email, sb, 1, true);
                 }
-                sb.AppendLine();
+                AppendLine("", sb);
+                AppendLine("", sb);
             }
             sb.Append(_logBuffer);
 
@@ -729,6 +757,94 @@ namespace Medo.Diagnostics {
                 }
             }
             return sb.ToString();
+        }
+
+
+        private const int LineLength = 72;
+
+        private static void AppendLine(string input, StringBuilder output) {
+            AppendLine(input, output, 0, false);
+        }
+
+        private static void AppendLine(string input, StringBuilder output, int indentLevel, bool tickO) {
+            if (input == null) { return; }
+            if (input.Length == 0) {
+                output.AppendLine();
+                return;
+            }
+
+            if (tickO) {
+                indentLevel += 1;
+            }
+
+
+            int maxWidth = LineLength - indentLevel * 3;
+            int end = input.Length - 1;
+
+            int firstChar = 0;
+
+            int lastChar;
+            int nextChar;
+            do {
+                if ((end - firstChar) < maxWidth) {
+                    lastChar = end;
+                    nextChar = end + 1;
+                } else {
+                    int nextCrBreak = input.IndexOf('\r', firstChar, maxWidth);
+                    int nextLfBreak = input.IndexOf('\n', firstChar, maxWidth);
+                    int nextCrLfBreak;
+                    if (nextCrBreak == -1) {
+                        nextCrLfBreak = nextLfBreak;
+                    } else if (nextLfBreak == -1) {
+                        nextCrLfBreak = nextCrBreak;
+                    } else {
+                        nextCrLfBreak = System.Math.Min(nextCrBreak, nextLfBreak);
+                    }
+                    if ((nextCrLfBreak != -1) && ((nextCrLfBreak - firstChar) <= maxWidth)) {
+                        lastChar = nextCrLfBreak - 1;
+                        nextChar = lastChar + 2;
+                        if (nextChar <= end) {
+                            if ((input[nextChar] == '\n') || (input[nextChar] == '\r')) {
+                                nextChar += 1;
+                            }
+                        }
+                    } else {
+                        int nextSpaceBreak = input.LastIndexOf(' ', firstChar + maxWidth, maxWidth);
+                        if ((nextSpaceBreak != -1) && ((nextSpaceBreak - firstChar) <= maxWidth)) {
+                            lastChar = nextSpaceBreak;
+                            nextChar = lastChar + 1;
+                        } else {
+                            int nextOtherBreak1 = input.LastIndexOf('-', firstChar + maxWidth, maxWidth);
+                            int nextOtherBreak2 = input.LastIndexOf(':', firstChar + maxWidth, maxWidth);
+                            int nextOtherBreak3 = input.LastIndexOf('(', firstChar + maxWidth, maxWidth);
+                            int nextOtherBreak4 = input.LastIndexOf(',', firstChar + maxWidth, maxWidth);
+                            int nextOtherBreak = System.Math.Max(nextOtherBreak1, System.Math.Max(nextOtherBreak2, System.Math.Max(nextOtherBreak3, nextOtherBreak4)));
+                            if ((nextOtherBreak != -1) && ((nextOtherBreak - firstChar) <= maxWidth)) {
+                                lastChar = nextOtherBreak;
+                                nextChar = lastChar + 1;
+                            } else {
+                                lastChar = firstChar + maxWidth;
+                                if (lastChar > end) { lastChar = end; }
+                                nextChar = lastChar;
+                            }
+                        }
+                    }
+                }
+
+                if (tickO) {
+                    for (int i = 0; i < indentLevel - 1; ++i) { output.Append("   "); }
+                    output.Append("o  ");
+                    tickO = false;
+                } else {
+                    for (int i = 0; i < indentLevel; ++i) { output.Append("   "); }
+                }
+                for (int i = firstChar; i <= lastChar; ++i) {
+                    output.Append(input[i]);
+                }
+                output.AppendLine();
+
+                firstChar = nextChar;
+            } while (nextChar <= end);
         }
 
 
