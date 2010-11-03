@@ -67,7 +67,7 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="%28Medo%29\AboutBox [009].cs" />
+    <Compile Include="%28Medo%29\AboutBox [010].cs" />
     <Compile Include="%28Medo%29\EntryAssembly [003].cs" />
     <Compile Include="%28Medo%29\ErrorReport [017].cs" />
     <Compile Include="%28Medo%29\FullText [003].cs" />

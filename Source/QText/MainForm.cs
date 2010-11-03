@@ -12,7 +12,7 @@ using System.Threading;
 using System.IO;
 
 namespace QText {
-    [System.Runtime.InteropServices.GuidAttribute("6A2DF16A-9F7B-4610-9D79-E381199C73C7")]
+
     public partial class MainForm : Form {
 
         internal bool _suppressMenuKey = false;
@@ -1175,7 +1175,7 @@ namespace QText {
         }
 
         private void mnuHelpAbout_Click(object sender, EventArgs e) {
-            Medo.Windows.Forms.AboutBox.ShowDialog(this, new Uri("http://www.jmedved.com/?page=qtext"), global::Medo.Reflection.EntryAssembly.Product + " (beta 3)");
+            Medo.Windows.Forms.AboutBox.ShowDialog(this, new Uri("http://www.jmedved.com/?page=qtext"));
 
             if (tabFiles.SelectedTab != null) {
                 TextBoxBase txt = tabFiles.SelectedTab.TextBox;
