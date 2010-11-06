@@ -69,7 +69,7 @@
   <ItemGroup>
     <Compile Include="%28Medo%29\AboutBox [010].cs" />
     <Compile Include="%28Medo%29\EntryAssembly [003].cs" />
-    <Compile Include="%28Medo%29\ErrorReport [017].cs" />
+    <Compile Include="%28Medo%29\ErrorReport [018].cs" />
     <Compile Include="%28Medo%29\FullText [003].cs" />
     <Compile Include="%28Medo%29\ManifestResources [002].cs" />
     <Compile Include="%28Medo%29\MessageBox [006].cs" />
