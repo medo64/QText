@@ -48,7 +48,11 @@ Shortcut keys
 
 Version history
 
-   Version 2.30 (beta 3)
+   Version 2.31 (2010-10-11)
+
+      o  Directory is now created during startup.
+
+   Version 2.30 (2010-10-10)
 
       o  All text is now internally handled via RichTextBox.
       o  Files can be hidden.

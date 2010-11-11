@@ -98,11 +98,13 @@ namespace QText {
             }
 
             //Then everything else
-            foreach (var file in GetSortedFileNames(false)) {
-                var fileName = Path.Combine(Settings.FilesLocation, file);
-                if (files.Contains(fileName) == false) {
-                    if (File.Exists(fileName)) {
-                        files.Add(fileName);
+            if (Directory.Exists(Settings.FilesLocation)) {
+                foreach (var file in GetSortedFileNames(false)) {
+                    var fileName = Path.Combine(Settings.FilesLocation, file);
+                    if (files.Contains(fileName) == false) {
+                        if (File.Exists(fileName)) {
+                            files.Add(fileName);
+                        }
                     }
                 }
             }
