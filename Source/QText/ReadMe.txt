@@ -58,6 +58,7 @@ Version history
       o  Files can be hidden.
       o  QText updates files when another process changes them.
       o  Lot of minor improvements.
+      o  No reqistry writes if program is not installed.
       o  Fix: Cursor does not reset position upon save.
 
    Version 2.20 (2009-10-01)
