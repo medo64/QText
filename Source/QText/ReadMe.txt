@@ -183,8 +183,8 @@ Version history
 Feature contributors (in alphabetic order)
 
     Radu Capan             Romaina
-    Marc Desbiens          Canada, Montreal
-    Ivan Gabajček          Croatia, Našice
+    Marc Desbiens          Canada
+    Ivan Gabajček          Croatia
     Michael Jagersberger   Austria
     Randy Simat
     Steven Yarnot          United States
