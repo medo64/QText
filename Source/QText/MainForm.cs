@@ -87,6 +87,9 @@ namespace QText {
             this.tmrUpdateToolbar.Enabled = Settings.DisplayShowToolbar;
             if (tabFiles.SelectedTab != null) {
                 tabFiles.SelectedTab.TextBox.Focus();
+            } else if (tabFiles.TabCount > 0) {
+                tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[0];
+                tabFiles.SelectedTab.TextBox.Focus();
             }
         }
 

@@ -48,6 +48,10 @@ Shortcut keys
 
 Version history
 
+   Version 2.32 (2010-10-30)
+
+      o  Bug-fixing.
+
    Version 2.31 (2010-10-11)
 
       o  Directory is now created during startup.

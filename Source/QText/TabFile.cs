@@ -28,7 +28,7 @@ namespace QText {
             bool isRichTextFormat = string.Compare(fileInfo.Extension, ".rtf", StringComparison.OrdinalIgnoreCase) == 0;
             string fileTitle = fileInfo.Name.Remove(fileInfo.Name.Length - fileInfo.Extension.Length, fileInfo.Extension.Length);
 
-            if ((createFile)) {
+            if (createFile) {
                 if ((File.Exists(fileName))) {
                     throw new IOException("File already exists.");
                 } else if ((File.Exists(Path.Combine(Settings.FilesLocation, fileTitle + ".txt")))) {
