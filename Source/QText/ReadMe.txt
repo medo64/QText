@@ -48,7 +48,7 @@ Shortcut keys
 
 Version history
 
-   Version 2.32 (2010-10-30)
+   Version 2.32 (2010-12-02)
 
       o  Bug-fixing.
 
@@ -180,11 +180,12 @@ Version history
       o  First public release.
 
 
-Feature contributors (in alphabetic order)
+Contributors (in alphabetic order)
 
+    Dražen Bajus           Croatia
     Radu Capan             Romaina
-    Marc Desbiens          Canada, Montreal
-    Ivan Gabajček          Croatia, Našice
+    Marc Desbiens          Canada
+    Ivan Gabajček          Croatia
     Michael Jagersberger   Austria
     Randy Simat
     Steven Yarnot          United States

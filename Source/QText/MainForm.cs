@@ -85,11 +85,20 @@ namespace QText {
 
         private void MainForm_Activated(object sender, EventArgs e) {
             this.tmrUpdateToolbar.Enabled = Settings.DisplayShowToolbar;
+            if (tabFiles == null) { return; }
+
             if (tabFiles.SelectedTab != null) {
-                tabFiles.SelectedTab.TextBox.Focus();
+                if (tabFiles.SelectedTab.TextBox != null) {
+                    tabFiles.SelectedTab.TextBox.Focus();
+                }
             } else if (tabFiles.TabCount > 0) {
-                tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[0];
-                tabFiles.SelectedTab.TextBox.Focus();
+                var selectedTab = (TabFile)tabFiles.TabPages[0] as TabFile;
+                if (selectedTab != null) {
+                    tabFiles.SelectedTab = selectedTab;
+                    if (selectedTab.TextBox != null) {
+                        selectedTab.TextBox.Focus();
+                    }
+                }
             }
         }
 
