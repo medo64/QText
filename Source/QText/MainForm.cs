@@ -114,19 +114,6 @@ namespace QText {
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
-            mnu_Leave(null, null);
-
-            //if (e.Cancel) { return; }
-
-            try {
-                SaveAllChanged();
-                tabFiles.SaveAll();
-            } catch (Exception ex) {
-                Medo.MessageBox.ShowWarning(null, "QText : File saving failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
-            }
-
-            this.FileOrder.Save(tabFiles, true);
-
 #if !DEBUG
             switch (e.CloseReason) {
                 case CloseReason.ApplicationExitCall:
@@ -141,6 +128,17 @@ namespace QText {
                     break;
             }
 #endif
+
+            mnu_Leave(null, null);
+
+            try {
+                SaveAllChanged();
+                tabFiles.SaveAll();
+            } catch (Exception ex) {
+                Medo.MessageBox.ShowWarning(null, "QText : File saving failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
+            }
+
+            this.FileOrder.Save(tabFiles, true);
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e) {
