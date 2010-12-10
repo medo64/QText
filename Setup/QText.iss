@@ -1,8 +1,8 @@
 [Setup]
 AppName=QText
-AppVerName=QText 2.40 (alpha)
+AppVerName=QText 2.32
 DefaultDirName={pf}\Josip Medved\QText
-OutputBaseFilename=qtext240a
+OutputBaseFilename=qtext232g3
 OutputDir=..\Releases
 SourceDir=..\Binaries
 AppId=JosipMedved_QText

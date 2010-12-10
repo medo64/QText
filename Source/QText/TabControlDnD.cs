@@ -85,8 +85,12 @@ namespace QText {
 
         internal new TabFile SelectedTab {
             get {
-                if (base.SelectedTab == null) { return null; }
-                return base.SelectedTab as QText.TabFile;
+                try {
+                    if (base.SelectedTab == null) { return null; }
+                    return base.SelectedTab as QText.TabFile;
+                } catch (NullReferenceException) { //work around for bug (Bajus)
+                    return null;
+                }
             }
             set {
                 base.SelectedTab = value;
