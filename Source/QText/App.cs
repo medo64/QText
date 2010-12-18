@@ -82,7 +82,9 @@ namespace QText {
                 }
             }
 
-
+            if (Medo.Application.Args.Current.ContainsKey("hide") == false) {
+                Tray.ShowForm();
+            }
             Application.Run();
 
 

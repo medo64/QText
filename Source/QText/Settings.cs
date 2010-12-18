@@ -6,6 +6,8 @@ using System.Windows.Forms;
 namespace QText {
     public static class Settings {
 
+        private static readonly Medo.Configuration.RunOnStartup StartupConfig = new Medo.Configuration.RunOnStartup(Medo.Configuration.RunOnStartup.Current.Title, Medo.Configuration.RunOnStartup.Current.ExecutablePath, "/hide");
+
         public static Keys ActivationHotkey {
             get { return (Keys)Medo.Configuration.Settings.Read("ActivationHotkey", Convert.ToInt32(Keys.Control | Keys.Shift | Keys.Q)); }
             set {
@@ -231,10 +233,12 @@ namespace QText {
         }
 
         public static bool StartupRun {
-            get { return Medo.Configuration.RunOnStartup.Current.RunForCurrentUser; }
+            get {
+                return StartupConfig.RunForCurrentUser; 
+            }
             set {
                 try {
-                    Medo.Configuration.RunOnStartup.Current.RunForCurrentUser = value;
+                    StartupConfig.RunForCurrentUser = value;
                 } catch (Exception) {}
             }
         }

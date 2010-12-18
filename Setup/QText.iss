@@ -2,7 +2,7 @@
 AppName=QText
 AppVerName=QText 2.32
 DefaultDirName={pf}\Josip Medved\QText
-OutputBaseFilename=qtext232g3
+OutputBaseFilename=qtext232
 OutputDir=..\Releases
 SourceDir=..\Binaries
 AppId=JosipMedved_QText
@@ -20,23 +20,23 @@ ShowLanguageDialog=no
 SolidCompression=yes
 
 [Dirs]
-Name: "{userappdata}\Josip Medved\QText"; Flags: uninsalwaysuninstall
+Name: "{userappdata}\Josip Medved\QText";  Flags: uninsalwaysuninstall
 
 [Files]
-Source: "QText.exe"; DestDir: "{app}"; Flags: ignoreversion;
-Source: "ReadMe.txt"; DestDir: "{app}"; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly;
+Source: "QText.exe";   DestDir: "{app}";                      Flags: ignoreversion;
+Source: "ReadMe.txt";  DestDir: "{app}";  Attribs: readonly;  Flags: overwritereadonly uninsremovereadonly;
 
 [Icons]
-Name: "{userstartmenu}\QText"; Filename: "{app}\QText.exe"
+Name: "{userstartmenu}\QText";  Filename: "{app}\QText.exe"
 
 [Registry]
-Root: HKCU; Subkey: "Software\Josip Medved\QText"; ValueType: dword; ValueName: "Installed"; ValueData: "1"; Flags: uninsdeletekey
-Root: HKCU; Subkey: "Software\Josip Medved"; Flags: uninsdeletekeyifempty
-Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "QText"; ValueData: "{app}\QText.exe"; Flags: uninsdeletevalue;
+Root: HKCU;  Subkey: "Software\Josip Medved\QText";                    ValueType: dword;   ValueName: "Installed";  ValueData: "1";                          Flags: uninsdeletekey
+Root: HKCU;  Subkey: "Software\Josip Medved";                                                                                                                Flags: uninsdeletekeyifempty
+Root: HKCU;  Subkey: "Software\Microsoft\Windows\CurrentVersion\Run";  ValueType: string;  ValueName: "QText";      ValueData: """{app}\QText.exe"" /hide";  Flags: uninsdeletevalue;
 
 [Run]
-Filename: "{app}\ReadMe.txt"; Description: "View ReadMe.txt"; Flags: postinstall runasoriginaluser shellexec nowait skipifsilent unchecked
-Filename: "{app}\QText.exe"; Description: "Launch application now"; Flags: postinstall nowait skipifsilent runasoriginaluser shellexec
+Description: "View ReadMe.txt";         Filename: "{app}\ReadMe.txt";                        Flags: postinstall runasoriginaluser shellexec nowait skipifsilent unchecked
+Description: "Launch application now";  Filename: "{app}\QText.exe";   Parameters: "/hide";  Flags: postinstall nowait skipifsilent runasoriginaluser shellexec
 
 [Code]
 function InitializeSetup(): Boolean;

@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="%28Medo%29\AboutBox [010].cs" />
+    <Compile Include="%28Medo%29\Args [001].cs" />
     <Compile Include="%28Medo%29\EntryAssembly [003].cs" />
     <Compile Include="%28Medo%29\ErrorReport [018].cs" />
     <Compile Include="%28Medo%29\FullText [003].cs" />
@@ -76,7 +77,7 @@
     <Compile Include="%28Medo%29\PrintPreviewDialog [005].cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="%28Medo%29\RunOnStartup [003].cs" />
+    <Compile Include="%28Medo%29\RunOnStartup [004].cs" />
     <Compile Include="%28Medo%29\Settings [011].cs" />
     <Compile Include="%28Medo%29\SingleInstance [009].cs" />
     <Compile Include="%28Medo%29\State [015].cs" />

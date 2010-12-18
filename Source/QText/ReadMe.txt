@@ -48,7 +48,7 @@ Shortcut keys
 
 Version history
 
-   Version 2.32 (2010-12-10)
+   Version 2.32 (2010-12-20)
 
       o  Closing is faster.
       o  Bug-fixing.

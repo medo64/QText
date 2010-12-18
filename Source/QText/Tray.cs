@@ -45,16 +45,20 @@ namespace QText {
             notMain.Visible = false;
         }
 
-        private void mnxNotifyShow_Click(object sender, System.EventArgs e) {
+        public void ShowForm() {
             lock (Tray.SyncRoot) {
                 this.Form.Show();
                 this.Form.Activate();
             }
         }
 
+        private void mnxNotifyShow_Click(object sender, System.EventArgs e) {
+            ShowForm();
+        }
+
         private void mnxNotifyShowOnPrimary_Click(object sender, System.EventArgs e) {
             lock (Tray.SyncRoot) {
-                this.Form.Show();
+                ShowForm();
 
                 Rectangle priBounds = Screen.PrimaryScreen.WorkingArea;
                 Rectangle currBounds = this.Form.Bounds;
