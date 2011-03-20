@@ -8,7 +8,7 @@ SourceDir=..\Binaries
 AppId=JosipMedved_QText
 AppMutex=Global\JosipMedved_QText
 AppPublisher=Josip Medved
-AppPublisherURL=http://www.jmedved.com/?page=qtext
+AppPublisherURL=http://www.jmedved.com/qtext/
 UninstallDisplayIcon={app}\QText.exe
 AlwaysShowComponentsList=no
 ArchitecturesInstallIn64BitMode=x64
