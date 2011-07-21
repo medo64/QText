@@ -1418,24 +1418,28 @@ namespace QText {
         }
 
         private void Document_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e) {
-            using (System.Drawing.Font font = new System.Drawing.Font("Tahoma", 10)) {
-                e.Graphics.DrawString(((Medo.Drawing.Printing.FullText)sender).Document.DocumentName, font, System.Drawing.Brushes.Black, 0, -10 / 25.4f * 100);
+            try {
+                using (System.Drawing.Font font = new System.Drawing.Font("Tahoma", 10)) {
+                    e.Graphics.DrawString(((Medo.Drawing.Printing.FullText)sender).Document.DocumentName, font, System.Drawing.Brushes.Black, 0, -10 / 25.4f * 100);
 
-                //used now only for height measurements
-                string textC = global::Medo.Reflection.EntryAssembly.Title;
-                System.Drawing.SizeF sizeC = e.Graphics.MeasureString(textC, font);
-                if (Settings.PrintApplicationName) {
-                    e.Graphics.DrawString(textC, font, System.Drawing.Brushes.Black, (e.MarginBounds.Width - sizeC.Width) / 2, -10 / 25.4f * 100);
+                    //used now only for height measurements
+                    string textC = global::Medo.Reflection.EntryAssembly.Title;
+                    System.Drawing.SizeF sizeC = e.Graphics.MeasureString(textC, font);
+                    if (Settings.PrintApplicationName) {
+                        e.Graphics.DrawString(textC, font, System.Drawing.Brushes.Black, (e.MarginBounds.Width - sizeC.Width) / 2, -10 / 25.4f * 100);
+                    }
+
+                    string textR = this._PageNumber.ToString();
+                    System.Drawing.SizeF sizeR = e.Graphics.MeasureString(textR, font);
+                    e.Graphics.DrawString(textR, font, System.Drawing.Brushes.Black, e.MarginBounds.Right - sizeR.Width, -10 / 25.4f * 100);
+
+                    e.Graphics.DrawLine(System.Drawing.Pens.Black, 0.0f, Convert.ToSingle(-10 / 25.4 * 100 + sizeC.Height), e.MarginBounds.Right, Convert.ToSingle(-10 / 25.4 * 100 + sizeC.Height));
                 }
 
-                string textR = this._PageNumber.ToString();
-                System.Drawing.SizeF sizeR = e.Graphics.MeasureString(textR, font);
-                e.Graphics.DrawString(textR, font, System.Drawing.Brushes.Black, e.MarginBounds.Right - sizeR.Width, -10 / 25.4f * 100);
-
-                e.Graphics.DrawLine(System.Drawing.Pens.Black, 0.0f, Convert.ToSingle(-10 / 25.4 * 100 + sizeC.Height), e.MarginBounds.Right, Convert.ToSingle(-10 / 25.4 * 100 + sizeC.Height));
+                this._PageNumber += 1;
+            } catch (ArgumentException) {
+                Medo.MessageBox.ShowWarning(this, "Print preview cannot be shown.\n\nIs there a printer connected and up?");
             }
-
-            this._PageNumber += 1;
         }
 
         #endregion
