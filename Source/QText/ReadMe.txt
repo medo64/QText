@@ -1,6 +1,5 @@
                                               Josip Medved
                                               http://www.jmedved.com
-                                              http://blog.jmedved.com
 
 
                                  QText
@@ -194,7 +193,7 @@ Contributors (in alphabetic order)
 
 Licence (MIT)
 
-   Copyright (c) 2004-2010 Josip Medved <jmedved@jmedved.com>
+   Copyright (c) 2004 Josip Medved <jmedved@jmedved.com>
 
    Permission is hereby granted, free of charge, to any person obtaining
    a copy of this software and associated documentation files (the
