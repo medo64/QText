@@ -169,12 +169,12 @@
             this.mnuToolsOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelpReportABug = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHelpUpgrade = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHelpDonate = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp0 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.tabFiles = new QText.TabControlDnD();
             this.tmrCheckFileUpdate = new System.Windows.Forms.Timer(this.components);
-            this.mnuHelpDonate = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuHelpUpgrade = new System.Windows.Forms.ToolStripMenuItem();
             this.tls.SuspendLayout();
             this.mnxTextBox.SuspendLayout();
             this.mnxTab.SuspendLayout();
@@ -210,7 +210,7 @@
             this.mnuApp,
             this.tls_btnOptions,
             this.ToolStripSeparator2});
-            this.tls.Location = new System.Drawing.Point(0, 28);
+            this.tls.Location = new System.Drawing.Point(0, 0);
             this.tls.Name = "tls";
             this.tls.Size = new System.Drawing.Size(542, 25);
             this.tls.TabIndex = 1;
@@ -441,7 +441,7 @@
             this.mnuApp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuApp.Name = "mnuApp";
             this.mnuApp.Size = new System.Drawing.Size(29, 22);
-            this.mnuApp.Text = "About";
+            this.mnuApp.Text = "QText";
             // 
             // mnuAppFeedback
             // 
@@ -1432,7 +1432,7 @@
             this.mnuToolsOptions.Image = ((System.Drawing.Image)(resources.GetObject("mnuToolsOptions.Image")));
             this.mnuToolsOptions.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnuToolsOptions.Name = "mnuToolsOptions";
-            this.mnuToolsOptions.Size = new System.Drawing.Size(152, 24);
+            this.mnuToolsOptions.Size = new System.Drawing.Size(130, 24);
             this.mnuToolsOptions.Text = "&Options";
             this.mnuToolsOptions.Click += new System.EventHandler(this.mnuToolsOptions_Click);
             // 
@@ -1455,6 +1455,20 @@
             this.mnuHelpReportABug.Size = new System.Drawing.Size(200, 24);
             this.mnuHelpReportABug.Text = "Send &feedback";
             this.mnuHelpReportABug.Click += new System.EventHandler(this.mnuHelpReportABug_Click);
+            // 
+            // mnuHelpUpgrade
+            // 
+            this.mnuHelpUpgrade.Name = "mnuHelpUpgrade";
+            this.mnuHelpUpgrade.Size = new System.Drawing.Size(200, 24);
+            this.mnuHelpUpgrade.Text = "Check for &upgrade";
+            this.mnuHelpUpgrade.Click += new System.EventHandler(this.mnuAppUpgrade_Click);
+            // 
+            // mnuHelpDonate
+            // 
+            this.mnuHelpDonate.Name = "mnuHelpDonate";
+            this.mnuHelpDonate.Size = new System.Drawing.Size(200, 24);
+            this.mnuHelpDonate.Text = "&Donate";
+            this.mnuHelpDonate.Click += new System.EventHandler(this.mnuAppDonate_Click);
             // 
             // mnuHelp0
             // 
@@ -1486,20 +1500,6 @@
             // tmrCheckFileUpdate
             // 
             this.tmrCheckFileUpdate.Tick += new System.EventHandler(this.tmrCheckFileUpdate_Tick);
-            // 
-            // mnuHelpDonate
-            // 
-            this.mnuHelpDonate.Name = "mnuHelpDonate";
-            this.mnuHelpDonate.Size = new System.Drawing.Size(200, 24);
-            this.mnuHelpDonate.Text = "&Donate";
-            this.mnuHelpDonate.Click += new System.EventHandler(this.mnuAppDonate_Click);
-            // 
-            // mnuHelpUpgrade
-            // 
-            this.mnuHelpUpgrade.Name = "mnuHelpUpgrade";
-            this.mnuHelpUpgrade.Size = new System.Drawing.Size(200, 24);
-            this.mnuHelpUpgrade.Text = "Check for &upgrade";
-            this.mnuHelpUpgrade.Click += new System.EventHandler(this.mnuAppUpgrade_Click);
             // 
             // MainForm
             // 

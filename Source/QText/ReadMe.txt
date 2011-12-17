@@ -44,8 +44,17 @@ Shortcut keys
    Ctrl+Alt+V              Paste without formatting
    Ctrl+Alt+X              Cut without formatting
 
+   Ctrl+Backspace          Delete word on left.
+   Ctrl+Delete             Delete word on right.
+
+
 
 Version history
+
+   Version 3.00 (2011-12)
+
+      o  Some interface tweaks.
+      o  Added upgrade procedure.
 
    Version 2.32 (2010-12-20)
 

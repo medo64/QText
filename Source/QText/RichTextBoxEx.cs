@@ -7,7 +7,11 @@ using System.Security.Permissions;
 namespace QText {
     public class RichTextBoxEx : RichTextBox {
 
-        private bool _useMultilineTab = true;
+        public RichTextBoxEx() {
+            this.UseMultilineTab = true;
+        }
+
+
         /// <summary> 
         /// Gets or sets whether multiline tabs will be allowed. If Multiline is not true than this property is ignored. 
         /// </summary> 
@@ -15,40 +19,34 @@ namespace QText {
         [System.ComponentModel.Description("Gets or sets whether multiline tabs will be allowed.")]
         [System.ComponentModel.MergableProperty(true)]
         [System.ComponentModel.DefaultValue(true)]
-        public bool UseMultilineTab {
-            get { return this._useMultilineTab; }
-            set { this._useMultilineTab = value; }
-        }
+        public bool UseMultilineTab { get; set; }
 
         protected override void OnLinkClicked(System.Windows.Forms.LinkClickedEventArgs e) {
-            if (!Settings.FollowURLs) { return; }
-            try {
-                System.Diagnostics.Process.Start(e.LinkText);
-            } catch (Exception ex) {
-                Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.InvariantCulture, "Cannot execute link \"{0}\".", e.LinkText) + Environment.NewLine + Environment.NewLine + ex.Message);
+            if (Settings.FollowURLs) {
+                try {
+                    System.Diagnostics.Process.Start(e.LinkText);
+                } catch (Exception ex) {
+                    Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot execute link \"{0}\".\n\n{1}", e.LinkText, ex.Message));
+                }
             }
         }
 
 
-        private static int _beginUpdateCount;
-
-        private static IntPtr _originalEventMask;
+        private int _beginUpdateCount;
+        private IntPtr _originalEventMask;
         public void BeginUpdate() {
-            _beginUpdateCount += 1;
-            if (_beginUpdateCount > 1) {
+            this._beginUpdateCount += 1;
+            if (this._beginUpdateCount > 1) {
                 return;
             }
 
-            _originalEventMask = NativeMethods.SendMessage(new HandleRef(this, Handle).Handle, NativeMethods.EM_SETEVENTMASK, 0, 0);
-            // Prevent the control from raising any events.
-            NativeMethods.SendMessage(new HandleRef(this, Handle).Handle, NativeMethods.WM_SETREDRAW, 0, 0);
-            //Prevent the control from redrawing itself.
+            _originalEventMask = NativeMethods.SendMessage(new HandleRef(this, Handle).Handle, NativeMethods.EM_SETEVENTMASK, 0, 0); // Prevent the control from raising any events.
+            NativeMethods.SendMessage(new HandleRef(this, Handle).Handle, NativeMethods.WM_SETREDRAW, 0, 0); //Prevent the control from redrawing itself.
         }
 
         public void EndUpdate() {
-            _beginUpdateCount -= 1;
-            if ((_beginUpdateCount > 0))
-                return;
+            this._beginUpdateCount -= 1;
+            if (_beginUpdateCount > 0) { return; }
 
             NativeMethods.SendMessage(new HandleRef(this, Handle).Handle, NativeMethods.WM_SETREDRAW, 1, 0); // Allow the control to redraw itself.
             NativeMethods.SendMessage(new HandleRef(this, Handle).Handle, NativeMethods.EM_SETEVENTMASK, 0, _originalEventMask); // Allow the control to raise event messages.
@@ -86,161 +84,133 @@ namespace QText {
         [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
         protected override bool ProcessCmdKey(ref System.Windows.Forms.Message msg, System.Windows.Forms.Keys keyData) {
             switch (keyData) {
-                case System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Back:
+                case System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Back: { //deletes word before cursor
+                        if (this.SelectionStart <= 0) { break; }
+                        var endIndex = this.SelectionStart + this.SelectionLength - 1;
+                        var startIndex = this.SelectionStart - 1;
+                        while (startIndex >= 0) { //find start of word (backward)
+                            if (char.IsWhiteSpace(this.Text[startIndex]) == false) { break; }
+                            startIndex -= 1;
+                        }
+                        var category = char.GetUnicodeCategory(char.ToUpperInvariant(this.Text[startIndex]));
+                        while (startIndex >= 0) { //find end of word (backward)
+                            if (char.GetUnicodeCategory(char.ToUpperInvariant(this.Text[startIndex])) != category) { break; }
+                            startIndex -= 1;
+                        }
+                        startIndex += 1;
+                        this.SelectionStart = startIndex;
+                        this.SelectionLength = endIndex - startIndex + 1;
+                        this.SelectedText = "";
+                    } return true;
 
-                    if (this.ShortcutsEnabled) {
-                        int iEnd = this.SelectionStart + this.SelectionLength;
-                        int i = iEnd - 1;
-                        while (i > 0) {
-                            if (!char.IsWhiteSpace(this.Text[i])) {
-                                break; // TODO: might not be correct. Was : Exit While
-                            }
-                            i -= 1;
+                case System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Delete: { //delete word
+                        if (this.SelectionStart >= this.TextLength - 1) { break; }
+                        var startIndex = this.SelectionStart;
+                        var endIndex = this.SelectionStart;
+                        var category = char.GetUnicodeCategory(char.ToUpperInvariant(this.Text[endIndex]));
+                        while (endIndex < this.TextLength - 1) { //find end of word (forward)
+                            if (char.GetUnicodeCategory(char.ToUpperInvariant(this.Text[endIndex])) != category) { break; }
+                            endIndex += 1;
                         }
-                        int iStart = 0;
-                        while (i > 0) {
-                            if (char.IsWhiteSpace(this.Text[i])) {
-                                iStart = i + 1;
-                                break; // TODO: might not be correct. Was : Exit While
-                            }
-                            i -= 1;
+                        while (endIndex < this.TextLength - 1) { //include any trailing whitespace
+                            if (char.IsWhiteSpace(this.Text[endIndex]) == false) { break; }
+                            endIndex += 1;
                         }
-                        if (iStart < iEnd) {
-                            this.SelectionStart = iStart;
-                            this.SelectionLength = iEnd - iStart;
-                            this.SelectedText = "";
-                        }
-                        return true;
-                    }
-                    break; // TODO: might not be correct. Was : Exit Select
+                        endIndex -= 1;
+                        this.SelectionStart = startIndex;
+                        this.SelectionLength = endIndex - startIndex + 1;
+                        this.SelectedText = "";
+                    } return true;
 
-                case System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Delete:
-
-                    if (this.ShortcutsEnabled) {
-                        int iStart = this.SelectionStart;
-                        int i = iStart;
-                        while (i < this.Text.Length) {
-                            if (!char.IsWhiteSpace(this.Text[i])) {
-                                break; // TODO: might not be correct. Was : Exit While
-                            }
-                            i += 1;
-                        }
-                        int iEnd = 0;
-                        while (i < this.Text.Length) {
-                            if (char.IsWhiteSpace(this.Text[i])) {
-                                if (this.Text[i] == System.Convert.ToChar(13)) {
-                                    iEnd = i;
-                                } else {
-                                    iEnd = i + 1;
-                                }
-                                break; // TODO: might not be correct. Was : Exit While
-                            }
-                            i += 1;
-                        }
-                        if (iStart < iEnd) {
-                            this.SelectionStart = iStart;
-                            this.SelectionLength = iEnd - iStart;
-                            this.SelectedText = "";
-                        }
-                        return true;
-                    }
-                    break; // TODO: might not be correct. Was : Exit Select
-
-                case System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A:
-
-                    if (this.ShortcutsEnabled) {
+                case System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A: {
                         this.SelectAll();
-                        return true;
-                    }
-                    break; // TODO: might not be correct. Was : Exit Select
+                    } return true;
 
-                case System.Windows.Forms.Keys.Tab:
+                case System.Windows.Forms.Keys.Tab: {
 
-                    if ((this.Multiline) && (this.UseMultilineTab)) {
-                        int selStart = base.SelectionStart;
-                        int selLength = base.SelectionLength;
-                        int lineFrom = base.GetLineFromCharIndex(selStart);
-                        int lineTo = base.GetLineFromCharIndex(selStart + selLength);
-                        if (lineFrom == lineTo) {
-                            //tab within single line 
-                            base.SelectedText = System.Convert.ToChar(9).ToString();
-                        } else {
-                            //multiline tab 
-                            string[] lines = base.Lines;
-                            int lineToM = System.Math.Min(base.GetLineFromCharIndex(selStart + selLength - 1), lines.Length - 1);
-                            for (int i = lineFrom; i <= lineToM; i++) {
-                                lines[i] = System.Convert.ToChar(9) + lines[i];
-                            }
-                            base.Lines = lines;
-                            base.SelectionStart = selStart + 1;
-                            if (lineTo == lineToM) {
-                                base.SelectionLength = selLength + (lineTo - lineFrom);
+                        if ((this.Multiline) && (this.UseMultilineTab)) {
+                            int selStart = base.SelectionStart;
+                            int selLength = base.SelectionLength;
+                            int lineFrom = base.GetLineFromCharIndex(selStart);
+                            int lineTo = base.GetLineFromCharIndex(selStart + selLength);
+                            if (lineFrom == lineTo) {
+                                //tab within single line 
+                                base.SelectedText = System.Convert.ToChar(9).ToString();
                             } else {
-                                base.SelectionLength = selLength + (lineToM - lineFrom);
-                            }
-                        }
-                        return true;
-                    }
-                    break; // TODO: might not be correct. Was : Exit Select
-
-                case System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.Tab:
-
-                    if ((this.Multiline) && (this.UseMultilineTab)) {
-                        int selStart = base.SelectionStart;
-                        int selLength = base.SelectionLength;
-                        int lineFrom = base.GetLineFromCharIndex(selStart);
-                        int lineTo = base.GetLineFromCharIndex(selStart + selLength);
-                        if (lineFrom == lineTo) {
-                            //single line tab back 
-                            int selFirst = base.GetFirstCharIndexFromLine(lineTo);
-                            if (selStart > selFirst) {
+                                //multiline tab 
                                 string[] lines = base.Lines;
-                                if (lines[lineFrom][selStart - selFirst - 1] == System.Convert.ToChar(9)) {
-                                    lines[lineFrom] = lines[lineFrom].Remove(selStart - selFirst - 1, 1);
-                                    base.Lines = lines;
-                                    base.SelectionStart = selStart - 1;
+                                int lineToM = System.Math.Min(base.GetLineFromCharIndex(selStart + selLength - 1), lines.Length - 1);
+                                for (int i = lineFrom; i <= lineToM; i++) {
+                                    lines[i] = System.Convert.ToChar(9) + lines[i];
                                 }
-                            }
-                        } else {
-                            //multiline tab back 
-                            string[] lines = base.Lines;
-                            int lineToM = System.Math.Min(base.GetLineFromCharIndex(selStart + selLength - 1), lines.Length - 1);
-                            int tabCount = 0;
-                            bool tabInFirstLine = false;
-                            for (int i = lineFrom; i <= lineToM; i++) {
-                                if (lines[i].StartsWith(System.Convert.ToChar(9).ToString())) {
-                                    if (i == lineFrom) {
-                                        tabInFirstLine = true;
-                                    }
-                                    lines[i] = lines[i].Remove(0, 1);
-                                    tabCount += 1;
-                                }
-                            }
-                            if (tabCount > 0) {
                                 base.Lines = lines;
-                                if (selStart == 0) {
-                                    base.SelectionStart = 0;
+                                base.SelectionStart = selStart + 1;
+                                if (lineTo == lineToM) {
+                                    base.SelectionLength = selLength + (lineTo - lineFrom);
                                 } else {
-                                    if (tabInFirstLine == true) {
-                                        base.SelectionStart = selStart - 1;
-                                    } else {
-                                        base.SelectionStart = selStart;
-                                    }
-                                }
-                                if (tabCount <= (lineToM - lineFrom)) {
-                                    base.SelectionLength = selLength - tabCount;
-                                } else {
-                                    base.SelectionLength = selLength - (lineToM - lineFrom);
+                                    base.SelectionLength = selLength + (lineToM - lineFrom);
                                 }
                             }
+                            return true;
                         }
-                        return true;
+                        break; // TODO: might not be correct. Was : Exit Select
                     }
-                    break; // TODO: might not be correct. Was : Exit Select
 
-                default:
+                case System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.Tab: {
 
-                    break; // TODO: might not be correct. Was : Exit Select
+                        if ((this.Multiline) && (this.UseMultilineTab)) {
+                            int selStart = base.SelectionStart;
+                            int selLength = base.SelectionLength;
+                            int lineFrom = base.GetLineFromCharIndex(selStart);
+                            int lineTo = base.GetLineFromCharIndex(selStart + selLength);
+                            if (lineFrom == lineTo) {
+                                //single line tab back 
+                                int selFirst = base.GetFirstCharIndexFromLine(lineTo);
+                                if (selStart > selFirst) {
+                                    string[] lines = base.Lines;
+                                    if (lines[lineFrom][selStart - selFirst - 1] == System.Convert.ToChar(9)) {
+                                        lines[lineFrom] = lines[lineFrom].Remove(selStart - selFirst - 1, 1);
+                                        base.Lines = lines;
+                                        base.SelectionStart = selStart - 1;
+                                    }
+                                }
+                            } else {
+                                //multiline tab back 
+                                string[] lines = base.Lines;
+                                int lineToM = System.Math.Min(base.GetLineFromCharIndex(selStart + selLength - 1), lines.Length - 1);
+                                int tabCount = 0;
+                                bool tabInFirstLine = false;
+                                for (int i = lineFrom; i <= lineToM; i++) {
+                                    if (lines[i].StartsWith(System.Convert.ToChar(9).ToString())) {
+                                        if (i == lineFrom) {
+                                            tabInFirstLine = true;
+                                        }
+                                        lines[i] = lines[i].Remove(0, 1);
+                                        tabCount += 1;
+                                    }
+                                }
+                                if (tabCount > 0) {
+                                    base.Lines = lines;
+                                    if (selStart == 0) {
+                                        base.SelectionStart = 0;
+                                    } else {
+                                        if (tabInFirstLine == true) {
+                                            base.SelectionStart = selStart - 1;
+                                        } else {
+                                            base.SelectionStart = selStart;
+                                        }
+                                    }
+                                    if (tabCount <= (lineToM - lineFrom)) {
+                                        base.SelectionLength = selLength - tabCount;
+                                    } else {
+                                        base.SelectionLength = selLength - (lineToM - lineFrom);
+                                    }
+                                }
+                            }
+                            return true;
+                        }
+                        break; // TODO: might not be correct. Was : Exit Select
+                    }
 
             }
 
