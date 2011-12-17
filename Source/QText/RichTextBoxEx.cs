@@ -143,6 +143,57 @@ namespace QText {
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
+        protected override void WndProc(ref Message m) {
+            switch (m.Msg) {
+                case NativeMethods.WM_LBUTTONDBLCLK: {
+                        if (this.TextLength == 0) { return; } //cannot find word in empty text
+                        var startIndex = this.SelectionStart;
+                        if (startIndex >= this.TextLength) { startIndex -= 1; }
+                        if (this.Text[startIndex] == '\n') {
+                            var line1 = this.GetLineFromCharIndex(startIndex);
+                            var line2 = this.GetLineFromCharIndex(startIndex - 1);
+                            if (line1 == line2) {
+                                startIndex -= 1;
+                            } else {
+                                return; //cannot select word on empty row
+                            }
+                        }
+
+                        while (startIndex >= 0) { //find non whitespace
+                            if (char.IsWhiteSpace(this.Text[startIndex]) == false) { break; }
+                            startIndex -= 1;
+                        }
+                        if (startIndex == -1) { return; } //cannot select if it is only whitespace
+
+                        var category = GetLikeUnicodeCategory(this.Text[startIndex]);
+                        while (startIndex >= 0) { //find start of word
+                            if (GetLikeUnicodeCategory(this.Text[startIndex]) != category) { break; }
+                            startIndex -= 1;
+                        }
+                        startIndex += 1;
+                        var endIndex = startIndex;
+                        while (endIndex < this.TextLength - 1) { //find end of word
+                            if (GetLikeUnicodeCategory(this.Text[endIndex]) != category) { break; }
+                            endIndex += 1;
+                        }
+                        endIndex -= 1;
+                        this.SelectionStart = startIndex;
+                        this.SelectionLength = endIndex - startIndex + 1;
+                    } return;
+            }
+            base.WndProc(ref m);
+        }
+
+        private UnicodeCategory GetLikeUnicodeCategory(char ch) {
+            if (char.IsWhiteSpace(ch)) {
+                return UnicodeCategory.SpaceSeparator;
+            } else if (char.IsPunctuation(ch)) {
+                return UnicodeCategory.OtherSymbol;
+            } else {
+                return UnicodeCategory.LetterNumber;
+            }
+        }
+
 
         private int _beginUpdateCount;
         private IntPtr _originalEventMask;
@@ -171,6 +222,8 @@ namespace QText {
 
             internal const int WM_SETREDRAW = 11;
             internal const int EM_SETEVENTMASK = 1073;
+            internal const int WM_LBUTTONDBLCLK = 0x0203;
+
 
             public static IntPtr SendMessage(IntPtr hWnd, uint Msg, int wParam, IntPtr lParam) {
                 return SendMessageW(hWnd, Msg, new IntPtr(wParam), ref lParam);
