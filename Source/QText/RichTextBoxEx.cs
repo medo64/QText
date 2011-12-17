@@ -159,11 +159,33 @@ namespace QText {
                             }
                         }
 
-                        while (startIndex >= 0) { //find non whitespace
-                            if (char.IsWhiteSpace(this.Text[startIndex]) == false) { break; }
-                            startIndex -= 1;
+                        var leftCount = 0;
+                        while (startIndex - leftCount >= 0) { //find non whitespace
+                            if (char.IsWhiteSpace(this.Text[startIndex - leftCount]) == false) { break; }
+                            leftCount += 1;
                         }
-                        if (startIndex == -1) { return; } //cannot select if it is only whitespace
+                        if (startIndex - leftCount < 0) { leftCount = int.MinValue; }
+
+                        var rightCount = 0;
+                        while (startIndex + rightCount < this.TextLength - 1) { //find non whitespace
+                            if (char.IsWhiteSpace(this.Text[startIndex + rightCount]) == false) { break; }
+                            rightCount += 1;
+                        }
+                        if (startIndex + rightCount >= this.TextLength - 1) { rightCount = int.MinValue; }
+
+                        if ((rightCount == int.MinValue) && (leftCount == int.MinValue)) {
+                            return; //cannot select text if there is only whitespace
+                        } else if (leftCount == int.MinValue) {
+                            startIndex = startIndex + rightCount;
+                        } else if (rightCount == int.MinValue) {
+                            startIndex = startIndex - leftCount;
+                        } else {
+                            if (rightCount <= leftCount) {
+                                startIndex = startIndex + rightCount;
+                            } else {
+                                startIndex = startIndex - leftCount;
+                            }
+                        }
 
                         var category = GetLikeUnicodeCategory(this.Text[startIndex]);
                         while (startIndex >= 0) { //find start of word
@@ -176,7 +198,7 @@ namespace QText {
                             if (GetLikeUnicodeCategory(this.Text[endIndex]) != category) { break; }
                             endIndex += 1;
                         }
-                        endIndex -= 1;
+                        if (endIndex < this.TextLength - 1) { endIndex -= 1; }
                         this.SelectionStart = startIndex;
                         this.SelectionLength = endIndex - startIndex + 1;
                     } return;

@@ -51,7 +51,7 @@ Shortcut keys
 
 Version history
 
-   Version 3.00 (2011-12)
+   Version 2.50 (2011-12)
 
       o  Greatly improved text manipulation (especially multiline tabs).
       o  Some interface tweaks.
