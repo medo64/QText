@@ -1184,8 +1184,23 @@ namespace QText {
             Medo.Diagnostics.ErrorReport.ShowDialog(this, null, new Uri("http://jmedved.com/ErrorReport/"));
         }
 
-        private void mnuHelpAbout_Click(object sender, EventArgs e) {
-            Medo.Windows.Forms.AboutBox.ShowDialog(this, new Uri("http://www.jmedved.com/?page=qtext"));
+
+        private void mnuAppFeedback_Click(object sender, EventArgs e) {
+            mnuHelpReportABug_Click(null, null);
+        }
+
+        private void mnuAppUpgrade_Click(object sender, EventArgs e) {
+            using (var frm = new UpgradeForm()) {
+                frm.ShowDialog(this);
+            }
+        }
+
+        private void mnuAppDonate_Click(object sender, EventArgs e) {
+            Process.Start("http://www.jmedved.com/donate/");
+        }
+
+        private void mnuAppAbout_Click(object sender, EventArgs e) {
+            Medo.Windows.Forms.AboutBox.ShowDialog(this, new Uri("http://www.jmedved.com/qtext/"));
 
             if (tabFiles.SelectedTab != null) {
                 TextBoxBase txt = tabFiles.SelectedTab.TextBox;

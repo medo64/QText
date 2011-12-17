@@ -49,8 +49,12 @@
             this.ToolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.tls_btnFind = new System.Windows.Forms.ToolStripButton();
             this.tls_btnAlwaysOnTop = new System.Windows.Forms.ToolStripButton();
-            this.tlbHelpAbout = new System.Windows.Forms.ToolStripButton();
-            this.tlbHelpReportABug = new System.Windows.Forms.ToolStripButton();
+            this.mnuApp = new System.Windows.Forms.ToolStripDropDownButton();
+            this.mnuAppFeedback = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuAppUpgrade = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuAppDonate = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuAppAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.tls_btnOptions = new System.Windows.Forms.ToolStripButton();
             this.ToolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tmrUpdateToolbar = new System.Windows.Forms.Timer(this.components);
@@ -169,6 +173,8 @@
             this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.tabFiles = new QText.TabControlDnD();
             this.tmrCheckFileUpdate = new System.Windows.Forms.Timer(this.components);
+            this.mnuHelpDonate = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHelpUpgrade = new System.Windows.Forms.ToolStripMenuItem();
             this.tls.SuspendLayout();
             this.mnxTextBox.SuspendLayout();
             this.mnxTab.SuspendLayout();
@@ -201,11 +207,10 @@
             this.ToolStripSeparator3,
             this.tls_btnFind,
             this.tls_btnAlwaysOnTop,
-            this.tlbHelpAbout,
-            this.tlbHelpReportABug,
+            this.mnuApp,
             this.tls_btnOptions,
             this.ToolStripSeparator2});
-            this.tls.Location = new System.Drawing.Point(0, 0);
+            this.tls.Location = new System.Drawing.Point(0, 28);
             this.tls.Name = "tls";
             this.tls.Size = new System.Drawing.Size(542, 25);
             this.tls.TabIndex = 1;
@@ -422,27 +427,54 @@
             this.tls_btnAlwaysOnTop.ToolTipText = "Always on top (Ctrl+T)";
             this.tls_btnAlwaysOnTop.Click += new System.EventHandler(this.tls_btnAlwaysOnTop_Click);
             // 
-            // tlbHelpAbout
+            // mnuApp
             // 
-            this.tlbHelpAbout.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.tlbHelpAbout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tlbHelpAbout.Image = ((System.Drawing.Image)(resources.GetObject("tlbHelpAbout.Image")));
-            this.tlbHelpAbout.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tlbHelpAbout.Name = "tlbHelpAbout";
-            this.tlbHelpAbout.Size = new System.Drawing.Size(23, 22);
-            this.tlbHelpAbout.Text = "About";
-            this.tlbHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
+            this.mnuApp.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.mnuApp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.mnuApp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuAppFeedback,
+            this.mnuAppUpgrade,
+            this.mnuAppDonate,
+            this.toolStripMenuItem2,
+            this.mnuAppAbout});
+            this.mnuApp.Image = ((System.Drawing.Image)(resources.GetObject("mnuApp.Image")));
+            this.mnuApp.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuApp.Name = "mnuApp";
+            this.mnuApp.Size = new System.Drawing.Size(29, 22);
+            this.mnuApp.Text = "About";
             // 
-            // tlbHelpReportABug
+            // mnuAppFeedback
             // 
-            this.tlbHelpReportABug.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.tlbHelpReportABug.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tlbHelpReportABug.Image = ((System.Drawing.Image)(resources.GetObject("tlbHelpReportABug.Image")));
-            this.tlbHelpReportABug.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tlbHelpReportABug.Name = "tlbHelpReportABug";
-            this.tlbHelpReportABug.Size = new System.Drawing.Size(23, 22);
-            this.tlbHelpReportABug.Text = "Report a bug";
-            this.tlbHelpReportABug.Click += new System.EventHandler(this.mnuHelpReportABug_Click);
+            this.mnuAppFeedback.Name = "mnuAppFeedback";
+            this.mnuAppFeedback.Size = new System.Drawing.Size(200, 24);
+            this.mnuAppFeedback.Text = "Send &feedback";
+            this.mnuAppFeedback.Click += new System.EventHandler(this.mnuAppFeedback_Click);
+            // 
+            // mnuAppUpgrade
+            // 
+            this.mnuAppUpgrade.Name = "mnuAppUpgrade";
+            this.mnuAppUpgrade.Size = new System.Drawing.Size(200, 24);
+            this.mnuAppUpgrade.Text = "Check for &upgrade";
+            this.mnuAppUpgrade.Click += new System.EventHandler(this.mnuAppUpgrade_Click);
+            // 
+            // mnuAppDonate
+            // 
+            this.mnuAppDonate.Name = "mnuAppDonate";
+            this.mnuAppDonate.Size = new System.Drawing.Size(200, 24);
+            this.mnuAppDonate.Text = "&Donate";
+            this.mnuAppDonate.Click += new System.EventHandler(this.mnuAppDonate_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(197, 6);
+            // 
+            // mnuAppAbout
+            // 
+            this.mnuAppAbout.Name = "mnuAppAbout";
+            this.mnuAppAbout.Size = new System.Drawing.Size(200, 24);
+            this.mnuAppAbout.Text = "&About";
+            this.mnuAppAbout.Click += new System.EventHandler(this.mnuAppAbout_Click);
             // 
             // tls_btnOptions
             // 
@@ -561,8 +593,8 @@
             // 
             this.mnxTextBoxCutAsText.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextBoxCutAsText.Image")));
             this.mnxTextBoxCutAsText.Name = "mnxTextBoxCutAsText";
-            this.mnxTextBoxCutAsText.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt)
-                        | System.Windows.Forms.Keys.X)));
+            this.mnxTextBoxCutAsText.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
+            | System.Windows.Forms.Keys.X)));
             this.mnxTextBoxCutAsText.Size = new System.Drawing.Size(322, 24);
             this.mnxTextBoxCutAsText.Text = "Cut without formatting";
             this.mnxTextBoxCutAsText.Click += new System.EventHandler(this.mnxTextBoxCutAsText_Click);
@@ -571,8 +603,8 @@
             // 
             this.mnxTextBoxCopyAsText.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextBoxCopyAsText.Image")));
             this.mnxTextBoxCopyAsText.Name = "mnxTextBoxCopyAsText";
-            this.mnxTextBoxCopyAsText.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt)
-                        | System.Windows.Forms.Keys.C)));
+            this.mnxTextBoxCopyAsText.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
+            | System.Windows.Forms.Keys.C)));
             this.mnxTextBoxCopyAsText.Size = new System.Drawing.Size(322, 24);
             this.mnxTextBoxCopyAsText.Text = "Copy without formatting";
             this.mnxTextBoxCopyAsText.Click += new System.EventHandler(this.mnxTextBoxCopyAsText_Click);
@@ -581,8 +613,8 @@
             // 
             this.mnxTextBoxPasteAsText.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextBoxPasteAsText.Image")));
             this.mnxTextBoxPasteAsText.Name = "mnxTextBoxPasteAsText";
-            this.mnxTextBoxPasteAsText.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt)
-                        | System.Windows.Forms.Keys.V)));
+            this.mnxTextBoxPasteAsText.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
+            | System.Windows.Forms.Keys.V)));
             this.mnxTextBoxPasteAsText.Size = new System.Drawing.Size(322, 24);
             this.mnxTextBoxPasteAsText.Text = "Paste without formatting";
             this.mnxTextBoxPasteAsText.Click += new System.EventHandler(this.mnxTextBoxPasteAsText_Click);
@@ -952,8 +984,8 @@
             this.mnuFileSaveAll.Image = ((System.Drawing.Image)(resources.GetObject("mnuFileSaveAll.Image")));
             this.mnuFileSaveAll.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnuFileSaveAll.Name = "mnuFileSaveAll";
-            this.mnuFileSaveAll.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
-                        | System.Windows.Forms.Keys.S)));
+            this.mnuFileSaveAll.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.S)));
             this.mnuFileSaveAll.Size = new System.Drawing.Size(219, 24);
             this.mnuFileSaveAll.Text = "Save &all";
             this.mnuFileSaveAll.Click += new System.EventHandler(this.mnuFileSaveAll_Click);
@@ -1400,7 +1432,7 @@
             this.mnuToolsOptions.Image = ((System.Drawing.Image)(resources.GetObject("mnuToolsOptions.Image")));
             this.mnuToolsOptions.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnuToolsOptions.Name = "mnuToolsOptions";
-            this.mnuToolsOptions.Size = new System.Drawing.Size(130, 24);
+            this.mnuToolsOptions.Size = new System.Drawing.Size(152, 24);
             this.mnuToolsOptions.Text = "&Options";
             this.mnuToolsOptions.Click += new System.EventHandler(this.mnuToolsOptions_Click);
             // 
@@ -1408,6 +1440,8 @@
             // 
             this.mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuHelpReportABug,
+            this.mnuHelpUpgrade,
+            this.mnuHelpDonate,
             this.mnuHelp0,
             this.mnuHelpAbout});
             this.mnuHelp.Name = "mnuHelp";
@@ -1418,23 +1452,23 @@
             // 
             this.mnuHelpReportABug.Image = ((System.Drawing.Image)(resources.GetObject("mnuHelpReportABug.Image")));
             this.mnuHelpReportABug.Name = "mnuHelpReportABug";
-            this.mnuHelpReportABug.Size = new System.Drawing.Size(165, 24);
-            this.mnuHelpReportABug.Text = "Report a bug";
+            this.mnuHelpReportABug.Size = new System.Drawing.Size(200, 24);
+            this.mnuHelpReportABug.Text = "Send &feedback";
             this.mnuHelpReportABug.Click += new System.EventHandler(this.mnuHelpReportABug_Click);
             // 
             // mnuHelp0
             // 
             this.mnuHelp0.Name = "mnuHelp0";
-            this.mnuHelp0.Size = new System.Drawing.Size(162, 6);
+            this.mnuHelp0.Size = new System.Drawing.Size(197, 6);
             // 
             // mnuHelpAbout
             // 
             this.mnuHelpAbout.Image = ((System.Drawing.Image)(resources.GetObject("mnuHelpAbout.Image")));
             this.mnuHelpAbout.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnuHelpAbout.Name = "mnuHelpAbout";
-            this.mnuHelpAbout.Size = new System.Drawing.Size(165, 24);
+            this.mnuHelpAbout.Size = new System.Drawing.Size(200, 24);
             this.mnuHelpAbout.Text = "&About";
-            this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
+            this.mnuHelpAbout.Click += new System.EventHandler(this.mnuAppAbout_Click);
             // 
             // tabFiles
             // 
@@ -1452,6 +1486,20 @@
             // tmrCheckFileUpdate
             // 
             this.tmrCheckFileUpdate.Tick += new System.EventHandler(this.tmrCheckFileUpdate_Tick);
+            // 
+            // mnuHelpDonate
+            // 
+            this.mnuHelpDonate.Name = "mnuHelpDonate";
+            this.mnuHelpDonate.Size = new System.Drawing.Size(200, 24);
+            this.mnuHelpDonate.Text = "&Donate";
+            this.mnuHelpDonate.Click += new System.EventHandler(this.mnuAppDonate_Click);
+            // 
+            // mnuHelpUpgrade
+            // 
+            this.mnuHelpUpgrade.Name = "mnuHelpUpgrade";
+            this.mnuHelpUpgrade.Size = new System.Drawing.Size(200, 24);
+            this.mnuHelpUpgrade.Text = "Check for &upgrade";
+            this.mnuHelpUpgrade.Click += new System.EventHandler(this.mnuAppUpgrade_Click);
             // 
             // MainForm
             // 
@@ -1515,8 +1563,6 @@
         internal System.Windows.Forms.ToolStripSeparator ToolStripSeparator3;
         internal System.Windows.Forms.ToolStripButton tls_btnFind;
         internal System.Windows.Forms.ToolStripButton tls_btnAlwaysOnTop;
-        internal System.Windows.Forms.ToolStripButton tlbHelpAbout;
-        internal System.Windows.Forms.ToolStripButton tlbHelpReportABug;
         internal System.Windows.Forms.ToolStripButton tls_btnOptions;
         internal System.Windows.Forms.ToolStripSeparator ToolStripSeparator2;
         internal System.Windows.Forms.Timer tmrUpdateToolbar;
@@ -1635,5 +1681,13 @@
         private System.Windows.Forms.ToolStripMenuItem mnxTabUnhide;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem18;
         private System.Windows.Forms.Timer tmrCheckFileUpdate;
+        internal System.Windows.Forms.ToolStripDropDownButton mnuApp;
+        private System.Windows.Forms.ToolStripMenuItem mnuAppFeedback;
+        private System.Windows.Forms.ToolStripMenuItem mnuAppUpgrade;
+        private System.Windows.Forms.ToolStripMenuItem mnuAppDonate;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem mnuAppAbout;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelpUpgrade;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelpDonate;
     }
 }
