@@ -70,7 +70,7 @@ namespace QText {
                 case System.Windows.Forms.Keys.Tab: {
                         var startLine = this.GetLineFromCharIndex(this.SelectionStart);
                         var endLine = this.GetLineFromCharIndex(this.SelectionStart + this.SelectionLength - 1);
-                        if (startLine == endLine) { //single line tab
+                        if (startLine >= endLine) { //single line tab
                             this.SelectedText = "\t";
                         } else {
                             var origStart = this.SelectionStart;
@@ -99,7 +99,7 @@ namespace QText {
                         var endLine = this.GetLineFromCharIndex(this.SelectionStart + this.SelectionLength - 1);
                         var origStart = this.SelectionStart;
                         var origLen = this.SelectionLength;
-                        if (startLine == endLine) { //single line tab
+                        if (startLine >= endLine) { //single line tab
                             if (this.SelectionStart > 0) {
                                 if (this.Text[this.SelectionStart - 1] == '\t') {
                                     this.BeginUpdate();

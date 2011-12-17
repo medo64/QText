@@ -53,6 +53,7 @@ Version history
 
    Version 3.00 (2011-12)
 
+      o  Greatly improved text manipulation (especially multiline tabs).
       o  Some interface tweaks.
       o  Added upgrade procedure.
 
