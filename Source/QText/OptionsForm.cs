@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.IO;
 
 namespace QText {
-    public partial class OptionsForm : Form {
+    internal partial class OptionsForm : Form {
         public OptionsForm() {
             InitializeComponent();
             this.Font = System.Drawing.SystemFonts.MessageBoxFont;
@@ -27,8 +27,7 @@ namespace QText {
             chkDisplayURLs_CheckedChanged(null, null);
 
             //Display
-            chkShowMenu.Checked = Settings.ShowMenu;
-            chkShowToolbar.Checked = Settings.DisplayShowToolbar;
+            chkShowToolbar.Checked = Settings.ShowToolbar;
             chkShowInTaskbar.Checked = Settings.DisplayShowInTaskbar;
             chbMultilineTabHeaders.Checked = Settings.DisplayMultilineTabHeader;
             chbShowMinimizeMaximizeButtons.Checked = Settings.DisplayMinimizeMaximizeButtons;
@@ -299,8 +298,7 @@ namespace QText {
             Settings.DisplayForegroundColor = lblColorExample.ForeColor;
 
             //Display
-            Settings.ShowMenu = chkShowMenu.Checked;
-            Settings.DisplayShowToolbar = chkShowToolbar.Checked;
+            Settings.ShowToolbar = chkShowToolbar.Checked;
             Settings.DisplayShowInTaskbar = chkShowInTaskbar.Checked;
             Settings.DisplayMultilineTabHeader = chbMultilineTabHeaders.Checked;
             Settings.DisplayMinimizeMaximizeButtons = chbShowMinimizeMaximizeButtons.Checked;

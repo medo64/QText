@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 
 namespace QText {
-    public class TabControlDnD : TabControl {
+    internal class TabControlDnD : TabControl {
 
         private TabPage _dragTabPage = null;
         public TabControlDnD()

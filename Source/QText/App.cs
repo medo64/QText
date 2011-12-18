@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 
 namespace QText {
 
-    public static class App {
+    internal static class App {
 
         public static Mutex SetupMutex;
         public static MainForm Form;

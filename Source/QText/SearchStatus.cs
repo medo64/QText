@@ -1,5 +1,5 @@
 ﻿namespace QText {
-    public static class SearchStatus {
+    internal static class SearchStatus {
 
         private static string _text;
         public static string Text {

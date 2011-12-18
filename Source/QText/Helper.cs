@@ -8,7 +8,7 @@ using System.ComponentModel;
 namespace QText {
     namespace Helper {
 
-        public static class Path {
+        internal static class Path {
 
             public static void CreatePath(string path) {
                 if ((!Directory.Exists(path))) {

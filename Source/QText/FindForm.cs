@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using System.Security.Permissions;
 
 namespace QText {
-    public partial class FindForm : Form {
+    internal partial class FindForm : Form {
 
         private TabControlDnD _tabFiles;
 

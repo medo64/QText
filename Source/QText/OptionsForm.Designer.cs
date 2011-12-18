@@ -42,7 +42,6 @@
             this.chbHorizontalScrollbar = new System.Windows.Forms.CheckBox();
             this.chbShowMinimizeMaximizeButtons = new System.Windows.Forms.CheckBox();
             this.chbMultilineTabHeaders = new System.Windows.Forms.CheckBox();
-            this.chkShowMenu = new System.Windows.Forms.CheckBox();
             this.chkShowToolbar = new System.Windows.Forms.CheckBox();
             this.chkShowInTaskbar = new System.Windows.Forms.CheckBox();
             this.tab_pagFiles = new System.Windows.Forms.TabPage();
@@ -86,9 +85,9 @@
             // 
             // tab
             // 
-            this.tab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tab.Controls.Add(this.tab_pagAppearance);
             this.tab.Controls.Add(this.tab_pagDisplay);
             this.tab.Controls.Add(this.tab_pagFiles);
@@ -236,8 +235,8 @@
             // 
             // txtFont
             // 
-            this.txtFont.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtFont.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtFont.Location = new System.Drawing.Point(123, 91);
             this.txtFont.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.txtFont.Name = "txtFont";
@@ -252,7 +251,6 @@
             this.tab_pagDisplay.Controls.Add(this.chbHorizontalScrollbar);
             this.tab_pagDisplay.Controls.Add(this.chbShowMinimizeMaximizeButtons);
             this.tab_pagDisplay.Controls.Add(this.chbMultilineTabHeaders);
-            this.tab_pagDisplay.Controls.Add(this.chkShowMenu);
             this.tab_pagDisplay.Controls.Add(this.chkShowToolbar);
             this.tab_pagDisplay.Controls.Add(this.chkShowInTaskbar);
             this.tab_pagDisplay.Location = new System.Drawing.Point(4, 25);
@@ -265,7 +263,7 @@
             // chbZoomToolbarWithDpi
             // 
             this.chbZoomToolbarWithDpi.AutoSize = true;
-            this.chbZoomToolbarWithDpi.Location = new System.Drawing.Point(3, 84);
+            this.chbZoomToolbarWithDpi.Location = new System.Drawing.Point(3, 57);
             this.chbZoomToolbarWithDpi.Name = "chbZoomToolbarWithDpi";
             this.chbZoomToolbarWithDpi.Size = new System.Drawing.Size(219, 21);
             this.chbZoomToolbarWithDpi.TabIndex = 5;
@@ -275,7 +273,7 @@
             // chbVerticalScrollbar
             // 
             this.chbVerticalScrollbar.AutoSize = true;
-            this.chbVerticalScrollbar.Location = new System.Drawing.Point(3, 192);
+            this.chbVerticalScrollbar.Location = new System.Drawing.Point(3, 165);
             this.chbVerticalScrollbar.Name = "chbVerticalScrollbar";
             this.chbVerticalScrollbar.Size = new System.Drawing.Size(135, 21);
             this.chbVerticalScrollbar.TabIndex = 10;
@@ -285,7 +283,7 @@
             // chbHorizontalScrollbar
             // 
             this.chbHorizontalScrollbar.AutoSize = true;
-            this.chbHorizontalScrollbar.Location = new System.Drawing.Point(3, 165);
+            this.chbHorizontalScrollbar.Location = new System.Drawing.Point(3, 138);
             this.chbHorizontalScrollbar.Name = "chbHorizontalScrollbar";
             this.chbHorizontalScrollbar.Size = new System.Drawing.Size(152, 21);
             this.chbHorizontalScrollbar.TabIndex = 9;
@@ -295,7 +293,7 @@
             // chbShowMinimizeMaximizeButtons
             // 
             this.chbShowMinimizeMaximizeButtons.AutoSize = true;
-            this.chbShowMinimizeMaximizeButtons.Location = new System.Drawing.Point(3, 138);
+            this.chbShowMinimizeMaximizeButtons.Location = new System.Drawing.Point(3, 111);
             this.chbShowMinimizeMaximizeButtons.Name = "chbShowMinimizeMaximizeButtons";
             this.chbShowMinimizeMaximizeButtons.Size = new System.Drawing.Size(234, 21);
             this.chbShowMinimizeMaximizeButtons.TabIndex = 7;
@@ -306,27 +304,17 @@
             // chbMultilineTabHeaders
             // 
             this.chbMultilineTabHeaders.AutoSize = true;
-            this.chbMultilineTabHeaders.Location = new System.Drawing.Point(3, 111);
+            this.chbMultilineTabHeaders.Location = new System.Drawing.Point(3, 84);
             this.chbMultilineTabHeaders.Name = "chbMultilineTabHeaders";
             this.chbMultilineTabHeaders.Size = new System.Drawing.Size(161, 21);
             this.chbMultilineTabHeaders.TabIndex = 6;
             this.chbMultilineTabHeaders.Text = "Multiline tab headers";
             this.chbMultilineTabHeaders.UseVisualStyleBackColor = true;
             // 
-            // chkShowMenu
-            // 
-            this.chkShowMenu.AutoSize = true;
-            this.chkShowMenu.Location = new System.Drawing.Point(3, 30);
-            this.chkShowMenu.Name = "chkShowMenu";
-            this.chkShowMenu.Size = new System.Drawing.Size(103, 21);
-            this.chkShowMenu.TabIndex = 2;
-            this.chkShowMenu.Text = "Show menu";
-            this.chkShowMenu.UseVisualStyleBackColor = true;
-            // 
             // chkShowToolbar
             // 
             this.chkShowToolbar.AutoSize = true;
-            this.chkShowToolbar.Location = new System.Drawing.Point(3, 57);
+            this.chkShowToolbar.Location = new System.Drawing.Point(3, 30);
             this.chkShowToolbar.Name = "chkShowToolbar";
             this.chkShowToolbar.Size = new System.Drawing.Size(112, 21);
             this.chkShowToolbar.TabIndex = 4;
@@ -518,8 +506,8 @@
             // 
             // txtHotkey
             // 
-            this.txtHotkey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtHotkey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtHotkey.Location = new System.Drawing.Point(153, 3);
             this.txtHotkey.Name = "txtHotkey";
             this.txtHotkey.ReadOnly = true;
@@ -638,8 +626,8 @@
             // 
             // txtCarbonCopyFolder
             // 
-            this.txtCarbonCopyFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtCarbonCopyFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtCarbonCopyFolder.Location = new System.Drawing.Point(153, 32);
             this.txtCarbonCopyFolder.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.txtCarbonCopyFolder.Name = "txtCarbonCopyFolder";
@@ -740,7 +728,6 @@
         internal System.Windows.Forms.CheckBox chbHorizontalScrollbar;
         internal System.Windows.Forms.CheckBox chbShowMinimizeMaximizeButtons;
         internal System.Windows.Forms.CheckBox chbMultilineTabHeaders;
-        internal System.Windows.Forms.CheckBox chkShowMenu;
         internal System.Windows.Forms.CheckBox chkShowToolbar;
         internal System.Windows.Forms.CheckBox chkShowInTaskbar;
         internal System.Windows.Forms.TabPage tab_pagFiles;

@@ -6,7 +6,7 @@ using Medo.Xml;
 using System.Text;
 
 namespace QText {
-    public class FileOrder {
+    internal class FileOrder {
 
         private static readonly Encoding Encoding = new UTF8Encoding(false);
 

@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 
 namespace QText {
-    public static class Settings {
+    internal static class Settings {
 
         private static readonly Medo.Configuration.RunOnStartup StartupConfig = new Medo.Configuration.RunOnStartup(Medo.Configuration.RunOnStartup.Current.Title, Medo.Configuration.RunOnStartup.Current.ExecutablePath, "/hide");
 
@@ -121,9 +121,9 @@ namespace QText {
             set { Medo.Configuration.Settings.Write("DisplayShowInTaskbar", value); }
         }
 
-        public static bool DisplayShowToolbar {
-            get { return Medo.Configuration.Settings.Read("DisplayShowToolbar", true); }
-            set { Medo.Configuration.Settings.Write("DisplayShowToolbar", value); }
+        public static bool ShowToolbar {
+            get { return Medo.Configuration.Settings.Read("ShowToolbar", true); }
+            set { Medo.Configuration.Settings.Write("ShowToolbar", value); }
         }
 
         public static int DisplayTabWidth {
@@ -220,11 +220,6 @@ namespace QText {
                 if (value > 15) { value = 15; }
                 Medo.Configuration.Settings.Write("QuickAutoSaveSeconds", value);
             }
-        }
-
-        public static bool ShowMenu {
-            get { return Medo.Configuration.Settings.Read("ShowMenu", false); }
-            set { Medo.Configuration.Settings.Write("ShowMenu", value); }
         }
 
         public static bool StartupRememberSelectedFile {
