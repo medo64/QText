@@ -26,6 +26,7 @@ namespace QText {
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(Medo.Configuration.Settings.Read("CultureName", "en-US"));
 
             Helper.LegacySettings.CopyLegacySettingsIfNeeded();
+            Legacy.OrderedFiles.Upgrade();
 
             Medo.Application.UnhandledCatch.ThreadException += new System.EventHandler<ThreadExceptionEventArgs>(UnhandledException);
             Medo.Application.UnhandledCatch.Attach();

@@ -98,9 +98,6 @@
             this.mnxTabConvertPlain = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabConvertRich = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTab2 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnxTabHide = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnxTabUnhide = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem18 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTabPrintPreview = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabPrint = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem14 = new System.Windows.Forms.ToolStripSeparator();
@@ -696,15 +693,12 @@
             this.mnxTabConvertPlain,
             this.mnxTabConvertRich,
             this.mnxTab2,
-            this.mnxTabHide,
-            this.mnxTabUnhide,
-            this.toolStripMenuItem18,
             this.mnxTabPrintPreview,
             this.mnxTabPrint,
             this.ToolStripMenuItem14,
             this.mnxTabOpenContainingFolder});
             this.mnxTab.Name = "mnxTab";
-            this.mnxTab.Size = new System.Drawing.Size(233, 322);
+            this.mnxTab.Size = new System.Drawing.Size(233, 268);
             this.mnxTab.Opening += new System.ComponentModel.CancelEventHandler(this.mnxTab_Opening);
             // 
             // mnxTabNew
@@ -781,25 +775,6 @@
             // 
             this.mnxTab2.Name = "mnxTab2";
             this.mnxTab2.Size = new System.Drawing.Size(229, 6);
-            // 
-            // mnxTabHide
-            // 
-            this.mnxTabHide.Name = "mnxTabHide";
-            this.mnxTabHide.Size = new System.Drawing.Size(232, 24);
-            this.mnxTabHide.Text = "&Hide";
-            this.mnxTabHide.Click += new System.EventHandler(this.mnxTabHide_Click);
-            // 
-            // mnxTabUnhide
-            // 
-            this.mnxTabUnhide.Name = "mnxTabUnhide";
-            this.mnxTabUnhide.Size = new System.Drawing.Size(232, 24);
-            this.mnxTabUnhide.Text = "&Unhide";
-            this.mnxTabUnhide.Click += new System.EventHandler(this.mnxTabUnhide_Click);
-            // 
-            // toolStripMenuItem18
-            // 
-            this.toolStripMenuItem18.Name = "toolStripMenuItem18";
-            this.toolStripMenuItem18.Size = new System.Drawing.Size(229, 6);
             // 
             // mnxTabPrintPreview
             // 
@@ -955,9 +930,6 @@
         internal System.Windows.Forms.ToolStripSeparator ToolStripMenuItem14;
         internal System.Windows.Forms.ToolStripMenuItem mnxTabOpenContainingFolder;
         internal TabFiles tabFiles;
-        private System.Windows.Forms.ToolStripMenuItem mnxTabHide;
-        private System.Windows.Forms.ToolStripMenuItem mnxTabUnhide;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem18;
         private System.Windows.Forms.Timer tmrCheckFileUpdate;
         internal System.Windows.Forms.ToolStripDropDownButton mnuApp;
         private System.Windows.Forms.ToolStripMenuItem mnuAppFeedback;

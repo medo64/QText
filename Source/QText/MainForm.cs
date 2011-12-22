@@ -100,8 +100,7 @@ namespace QText {
 #endif
 
             try {
-                SaveAllChanged();
-                tabFiles.SaveAll();
+                tabFiles.DirectorySave();
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(null, "QText : File saving failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
             }
@@ -119,14 +118,6 @@ namespace QText {
             if (tabFiles.SelectedTab != null) {
                 if (tabFiles.SelectedTab.TextBox != null) {
                     tabFiles.SelectedTab.TextBox.Focus();
-                }
-            } else if (tabFiles.TabCount > 0) {
-                var selectedTab = (TabFile)tabFiles.TabPages[0] as TabFile;
-                if (selectedTab != null) {
-                    tabFiles.SelectedTab = selectedTab;
-                    if (selectedTab.TextBox != null) {
-                        selectedTab.TextBox.Focus();
-                    }
                 }
             }
         }
@@ -391,8 +382,6 @@ namespace QText {
         #region Menu
 
         private void mnuNew_Click(object sender, EventArgs e) {
-            tabFiles.FileOrder.Save(tabFiles, true);
-
             using (NewFileForm frm = new NewFileForm("")) {
                 if ((frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)) {
                     try {
@@ -409,17 +398,12 @@ namespace QText {
                     }
                 }
             }
-
-            tabFiles.FileOrder.Save(tabFiles, true);
         }
 
         private void mnuSaveNow_Click(object sender, EventArgs e) {
-            tabFiles.FileOrder.Save(tabFiles, true);
-
             if (tabFiles.SelectedTab != null) {
                 try {
                     tabFiles.SelectedTab.Save();
-                    tabFiles.FileOrder.Save(tabFiles, true);
                 } catch (Exception ex) {
                     Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
                 }
@@ -427,8 +411,6 @@ namespace QText {
         }
 
         private void mnuRename_Click(object sender, EventArgs e) {
-            tabFiles.FileOrder.Save(tabFiles, true);
-
             if (tabFiles.SelectedTab != null) {
                 try {
                     using (var frm = new RenameFileForm(tabFiles.SelectedTab.Title)) {
@@ -436,7 +418,6 @@ namespace QText {
                             tabFiles.SelectedTab.Rename(frm.Title);
                         }
                     }
-                    tabFiles.FileOrder.Save(tabFiles, true);
                 } catch (Exception ex) {
                     Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
                 }
@@ -608,7 +589,6 @@ namespace QText {
             using (var frm = new OptionsForm()) {
                 tmrQuickAutoSave.Enabled = false;
                 SaveAllChanged();
-                tabFiles.FileOrder.Save(tabFiles, true);
                 this.tmrUpdateToolbar.Enabled = false;
                 RefreshAll(null, null);
                 if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK) {
@@ -685,7 +665,6 @@ namespace QText {
             mnxTabRename.Enabled = isTabSelected;
             mnxTabConvertPlain.Enabled = isTabRichText;
             mnxTabConvertRich.Enabled = isTabPlainText;
-            mnxTabHide.Enabled = isTabSelected;
             mnxTabPrintPreview.Enabled = isTabSelected;
             mnxTabPrint.Enabled = isTabSelected;
             mnxTabOpenContainingFolder.Enabled = isTabSelected;
@@ -693,8 +672,6 @@ namespace QText {
 
 
         private void mnxTabReopen_Click(object sender, EventArgs e) {
-            tabFiles.FileOrder.Save(tabFiles, true);
-
             if (tabFiles.SelectedTab != null) {
                 TabFile tf = tabFiles.SelectedTab;
                 if (tf.IsChanged) {
@@ -717,7 +694,6 @@ namespace QText {
         }
 
         private void mnxTabDelete_Click(object sender, EventArgs e) {
-            tabFiles.FileOrder.Save(tabFiles, true);
             if (tabFiles.SelectedTab != null) {
                 var currTab = tabFiles.SelectedTab;
                 if (currTab.TextBox.Text.Length > 0) {
@@ -738,44 +714,14 @@ namespace QText {
         private void mnxTabConvertPlain_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 if (Medo.MessageBox.ShowQuestion(this, "Conversion will remove all formating (font, style, etc.). Do you want to continue?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
-                    tabFiles.SelectedTab.ConvertToPlainText(tabFiles.FileOrder);
-                    tabFiles.FileOrder.Save(tabFiles, true);
+                    tabFiles.SelectedTab.ConvertToPlainText();
                 }
             }
         }
 
         private void mnxTabConvertRich_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
-                tabFiles.SelectedTab.ConvertToRichText(tabFiles.FileOrder);
-                tabFiles.FileOrder.Save(tabFiles, true);
-            }
-        }
-
-        private void mnxTabHide_Click(object sender, EventArgs e) {
-            if (tabFiles.SelectedTab != null) {
-                var currTab = tabFiles.SelectedTab;
-                try {
-                    var currAttributes = File.GetAttributes(tabFiles.SelectedTab.FullFileName);
-                    File.SetAttributes(tabFiles.SelectedTab.FullFileName, currAttributes | FileAttributes.Hidden);
-                    tabFiles.SelectedTab = GetNextTab();
-                    tabFiles.TabPages.Remove(currTab);
-                } catch (Exception ex) {
-                    Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
-                }
-            }
-        }
-
-        private void mnxTabUnhide_Click(object sender, EventArgs e) {
-            using (var frm = new UnhideFileForm()) {
-                if (frm.ShowDialog(this) == DialogResult.OK) {
-                    RefreshAll(null, null);
-                    foreach (TabFile iTab in tabFiles.TabPages) {
-                        if (string.CompareOrdinal(iTab.Title, frm.LastTitle) == 0) {
-                            tabFiles.SelectedTab = iTab;
-                            break;
-                        }
-                    }
-                }
+                tabFiles.SelectedTab.ConvertToRichText();
             }
         }
 
@@ -1017,7 +963,6 @@ namespace QText {
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
             }
-            tabFiles.FileOrder.Save(tabFiles, true);
         }
 
         private void RefreshAll(object sender, EventArgs e) {
@@ -1044,40 +989,11 @@ namespace QText {
                 }
             }
 
-            if (sender != null) { tabFiles.FileOrder.Save(tabFiles, true); }
-
-            string selectedTitle = "*";
-            if (tabFiles.SelectedTab != null) { selectedTitle = tabFiles.SelectedTab.Title; }
-
-            tabFiles.Visible = false;
-            tabFiles.TabPages.Clear();
-            try { //if files cannot be found
-                tabFiles.FileOrder.Reload();
-                if ((Settings.StartupRememberSelectedFile) && ((string.IsNullOrEmpty(selectedTitle)) || (selectedTitle == "*"))) { selectedTitle = tabFiles.FileOrder.SelectedTitle; }
-                string[] fs = tabFiles.FileOrder.Files;
-                for (int i = 0; i <= fs.Length - 1; i++) {
-                    TabFile t = new TabFile(fs[i], App.Form.mnxText);
-                    tabFiles.TabPages.Add(t);
-                }
-
-                tabFiles.Visible = true;
+            try {
+                tabFiles.DirectoryOpen();
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(this, "Files could not be loaded." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
             }
-
-            if (tabFiles.TabPages.Count > 0) {
-                for (int i = 0; i <= tabFiles.TabPages.Count - 1; i++) {
-                    if ((string.Compare(tabFiles.TabPages[i].Text, selectedTitle) == 0)) {
-                        selectedTitle = "";
-                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[i];
-
-                    }
-                }
-                if (!string.IsNullOrEmpty(selectedTitle)) { tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[0]; }
-                tabFiles_SelectedIndexChanged(null, null);
-            }
-
-            this.TopMost = Settings.DisplayAlwaysOnTop;
         }
 
         private static void ToogleStyle(RichTextBoxEx richTextBox, FontStyle fontStyle) {

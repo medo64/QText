@@ -85,13 +85,6 @@
     <Compile Include="%28Medo%29\XmlTagWriter [002].cs" />
     <Compile Include="%28Medo%29\Hotkey [001].cs" />
     <Compile Include="App.cs" />
-    <Compile Include="FileOrder.cs" />
-    <Compile Include="UnhideFileForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UnhideFileForm.Designer.cs">
-      <DependentUpon>UnhideFileForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="FindForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -99,6 +92,7 @@
       <DependentUpon>FindForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Helper.cs" />
+    <Compile Include="Legacy.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -158,9 +152,6 @@
     <None Include="Properties\App.snk" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="UnhideFileForm.resx">
-      <DependentUpon>UnhideFileForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="FindForm.resx">
       <DependentUpon>FindForm.cs</DependentUpon>
     </EmbeddedResource>
