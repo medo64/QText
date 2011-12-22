@@ -103,6 +103,7 @@
             this.ToolStripMenuItem14 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTabOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.tmrCheckFileUpdate = new System.Windows.Forms.Timer(this.components);
+            this.mnuFolder = new System.Windows.Forms.ToolStripDropDownButton();
             this.tabFiles = new QText.TabFiles();
             this.mnu.SuspendLayout();
             this.mnxText.SuspendLayout();
@@ -137,10 +138,11 @@
             this.mnuAlwaysOnTop,
             this.mnuApp,
             this.mnuOptions,
-            this.ToolStripSeparator2});
+            this.ToolStripSeparator2,
+            this.mnuFolder});
             this.mnu.Location = new System.Drawing.Point(0, 0);
             this.mnu.Name = "mnu";
-            this.mnu.Size = new System.Drawing.Size(542, 25);
+            this.mnu.Size = new System.Drawing.Size(582, 27);
             this.mnu.TabIndex = 1;
             // 
             // mnuNew
@@ -149,7 +151,7 @@
             this.mnuNew.Image = ((System.Drawing.Image)(resources.GetObject("mnuNew.Image")));
             this.mnuNew.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuNew.Name = "mnuNew";
-            this.mnuNew.Size = new System.Drawing.Size(23, 22);
+            this.mnuNew.Size = new System.Drawing.Size(23, 24);
             this.mnuNew.Text = "New (Ctrl+N)";
             this.mnuNew.ToolTipText = "New tab (Ctrl+N)";
             this.mnuNew.Click += new System.EventHandler(this.mnuNew_Click);
@@ -160,7 +162,7 @@
             this.mnuSaveNow.Image = ((System.Drawing.Image)(resources.GetObject("mnuSaveNow.Image")));
             this.mnuSaveNow.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuSaveNow.Name = "mnuSaveNow";
-            this.mnuSaveNow.Size = new System.Drawing.Size(23, 22);
+            this.mnuSaveNow.Size = new System.Drawing.Size(23, 24);
             this.mnuSaveNow.Text = "Save now (Ctrl+S)";
             this.mnuSaveNow.ToolTipText = "Save now (Ctrl+S)";
             this.mnuSaveNow.Click += new System.EventHandler(this.mnuSaveNow_Click);
@@ -171,7 +173,7 @@
             this.mnuRename.Image = ((System.Drawing.Image)(resources.GetObject("mnuRename.Image")));
             this.mnuRename.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuRename.Name = "mnuRename";
-            this.mnuRename.Size = new System.Drawing.Size(23, 22);
+            this.mnuRename.Size = new System.Drawing.Size(23, 24);
             this.mnuRename.Text = "Rename (F2)";
             this.mnuRename.ToolTipText = "Rename tab (F2)";
             this.mnuRename.Click += new System.EventHandler(this.mnuRename_Click);
@@ -179,7 +181,7 @@
             // tls_0
             // 
             this.tls_0.Name = "tls_0";
-            this.tls_0.Size = new System.Drawing.Size(6, 25);
+            this.tls_0.Size = new System.Drawing.Size(6, 27);
             // 
             // mnuPrintPreview
             // 
@@ -187,7 +189,7 @@
             this.mnuPrintPreview.Image = ((System.Drawing.Image)(resources.GetObject("mnuPrintPreview.Image")));
             this.mnuPrintPreview.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuPrintPreview.Name = "mnuPrintPreview";
-            this.mnuPrintPreview.Size = new System.Drawing.Size(23, 22);
+            this.mnuPrintPreview.Size = new System.Drawing.Size(23, 24);
             this.mnuPrintPreview.Text = "Print preview";
             this.mnuPrintPreview.ToolTipText = "Print preview";
             this.mnuPrintPreview.Click += new System.EventHandler(this.mnuPrintPreview_Click);
@@ -198,7 +200,7 @@
             this.mnuPrint.Image = ((System.Drawing.Image)(resources.GetObject("mnuPrint.Image")));
             this.mnuPrint.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuPrint.Name = "mnuPrint";
-            this.mnuPrint.Size = new System.Drawing.Size(23, 22);
+            this.mnuPrint.Size = new System.Drawing.Size(23, 24);
             this.mnuPrint.Text = "Print (Ctrl+P)";
             this.mnuPrint.ToolTipText = "Print (Ctrl+P)";
             this.mnuPrint.Click += new System.EventHandler(this.mnuPrint_Click);
@@ -206,7 +208,7 @@
             // tls_1
             // 
             this.tls_1.Name = "tls_1";
-            this.tls_1.Size = new System.Drawing.Size(6, 25);
+            this.tls_1.Size = new System.Drawing.Size(6, 27);
             // 
             // mnuCut
             // 
@@ -214,7 +216,7 @@
             this.mnuCut.Image = ((System.Drawing.Image)(resources.GetObject("mnuCut.Image")));
             this.mnuCut.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuCut.Name = "mnuCut";
-            this.mnuCut.Size = new System.Drawing.Size(23, 22);
+            this.mnuCut.Size = new System.Drawing.Size(23, 24);
             this.mnuCut.Text = "Cut";
             this.mnuCut.ToolTipText = "Cut (Ctrl+X)";
             this.mnuCut.Click += new System.EventHandler(this.mnuCut_Click);
@@ -225,7 +227,7 @@
             this.mnuCopy.Image = ((System.Drawing.Image)(resources.GetObject("mnuCopy.Image")));
             this.mnuCopy.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuCopy.Name = "mnuCopy";
-            this.mnuCopy.Size = new System.Drawing.Size(23, 22);
+            this.mnuCopy.Size = new System.Drawing.Size(23, 24);
             this.mnuCopy.Text = "Copy";
             this.mnuCopy.ToolTipText = "Copy (Ctrl+C)";
             this.mnuCopy.Click += new System.EventHandler(this.mnuCopy_Click);
@@ -236,7 +238,7 @@
             this.mnuPaste.Image = ((System.Drawing.Image)(resources.GetObject("mnuPaste.Image")));
             this.mnuPaste.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuPaste.Name = "mnuPaste";
-            this.mnuPaste.Size = new System.Drawing.Size(23, 22);
+            this.mnuPaste.Size = new System.Drawing.Size(23, 24);
             this.mnuPaste.Text = "Paste";
             this.mnuPaste.ToolTipText = "Paste (Ctrl+V)";
             this.mnuPaste.Click += new System.EventHandler(this.mnuPaste_Click);
@@ -244,7 +246,7 @@
             // ToolStripSeparator1
             // 
             this.ToolStripSeparator1.Name = "ToolStripSeparator1";
-            this.ToolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            this.ToolStripSeparator1.Size = new System.Drawing.Size(6, 27);
             // 
             // mnuFont
             // 
@@ -252,7 +254,7 @@
             this.mnuFont.Image = ((System.Drawing.Image)(resources.GetObject("mnuFont.Image")));
             this.mnuFont.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuFont.Name = "mnuFont";
-            this.mnuFont.Size = new System.Drawing.Size(23, 22);
+            this.mnuFont.Size = new System.Drawing.Size(23, 24);
             this.mnuFont.Text = "Font";
             this.mnuFont.Click += new System.EventHandler(this.mnuFont_Click);
             // 
@@ -262,7 +264,7 @@
             this.mnuBold.Image = ((System.Drawing.Image)(resources.GetObject("mnuBold.Image")));
             this.mnuBold.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuBold.Name = "mnuBold";
-            this.mnuBold.Size = new System.Drawing.Size(23, 22);
+            this.mnuBold.Size = new System.Drawing.Size(23, 24);
             this.mnuBold.Text = "Bold (Ctrl+B)";
             this.mnuBold.ToolTipText = "Bold (Ctrl+B)";
             this.mnuBold.Click += new System.EventHandler(this.mnuBold_Click);
@@ -273,7 +275,7 @@
             this.mnuItalic.Image = ((System.Drawing.Image)(resources.GetObject("mnuItalic.Image")));
             this.mnuItalic.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuItalic.Name = "mnuItalic";
-            this.mnuItalic.Size = new System.Drawing.Size(23, 22);
+            this.mnuItalic.Size = new System.Drawing.Size(23, 24);
             this.mnuItalic.Text = "Italic (Ctrl+I)";
             this.mnuItalic.ToolTipText = "Italic (Ctrl+I)";
             this.mnuItalic.Click += new System.EventHandler(this.mnuItalic_Click);
@@ -284,7 +286,7 @@
             this.mnuUnderline.Image = ((System.Drawing.Image)(resources.GetObject("mnuUnderline.Image")));
             this.mnuUnderline.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuUnderline.Name = "mnuUnderline";
-            this.mnuUnderline.Size = new System.Drawing.Size(23, 22);
+            this.mnuUnderline.Size = new System.Drawing.Size(23, 24);
             this.mnuUnderline.Text = "Underline (Ctrl+U)";
             this.mnuUnderline.ToolTipText = "Underline (Ctrl+U)";
             this.mnuUnderline.Click += new System.EventHandler(this.mnuUnderline_Click);
@@ -295,14 +297,14 @@
             this.mnuStrikeout.Image = ((System.Drawing.Image)(resources.GetObject("mnuStrikeout.Image")));
             this.mnuStrikeout.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuStrikeout.Name = "mnuStrikeout";
-            this.mnuStrikeout.Size = new System.Drawing.Size(23, 22);
+            this.mnuStrikeout.Size = new System.Drawing.Size(23, 24);
             this.mnuStrikeout.Text = "Strikeout";
             this.mnuStrikeout.Click += new System.EventHandler(this.mnuStrikeout_Click);
             // 
             // mnuRtfSeparator
             // 
             this.mnuRtfSeparator.Name = "mnuRtfSeparator";
-            this.mnuRtfSeparator.Size = new System.Drawing.Size(6, 25);
+            this.mnuRtfSeparator.Size = new System.Drawing.Size(6, 27);
             // 
             // mnuUndo
             // 
@@ -310,7 +312,7 @@
             this.mnuUndo.Image = ((System.Drawing.Image)(resources.GetObject("mnuUndo.Image")));
             this.mnuUndo.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuUndo.Name = "mnuUndo";
-            this.mnuUndo.Size = new System.Drawing.Size(23, 22);
+            this.mnuUndo.Size = new System.Drawing.Size(23, 24);
             this.mnuUndo.Text = "Undo (Ctrl+Z)";
             this.mnuUndo.ToolTipText = "Undo (Ctrl+Z)";
             this.mnuUndo.Click += new System.EventHandler(this.mnuUndo_Click);
@@ -321,7 +323,7 @@
             this.mnuRedo.Image = ((System.Drawing.Image)(resources.GetObject("mnuRedo.Image")));
             this.mnuRedo.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuRedo.Name = "mnuRedo";
-            this.mnuRedo.Size = new System.Drawing.Size(23, 22);
+            this.mnuRedo.Size = new System.Drawing.Size(23, 24);
             this.mnuRedo.Text = "Redo (Ctrl+Y)";
             this.mnuRedo.ToolTipText = "Redo (Ctrl+Y)";
             this.mnuRedo.Click += new System.EventHandler(this.mnuRedo_Click);
@@ -329,7 +331,7 @@
             // ToolStripSeparator3
             // 
             this.ToolStripSeparator3.Name = "ToolStripSeparator3";
-            this.ToolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            this.ToolStripSeparator3.Size = new System.Drawing.Size(6, 27);
             // 
             // mnuFind
             // 
@@ -337,7 +339,7 @@
             this.mnuFind.Image = ((System.Drawing.Image)(resources.GetObject("mnuFind.Image")));
             this.mnuFind.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuFind.Name = "mnuFind";
-            this.mnuFind.Size = new System.Drawing.Size(23, 22);
+            this.mnuFind.Size = new System.Drawing.Size(23, 24);
             this.mnuFind.Text = "Find (Ctrl+F)";
             this.mnuFind.ToolTipText = "Find (Ctrl+F)";
             this.mnuFind.Click += new System.EventHandler(this.mnuFind_Click);
@@ -348,7 +350,7 @@
             this.mnuAlwaysOnTop.Image = ((System.Drawing.Image)(resources.GetObject("mnuAlwaysOnTop.Image")));
             this.mnuAlwaysOnTop.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuAlwaysOnTop.Name = "mnuAlwaysOnTop";
-            this.mnuAlwaysOnTop.Size = new System.Drawing.Size(23, 22);
+            this.mnuAlwaysOnTop.Size = new System.Drawing.Size(23, 24);
             this.mnuAlwaysOnTop.Text = "Always on top (Ctrl+T)";
             this.mnuAlwaysOnTop.ToolTipText = "Always on top (Ctrl+T)";
             this.mnuAlwaysOnTop.Click += new System.EventHandler(this.mnuAlwaysOnTop_Click);
@@ -366,7 +368,7 @@
             this.mnuApp.Image = ((System.Drawing.Image)(resources.GetObject("mnuApp.Image")));
             this.mnuApp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuApp.Name = "mnuApp";
-            this.mnuApp.Size = new System.Drawing.Size(29, 22);
+            this.mnuApp.Size = new System.Drawing.Size(29, 24);
             this.mnuApp.Text = "QText";
             // 
             // mnuAppFeedback
@@ -409,7 +411,7 @@
             this.mnuOptions.Image = ((System.Drawing.Image)(resources.GetObject("mnuOptions.Image")));
             this.mnuOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuOptions.Name = "mnuOptions";
-            this.mnuOptions.Size = new System.Drawing.Size(23, 22);
+            this.mnuOptions.Size = new System.Drawing.Size(23, 24);
             this.mnuOptions.Text = "Options (Ctrl+O)";
             this.mnuOptions.ToolTipText = "Options";
             this.mnuOptions.Click += new System.EventHandler(this.mnuOptions_Click);
@@ -418,7 +420,7 @@
             // 
             this.ToolStripSeparator2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.ToolStripSeparator2.Name = "ToolStripSeparator2";
-            this.ToolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            this.ToolStripSeparator2.Size = new System.Drawing.Size(6, 27);
             // 
             // tmrUpdateToolbar
             // 
@@ -811,15 +813,26 @@
             // 
             this.tmrCheckFileUpdate.Tick += new System.EventHandler(this.tmrCheckFileUpdate_Tick);
             // 
+            // mnuFolder
+            // 
+            this.mnuFolder.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.mnuFolder.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.mnuFolder.Image = ((System.Drawing.Image)(resources.GetObject("mnuFolder.Image")));
+            this.mnuFolder.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuFolder.Name = "mnuFolder";
+            this.mnuFolder.Size = new System.Drawing.Size(71, 24);
+            this.mnuFolder.Text = "Default";
+            this.mnuFolder.ToolTipText = "Select folder";
+            // 
             // tabFiles
             // 
             this.tabFiles.Cursor = System.Windows.Forms.Cursors.Default;
             this.tabFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabFiles.Location = new System.Drawing.Point(0, 25);
+            this.tabFiles.Location = new System.Drawing.Point(0, 27);
             this.tabFiles.Margin = new System.Windows.Forms.Padding(0);
             this.tabFiles.Name = "tabFiles";
             this.tabFiles.SelectedIndex = 0;
-            this.tabFiles.Size = new System.Drawing.Size(542, 290);
+            this.tabFiles.Size = new System.Drawing.Size(582, 288);
             this.tabFiles.TabIndex = 0;
             this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
             this.tabFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabFiles_MouseDown);
@@ -828,7 +841,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(542, 315);
+            this.ClientSize = new System.Drawing.Size(582, 315);
             this.Controls.Add(this.tabFiles);
             this.Controls.Add(this.mnu);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -937,5 +950,6 @@
         private System.Windows.Forms.ToolStripMenuItem mnuAppDonate;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem mnuAppAbout;
+        private System.Windows.Forms.ToolStripDropDownButton mnuFolder;
     }
 }

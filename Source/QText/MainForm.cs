@@ -456,6 +456,7 @@ namespace QText {
             try {
                 if (tabFiles.SelectedTab != null) {
                     tabFiles.SelectedTab.Cut(Settings.ForceTextCopyPaste);
+                    if (Settings.EnableQuickAutoSave) { tmrQuickAutoSave.Enabled = false; tmrQuickAutoSave.Enabled = true; }
                 }
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(this, "Operation could not be completed." + Environment.NewLine + Environment.NewLine + ex.Message);
@@ -466,6 +467,7 @@ namespace QText {
             try {
                 if (tabFiles.SelectedTab != null) {
                     tabFiles.SelectedTab.Copy(Settings.ForceTextCopyPaste);
+                    if (Settings.EnableQuickAutoSave) { tmrQuickAutoSave.Enabled = false; tmrQuickAutoSave.Enabled = true; }
                 }
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(this, "Operation could not be completed." + Environment.NewLine + Environment.NewLine + ex.Message);
@@ -476,6 +478,7 @@ namespace QText {
             try {
                 if (tabFiles.SelectedTab != null) {
                     tabFiles.SelectedTab.Paste(Settings.ForceTextCopyPaste);
+                    if (Settings.EnableQuickAutoSave) { tmrQuickAutoSave.Enabled = false; tmrQuickAutoSave.Enabled = true; }
                 }
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(this, "Operation could not be completed." + Environment.NewLine + Environment.NewLine + ex.Message);
@@ -506,6 +509,7 @@ namespace QText {
                         if (f.ShowDialog(this) == System.Windows.Forms.DialogResult.OK) {
                             tf.TextBox.SelectionColor = f.Color;
                             tf.TextBox.SelectionFont = f.Font;
+                            if (Settings.EnableQuickAutoSave) { tmrQuickAutoSave.Enabled = false; tmrQuickAutoSave.Enabled = true; }
                         }
                     }
                 }
@@ -517,6 +521,7 @@ namespace QText {
                 TabFile tf = tabFiles.SelectedTab;
                 if (tf.IsRichTextFormat) {
                     ToogleStyle(tf.TextBox, FontStyle.Bold);
+                    if (Settings.EnableQuickAutoSave) { tmrQuickAutoSave.Enabled = false; tmrQuickAutoSave.Enabled = true; }
                 }
             }
         }
@@ -526,6 +531,7 @@ namespace QText {
                 TabFile tf = tabFiles.SelectedTab;
                 if (tf.IsRichTextFormat) {
                     ToogleStyle(tf.TextBox, FontStyle.Italic);
+                    if (Settings.EnableQuickAutoSave) { tmrQuickAutoSave.Enabled = false; tmrQuickAutoSave.Enabled = true; }
                 }
             }
         }
@@ -536,6 +542,7 @@ namespace QText {
                 if (tf.IsRichTextFormat) {
                     if (tf.TextBox.SelectionFont != null) {
                         ToogleStyle(tf.TextBox, FontStyle.Underline);
+                        if (Settings.EnableQuickAutoSave) { tmrQuickAutoSave.Enabled = false; tmrQuickAutoSave.Enabled = true; }
                     }
                 }
             }
@@ -547,6 +554,7 @@ namespace QText {
                 if (tf.IsRichTextFormat) {
                     if (tf.TextBox.SelectionFont != null) {
                         ToogleStyle(tf.TextBox, FontStyle.Strikeout);
+                        if (Settings.EnableQuickAutoSave) { tmrQuickAutoSave.Enabled = false; tmrQuickAutoSave.Enabled = true; }
                     }
                 }
             }
@@ -556,12 +564,14 @@ namespace QText {
         private void mnuUndo_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 tabFiles.SelectedTab.Undo();
+                if (Settings.EnableQuickAutoSave) { tmrQuickAutoSave.Enabled = false; tmrQuickAutoSave.Enabled = true; }
             }
         }
 
         private void mnuRedo_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 tabFiles.SelectedTab.Redo();
+                if (Settings.EnableQuickAutoSave) { tmrQuickAutoSave.Enabled = false; tmrQuickAutoSave.Enabled = true; }
             }
         }
 
