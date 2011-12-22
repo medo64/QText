@@ -26,6 +26,16 @@ namespace QText {
         public void FolderOpen(string folder) {
             if (this.CurrentFolder != null) { FolderSave(); }
 
+            //check if it exists
+            string newFolder = null;
+            foreach (var iFolder in TabFiles.GetSubFolders()) {
+                if (string.Equals(iFolder, folder, StringComparison.OrdinalIgnoreCase)) {
+                    newFolder = iFolder;
+                    break;
+                }
+            }
+            folder = newFolder;
+
             this.Visible = false;
             this.TabPages.Clear();
             this.CurrentFolder = folder;
@@ -81,7 +91,7 @@ namespace QText {
             WriteOrderedTitles();
         }
 
-        internal IEnumerable<string> GetSubFolders() {
+        internal static IEnumerable<string> GetSubFolders() {
             var directories = new List<string>();
             directories.AddRange(Directory.GetDirectories(Settings.FilesLocation));
             directories.Sort();

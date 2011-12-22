@@ -253,5 +253,10 @@ namespace QText {
             set { Medo.Configuration.Settings.Write("ZoomToolbarWithDpiChange", value); }
         }
 
+        public static string LastFolder {
+            get { return Medo.Configuration.Settings.Read("LastFolder", ""); }
+            set { Medo.Configuration.Settings.Write("LastFolder", value); }
+        }
+
     }
 }
