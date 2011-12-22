@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
+using System.Windows.Forms;
 
 namespace QText {
     internal partial class OptionsForm : Form {
@@ -173,7 +171,7 @@ namespace QText {
 
                         bool isOK = true;
                         try {
-                            Helper.Path.CreatePath(newPath);
+                            Helper.CreatePath(newPath);
                             try {
                                 var oldFiles = new List<string>();
                                 oldFiles.AddRange(System.IO.Directory.GetFiles(Settings.FilesLocation, "*.txt"));

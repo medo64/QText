@@ -1,10 +1,10 @@
-﻿using System.Windows.Forms;
-using System.Threading;
-using System.Globalization;
-using System.Diagnostics;
+﻿using System;
 using System.ComponentModel;
-using System;
+using System.Diagnostics;
+using System.Globalization;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace QText {
 
@@ -25,7 +25,7 @@ namespace QText {
             Application.SetCompatibleTextRenderingDefault(false);
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(Medo.Configuration.Settings.Read("CultureName", "en-US"));
 
-            Helper.LegacySettings.CopyLegacySettingsIfNeeded();
+            Legacy.Settings.Upgrade();
             Legacy.OrderedFiles.Upgrade();
             Legacy.HiddenFiles.Upgrade();
 
@@ -53,13 +53,13 @@ namespace QText {
 
 
             try {
-                Helper.Path.CreatePath(Settings.FilesLocation);
+                Helper.CreatePath(Settings.FilesLocation);
             } catch (Exception ex) {
                 switch (Medo.MessageBox.ShowQuestion(null, ex.Message + Environment.NewLine + "Do you wish to try using default location instead?", MessageBoxButtons.YesNo)) {
                     case DialogResult.Yes:
                         try {
                             string defaultPath = Settings.DefaultFilesLocation;
-                            Helper.Path.CreatePath(defaultPath);
+                            Helper.CreatePath(defaultPath);
                             Settings.FilesLocation = defaultPath;
                         } catch (Exception ex2) {
                             global::Medo.MessageBox.ShowError(null, ex2.Message, MessageBoxButtons.OK);

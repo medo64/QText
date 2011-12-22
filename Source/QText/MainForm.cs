@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using System.Security.Permissions;
-using System.Diagnostics;
 using System.Collections;
-using System.Threading;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
 using System.IO;
+using System.Security.Permissions;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace QText {
 

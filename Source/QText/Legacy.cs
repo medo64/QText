@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Xml;
+using Microsoft.Win32;
 
 namespace QText.Legacy {
 
@@ -15,7 +18,7 @@ namespace QText.Legacy {
             var orderedTitles = new List<string>();
             string selectedTitle = null;
             try {
-                string fileName = Path.Combine(Settings.FilesLocation, "QText.xml");
+                string fileName = Path.Combine(QText.Settings.FilesLocation, "QText.xml");
                 if ((File.Exists(fileName))) {
                     using (var xr = new XmlTextReader(fileName)) {
                         var walk = new Stack<string>();
@@ -69,7 +72,7 @@ namespace QText.Legacy {
             if (orderedTitles.Count > 0) {
                 //write to new format
                 try {
-                    using (var fs = new FileStream(Path.Combine(Settings.FilesLocation, ".qtext"), FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read)) {
+                    using (var fs = new FileStream(Path.Combine(QText.Settings.FilesLocation, ".qtext"), FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read)) {
                         try { fs.SetLength(0); } catch (IOException) { } //try to delete content
                         fs.Position = fs.Length;
                         using (var sw = new StreamWriter(fs)) {
@@ -95,11 +98,11 @@ namespace QText.Legacy {
 
         public static void Upgrade() {
             var filesAll = new List<string>();
-            filesAll.AddRange(Directory.GetFiles(Settings.FilesLocation, "*.txt"));
-            filesAll.AddRange(Directory.GetFiles(Settings.FilesLocation, "*.rtf"));
+            filesAll.AddRange(Directory.GetFiles(QText.Settings.FilesLocation, "*.txt"));
+            filesAll.AddRange(Directory.GetFiles(QText.Settings.FilesLocation, "*.rtf"));
 
-            var newPath = Path.Combine(Settings.FilesLocation, "Hidden");
-            Helper.Path.CreatePath(newPath);
+            var newPath = Path.Combine(QText.Settings.FilesLocation, "Hidden");
+            Helper.CreatePath(newPath);
 
             var files = new List<string>();
             foreach (var fileNameA in filesAll) {
@@ -111,6 +114,96 @@ namespace QText.Legacy {
                     } catch (Exception ex) {
                         Medo.MessageBox.ShowWarning(null, string.Format("Hidden file {0} cannot be upgraded. It is still available in QText folder but it will not be available in tabs.\n\n{1}", fi.Name, ex.Message));
                     }
+                }
+            }
+        }
+
+    }
+
+
+    internal static class Settings {
+        public static void Upgrade() {
+            if (QText.Settings.LegacySettingsCopied == false) {
+
+                //kill old process
+                var currProcess = Process.GetCurrentProcess();
+                var currProcessId = currProcess.Id;
+                var currProcessName = currProcess.ProcessName;
+                var currProcessFileName = currProcess.MainModule.FileName;
+                foreach (var iProcess in Process.GetProcesses()) {
+                    Debug.WriteLine(iProcess.ProcessName);
+                    try {
+                        if (string.CompareOrdinal(iProcess.ProcessName, "QText") == 0) {
+                            if (iProcess.Id != currProcessId) {
+                                iProcess.Kill();
+                            }
+                        }
+                    } catch (Win32Exception) { }
+                }
+
+                //copy registry
+                try {
+                    var wasOldVersionInstalled = false;
+                    var hasOldVersionDataPath = false;
+                    using (var rkSource = Registry.CurrentUser.OpenSubKey(@"Software\jmedved\QText", false))
+                    using (var rkDestination = Registry.CurrentUser.OpenSubKey(@"Software\Josip Medved\QText", true)) {
+                        if ((rkSource != null) && (rkDestination != null)) {
+                            wasOldVersionInstalled = true;
+                            foreach (var iName in rkSource.GetValueNames()) {
+                                var iValue = rkSource.GetValue(iName);
+                                if (iName == "DataPath") {
+                                    hasOldVersionDataPath = true;
+                                }
+                                rkDestination.SetValue(iName, iValue);
+                            }
+                        }
+                    }
+                    using (var rkSource = Registry.CurrentUser.OpenSubKey(@"Software\jmedved", true)) {
+                        if (rkSource != null) {
+                            try {
+                                rkSource.DeleteSubKeyTree("QText");
+                            } catch (ArgumentException) { }
+                        }
+                    }
+                    using (var rkSource = Registry.CurrentUser.OpenSubKey("Software", true)) {
+                        if (rkSource != null) {
+                            try {
+                                rkSource.DeleteSubKey("jmedved");
+                            } catch (InvalidOperationException) {
+                            } catch (Exception) {
+                            }
+                        }
+                    }
+                    if ((wasOldVersionInstalled) && (!hasOldVersionDataPath)) { //should copy all files to new location
+                        var oldDataPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"jmedved\QText");
+                        var sourceFileNames = new List<string>();
+                        try {
+                            sourceFileNames.AddRange(System.IO.Directory.GetFiles(oldDataPath, "*.txt"));
+                            sourceFileNames.AddRange(System.IO.Directory.GetFiles(oldDataPath, "*.rtf"));
+                            if (System.IO.File.Exists(System.IO.Path.Combine(oldDataPath, "QText.xml"))) {
+                                sourceFileNames.Add(System.IO.Path.Combine(oldDataPath, "QText.xml"));
+                            }
+                            foreach (var iSourceFileName in sourceFileNames) {
+                                var iSource = new System.IO.FileInfo(iSourceFileName);
+                                var iDestinationFileName = System.IO.Path.Combine(QText.Settings.FilesLocation, iSource.Name);
+                                System.IO.File.Copy(iSource.FullName, iDestinationFileName);
+                            }
+                        } catch (Exception) {
+                            QText.Settings.FilesLocation = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"jmedved\QText");
+                        }
+                        try {
+                            foreach (var iSourceFileName in sourceFileNames) {
+                                System.IO.File.Delete(iSourceFileName);
+                            }
+                            try {
+                                System.IO.Directory.Delete(oldDataPath, false);
+                            } catch (Exception) { //if directory cannot be accessed or is not empty
+                            }
+                        } catch (Exception) {
+                        }
+                    }
+                    QText.Settings.LegacySettingsCopied = true;
+                } catch (Exception) {
                 }
             }
         }

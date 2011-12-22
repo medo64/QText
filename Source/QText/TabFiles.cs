@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Windows.Forms;
-using System.Globalization;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows.Forms;
 
 namespace QText {
     internal class TabFiles : TabControl {
@@ -32,8 +31,8 @@ namespace QText {
             IList<string> orderedTitles = ReadOrderedTitles(out selectedTitle);
 
             files.Sort(delegate(string file1, string file2) {
-                var title1 = Helper.Path.GetTitle(file1);
-                var title2 = Helper.Path.GetTitle(file2);
+                var title1 = Helper.GetTitle(file1);
+                var title2 = Helper.GetTitle(file2);
                 if (orderedTitles != null) {
                     var titleIndex1 = orderedTitles.IndexOf(title1);
                     var titleIndex2 = orderedTitles.IndexOf(title2);
