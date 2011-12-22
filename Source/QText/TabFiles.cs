@@ -209,7 +209,7 @@ namespace QText {
             return orderedTitles;
         }
 
-        private void WriteOrderedTitles() {
+        public void WriteOrderedTitles() {
             try {
                 using (var fs = new FileStream(this.OrderFile, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read)) {
                     try { fs.SetLength(0); } catch (IOException) { } //try to delete content

@@ -403,14 +403,15 @@ namespace QText {
 
         private void mnuRename_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
-                try {
-                    using (var frm = new RenameFileForm(tabFiles.SelectedTab.Title)) {
+                using (var frm = new RenameFileForm(tabFiles.CurrentDirectory, tabFiles.SelectedTab.Title)) {
+                    try {
                         if (frm.ShowDialog(this) == DialogResult.OK) {
-                            tabFiles.SelectedTab.Rename(frm.Title);
+                            tabFiles.SelectedTab.Rename(frm.NewTitle);
+                            tabFiles.WriteOrderedTitles();
                         }
+                    } catch (Exception ex) {
+                        Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
                     }
-                } catch (Exception ex) {
-                    Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
                 }
             }
         }

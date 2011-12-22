@@ -11,7 +11,6 @@ namespace QText {
 
     internal class TabFile : TabPage {
 
-        private string _fileName;
         public DateTime LastWriteTimeUtc { get; private set; }
         private DateTime _lastSaveTime;
         private static readonly UTF8Encoding Utf8EncodingWithoutBom = new UTF8Encoding(false);
@@ -21,15 +20,15 @@ namespace QText {
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", Justification = "This program is not intended to be localized.")]
-        public TabFile(string fileName, ContextMenuStrip contextMenu, bool createFile)
+        public TabFile(string fullFileName, ContextMenuStrip contextMenu, bool createFile)
             : base() {
 
-            var fileInfo = new FileInfo(fileName);
+            var fileInfo = new FileInfo(fullFileName);
             bool isRichTextFormat = string.Compare(fileInfo.Extension, ".rtf", StringComparison.OrdinalIgnoreCase) == 0;
             string fileTitle = Helper.GetTitle(fileInfo);
 
             if (createFile) {
-                if ((File.Exists(fileName))) {
+                if ((File.Exists(fullFileName))) {
                     throw new IOException("File already exists.");
                 } else if ((File.Exists(Path.Combine(Settings.FilesLocation, fileTitle + ".txt")))) {
                     throw new IOException("Title already exists.");
@@ -42,15 +41,15 @@ namespace QText {
                             r.BackColor = Settings.DisplayBackgroundColor;
                             r.Font = Settings.DisplayFont;
                             r.ForeColor = Settings.DisplayForegroundColor;
-                            r.SaveFile(fileName, RichTextBoxStreamType.RichText);
+                            r.SaveFile(fullFileName, RichTextBoxStreamType.RichText);
                         }
                     } else {
-                        System.IO.File.WriteAllText(fileName, "");
+                        System.IO.File.WriteAllText(fullFileName, "");
                     }
                 }
             }
 
-            this._fileName = fileName;
+            this.FullFileName = fullFileName;
             this.LastWriteTimeUtc = fileInfo.LastWriteTimeUtc;
             this.Title = fileTitle;
             this._lastSaveTime = System.DateTime.Now;
@@ -117,13 +116,12 @@ namespace QText {
             if (!this.IsRichTextFormat) { return; }
 
             Open();
-            string oldFileName = this._fileName;
+            string oldFileName = this.FullFileName;
             string newFileName = Path.ChangeExtension(oldFileName, ".txt");
             File.Move(oldFileName, newFileName);
-            this._fileName = newFileName;
+            this.FullFileName = newFileName;
             Save();
             Reopen();
-            //fileOrder.Rename(oldFileName, newFileName); //TODO
         }
 
         public void ConvertToRichText() {
@@ -132,18 +130,17 @@ namespace QText {
             Open();
             string text = this.TextBox.Text;
 
-            string oldFileName = this._fileName;
+            string oldFileName = this.FullFileName;
             string newFileName = Path.ChangeExtension(oldFileName, ".rtf");
             File.Move(oldFileName, newFileName);
-            this._fileName = newFileName;
+            this.FullFileName = newFileName;
             Save();
             Reopen();
-            //fileOrder.Rename(oldFileName, newFileName); //TODO
         }
 
         public bool IsRichTextFormat {
             get {
-                var fileInfo = new FileInfo(this._fileName);
+                var fileInfo = new FileInfo(this.FullFileName);
                 return (string.Compare(fileInfo.Extension, ".rtf", StringComparison.OrdinalIgnoreCase) == 0);
             }
         }
@@ -151,16 +148,16 @@ namespace QText {
         public void Reopen() {
             if (this.IsRichTextFormat) {
                 try {
-                    this.TextBox.LoadFile(this._fileName, RichTextBoxStreamType.RichText);
+                    this.TextBox.LoadFile(this.FullFileName, RichTextBoxStreamType.RichText);
                 } catch (System.ArgumentException) {
-                    this.TextBox.Text = File.ReadAllText(this._fileName);
+                    this.TextBox.Text = File.ReadAllText(this.FullFileName);
                 }
             } else {
                 this.TextBox.ResetText();
-                this.TextBox.Text = File.ReadAllText(this._fileName);
+                this.TextBox.Text = File.ReadAllText(this.FullFileName);
             }
 
-            this.LastWriteTimeUtc = new FileInfo(this._fileName).LastWriteTimeUtc;
+            this.LastWriteTimeUtc = new FileInfo(this.FullFileName).LastWriteTimeUtc;
             this.TextBox.Tag = "";
             base.Text = this.Title;
             this.TextBox.SelectionStart = 0;
@@ -172,16 +169,16 @@ namespace QText {
             if (this.TextBox.Tag == null) { return; }
 
             if (this.IsRichTextFormat) {
-                this.TextBox.SaveFile(this._fileName, RichTextBoxStreamType.RichText);
+                this.TextBox.SaveFile(this.FullFileName, RichTextBoxStreamType.RichText);
             } else {
-                using (var fileStream = new FileStream(this._fileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None)) {
+                using (var fileStream = new FileStream(this.FullFileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None)) {
                     byte[] bytes = Utf8EncodingWithoutBom.GetBytes(this.TextBox.Text);
                     fileStream.SetLength(0);
                     fileStream.Write(bytes, 0, bytes.Length);
                 }
             }
 
-            this.LastWriteTimeUtc = new FileInfo(this._fileName).LastWriteTimeUtc;
+            this.LastWriteTimeUtc = new FileInfo(this.FullFileName).LastWriteTimeUtc;
             this.TextBox.Tag = "";
             this._lastSaveTime = DateTime.Now;
             base.Text = this.Title;
@@ -199,7 +196,7 @@ namespace QText {
                     Helper.CreatePath(Settings.CarbonCopyFolder);
                 }
 
-                var fiBase = new FileInfo(this._fileName);
+                var fiBase = new FileInfo(this.FullFileName);
                 destFile = Path.Combine(Settings.CarbonCopyFolder, fiBase.Name);
                 if (this.IsRichTextFormat) {
                     this.TextBox.SaveFile(destFile, RichTextBoxStreamType.RichText);
@@ -211,7 +208,7 @@ namespace QText {
                     if (!string.IsNullOrEmpty(destFile)) {
                         Medo.MessageBox.ShowWarning(this, "Error making carbon copy to \"" + destFile + "\".", MessageBoxButtons.OK);
                     } else {
-                        Medo.MessageBox.ShowWarning(this, "Error making carbon copy from \"" + this._fileName + "\".", MessageBoxButtons.OK);
+                        Medo.MessageBox.ShowWarning(this, "Error making carbon copy from \"" + this.FullFileName + "\".", MessageBoxButtons.OK);
                     }
                 }
             }
@@ -219,9 +216,9 @@ namespace QText {
 
         public void Delete() {
             if ((Settings.FilesDeleteToRecycleBin)) {
-                SHFile.Delete(this._fileName);
+                SHFile.Delete(this.FullFileName);
             } else {
-                File.Delete(this._fileName);
+                File.Delete(this.FullFileName);
             }
             this.TextBox.Clear();
             this.TextBox.Tag = null;
@@ -229,7 +226,7 @@ namespace QText {
         }
 
         public void Rename(string newTitle) {
-            var oldInfo = new FileInfo(this._fileName);
+            var oldInfo = new FileInfo(this.FullFileName);
             var newInfo = new FileInfo(Path.Combine(Settings.FilesLocation, newTitle) + oldInfo.Extension);
 
             if (File.Exists(newInfo.FullName)) {
@@ -240,8 +237,8 @@ namespace QText {
                 throw new IOException("Title already exists.");
             } else {
                 File.Move(oldInfo.FullName, newInfo.FullName);
-                this._fileName = newInfo.FullName;
-                this.LastWriteTimeUtc = new FileInfo(this._fileName).LastWriteTimeUtc;
+                this.FullFileName = newInfo.FullName;
+                this.LastWriteTimeUtc = new FileInfo(this.FullFileName).LastWriteTimeUtc;
 
                 this.Title = newInfo.Name.Remove(newInfo.Name.Length - newInfo.Extension.Length, newInfo.Extension.Length);
                 if ((this.IsChanged == true)) {
@@ -270,14 +267,12 @@ namespace QText {
 
         public string FileName {
             get {
-                var fileInfo = new FileInfo(this._fileName);
+                var fileInfo = new FileInfo(this.FullFileName);
                 return fileInfo.Name;
             }
         }
 
-        public string FullFileName {
-            get { return this._fileName; }
-        }
+        public string FullFileName { get; private set; }
 
 
         public void Me_GotFocus(System.Object sender, System.EventArgs e) {
