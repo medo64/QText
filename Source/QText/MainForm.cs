@@ -288,10 +288,20 @@ namespace QText {
                         this._suppressMenuKey = false;
                         return;
                     }
-                    mnu.Visible = (Settings.ShowToolbar) ? true : !mnu.Visible;
+                    if (Settings.ShowToolbar == false) {
+                        mnu.Visible = !mnu.Visible;
+                    }
+                    if (mnu.Visible) {
+                        mnu.Select();
+                        mnu.Items[0].Select();
+                    }
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
                     break;
 
                 case Keys.Control | Keys.B:
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
                     break;
 
             }
