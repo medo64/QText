@@ -606,17 +606,16 @@ namespace QText {
         }
 
         private void mnuFolder_Click(object sender, EventArgs e) {
-            var oldFolder = mnuFolder.Tag as string;
+            var oldFolder = tabFiles.CurrentFolder;
             var newFolder = ((ToolStripMenuItem)sender).Tag as string;
             if (string.Equals(oldFolder, newFolder, StringComparison.OrdinalIgnoreCase) == false) {
                 tabFiles.FolderOpen(newFolder);
-                mnuFolder.Tag = newFolder;
                 if (string.IsNullOrEmpty(tabFiles.CurrentFolder)) {
                     mnuFolder.Text = "Default";
                 } else {
                     mnuFolder.Text = tabFiles.CurrentFolder;
                 }
-                Settings.LastFolder = newFolder;
+                Settings.LastFolder = tabFiles.CurrentFolder;
             }
         }
 

@@ -11,10 +11,6 @@ namespace QText {
 
     internal class TabFile : TabPage {
 
-        public DateTime LastWriteTimeUtc { get; private set; }
-        private DateTime _lastSaveTime;
-        private static readonly UTF8Encoding Utf8EncodingWithoutBom = new UTF8Encoding(false);
-
         public TabFile(string fileName, ContextMenuStrip contextMenu)
             : this(fileName, contextMenu, false) {
         }
@@ -52,7 +48,7 @@ namespace QText {
             this.FullFileName = fullFileName;
             this.LastWriteTimeUtc = fileInfo.LastWriteTimeUtc;
             this.Title = fileTitle;
-            this._lastSaveTime = System.DateTime.Now;
+            this.LastSaveTime = System.DateTime.Now;
 
             base.Text = this.Title;
 
@@ -85,12 +81,8 @@ namespace QText {
             tb.WordWrap = Settings.DisplayWordWrap;
 
             this.TextBox = tb;
-
-
             this.TextBox.Tag = null;
-            if ((Settings.FilesPreload)) {
-                this.Open();
-            }
+            if (Settings.FilesPreload) { this.Open(); }
 
             UpdateTabWidth();
 
@@ -104,6 +96,10 @@ namespace QText {
             base.Controls.Add(this.TextBox);
         }
 
+
+        private static readonly UTF8Encoding Utf8EncodingWithoutBom = new UTF8Encoding(false);
+        public DateTime LastWriteTimeUtc { get; private set; }
+        public DateTime LastSaveTime { get; private set; }
         public RichTextBoxEx TextBox { get; private set; }
 
         public void Open() {
@@ -113,29 +109,29 @@ namespace QText {
         }
 
         public void ConvertToPlainText() {
-            if (!this.IsRichTextFormat) { return; }
+            if (this.IsRichTextFormat == false) { return; }
 
-            Open();
+            this.Open();
             string oldFileName = this.FullFileName;
             string newFileName = Path.ChangeExtension(oldFileName, ".txt");
             File.Move(oldFileName, newFileName);
             this.FullFileName = newFileName;
-            Save();
-            Reopen();
+            this.Save();
+            this.Reopen();
         }
 
         public void ConvertToRichText() {
             if (this.IsRichTextFormat) { return; }
 
-            Open();
+            this.Open();
             string text = this.TextBox.Text;
 
             string oldFileName = this.FullFileName;
             string newFileName = Path.ChangeExtension(oldFileName, ".rtf");
             File.Move(oldFileName, newFileName);
             this.FullFileName = newFileName;
-            Save();
-            Reopen();
+            this.Save();
+            this.Reopen();
         }
 
         public bool IsRichTextFormat {
@@ -162,7 +158,7 @@ namespace QText {
             base.Text = this.Title;
             this.TextBox.SelectionStart = 0;
             this.TextBox.SelectionLength = 0;
-            this._lastSaveTime = DateTime.Now;
+            this.LastSaveTime = DateTime.Now;
         }
 
         public void Save() {
@@ -180,14 +176,14 @@ namespace QText {
 
             this.LastWriteTimeUtc = new FileInfo(this.FullFileName).LastWriteTimeUtc;
             this.TextBox.Tag = "";
-            this._lastSaveTime = DateTime.Now;
+            this.LastSaveTime = DateTime.Now;
             base.Text = this.Title;
 
             SaveCarbonCopy();
         }
 
         public void SaveCarbonCopy() {
-            Open();
+            this.Open();
             if ((!Settings.CarbonCopyUse) || (string.IsNullOrEmpty(Settings.CarbonCopyFolder))) { return; }
 
             string destFile = null;
@@ -239,7 +235,7 @@ namespace QText {
         }
 
         public bool GetIsEligibleForSave(int timeout) {
-            return (this.IsChanged) && (this._lastSaveTime.AddSeconds(timeout) <= DateTime.Now);
+            return (this.IsChanged) && (this.LastSaveTime.AddSeconds(timeout) <= DateTime.Now);
         }
 
         public bool IsChanged {
@@ -289,55 +285,54 @@ namespace QText {
                 case Keys.Shift | Keys.Delete:
                     this.Cut(QText.Settings.ForceTextCopyPaste);
                     e.IsInputKey = false;
-
                     break;
+
                 case Keys.Control | Keys.Alt | Keys.X:
                     this.Cut(true);
                     e.IsInputKey = false;
-
                     break;
+
                 case Keys.Control | Keys.C:
                 case Keys.Control | Keys.Insert:
                     this.Copy(QText.Settings.ForceTextCopyPaste);
                     e.IsInputKey = false;
-
                     break;
+
                 case Keys.Control | Keys.Alt | Keys.C:
                     this.Copy(true);
                     e.IsInputKey = false;
-
                     break;
+
                 case Keys.Control | Keys.V:
                 case Keys.Shift | Keys.Insert:
                     this.Paste(QText.Settings.ForceTextCopyPaste);
                     e.IsInputKey = false;
-
                     break;
+
                 case Keys.Control | Keys.Alt | Keys.V:
                     this.Paste(true);
                     e.IsInputKey = false;
-
                     break;
+
                 case Keys.Control | Keys.Z:
                 case Keys.Alt | Keys.Back:
                     this.Undo();
                     e.IsInputKey = false;
-
                     break;
+
                 case Keys.Control | Keys.Y:
                 case Keys.Alt | Keys.Shift | Keys.Back:
                     this.Redo();
                     e.IsInputKey = false;
-
                     break;
+
                 case Keys.X:
                     e.IsInputKey = false;
-
                     break;
+
                 case Keys.Control | Keys.A:
                     this.TextBox.SelectAll();
                     e.IsInputKey = false;
-
                     break;
             }
         }
@@ -346,7 +341,7 @@ namespace QText {
         public void Cut(bool forceText) {
             try {
                 if (this.CanCopy) {
-                    if ((!this.IsRichTextFormat) || forceText) {
+                    if ((this.IsRichTextFormat == false) || forceText) {
                         Clipboard.Clear();
                         Clipboard.SetText(this.TextBox.SelectedText, TextDataFormat.UnicodeText);
                         this.TextBox.SelectedText = "";
@@ -365,7 +360,7 @@ namespace QText {
         public void Copy(bool forceText) {
             try {
                 if (this.CanCopy) {
-                    if (!this.IsRichTextFormat || forceText) {
+                    if ((this.IsRichTextFormat == false) || forceText) {
                         Clipboard.Clear();
                         Clipboard.SetText(this.TextBox.SelectedText, TextDataFormat.UnicodeText);
                     } else {
@@ -388,7 +383,7 @@ namespace QText {
         public void Paste(bool forceText) {
             try {
                 if (CanPaste) {
-                    if (!this.IsRichTextFormat || forceText) {
+                    if ((this.IsRichTextFormat == false) || forceText) {
                         var text = Clipboard.GetText(TextDataFormat.UnicodeText);
                         this.TextBox.SelectedText = text;
                     } else {
@@ -483,7 +478,7 @@ namespace QText {
         }
 
         public void ZoomReset() {
-            this.TextBox.ZoomFactor = 2.1f; //TODO: Blog about this
+            this.TextBox.ZoomFactor = 2.1f;
             this.TextBox.Refresh();
             this.TextBox.ZoomFactor = 1.0f;
             this.TextBox.Refresh();

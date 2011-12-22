@@ -229,12 +229,12 @@ namespace QText {
 
         public static bool StartupRun {
             get {
-                return StartupConfig.RunForCurrentUser; 
+                return StartupConfig.RunForCurrentUser;
             }
             set {
                 try {
                     StartupConfig.RunForCurrentUser = value;
-                } catch (Exception) {}
+                } catch (Exception) { }
             }
         }
 
@@ -255,7 +255,7 @@ namespace QText {
 
         public static string LastFolder {
             get { return Medo.Configuration.Settings.Read("LastFolder", ""); }
-            set { Medo.Configuration.Settings.Write("LastFolder", value); }
+            set { Medo.Configuration.Settings.Write("LastFolder", (value != null) ? value : ""); }
         }
 
     }
