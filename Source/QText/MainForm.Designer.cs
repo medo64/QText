@@ -106,7 +106,7 @@
             this.ToolStripMenuItem14 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTabOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.tmrCheckFileUpdate = new System.Windows.Forms.Timer(this.components);
-            this.tabFiles = new QText.TabControlDnD();
+            this.tabFiles = new QText.TabFiles();
             this.mnu.SuspendLayout();
             this.mnxText.SuspendLayout();
             this.mnxTab.SuspendLayout();
@@ -846,7 +846,6 @@
             this.tabFiles.SelectedIndex = 0;
             this.tabFiles.Size = new System.Drawing.Size(542, 290);
             this.tabFiles.TabIndex = 0;
-            this.tabFiles.ChangedOrder += new QText.TabControlDnD.ChangedOrderEventHandler(this.tabFiles_ChangedOrder);
             this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
             this.tabFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabFiles_MouseDown);
             // 
@@ -955,7 +954,7 @@
         internal System.Windows.Forms.ToolStripMenuItem mnxTabConvertRich;
         internal System.Windows.Forms.ToolStripSeparator ToolStripMenuItem14;
         internal System.Windows.Forms.ToolStripMenuItem mnxTabOpenContainingFolder;
-        internal TabControlDnD tabFiles;
+        internal TabFiles tabFiles;
         private System.Windows.Forms.ToolStripMenuItem mnxTabHide;
         private System.Windows.Forms.ToolStripMenuItem mnxTabUnhide;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem18;

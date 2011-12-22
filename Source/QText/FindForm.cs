@@ -10,9 +10,9 @@ using System.Security.Permissions;
 namespace QText {
     internal partial class FindForm : Form {
 
-        private TabControlDnD _tabFiles;
+        private TabFiles _tabFiles;
 
-        public FindForm(TabControlDnD tabFiles) {
+        public FindForm(TabFiles tabFiles) {
             InitializeComponent();
             this.Font = System.Drawing.SystemFonts.MessageBoxFont;
 

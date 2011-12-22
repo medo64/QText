@@ -112,7 +112,7 @@ namespace QText {
             this.Files = files.ToArray();
         }
 
-        public void Save(TabControlDnD tabControl, bool dontThrowExceptions) {
+        public void Save(TabFiles tabControl, bool dontThrowExceptions) {
             try {
                 using (var xw = new XmlTagWriter(Path.Combine(QText.Settings.FilesLocation, "QText.xml"), Encoding)) {
                     xw.XmlTextWriter.WriteStartDocument();

@@ -16,7 +16,7 @@ namespace QText {
         private void MenuStripExOnMainForm_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e) {
             MainForm mainForm = this.Parent as MainForm;
             if (mainForm == null) { return; }
-            TabControlDnD tabFiles = mainForm.tabFiles;
+            TabFiles tabFiles = mainForm.tabFiles;
 
             switch (e.KeyData) {
                 case Keys.Menu:
@@ -34,7 +34,7 @@ namespace QText {
         private void MenuStripExOnMainForm_MenuDeactivate(object sender, System.EventArgs e) {
             MainForm mainForm = this.Parent as MainForm;
             if (mainForm == null) { return; }
-            TabControlDnD tabFiles = mainForm.tabFiles;
+            TabFiles tabFiles = mainForm.tabFiles;
 
             if (tabFiles.SelectedTab != null) {
                 TextBoxBase txt = tabFiles.SelectedTab.TextBox;

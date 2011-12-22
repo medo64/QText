@@ -2,14 +2,60 @@
 using System.Windows.Forms;
 
 namespace QText {
-    internal class TabControlDnD : TabControl {
+    internal class TabFiles : TabControl {
 
-        private TabPage _dragTabPage = null;
-        public TabControlDnD()
+        internal FileOrder FileOrder = new FileOrder();
+
+        public TabFiles()
             : base() {
-            this._dragTabPage = null;
         }
 
+        internal string CurrentDirectory { get; private set; }
+
+        public void Open(string directory) {
+        }
+
+        public void Save() {
+        }
+
+
+        private TabPage GetTabPageFromXY(int x, int y) {
+            for (int i = 0; i <= base.TabPages.Count - 1; i++) {
+                if (base.GetTabRect(i).Contains(x, y)) {
+                    return base.TabPages[i];
+                }
+            }
+            return null;
+        }
+
+        public void SaveAll() {
+            try {
+                foreach (TabFile file in this.TabPages) {
+                    file.Save();
+                }
+            } finally {
+                this.FileOrder.Save(this, true);
+            }
+        }
+
+        internal new TabFile SelectedTab {
+            get {
+                try {
+                    if (base.SelectedTab == null) { return null; }
+                    return base.SelectedTab as QText.TabFile;
+                } catch (NullReferenceException) { //work around for bug (Bajus)
+                    return null;
+                }
+            }
+            set {
+                base.SelectedTab = value;
+            }
+        }
+
+
+        #region Drag & drop
+
+        private TabPage _dragTabPage = null;
 
         protected override void OnMouseDown(MouseEventArgs e) {
             if ((e.Button == MouseButtons.Left) && (base.SelectedTab != null) && (!base.GetTabRect(base.SelectedIndex).IsEmpty)) {
@@ -54,9 +100,7 @@ namespace QText {
                         base.TabPages.Insert(base.TabPages.IndexOf(currTabPage) + 1, this._dragTabPage);
                         base.SelectedTab = this._dragTabPage;
                     }
-                    if (ChangedOrder != null) {
-                        ChangedOrder(this, new EventArgs());
-                    }
+                    this.FileOrder.Save(this, true);
                 }
             }
             this._dragTabPage = null;
@@ -64,39 +108,7 @@ namespace QText {
             base.OnMouseUp(e);
         }
 
-
-        public event ChangedOrderEventHandler ChangedOrder;
-        public delegate void ChangedOrderEventHandler(object sender, System.EventArgs e);
-
-        private TabPage GetTabPageFromXY(int x, int y) {
-            for (int i = 0; i <= base.TabPages.Count - 1; i++) {
-                if (base.GetTabRect(i).Contains(x, y)) {
-                    return base.TabPages[i];
-                }
-            }
-            return null;
-        }
-
-        public void SaveAll() {
-            foreach (QText.TabFile file in this.TabPages) {
-                file.Save();
-            }
-        }
-
-        internal new TabFile SelectedTab {
-            get {
-                try {
-                    if (base.SelectedTab == null) { return null; }
-                    return base.SelectedTab as QText.TabFile;
-                } catch (NullReferenceException) { //work around for bug (Bajus)
-                    return null;
-                }
-            }
-            set {
-                base.SelectedTab = value;
-            }
-        }
-
+        #endregion
 
     }
 }
