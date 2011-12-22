@@ -98,7 +98,7 @@ namespace QText {
 #endif
 
             try {
-                tabFiles.DirectorySave();
+                tabFiles.FolderSave();
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(null, "QText : File saving failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
             }
@@ -114,9 +114,7 @@ namespace QText {
             if (tabFiles == null) { return; }
 
             if (tabFiles.SelectedTab != null) {
-                if (tabFiles.SelectedTab.TextBox != null) {
-                    tabFiles.SelectedTab.TextBox.Focus();
-                }
+                tabFiles.SelectedTab.Focus();
             }
         }
 
@@ -587,6 +585,29 @@ namespace QText {
         }
 
 
+        private void mnuFolder_DropDownOpening(object sender, EventArgs e) {
+            mnuFolder.DropDownItems.Clear();
+            mnuFolder.DropDownItems.Add(new ToolStripMenuItem("(Default)", null, mnuFolder_Click) { Tag = "" });
+            foreach (var folder in tabFiles.GetSubFolders()) {
+                mnuFolder.DropDownItems.Add(new ToolStripMenuItem(folder, null, mnuFolder_Click) { Tag = folder });
+            }
+        }
+
+        private void mnuFolder_Click(object sender, EventArgs e) {
+            var oldFolder = mnuFolder.Tag as string;
+            var newFolder = ((ToolStripMenuItem)sender).Tag as string;
+            if (string.Equals(oldFolder, newFolder, StringComparison.OrdinalIgnoreCase) == false) {
+                tabFiles.FolderOpen(newFolder);
+                mnuFolder.Tag = newFolder;
+                if (string.IsNullOrEmpty(tabFiles.CurrentFolder)) {
+                    mnuFolder.Text = "Default";
+                } else {
+                    mnuFolder.Text = tabFiles.CurrentFolder;
+                }
+            }
+        }
+
+
         private void mnuOptions_Click(object sender, EventArgs e) {
             using (var frm = new OptionsForm()) {
                 tmrQuickAutoSave.Enabled = false;
@@ -948,7 +969,7 @@ namespace QText {
 
         private void SaveAllChanged() {
             try {
-                tabFiles.DirectorySave();
+                tabFiles.FolderSave();
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
             }
@@ -979,7 +1000,7 @@ namespace QText {
             }
 
             try {
-                tabFiles.DirectoryOpen();
+                tabFiles.FolderOpen();
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(this, "Files could not be loaded." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
             }

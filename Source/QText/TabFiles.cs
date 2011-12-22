@@ -11,21 +11,28 @@ namespace QText {
         }
 
 
-        internal string CurrentDirectory { get; private set; }
+        internal string CurrentDirectory { 
+            get {
+                if (string.IsNullOrEmpty(this.CurrentFolder)) { return Settings.FilesLocation; }
+                return Path.Combine(Settings.FilesLocation, CurrentFolder);
+            } 
+        }
+        internal string CurrentFolder { get; private set; }
 
-        public void DirectoryOpen() { //Reopens
-            this.DirectoryOpen(this.CurrentDirectory);
+        public void FolderOpen() { //Reopens
+            this.FolderOpen(this.CurrentFolder);
         }
 
-        public void DirectoryOpen(string directory) {
-            if (directory == null) { directory = Settings.FilesLocation; }
-            if (this.CurrentDirectory != null) { DirectorySave(); }
+        public void FolderOpen(string folder) {
+            if (this.CurrentFolder != null) { FolderSave(); }
 
-            this.CurrentDirectory = directory;
+            this.Visible = false;
+            this.TabPages.Clear();
+            this.CurrentFolder = folder;
 
             var files = new List<string>();
-            files.AddRange(Directory.GetFiles(Settings.FilesLocation, "*.txt"));
-            files.AddRange(Directory.GetFiles(Settings.FilesLocation, "*.rtf"));
+            files.AddRange(Directory.GetFiles(this.CurrentDirectory, "*.txt"));
+            files.AddRange(Directory.GetFiles(this.CurrentDirectory, "*.rtf"));
 
             string selectedTitle;
             IList<string> orderedTitles = ReadOrderedTitles(out selectedTitle);
@@ -47,8 +54,6 @@ namespace QText {
                 return string.Compare(title1, title2); //just sort alphabetically
             });
 
-            this.Visible = false;
-            this.TabPages.Clear();
             TabFile selectedTab = null;
             foreach (var file in files) {
                 var tab = new TabFile(file, App.Form.mnxText);
@@ -63,13 +68,24 @@ namespace QText {
                 this.SelectedTab = (TabFile)this.TabPages[0];
             }
             this.Visible = true;
+            if (this.SelectedTab != null) {
+                this.SelectedTab.Reopen();
+                this.SelectedTab.Focus();
+            }
         }
 
-        public void DirectorySave() {
+        public void FolderSave() {
             foreach (TabFile file in this.TabPages) {
                 file.Save();
             }
             WriteOrderedTitles();
+        }
+
+        internal IEnumerable<string> GetSubFolders() {
+            foreach (var directory in Directory.GetDirectories(Settings.FilesLocation)) {
+                var di = new DirectoryInfo(directory);
+                yield return di.Name;
+            }
         }
 
 

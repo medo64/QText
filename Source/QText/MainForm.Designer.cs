@@ -56,6 +56,7 @@
             this.mnuAppAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOptions = new System.Windows.Forms.ToolStripButton();
             this.ToolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuFolder = new System.Windows.Forms.ToolStripDropDownButton();
             this.tmrUpdateToolbar = new System.Windows.Forms.Timer(this.components);
             this.tmrQuickAutoSave = new System.Windows.Forms.Timer(this.components);
             this.mnxText = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -103,7 +104,6 @@
             this.ToolStripMenuItem14 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTabOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.tmrCheckFileUpdate = new System.Windows.Forms.Timer(this.components);
-            this.mnuFolder = new System.Windows.Forms.ToolStripDropDownButton();
             this.tabFiles = new QText.TabFiles();
             this.mnu.SuspendLayout();
             this.mnxText.SuspendLayout();
@@ -420,7 +420,19 @@
             // 
             this.ToolStripSeparator2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.ToolStripSeparator2.Name = "ToolStripSeparator2";
-            this.ToolStripSeparator2.Size = new System.Drawing.Size(6, 27);
+            this.ToolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // mnuFolder
+            // 
+            this.mnuFolder.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.mnuFolder.Image = ((System.Drawing.Image)(resources.GetObject("mnuFolder.Image")));
+            this.mnuFolder.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuFolder.Name = "mnuFolder";
+            this.mnuFolder.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.mnuFolder.Size = new System.Drawing.Size(87, 24);
+            this.mnuFolder.Text = "Default";
+            this.mnuFolder.ToolTipText = "Select folder";
+            this.mnuFolder.DropDownOpening += new System.EventHandler(this.mnuFolder_DropDownOpening);
             // 
             // tmrUpdateToolbar
             // 
@@ -812,17 +824,6 @@
             // tmrCheckFileUpdate
             // 
             this.tmrCheckFileUpdate.Tick += new System.EventHandler(this.tmrCheckFileUpdate_Tick);
-            // 
-            // mnuFolder
-            // 
-            this.mnuFolder.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.mnuFolder.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.mnuFolder.Image = ((System.Drawing.Image)(resources.GetObject("mnuFolder.Image")));
-            this.mnuFolder.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mnuFolder.Name = "mnuFolder";
-            this.mnuFolder.Size = new System.Drawing.Size(71, 24);
-            this.mnuFolder.Text = "Default";
-            this.mnuFolder.ToolTipText = "Select folder";
             // 
             // tabFiles
             // 
