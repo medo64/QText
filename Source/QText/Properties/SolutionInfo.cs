@@ -5,5 +5,5 @@ using System.Reflection;
 [assembly: AssemblyCompany("Josip Medved")]
 [assembly: AssemblyCopyright("Copyright (c) 2004 Josip Medved <jmedved@jmedved.com>")]
 
-[assembly: AssemblyVersion("2.50.*")]
-[assembly: AssemblyInformationalVersion("2.50")]
+[assembly: AssemblyVersion("3.00.*")]
+[assembly: AssemblyInformationalVersion("3.00 (alpha)")]

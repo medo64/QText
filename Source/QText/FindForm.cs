@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using System.Security.Permissions;
+using System.Windows.Forms;
 
 namespace QText {
-    public partial class FindForm : Form {
+    internal partial class FindForm : Form {
 
-        private TabControlDnD _tabFiles;
+        private TabFiles _tabFiles;
 
-        public FindForm(TabControlDnD tabFiles) {
+        public FindForm(TabFiles tabFiles) {
             InitializeComponent();
             this.Font = System.Drawing.SystemFonts.MessageBoxFont;
 

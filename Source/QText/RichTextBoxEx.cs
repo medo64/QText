@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 using System.Security.Permissions;
+using System.Windows.Forms;
 
 namespace QText {
     internal class RichTextBoxEx : RichTextBox {

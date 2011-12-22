@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Windows.Forms;
 
 namespace QText {
-    public partial class UpgradeForm : Form {
+    internal partial class UpgradeForm : Form {
         public UpgradeForm() {
             InitializeComponent();
             this.Font = SystemFonts.MessageBoxFont;

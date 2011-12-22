@@ -51,7 +51,12 @@ Shortcut keys
 
 Version history
 
-   Version 2.50 (2011-12)
+   Version 3.00 (alpha)
+
+      o  Removed support for hidden files.
+      o  Changed how file order is saved.
+
+   Version 2.50 (2011-12-27)
 
       o  Greatly improved text manipulation (especially multiline tabs).
       o  Some interface tweaks.

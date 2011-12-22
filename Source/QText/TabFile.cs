@@ -26,7 +26,7 @@ namespace QText {
 
             var fileInfo = new FileInfo(fileName);
             bool isRichTextFormat = string.Compare(fileInfo.Extension, ".rtf", StringComparison.OrdinalIgnoreCase) == 0;
-            string fileTitle = fileInfo.Name.Remove(fileInfo.Name.Length - fileInfo.Extension.Length, fileInfo.Extension.Length);
+            string fileTitle = Helper.GetTitle(fileInfo);
 
             if (createFile) {
                 if ((File.Exists(fileName))) {
@@ -113,7 +113,7 @@ namespace QText {
             }
         }
 
-        public void ConvertToPlainText(FileOrder fileOrder) {
+        public void ConvertToPlainText() {
             if (!this.IsRichTextFormat) { return; }
 
             Open();
@@ -126,7 +126,7 @@ namespace QText {
             //fileOrder.Rename(oldFileName, newFileName); //TODO
         }
 
-        public void ConvertToRichText(FileOrder fileOrder) {
+        public void ConvertToRichText() {
             if (this.IsRichTextFormat) { return; }
 
             Open();
@@ -196,7 +196,7 @@ namespace QText {
             string destFile = null;
             try {
                 if ((!Directory.Exists(Settings.CarbonCopyFolder)) && (Settings.CarbonCopyCreateFolder)) {
-                    Helper.Path.CreatePath(Settings.CarbonCopyFolder);
+                    Helper.CreatePath(Settings.CarbonCopyFolder);
                 }
 
                 var fiBase = new FileInfo(this._fileName);
