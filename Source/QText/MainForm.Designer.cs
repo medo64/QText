@@ -98,6 +98,7 @@
             this.mnxTabRename = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabConvertPlain = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabConvertRich = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTabMoveTo = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTab2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTabPrintPreview = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabPrint = new System.Windows.Forms.ToolStripMenuItem();
@@ -105,6 +106,7 @@
             this.mnxTabOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.tmrCheckFileUpdate = new System.Windows.Forms.Timer(this.components);
             this.tabFiles = new QText.TabFiles();
+            this.mnxTabMoveToDummy = new System.Windows.Forms.ToolStripMenuItem();
             this.mnu.SuspendLayout();
             this.mnxText.SuspendLayout();
             this.mnxTab.SuspendLayout();
@@ -142,6 +144,7 @@
             this.mnuFolder});
             this.mnu.Location = new System.Drawing.Point(0, 0);
             this.mnu.Name = "mnu";
+            this.mnu.Padding = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.mnu.Size = new System.Drawing.Size(582, 27);
             this.mnu.TabIndex = 1;
             // 
@@ -420,7 +423,7 @@
             // 
             this.ToolStripSeparator2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.ToolStripSeparator2.Name = "ToolStripSeparator2";
-            this.ToolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            this.ToolStripSeparator2.Size = new System.Drawing.Size(6, 27);
             // 
             // mnuFolder
             // 
@@ -706,13 +709,14 @@
             this.mnxTabRename,
             this.mnxTabConvertPlain,
             this.mnxTabConvertRich,
+            this.mnxTabMoveTo,
             this.mnxTab2,
             this.mnxTabPrintPreview,
             this.mnxTabPrint,
             this.ToolStripMenuItem14,
             this.mnxTabOpenContainingFolder});
             this.mnxTab.Name = "mnxTab";
-            this.mnxTab.Size = new System.Drawing.Size(233, 268);
+            this.mnxTab.Size = new System.Drawing.Size(233, 314);
             this.mnxTab.Opening += new System.ComponentModel.CancelEventHandler(this.mnxTab_Opening);
             // 
             // mnxTabNew
@@ -785,6 +789,16 @@
             this.mnxTabConvertRich.Text = "Convert to rich text";
             this.mnxTabConvertRich.Click += new System.EventHandler(this.mnxTabConvertRich_Click);
             // 
+            // mnxTabMoveTo
+            // 
+            this.mnxTabMoveTo.AccessibleDescription = "";
+            this.mnxTabMoveTo.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnxTabMoveToDummy});
+            this.mnxTabMoveTo.Name = "mnxTabMoveTo";
+            this.mnxTabMoveTo.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabMoveTo.Text = "Move to";
+            this.mnxTabMoveTo.DropDownOpening += new System.EventHandler(this.mnxTabMoveTo_DropDownOpening);
+            // 
             // mnxTab2
             // 
             this.mnxTab2.Name = "mnxTab2";
@@ -837,6 +851,12 @@
             this.tabFiles.TabIndex = 0;
             this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
             this.tabFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabFiles_MouseDown);
+            // 
+            // mnxTabMoveToDummy
+            // 
+            this.mnxTabMoveToDummy.Name = "mnxTabMoveToDummy";
+            this.mnxTabMoveToDummy.Size = new System.Drawing.Size(152, 24);
+            this.mnxTabMoveToDummy.Text = "dummy";
             // 
             // MainForm
             // 
@@ -952,5 +972,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem mnuAppAbout;
         private System.Windows.Forms.ToolStripDropDownButton mnuFolder;
+        private System.Windows.Forms.ToolStripMenuItem mnxTabMoveTo;
+        private System.Windows.Forms.ToolStripMenuItem mnxTabMoveToDummy;
     }
 }

@@ -587,10 +587,12 @@ namespace QText {
 
         private void mnuFolder_DropDownOpening(object sender, EventArgs e) {
             mnuFolder.DropDownItems.Clear();
-            mnuFolder.DropDownItems.Add(new ToolStripMenuItem("(Default)", null, mnuFolder_Click) { Tag = "" });
+            mnuFolder.DropDownItems.Add(new ToolStripMenuItem("(Default)", null, mnuFolder_Click) { Tag = null });
             foreach (var folder in tabFiles.GetSubFolders()) {
                 mnuFolder.DropDownItems.Add(new ToolStripMenuItem(folder, null, mnuFolder_Click) { Tag = folder });
             }
+            mnuFolder.DropDownItems.Add(new ToolStripSeparator());
+            mnuFolder.DropDownItems.Add(new ToolStripMenuItem("Edit folders", null, mnuFolderEdit_Click));
         }
 
         private void mnuFolder_Click(object sender, EventArgs e) {
@@ -605,6 +607,9 @@ namespace QText {
                     mnuFolder.Text = tabFiles.CurrentFolder;
                 }
             }
+        }
+
+        private void mnuFolderEdit_Click(object sender, EventArgs e) {
         }
 
 
@@ -688,6 +693,7 @@ namespace QText {
             mnxTabRename.Enabled = isTabSelected;
             mnxTabConvertPlain.Enabled = isTabRichText;
             mnxTabConvertRich.Enabled = isTabPlainText;
+            mnxTabMoveTo.Enabled = isTabSelected;
             mnxTabPrintPreview.Enabled = isTabSelected;
             mnxTabPrint.Enabled = isTabSelected;
             mnxTabOpenContainingFolder.Enabled = isTabSelected;
@@ -743,6 +749,24 @@ namespace QText {
         private void mnxTabConvertRich_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 tabFiles.SelectedTab.ConvertToRichText();
+            }
+        }
+
+        private void mnxTabMoveTo_DropDownOpening(object sender, EventArgs e) {
+            mnxTabMoveTo.DropDownItems.Clear();
+            mnxTabMoveTo.DropDownItems.Add(new ToolStripMenuItem("(Default)", null, mnxTabMoveTo_Click) { Tag = null });
+            foreach (var folder in tabFiles.GetSubFolders()) {
+                mnxTabMoveTo.DropDownItems.Add(new ToolStripMenuItem(folder, null, mnxTabMoveTo_Click) { Tag = folder });
+            }
+            foreach (ToolStripMenuItem item in mnxTabMoveTo.DropDownItems) {
+                item.Enabled = !string.Equals(tabFiles.CurrentFolder, (string)item.Tag, StringComparison.OrdinalIgnoreCase);
+            }
+        }
+
+        private void mnxTabMoveTo_Click(object sender, EventArgs e) {
+            if (tabFiles.SelectedTab != null) {
+                var folder = ((ToolStripMenuItem)sender).Tag as string;
+                tabFiles.MoveTab(tabFiles.SelectedTab, folder);
             }
         }
 

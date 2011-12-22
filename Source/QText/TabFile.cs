@@ -216,13 +216,13 @@ namespace QText {
 
         public void Rename(string newTitle) {
             var oldInfo = new FileInfo(this.FullFileName);
-            var newInfo = new FileInfo(Path.Combine(Settings.FilesLocation, newTitle) + oldInfo.Extension);
+            var newInfo = new FileInfo(Path.Combine(oldInfo.DirectoryName, newTitle) + oldInfo.Extension);
 
             if (File.Exists(newInfo.FullName)) {
                 throw new IOException("File already exists.");
-            } else if (File.Exists(System.IO.Path.Combine(Settings.FilesLocation, newTitle + ".txt"))) {
+            } else if (File.Exists(Path.Combine(newInfo.DirectoryName, newTitle + ".txt"))) {
                 throw new IOException("Title already exists.");
-            } else if (File.Exists(System.IO.Path.Combine(Settings.FilesLocation, newTitle + ".rtf"))) {
+            } else if (File.Exists(Path.Combine(newInfo.DirectoryName, newTitle + ".rtf"))) {
                 throw new IOException("Title already exists.");
             } else {
                 File.Move(oldInfo.FullName, newInfo.FullName);
