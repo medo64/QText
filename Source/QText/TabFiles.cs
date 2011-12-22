@@ -101,6 +101,25 @@ namespace QText {
         }
 
 
+        #region File operations
+
+        public void NewTab(string title, bool isRichText) {
+            TabFile t = default(TabFile);
+            if (isRichText) {
+                t = new TabFile(System.IO.Path.Combine(this.CurrentDirectory, title + ".rtf"), App.Form.mnxText, true);
+            } else {
+                t = new TabFile(System.IO.Path.Combine(this.CurrentDirectory, title + ".txt"), App.Form.mnxText, true);
+            }
+            if (this.SelectedTab != null) {
+                this.TabPages.Insert(this.TabPages.IndexOf(this.SelectedTab) + 1, t);
+            } else {
+                this.TabPages.Add(t);
+            }
+            this.SelectedTab = t;
+        }
+
+        #endregion
+
         #region Drag & drop
 
         private TabPage _dragTabPage = null;

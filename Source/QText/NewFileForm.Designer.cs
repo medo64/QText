@@ -23,7 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.txtFileName = new System.Windows.Forms.TextBox();
+            this.txtTitle = new System.Windows.Forms.TextBox();
             this.lblFileName = new System.Windows.Forms.Label();
             this.radRichText = new System.Windows.Forms.RadioButton();
             this.radText = new System.Windows.Forms.RadioButton();
@@ -31,16 +31,16 @@
             this.btnOK = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // txtFileName
+            // txtTitle
             // 
-            this.txtFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtFileName.Location = new System.Drawing.Point(82, 12);
-            this.txtFileName.Name = "txtFileName";
-            this.txtFileName.Size = new System.Drawing.Size(260, 22);
-            this.txtFileName.TabIndex = 1;
-            this.txtFileName.TextChanged += new System.EventHandler(this.txtFileName_TextChanged);
-            this.txtFileName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFileName_KeyPress);
+            this.txtTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtTitle.Location = new System.Drawing.Point(82, 12);
+            this.txtTitle.Name = "txtTitle";
+            this.txtTitle.Size = new System.Drawing.Size(260, 22);
+            this.txtTitle.TabIndex = 1;
+            this.txtTitle.TextChanged += new System.EventHandler(this.txtTitle_TextChanged);
+            this.txtTitle.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtTitle_KeyPress);
             // 
             // lblFileName
             // 
@@ -111,7 +111,7 @@
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.lblFileName);
-            this.Controls.Add(this.txtFileName);
+            this.Controls.Add(this.txtTitle);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -127,7 +127,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox txtFileName;
+        private System.Windows.Forms.TextBox txtTitle;
         private System.Windows.Forms.Label lblFileName;
         internal System.Windows.Forms.RadioButton radRichText;
         internal System.Windows.Forms.RadioButton radText;

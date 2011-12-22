@@ -7,6 +7,7 @@ using System.IO;
 using System.Security.Permissions;
 using System.Threading;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace QText {
 
@@ -379,19 +380,12 @@ namespace QText {
         #region Menu
 
         private void mnuNew_Click(object sender, EventArgs e) {
-            using (NewFileForm frm = new NewFileForm("")) {
-                if ((frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)) {
+            using (NewFileForm frm = new NewFileForm()) {
+                if (frm.ShowDialog(this) == DialogResult.OK) {
                     try {
-                        TabFile t = default(TabFile);
-                        if ((frm.IsRichText)) {
-                            t = new TabFile(System.IO.Path.Combine(Settings.FilesLocation, frm.FileName) + ".rtf", App.Form.mnxText, true);
-                        } else {
-                            t = new TabFile(System.IO.Path.Combine(Settings.FilesLocation, frm.FileName) + ".txt", App.Form.mnxText, true);
-                        }
-                        tabFiles.TabPages.Add(t);
-                        tabFiles.SelectedTab = t;
+                        tabFiles.NewTab(frm.Title, frm.IsRichText);
                     } catch (Exception ex) {
-                        Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
+                        Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Operation failed.\n\n{0}", ex.Message), MessageBoxButtons.OK);
                     }
                 }
             }
