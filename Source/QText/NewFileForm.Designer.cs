@@ -23,12 +23,15 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             this.txtTitle = new System.Windows.Forms.TextBox();
             this.lblFileName = new System.Windows.Forms.Label();
             this.radRichText = new System.Windows.Forms.RadioButton();
             this.radText = new System.Windows.Forms.RadioButton();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
+            this.erp = new System.Windows.Forms.ErrorProvider(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.erp)).BeginInit();
             this.SuspendLayout();
             // 
             // txtTitle
@@ -99,6 +102,10 @@
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
+            // erp
+            // 
+            this.erp.ContainerControl = this;
+            // 
             // NewFileForm
             // 
             this.AcceptButton = this.btnOK;
@@ -120,6 +127,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "New file";
+            ((System.ComponentModel.ISupportInitialize)(this.erp)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -133,5 +141,7 @@
         internal System.Windows.Forms.RadioButton radText;
         internal System.Windows.Forms.Button btnCancel;
         internal System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.ErrorProvider erp;
+        private System.ComponentModel.IContainer components;
     }
 }

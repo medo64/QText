@@ -380,7 +380,7 @@ namespace QText {
         #region Menu
 
         private void mnuNew_Click(object sender, EventArgs e) {
-            using (NewFileForm frm = new NewFileForm()) {
+            using (NewFileForm frm = new NewFileForm(tabFiles.CurrentDirectory)) {
                 if (frm.ShowDialog(this) == DialogResult.OK) {
                     try {
                         tabFiles.NewTab(frm.Title, frm.IsRichText);
