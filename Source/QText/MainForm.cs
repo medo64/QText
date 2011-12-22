@@ -601,6 +601,9 @@ namespace QText {
             foreach (var folder in TabFiles.GetSubFolders()) {
                 mnuFolder.DropDownItems.Add(new ToolStripMenuItem(folder, null, mnuFolder_Click) { Tag = folder });
             }
+            foreach (ToolStripMenuItem item in mnuFolder.DropDownItems) {
+                item.Enabled = !string.Equals(tabFiles.CurrentFolder, (string)item.Tag, StringComparison.OrdinalIgnoreCase);
+            }
             mnuFolder.DropDownItems.Add(new ToolStripSeparator());
             mnuFolder.DropDownItems.Add(new ToolStripMenuItem("Edit folders", null, mnuFolderEdit_Click));
         }
@@ -611,7 +614,7 @@ namespace QText {
             if (string.Equals(oldFolder, newFolder, StringComparison.OrdinalIgnoreCase) == false) {
                 tabFiles.FolderOpen(newFolder);
                 if (string.IsNullOrEmpty(tabFiles.CurrentFolder)) {
-                    mnuFolder.Text = "Default";
+                    mnuFolder.Text = "(Default)";
                 } else {
                     mnuFolder.Text = tabFiles.CurrentFolder;
                 }
@@ -1035,7 +1038,7 @@ namespace QText {
 
             try {
                 tabFiles.FolderOpen(Settings.LastFolder);
-                mnuFolder.Text = tabFiles.CurrentFolder;
+                mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(this, "Files could not be loaded." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
             }
