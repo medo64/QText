@@ -950,7 +950,7 @@ namespace QText {
 
         private void SaveAllChanged() {
             try {
-                tabFiles.SaveAll();
+                tabFiles.DirectorySave();
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
             }

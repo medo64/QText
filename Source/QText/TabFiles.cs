@@ -66,7 +66,9 @@ namespace QText {
         }
 
         public void DirectorySave() {
-            this.SaveAll();
+            foreach (TabFile file in this.TabPages) {
+                file.Save();
+            }
             WriteOrderedTitles();
         }
 
@@ -78,12 +80,6 @@ namespace QText {
                 }
             }
             return null;
-        }
-
-        public void SaveAll() {
-            foreach (TabFile file in this.TabPages) {
-                file.Save();
-            }
         }
 
         internal new TabFile SelectedTab {
@@ -116,6 +112,7 @@ namespace QText {
                 this.TabPages.Add(t);
             }
             this.SelectedTab = t;
+            WriteOrderedTitles();
         }
 
         #endregion
