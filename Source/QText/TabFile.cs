@@ -405,7 +405,8 @@ namespace QText {
             try {
                 if (CanPaste) {
                     if (!this.IsRichTextFormat || forceText) {
-                        this.TextBox.Paste(DataFormats.GetFormat(DataFormats.UnicodeText));
+                        var text = Clipboard.GetText(TextDataFormat.UnicodeText);
+                        this.TextBox.SelectedText = text;
                     } else {
                         this.TextBox.Paste();
                     }
