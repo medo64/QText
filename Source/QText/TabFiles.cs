@@ -99,7 +99,7 @@ namespace QText {
 
         #region File operations
 
-        public void NewTab(string title, bool isRichText) {
+        public void AddTab(string title, bool isRichText) {
             TabFile t = default(TabFile);
             if (isRichText) {
                 t = new TabFile(System.IO.Path.Combine(this.CurrentDirectory, title + ".rtf"), App.Form.mnxText, true);
@@ -114,6 +114,18 @@ namespace QText {
             this.SelectedTab = t;
             WriteOrderedTitles();
         }
+
+        public void RemoveTab(TabFile tab) {
+            this.SelectedTab = GetNextTab();
+            this.TabPages.Remove(tab);
+            if (Settings.FilesDeleteToRecycleBin) {
+                SHFile.Delete(tab.FullFileName);
+            } else {
+                File.Delete(tab.FullFileName);
+            }
+            WriteOrderedTitles();
+        }
+
 
         #endregion
 
@@ -230,6 +242,18 @@ namespace QText {
         }
 
         #endregion
+
+
+        private TabFile GetNextTab() {
+            int tindex = this.TabPages.IndexOf(this.SelectedTab) + 1; //select next tab
+            if (tindex >= this.TabPages.Count) {
+                tindex -= 2; //go to one in front of it
+            }
+            if ((tindex > 0) && (tindex < this.TabPages.Count)) {
+                return (TabFile)this.TabPages[tindex];
+            }
+            return null;
+        }
 
     }
 }

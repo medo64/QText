@@ -214,17 +214,6 @@ namespace QText {
             }
         }
 
-        public void Delete() {
-            if ((Settings.FilesDeleteToRecycleBin)) {
-                SHFile.Delete(this.FullFileName);
-            } else {
-                File.Delete(this.FullFileName);
-            }
-            this.TextBox.Clear();
-            this.TextBox.Tag = null;
-            base.Controls.Clear();
-        }
-
         public void Rename(string newTitle) {
             var oldInfo = new FileInfo(this.FullFileName);
             var newInfo = new FileInfo(Path.Combine(Settings.FilesLocation, newTitle) + oldInfo.Extension);

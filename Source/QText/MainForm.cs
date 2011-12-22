@@ -383,7 +383,7 @@ namespace QText {
             using (NewFileForm frm = new NewFileForm(tabFiles.CurrentDirectory)) {
                 if (frm.ShowDialog(this) == DialogResult.OK) {
                     try {
-                        tabFiles.NewTab(frm.Title, frm.IsRichText);
+                        tabFiles.AddTab(frm.Title, frm.IsRichText);
                     } catch (Exception ex) {
                         Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Operation failed.\n\n{0}", ex.Message), MessageBoxButtons.OK);
                     }
@@ -689,16 +689,14 @@ namespace QText {
             if (tabFiles.SelectedTab != null) {
                 var currTab = tabFiles.SelectedTab;
                 if (currTab.TextBox.Text.Length > 0) {
-                    if (Medo.MessageBox.ShowQuestion(this, "Are you sure?", Medo.Reflection.EntryAssembly.Title + " : Delete", MessageBoxButtons.YesNo, MessageBoxDefaultButton.Button2) == DialogResult.No) {
+                    if (Medo.MessageBox.ShowQuestion(this, string.Format(CultureInfo.CurrentUICulture, "Do you really want to delete \"{0}\"?", tabFiles.SelectedTab.Title), MessageBoxButtons.YesNo, MessageBoxDefaultButton.Button2) == DialogResult.No) {
                         return;
                     }
                 }
                 try {
-                    tabFiles.SelectedTab = GetNextTab();
-                    currTab.Delete();
-                    tabFiles.TabPages.Remove(currTab);
+                    tabFiles.RemoveTab(tabFiles.SelectedTab);
                 } catch (Exception ex) {
-                    Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
+                    Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Operation failed.\n\n{0}", ex.Message));
                 }
             }
         }
@@ -934,17 +932,6 @@ namespace QText {
                 if (tabFiles.TabPages.Contains(this._PrevSelectedTab)) {
                     return this._PrevSelectedTab;
                 }
-            }
-            return null;
-        }
-
-        private TabFile GetNextTab() {
-            int tindex = tabFiles.TabPages.IndexOf(tabFiles.SelectedTab) + 1; //select next tab
-            if (tindex >= tabFiles.TabPages.Count) {
-                tindex -= 2; //go to one in front of it
-            }
-            if ((tindex > 0) && (tindex < tabFiles.TabPages.Count)) {
-                return (TabFile)tabFiles.TabPages[tindex];
             }
             return null;
         }
