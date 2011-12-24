@@ -23,8 +23,8 @@ namespace QText {
             this.FolderOpen(this.CurrentFolder);
         }
 
-        public void FolderOpen(string folder) {
-            if (this.CurrentFolder != null) { FolderSave(); }
+        public void FolderOpen(string folder, bool saveBeforeOpen = true) {
+            if ((this.CurrentFolder != null) && (saveBeforeOpen)) { FolderSave(); }
 
             //check if it exists
             string newFolder = null;

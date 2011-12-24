@@ -31,7 +31,6 @@ namespace QText {
                 } else if ((File.Exists(Path.Combine(Settings.FilesLocation, fileTitle + ".rtf")))) {
                     throw new IOException("Title already exists.");
                 } else {
-                    //rich text box
                     if ((isRichTextFormat)) {
                         using (RichTextBox r = new RichTextBox()) {
                             r.BackColor = Settings.DisplayBackgroundColor;
@@ -101,6 +100,7 @@ namespace QText {
         public DateTime LastWriteTimeUtc { get; private set; }
         public DateTime LastSaveTime { get; private set; }
         public RichTextBoxEx TextBox { get; private set; }
+        public bool IsLoaded { get; private set; }
 
         public void Open() {
             if (this.TextBox.Tag == null) {
@@ -159,6 +159,7 @@ namespace QText {
             this.TextBox.SelectionStart = 0;
             this.TextBox.SelectionLength = 0;
             this.LastSaveTime = DateTime.Now;
+            this.IsLoaded = true;
         }
 
         public void Save() {

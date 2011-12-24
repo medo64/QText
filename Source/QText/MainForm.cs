@@ -92,7 +92,6 @@ namespace QText {
                 default:
                     e.Cancel = true;
                     this.Hide();
-                    //this.Visible = false;
                     break;
             }
 #endif
@@ -369,6 +368,7 @@ namespace QText {
         }
 
         private void tabFiles_SelectedIndexChanged(object sender, EventArgs e) {
+            if (tabFiles.Enabled == false) { return; }
             if (tabFiles.SelectedTab != null) {
                 try {
                     TextBoxBase txt = tabFiles.SelectedTab.TextBox;
@@ -621,18 +621,17 @@ namespace QText {
         private void mnuFolderEdit_Click(object sender, EventArgs e) {
             tabFiles.FolderSave();
             try {
-                tabFiles.Visible = false;
+                tabFiles.Enabled = false;
                 using (var frm = new FolderEditForm(tabFiles.CurrentFolder)) {
-                    tabFiles.FolderOpen(null);
                     frm.ShowDialog(this);
                     if (string.Equals(tabFiles.CurrentFolder, frm.CurrentFolder, StringComparison.Ordinal) == false) {
-                        tabFiles.FolderOpen(frm.CurrentFolder);
+                        tabFiles.FolderOpen(frm.CurrentFolder, false);
                         mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
                         Settings.LastFolder = tabFiles.CurrentFolder;
                     }
                 }
             } finally {
-                tabFiles.Visible = true;
+                tabFiles.Enabled = true;
             }
         }
 
@@ -1142,7 +1141,6 @@ namespace QText {
                     Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
                 }
             }
-            //TODO fswLocationTxt.EnableRaisingEvents = (tabFiles.TabPages.Count > 0);
         }
 
         private void tmrQuickAutoSave_Tick(object sender, EventArgs e) {
@@ -1200,6 +1198,7 @@ namespace QText {
         int nextIndexToCheck = 0;
 
         private void tmrCheckFileUpdate_Tick(object sender, EventArgs e) {
+            if (tabFiles.Enabled == false) { return; }
             tmrCheckFileUpdate.Enabled = false;
             if (tabFiles.TabCount > 0) {
                 nextIndexToCheck = nextIndexToCheck % tabFiles.TabPages.Count;
@@ -1220,26 +1219,6 @@ namespace QText {
         }
 
         #endregion
-
-
-
-        //private void mnuViewZoomIn_Click(object sender, EventArgs e) {
-        //    if (tabFiles.SelectedTab != null) {
-        //        tabFiles.SelectedTab.ZoomIn();
-        //    }
-        //}
-
-        //private void mnuViewZoomOut_Click(object sender, EventArgs e) {
-        //    if (tabFiles.SelectedTab != null) {
-        //        tabFiles.SelectedTab.ZoomOut();
-        //    }
-        //}
-
-        //private void mnuViewZoomReset_Click(object sender, EventArgs e) {
-        //    if (tabFiles.SelectedTab != null) {
-        //        tabFiles.SelectedTab.ZoomReset();
-        //    }
-        //}
 
 
         private FindForm _findForm;
