@@ -1,5 +1,5 @@
 ﻿namespace QText {
-    partial class NewFileForm {
+    partial class FileRenameForm {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -24,15 +24,48 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            this.txtTitle = new System.Windows.Forms.TextBox();
-            this.lblFileName = new System.Windows.Forms.Label();
-            this.radRichText = new System.Windows.Forms.RadioButton();
-            this.radText = new System.Windows.Forms.RadioButton();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
+            this.lblFileName = new System.Windows.Forms.Label();
+            this.txtTitle = new System.Windows.Forms.TextBox();
             this.erp = new System.Windows.Forms.ErrorProvider(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.erp)).BeginInit();
             this.SuspendLayout();
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCancel.Location = new System.Drawing.Point(244, 49);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 12, 3, 3);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(98, 29);
+            this.btnCancel.TabIndex = 3;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            // 
+            // btnOK
+            // 
+            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnOK.Enabled = false;
+            this.btnOK.Location = new System.Drawing.Point(140, 49);
+            this.btnOK.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(98, 29);
+            this.btnOK.TabIndex = 2;
+            this.btnOK.Text = "OK";
+            this.btnOK.UseVisualStyleBackColor = true;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            // 
+            // lblFileName
+            // 
+            this.lblFileName.AutoSize = true;
+            this.lblFileName.Location = new System.Drawing.Point(12, 15);
+            this.lblFileName.Name = "lblFileName";
+            this.lblFileName.Size = new System.Drawing.Size(49, 17);
+            this.lblFileName.TabIndex = 0;
+            this.lblFileName.Text = "Name:";
             // 
             // txtTitle
             // 
@@ -45,88 +78,29 @@
             this.txtTitle.TextChanged += new System.EventHandler(this.txtTitle_TextChanged);
             this.txtTitle.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtTitle_KeyPress);
             // 
-            // lblFileName
-            // 
-            this.lblFileName.AutoSize = true;
-            this.lblFileName.Location = new System.Drawing.Point(12, 15);
-            this.lblFileName.Name = "lblFileName";
-            this.lblFileName.Size = new System.Drawing.Size(49, 17);
-            this.lblFileName.TabIndex = 0;
-            this.lblFileName.Text = "Name:";
-            // 
-            // radRichText
-            // 
-            this.radRichText.AutoSize = true;
-            this.radRichText.Location = new System.Drawing.Point(144, 40);
-            this.radRichText.Name = "radRichText";
-            this.radRichText.Size = new System.Drawing.Size(83, 21);
-            this.radRichText.TabIndex = 3;
-            this.radRichText.Text = "Rich text";
-            this.radRichText.UseVisualStyleBackColor = true;
-            // 
-            // radText
-            // 
-            this.radText.AutoSize = true;
-            this.radText.Checked = true;
-            this.radText.Location = new System.Drawing.Point(82, 40);
-            this.radText.Name = "radText";
-            this.radText.Size = new System.Drawing.Size(56, 21);
-            this.radText.TabIndex = 2;
-            this.radText.TabStop = true;
-            this.radText.Text = "Text";
-            this.radText.UseVisualStyleBackColor = true;
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(244, 70);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(98, 29);
-            this.btnCancel.TabIndex = 5;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            // 
-            // btnOK
-            // 
-            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Enabled = false;
-            this.btnOK.Location = new System.Drawing.Point(140, 70);
-            this.btnOK.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(98, 29);
-            this.btnOK.TabIndex = 4;
-            this.btnOK.Text = "OK";
-            this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
-            // 
             // erp
             // 
             this.erp.ContainerControl = this;
             // 
-            // NewFileForm
+            // RenameFileForm
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(354, 111);
-            this.Controls.Add(this.radRichText);
-            this.Controls.Add(this.radText);
-            this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.btnOK);
+            this.ClientSize = new System.Drawing.Size(354, 90);
             this.Controls.Add(this.lblFileName);
             this.Controls.Add(this.txtTitle);
+            this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this.btnOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "NewFileForm";
+            this.Name = "RenameFileForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "New file";
+            this.Text = "Rename file";
             ((System.ComponentModel.ISupportInitialize)(this.erp)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -135,12 +109,10 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox txtTitle;
-        private System.Windows.Forms.Label lblFileName;
-        internal System.Windows.Forms.RadioButton radRichText;
-        internal System.Windows.Forms.RadioButton radText;
         internal System.Windows.Forms.Button btnCancel;
         internal System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.Label lblFileName;
+        private System.Windows.Forms.TextBox txtTitle;
         private System.Windows.Forms.ErrorProvider erp;
         private System.ComponentModel.IContainer components;
     }

@@ -388,7 +388,7 @@ namespace QText {
         #region Menu
 
         private void mnuNew_Click(object sender, EventArgs e) {
-            using (NewFileForm frm = new NewFileForm(tabFiles.CurrentDirectory)) {
+            using (FileNewForm frm = new FileNewForm(tabFiles.CurrentDirectory)) {
                 if (frm.ShowDialog(this) == DialogResult.OK) {
                     try {
                         tabFiles.AddTab(frm.Title, frm.IsRichText);
@@ -411,7 +411,7 @@ namespace QText {
 
         private void mnuRename_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
-                using (var frm = new RenameFileForm(tabFiles.CurrentDirectory, tabFiles.SelectedTab.Title)) {
+                using (var frm = new FileRenameForm(tabFiles.CurrentDirectory, tabFiles.SelectedTab.Title)) {
                     try {
                         if (frm.ShowDialog(this) == DialogResult.OK) {
                             tabFiles.SelectedTab.Rename(frm.NewTitle);
