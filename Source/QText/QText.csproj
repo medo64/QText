@@ -91,6 +91,12 @@
     <Compile Include="FindForm.Designer.cs">
       <DependentUpon>FindForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="FolderEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FolderEditForm.Designer.cs">
+      <DependentUpon>FolderEditForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helper.cs" />
     <Compile Include="Legacy.cs" />
     <Compile Include="MainForm.cs">
@@ -98,9 +104,6 @@
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MenuStripExOnMainForm.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="OptionsForm.cs">
       <SubType>Form</SubType>
@@ -149,6 +152,9 @@
   <ItemGroup>
     <EmbeddedResource Include="FindForm.resx">
       <DependentUpon>FindForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FolderEditForm.resx">
+      <DependentUpon>FolderEditForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

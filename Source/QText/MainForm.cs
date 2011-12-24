@@ -613,16 +613,27 @@ namespace QText {
             var newFolder = ((ToolStripMenuItem)sender).Tag as string;
             if (string.Equals(oldFolder, newFolder, StringComparison.OrdinalIgnoreCase) == false) {
                 tabFiles.FolderOpen(newFolder);
-                if (string.IsNullOrEmpty(tabFiles.CurrentFolder)) {
-                    mnuFolder.Text = "(Default)";
-                } else {
-                    mnuFolder.Text = tabFiles.CurrentFolder;
-                }
+                mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
                 Settings.LastFolder = tabFiles.CurrentFolder;
             }
         }
 
         private void mnuFolderEdit_Click(object sender, EventArgs e) {
+            tabFiles.FolderSave();
+            try {
+                tabFiles.Visible = false;
+                using (var frm = new FolderEditForm(tabFiles.CurrentFolder)) {
+                    tabFiles.FolderOpen(null);
+                    frm.ShowDialog(this);
+                    if (string.Equals(tabFiles.CurrentFolder, frm.CurrentFolder, StringComparison.Ordinal) == false) {
+                        tabFiles.FolderOpen(frm.CurrentFolder);
+                        mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
+                        Settings.LastFolder = tabFiles.CurrentFolder;
+                    }
+                }
+            } finally {
+                tabFiles.Visible = true;
+            }
         }
 
 

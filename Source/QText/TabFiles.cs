@@ -36,6 +36,7 @@ namespace QText {
             }
             folder = newFolder;
 
+            var initialVisibility = this.Visible;
             this.Visible = false;
             this.TabPages.Clear();
             this.CurrentFolder = folder;
@@ -77,7 +78,7 @@ namespace QText {
             } else if (this.TabCount > 0) {
                 this.SelectedTab = (TabFile)this.TabPages[0];
             }
-            this.Visible = true;
+            this.Visible = initialVisibility;
             if (this.SelectedTab != null) {
                 this.SelectedTab.Reopen();
                 this.SelectedTab.Focus();

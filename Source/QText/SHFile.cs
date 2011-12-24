@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.ComponentModel;
 
 namespace QText {
     internal static class SHFile {
@@ -21,7 +22,26 @@ namespace QText {
             fileOp.pTo = "\0";
             fileOp.fFlags = NativeMethods.FOF_NOCONFIRMATION | NativeMethods.FOF_ALLOWUNDO;
             fileOp.lpszProgressTitle = "\0";
-            NativeMethods.SHFileOperationW(ref fileOp);
+            if (NativeMethods.SHFileOperationW(ref fileOp) != 0) {
+                throw new Win32Exception();
+            }
+        }
+
+        public static void DeleteDirectory(string path) {
+            if (!Directory.Exists(path)) {
+                throw new FileNotFoundException("Cannot delete " + path + ": Cannot find the specified file.");
+            }
+
+            var fileOp = new NativeMethods.SHFILEOPSTRUCTW();
+            fileOp.hwnd = IntPtr.Zero;
+            fileOp.wFunc = NativeMethods.FO_DELETE;
+            fileOp.pFrom = path + "\0";
+            fileOp.pTo = "\0";
+            fileOp.fFlags = NativeMethods.FOF_NOCONFIRMATION | NativeMethods.FOF_ALLOWUNDO;
+            fileOp.lpszProgressTitle = "\0";
+            if (NativeMethods.SHFileOperationW(ref fileOp) != 0) {
+                throw new Win32Exception();
+            }
         }
 
 
