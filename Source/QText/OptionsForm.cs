@@ -37,10 +37,7 @@ namespace QText {
             chkRememberSelectedFile.Checked = Settings.StartupRememberSelectedFile;
             chkPreloadFilesOnStartup.Checked = Settings.FilesPreload;
             chkDeleteToRecycleBin.Checked = Settings.FilesDeleteToRecycleBin;
-            nudFilesAutoSaveInterval.Value = Settings.FilesAutoSaveInterval;
-            chbEnableQuickAutoSave.Checked = Settings.EnableQuickAutoSave;
-            nudQuickAutoSaveSeconds.Value = Settings.QuickAutoSaveSeconds;
-            chbEnableQuickAutoSave_CheckedChanged(null, null);
+            nudQuickSaveIntervalInSeconds.Value = Settings.QuickSaveInterval / 1000;
 
             //Behavior
             txtHotkey.Text = GetKeyString(Settings.ActivationHotkey);
@@ -133,11 +130,6 @@ namespace QText {
             if (chbShowMinimizeMaximizeButtons.Checked) {
                 chkShowInTaskbar.Checked = true;
             }
-        }
-
-        private void chbEnableQuickAutoSave_CheckedChanged(object sender, EventArgs e) {
-            nudQuickAutoSaveSeconds.Enabled = chbEnableQuickAutoSave.Checked;
-            lblQuickAutoSaveSeconds.Enabled = chbEnableQuickAutoSave.Checked;
         }
 
         private void btnOpenLocationFolder_Click(object sender, EventArgs e) {
@@ -315,9 +307,7 @@ namespace QText {
             Settings.StartupRememberSelectedFile = chkRememberSelectedFile.Checked;
             Settings.FilesPreload = chkPreloadFilesOnStartup.Checked;
             Settings.FilesDeleteToRecycleBin = chkDeleteToRecycleBin.Checked;
-            Settings.FilesAutoSaveInterval = Convert.ToInt32(nudFilesAutoSaveInterval.Value);
-            Settings.EnableQuickAutoSave = chbEnableQuickAutoSave.Checked;
-            Settings.QuickAutoSaveSeconds = Convert.ToInt32(nudQuickAutoSaveSeconds.Value);
+            Settings.QuickSaveInterval = Convert.ToInt32(nudQuickSaveIntervalInSeconds.Value) * 1000;
 
             //Behavior
             Settings.ActivationHotkey = (Keys)txtHotkey.Tag;

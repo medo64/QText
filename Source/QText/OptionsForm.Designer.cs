@@ -45,13 +45,10 @@
             this.chkShowToolbar = new System.Windows.Forms.CheckBox();
             this.chkShowInTaskbar = new System.Windows.Forms.CheckBox();
             this.tab_pagFiles = new System.Windows.Forms.TabPage();
-            this.lblQuickAutoSaveSeconds = new System.Windows.Forms.Label();
-            this.nudQuickAutoSaveSeconds = new System.Windows.Forms.NumericUpDown();
-            this.chbEnableQuickAutoSave = new System.Windows.Forms.CheckBox();
+            this.nudQuickSaveIntervalInSeconds = new System.Windows.Forms.NumericUpDown();
             this.btnOpenLocationFolder = new System.Windows.Forms.Button();
-            this.lblFilesAutoSaveIntervalSeconds = new System.Windows.Forms.Label();
-            this.nudFilesAutoSaveInterval = new System.Windows.Forms.NumericUpDown();
-            this.lblFilesAutoSaveInterval = new System.Windows.Forms.Label();
+            this.lblQuickSaveIntervalSeconds = new System.Windows.Forms.Label();
+            this.lblQuickSaveInterval = new System.Windows.Forms.Label();
             this.chkDeleteToRecycleBin = new System.Windows.Forms.CheckBox();
             this.chkPreloadFilesOnStartup = new System.Windows.Forms.CheckBox();
             this.chkRememberSelectedFile = new System.Windows.Forms.CheckBox();
@@ -77,8 +74,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudTabWidth)).BeginInit();
             this.tab_pagDisplay.SuspendLayout();
             this.tab_pagFiles.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudQuickAutoSaveSeconds)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudFilesAutoSaveInterval)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudQuickSaveIntervalInSeconds)).BeginInit();
             this.tab_pagBehavior.SuspendLayout();
             this.tab_pagCarbonCopy.SuspendLayout();
             this.SuspendLayout();
@@ -334,13 +330,10 @@
             // 
             // tab_pagFiles
             // 
-            this.tab_pagFiles.Controls.Add(this.lblQuickAutoSaveSeconds);
-            this.tab_pagFiles.Controls.Add(this.nudQuickAutoSaveSeconds);
-            this.tab_pagFiles.Controls.Add(this.chbEnableQuickAutoSave);
+            this.tab_pagFiles.Controls.Add(this.nudQuickSaveIntervalInSeconds);
             this.tab_pagFiles.Controls.Add(this.btnOpenLocationFolder);
-            this.tab_pagFiles.Controls.Add(this.lblFilesAutoSaveIntervalSeconds);
-            this.tab_pagFiles.Controls.Add(this.nudFilesAutoSaveInterval);
-            this.tab_pagFiles.Controls.Add(this.lblFilesAutoSaveInterval);
+            this.tab_pagFiles.Controls.Add(this.lblQuickSaveIntervalSeconds);
+            this.tab_pagFiles.Controls.Add(this.lblQuickSaveInterval);
             this.tab_pagFiles.Controls.Add(this.chkDeleteToRecycleBin);
             this.tab_pagFiles.Controls.Add(this.chkPreloadFilesOnStartup);
             this.tab_pagFiles.Controls.Add(this.chkRememberSelectedFile);
@@ -353,48 +346,28 @@
             this.tab_pagFiles.Text = "Files";
             this.tab_pagFiles.UseVisualStyleBackColor = true;
             // 
-            // lblQuickAutoSaveSeconds
+            // nudQuickSaveIntervalInSeconds
             // 
-            this.lblQuickAutoSaveSeconds.AutoSize = true;
-            this.lblQuickAutoSaveSeconds.Location = new System.Drawing.Point(211, 33);
-            this.lblQuickAutoSaveSeconds.Name = "lblQuickAutoSaveSeconds";
-            this.lblQuickAutoSaveSeconds.Size = new System.Drawing.Size(61, 17);
-            this.lblQuickAutoSaveSeconds.TabIndex = 5;
-            this.lblQuickAutoSaveSeconds.Text = "seconds";
-            // 
-            // nudQuickAutoSaveSeconds
-            // 
-            this.nudQuickAutoSaveSeconds.Location = new System.Drawing.Point(155, 31);
-            this.nudQuickAutoSaveSeconds.Maximum = new decimal(new int[] {
+            this.nudQuickSaveIntervalInSeconds.Location = new System.Drawing.Point(155, 5);
+            this.nudQuickSaveIntervalInSeconds.Maximum = new decimal(new int[] {
             300,
             0,
             0,
             0});
-            this.nudQuickAutoSaveSeconds.Minimum = new decimal(new int[] {
+            this.nudQuickSaveIntervalInSeconds.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.nudQuickAutoSaveSeconds.Name = "nudQuickAutoSaveSeconds";
-            this.nudQuickAutoSaveSeconds.Size = new System.Drawing.Size(50, 22);
-            this.nudQuickAutoSaveSeconds.TabIndex = 4;
-            this.nudQuickAutoSaveSeconds.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.nudQuickAutoSaveSeconds.Value = new decimal(new int[] {
+            this.nudQuickSaveIntervalInSeconds.Name = "nudQuickSaveIntervalInSeconds";
+            this.nudQuickSaveIntervalInSeconds.Size = new System.Drawing.Size(50, 22);
+            this.nudQuickSaveIntervalInSeconds.TabIndex = 4;
+            this.nudQuickSaveIntervalInSeconds.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.nudQuickSaveIntervalInSeconds.Value = new decimal(new int[] {
             3,
             0,
             0,
             0});
-            // 
-            // chbEnableQuickAutoSave
-            // 
-            this.chbEnableQuickAutoSave.AutoSize = true;
-            this.chbEnableQuickAutoSave.Location = new System.Drawing.Point(3, 32);
-            this.chbEnableQuickAutoSave.Name = "chbEnableQuickAutoSave";
-            this.chbEnableQuickAutoSave.Size = new System.Drawing.Size(132, 21);
-            this.chbEnableQuickAutoSave.TabIndex = 3;
-            this.chbEnableQuickAutoSave.Text = "Quick auto save";
-            this.chbEnableQuickAutoSave.UseVisualStyleBackColor = true;
-            this.chbEnableQuickAutoSave.CheckedChanged += new System.EventHandler(this.chbEnableQuickAutoSave_CheckedChanged);
             // 
             // btnOpenLocationFolder
             // 
@@ -407,51 +380,28 @@
             this.btnOpenLocationFolder.UseVisualStyleBackColor = true;
             this.btnOpenLocationFolder.Click += new System.EventHandler(this.btnOpenLocationFolder_Click);
             // 
-            // lblFilesAutoSaveIntervalSeconds
+            // lblQuickSaveIntervalSeconds
             // 
-            this.lblFilesAutoSaveIntervalSeconds.AutoSize = true;
-            this.lblFilesAutoSaveIntervalSeconds.Location = new System.Drawing.Point(211, 5);
-            this.lblFilesAutoSaveIntervalSeconds.Name = "lblFilesAutoSaveIntervalSeconds";
-            this.lblFilesAutoSaveIntervalSeconds.Size = new System.Drawing.Size(61, 17);
-            this.lblFilesAutoSaveIntervalSeconds.TabIndex = 2;
-            this.lblFilesAutoSaveIntervalSeconds.Text = "seconds";
+            this.lblQuickSaveIntervalSeconds.AutoSize = true;
+            this.lblQuickSaveIntervalSeconds.Location = new System.Drawing.Point(211, 5);
+            this.lblQuickSaveIntervalSeconds.Name = "lblQuickSaveIntervalSeconds";
+            this.lblQuickSaveIntervalSeconds.Size = new System.Drawing.Size(61, 17);
+            this.lblQuickSaveIntervalSeconds.TabIndex = 2;
+            this.lblQuickSaveIntervalSeconds.Text = "seconds";
             // 
-            // nudFilesAutoSaveInterval
+            // lblQuickSaveInterval
             // 
-            this.nudFilesAutoSaveInterval.Location = new System.Drawing.Point(155, 3);
-            this.nudFilesAutoSaveInterval.Maximum = new decimal(new int[] {
-            300,
-            0,
-            0,
-            0});
-            this.nudFilesAutoSaveInterval.Minimum = new decimal(new int[] {
-            15,
-            0,
-            0,
-            0});
-            this.nudFilesAutoSaveInterval.Name = "nudFilesAutoSaveInterval";
-            this.nudFilesAutoSaveInterval.Size = new System.Drawing.Size(50, 22);
-            this.nudFilesAutoSaveInterval.TabIndex = 1;
-            this.nudFilesAutoSaveInterval.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.nudFilesAutoSaveInterval.Value = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
-            // 
-            // lblFilesAutoSaveInterval
-            // 
-            this.lblFilesAutoSaveInterval.AutoSize = true;
-            this.lblFilesAutoSaveInterval.Location = new System.Drawing.Point(3, 5);
-            this.lblFilesAutoSaveInterval.Name = "lblFilesAutoSaveInterval";
-            this.lblFilesAutoSaveInterval.Size = new System.Drawing.Size(126, 17);
-            this.lblFilesAutoSaveInterval.TabIndex = 0;
-            this.lblFilesAutoSaveInterval.Text = "Auto-save interval:";
+            this.lblQuickSaveInterval.AutoSize = true;
+            this.lblQuickSaveInterval.Location = new System.Drawing.Point(3, 5);
+            this.lblQuickSaveInterval.Name = "lblQuickSaveInterval";
+            this.lblQuickSaveInterval.Size = new System.Drawing.Size(133, 17);
+            this.lblQuickSaveInterval.TabIndex = 0;
+            this.lblQuickSaveInterval.Text = "Quick-save interval:";
             // 
             // chkDeleteToRecycleBin
             // 
             this.chkDeleteToRecycleBin.AutoSize = true;
-            this.chkDeleteToRecycleBin.Location = new System.Drawing.Point(3, 89);
+            this.chkDeleteToRecycleBin.Location = new System.Drawing.Point(7, 63);
             this.chkDeleteToRecycleBin.Name = "chkDeleteToRecycleBin";
             this.chkDeleteToRecycleBin.Size = new System.Drawing.Size(159, 21);
             this.chkDeleteToRecycleBin.TabIndex = 8;
@@ -461,7 +411,7 @@
             // chkPreloadFilesOnStartup
             // 
             this.chkPreloadFilesOnStartup.AutoSize = true;
-            this.chkPreloadFilesOnStartup.Location = new System.Drawing.Point(3, 59);
+            this.chkPreloadFilesOnStartup.Location = new System.Drawing.Point(7, 33);
             this.chkPreloadFilesOnStartup.Name = "chkPreloadFilesOnStartup";
             this.chkPreloadFilesOnStartup.Size = new System.Drawing.Size(176, 21);
             this.chkPreloadFilesOnStartup.TabIndex = 7;
@@ -471,7 +421,7 @@
             // chkRememberSelectedFile
             // 
             this.chkRememberSelectedFile.AutoSize = true;
-            this.chkRememberSelectedFile.Location = new System.Drawing.Point(3, 119);
+            this.chkRememberSelectedFile.Location = new System.Drawing.Point(7, 93);
             this.chkRememberSelectedFile.Name = "chkRememberSelectedFile";
             this.chkRememberSelectedFile.Size = new System.Drawing.Size(178, 21);
             this.chkRememberSelectedFile.TabIndex = 9;
@@ -697,8 +647,7 @@
             this.tab_pagDisplay.PerformLayout();
             this.tab_pagFiles.ResumeLayout(false);
             this.tab_pagFiles.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudQuickAutoSaveSeconds)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudFilesAutoSaveInterval)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudQuickSaveIntervalInSeconds)).EndInit();
             this.tab_pagBehavior.ResumeLayout(false);
             this.tab_pagBehavior.PerformLayout();
             this.tab_pagCarbonCopy.ResumeLayout(false);
@@ -731,13 +680,10 @@
         internal System.Windows.Forms.CheckBox chkShowToolbar;
         internal System.Windows.Forms.CheckBox chkShowInTaskbar;
         internal System.Windows.Forms.TabPage tab_pagFiles;
-        internal System.Windows.Forms.Label lblQuickAutoSaveSeconds;
-        internal System.Windows.Forms.NumericUpDown nudQuickAutoSaveSeconds;
-        internal System.Windows.Forms.CheckBox chbEnableQuickAutoSave;
+        internal System.Windows.Forms.NumericUpDown nudQuickSaveIntervalInSeconds;
         internal System.Windows.Forms.Button btnOpenLocationFolder;
-        internal System.Windows.Forms.Label lblFilesAutoSaveIntervalSeconds;
-        internal System.Windows.Forms.NumericUpDown nudFilesAutoSaveInterval;
-        internal System.Windows.Forms.Label lblFilesAutoSaveInterval;
+        internal System.Windows.Forms.Label lblQuickSaveIntervalSeconds;
+        internal System.Windows.Forms.Label lblQuickSaveInterval;
         internal System.Windows.Forms.CheckBox chkDeleteToRecycleBin;
         internal System.Windows.Forms.CheckBox chkPreloadFilesOnStartup;
         internal System.Windows.Forms.CheckBox chkRememberSelectedFile;

@@ -58,7 +58,7 @@
             this.ToolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFolder = new System.Windows.Forms.ToolStripDropDownButton();
             this.tmrUpdateToolbar = new System.Windows.Forms.Timer(this.components);
-            this.tmrQuickAutoSave = new System.Windows.Forms.Timer(this.components);
+            this.tmrQuickSave = new System.Windows.Forms.Timer(this.components);
             this.mnxText = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnxTextUndo = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextRedo = new System.Windows.Forms.ToolStripMenuItem();
@@ -87,7 +87,6 @@
             this.mnxTextFormatConvertLower = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextFormatConvertTitleCase = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextFormatConvertDrGrammar = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmrAutoSave = new System.Windows.Forms.Timer(this.components);
             this.mnxTab = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnxTabNew = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTab0 = new System.Windows.Forms.ToolStripSeparator();
@@ -441,9 +440,9 @@
             // 
             this.tmrUpdateToolbar.Tick += new System.EventHandler(this.tmrUpdateToolbar_Tick);
             // 
-            // tmrQuickAutoSave
+            // tmrQuickSave
             // 
-            this.tmrQuickAutoSave.Tick += new System.EventHandler(this.tmrQuickAutoSave_Tick);
+            this.tmrQuickSave.Tick += new System.EventHandler(this.tmrQuickSave_Tick);
             // 
             // mnxText
             // 
@@ -692,11 +691,6 @@
             this.mnxTextFormatConvertDrGrammar.Text = "Convert to title case (Dr. &Grammar rules)";
             this.mnxTextFormatConvertDrGrammar.Click += new System.EventHandler(this.mnxTextConvertDrGrammar_Click);
             // 
-            // tmrAutoSave
-            // 
-            this.tmrAutoSave.Interval = 1000;
-            this.tmrAutoSave.Tick += new System.EventHandler(this.tmrAutoSave_Tick);
-            // 
             // mnxTab
             // 
             this.mnxTab.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -919,7 +913,7 @@
         internal System.Windows.Forms.ToolStripButton mnuOptions;
         internal System.Windows.Forms.ToolStripSeparator ToolStripSeparator2;
         internal System.Windows.Forms.Timer tmrUpdateToolbar;
-        internal System.Windows.Forms.Timer tmrQuickAutoSave;
+        internal System.Windows.Forms.Timer tmrQuickSave;
         internal System.Windows.Forms.ContextMenuStrip mnxText;
         internal System.Windows.Forms.ToolStripMenuItem mnxTextUndo;
         internal System.Windows.Forms.ToolStripMenuItem mnxTextRedo;
@@ -948,7 +942,6 @@
         internal System.Windows.Forms.ToolStripMenuItem mnxTextFormatConvertLower;
         internal System.Windows.Forms.ToolStripMenuItem mnxTextFormatConvertTitleCase;
         internal System.Windows.Forms.ToolStripMenuItem mnxTextFormatConvertDrGrammar;
-        internal System.Windows.Forms.Timer tmrAutoSave;
         internal System.Windows.Forms.ContextMenuStrip mnxTab;
         internal System.Windows.Forms.ToolStripMenuItem mnxTabNew;
         internal System.Windows.Forms.ToolStripSeparator mnxTab0;

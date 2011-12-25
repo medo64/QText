@@ -8,6 +8,8 @@ using System.Security.Permissions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Globalization;
+using System.Collections.Generic;
+using System.Text;
 
 namespace QText {
 
@@ -35,7 +37,7 @@ namespace QText {
                 mnu.Scale(new SizeF(_dpiRatioX, _dpiRatioY));
             }
 
-            tmrQuickAutoSave.Interval = Settings.QuickAutoSaveSeconds * 1000;
+            tmrQuickSave.Interval = Settings.QuickSaveInterval;
 
             tabFiles.Multiline = Settings.DisplayMultilineTabHeader;
             if (Settings.DisplayMinimizeMaximizeButtons) {
@@ -96,10 +98,35 @@ namespace QText {
             }
 #endif
 
-            try {
-                tabFiles.FolderSave();
-            } catch (Exception ex) {
-                Medo.MessageBox.ShowWarning(null, "QText : File saving failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
+            var failedTitles = new List<string>();
+            var failedExceptions = new List<Exception>();
+            foreach (TabFile file in tabFiles.TabPages) {
+                try {
+                    file.Save();
+                } catch (Exception ex) {
+                    failedTitles.Add(file.Title);
+                    failedExceptions.Add(ex);
+                }
+            }
+            if (failedTitles.Count > 0) {
+                var sb = new StringBuilder("Cannot save ");
+                sb.Append((failedTitles.Count == 1) ? "file" : "files");
+                sb.Append(" ");
+                for (int i = 0; i < failedTitles.Count; i++) {
+                    if (i != 0) {
+                        sb.Append((i < failedTitles.Count - 1) ? ", " : " and");
+                    }
+                    sb.AppendFormat("\"{0}\"", failedTitles[i]);
+                }
+                sb.Append(".");
+                sb.AppendLine();
+                sb.AppendLine();
+                sb.Append(failedExceptions[0].Message);
+                if (failedExceptions.Count > 1) {
+                    sb.AppendLine();
+                    sb.Append("...");
+                }
+                Medo.MessageBox.ShowWarning(null, sb.ToString());
             }
         }
 
@@ -123,7 +150,7 @@ namespace QText {
 
 
         private void Form_KeyDown(object sender, KeyEventArgs e) {
-            tmrQuickAutoSave.Enabled = false;
+            tmrQuickSave.Enabled = false;
 
             switch (e.KeyData) {
 
@@ -272,13 +299,11 @@ namespace QText {
                     break;
             }
 
-            if (Settings.EnableQuickAutoSave) {
-                tmrQuickAutoSave.Enabled = true;
-            }
+            tmrQuickSave.Enabled = true;
         }
 
         private void Form_KeyUp(object sender, KeyEventArgs e) {
-            tmrQuickAutoSave.Enabled = false;
+            tmrQuickSave.Enabled = false;
 
             switch (e.KeyData) {
 
@@ -305,7 +330,7 @@ namespace QText {
 
             }
 
-            if (Settings.EnableQuickAutoSave) { tmrQuickAutoSave.Enabled = true; }
+            tmrQuickSave.Enabled = true;
         }
 
 
@@ -347,9 +372,8 @@ namespace QText {
                 _findForm.Close();
             }
 
-            tmrAutoSave.Enabled = this.Visible;
             tmrCheckFileUpdate.Enabled = this.Visible;
-            tmrQuickAutoSave.Enabled = this.Visible;
+            tmrQuickSave.Enabled = this.Visible;
             tmrUpdateToolbar.Enabled = this.Visible;
         }
 
@@ -370,6 +394,10 @@ namespace QText {
         private void tabFiles_SelectedIndexChanged(object sender, EventArgs e) {
             if (tabFiles.Enabled == false) { return; }
             if (tabFiles.SelectedTab != null) {
+                tmrQuickSave.Enabled = false;
+                foreach (TabFile file in tabFiles.TabPages) {
+                    if (file.IsChanged) { file.QuickSaveWithoutException(); }
+                }
                 try {
                     TextBoxBase txt = tabFiles.SelectedTab.TextBox;
                     txt.Refresh();
@@ -377,17 +405,18 @@ namespace QText {
                     txt.Focus();
                     SetSelectedTab(tabFiles.SelectedTab);
                 } catch (IOException ex) {
-                    Medo.MessageBox.ShowError(this, "Cannot open file!\n\n" + ex.Message);
+                    Medo.MessageBox.ShowError(this, string.Format(CultureInfo.CurrentUICulture, "Cannot open file!\n\n{0}", ex.Message));
                     tabFiles.SelectedTab = this._CurrSelectedTab;
                 }
+                tmrQuickSave.Enabled = true;
             }
         }
-
 
 
         #region Menu
 
         private void mnuNew_Click(object sender, EventArgs e) {
+            tmrQuickSave.Enabled = false;
             using (FileNewForm frm = new FileNewForm(tabFiles.CurrentDirectory)) {
                 if (frm.ShowDialog(this) == DialogResult.OK) {
                     try {
@@ -397,6 +426,7 @@ namespace QText {
                     }
                 }
             }
+            tmrQuickSave.Enabled = true;
         }
 
         private void mnuSaveNow_Click(object sender, EventArgs e) {
@@ -411,6 +441,7 @@ namespace QText {
 
         private void mnuRename_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
+                tmrQuickSave.Enabled = false;
                 using (var frm = new FileRenameForm(tabFiles.CurrentDirectory, tabFiles.SelectedTab.Title)) {
                     try {
                         if (frm.ShowDialog(this) == DialogResult.OK) {
@@ -421,12 +452,14 @@ namespace QText {
                         Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
                     }
                 }
+                tmrQuickSave.Enabled = true;
             }
         }
 
 
         private void mnuPrintPreview_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
+                tmrQuickSave.Enabled = false;
                 try {
                     using (var ol = new Medo.Drawing.Printing.FullText(tabFiles.SelectedTab.Title, 10.0f, 10.0f, 20.0f, 10.0f)) {
                         ol.BeginPrint += Document_BeginPrint;
@@ -440,6 +473,7 @@ namespace QText {
                 } catch (Exception ex) {
                     Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
                 }
+                tmrQuickSave.Enabled = true;
             }
         }
 
@@ -461,41 +495,45 @@ namespace QText {
 
 
         private void mnuCut_Click(object sender, EventArgs e) {
+            tmrQuickSave.Enabled = false;
             try {
                 if (tabFiles.SelectedTab != null) {
                     tabFiles.SelectedTab.Cut(Settings.ForceTextCopyPaste);
-                    if (Settings.EnableQuickAutoSave) { tmrQuickAutoSave.Enabled = false; tmrQuickAutoSave.Enabled = true; }
                 }
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(this, "Operation could not be completed." + Environment.NewLine + Environment.NewLine + ex.Message);
             }
+            tmrQuickSave.Enabled = true;
         }
 
         private void mnuCopy_Click(object sender, EventArgs e) {
+            tmrQuickSave.Enabled = false;
             try {
                 if (tabFiles.SelectedTab != null) {
                     tabFiles.SelectedTab.Copy(Settings.ForceTextCopyPaste);
-                    if (Settings.EnableQuickAutoSave) { tmrQuickAutoSave.Enabled = false; tmrQuickAutoSave.Enabled = true; }
                 }
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(this, "Operation could not be completed." + Environment.NewLine + Environment.NewLine + ex.Message);
             }
+            tmrQuickSave.Enabled = true;
         }
 
         private void mnuPaste_Click(object sender, EventArgs e) {
+            tmrQuickSave.Enabled = false;
             try {
                 if (tabFiles.SelectedTab != null) {
                     tabFiles.SelectedTab.Paste(Settings.ForceTextCopyPaste);
-                    if (Settings.EnableQuickAutoSave) { tmrQuickAutoSave.Enabled = false; tmrQuickAutoSave.Enabled = true; }
                 }
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(this, "Operation could not be completed." + Environment.NewLine + Environment.NewLine + ex.Message);
             }
+            tmrQuickSave.Enabled = true;
         }
 
 
         private void mnuFont_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
+                tmrQuickSave.Enabled = false;
                 TabFile tf = tabFiles.SelectedTab;
                 if (tf.IsRichTextFormat) {
                     using (var f = new System.Windows.Forms.FontDialog()) {
@@ -517,69 +555,75 @@ namespace QText {
                         if (f.ShowDialog(this) == System.Windows.Forms.DialogResult.OK) {
                             tf.TextBox.SelectionColor = f.Color;
                             tf.TextBox.SelectionFont = f.Font;
-                            if (Settings.EnableQuickAutoSave) { tmrQuickAutoSave.Enabled = false; tmrQuickAutoSave.Enabled = true; }
                         }
                     }
                 }
+                tmrQuickSave.Enabled = true;
             }
         }
 
         private void mnuBold_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
+                tmrQuickSave.Enabled = false;
                 TabFile tf = tabFiles.SelectedTab;
                 if (tf.IsRichTextFormat) {
                     ToogleStyle(tf.TextBox, FontStyle.Bold);
-                    if (Settings.EnableQuickAutoSave) { tmrQuickAutoSave.Enabled = false; tmrQuickAutoSave.Enabled = true; }
                 }
+                tmrQuickSave.Enabled = true;
             }
         }
 
         private void mnuItalic_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
+                tmrQuickSave.Enabled = false;
                 TabFile tf = tabFiles.SelectedTab;
                 if (tf.IsRichTextFormat) {
                     ToogleStyle(tf.TextBox, FontStyle.Italic);
-                    if (Settings.EnableQuickAutoSave) { tmrQuickAutoSave.Enabled = false; tmrQuickAutoSave.Enabled = true; }
                 }
+                tmrQuickSave.Enabled = true;
             }
         }
 
         private void mnuUnderline_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
+                tmrQuickSave.Enabled = false;
                 TabFile tf = tabFiles.SelectedTab;
                 if (tf.IsRichTextFormat) {
                     if (tf.TextBox.SelectionFont != null) {
                         ToogleStyle(tf.TextBox, FontStyle.Underline);
-                        if (Settings.EnableQuickAutoSave) { tmrQuickAutoSave.Enabled = false; tmrQuickAutoSave.Enabled = true; }
                     }
                 }
+                tmrQuickSave.Enabled = true;
             }
         }
 
         private void mnuStrikeout_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
+                tmrQuickSave.Enabled = false;
                 TabFile tf = tabFiles.SelectedTab;
                 if (tf.IsRichTextFormat) {
                     if (tf.TextBox.SelectionFont != null) {
                         ToogleStyle(tf.TextBox, FontStyle.Strikeout);
-                        if (Settings.EnableQuickAutoSave) { tmrQuickAutoSave.Enabled = false; tmrQuickAutoSave.Enabled = true; }
                     }
                 }
+                tmrQuickSave.Enabled = true;
             }
         }
 
 
         private void mnuUndo_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
+                tmrQuickSave.Enabled = false;
                 tabFiles.SelectedTab.Undo();
-                if (Settings.EnableQuickAutoSave) { tmrQuickAutoSave.Enabled = false; tmrQuickAutoSave.Enabled = true; }
+                tmrQuickSave.Enabled = true;
             }
         }
 
         private void mnuRedo_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
+                tmrQuickSave.Enabled = false;
                 tabFiles.SelectedTab.Redo();
-                if (Settings.EnableQuickAutoSave) { tmrQuickAutoSave.Enabled = false; tmrQuickAutoSave.Enabled = true; }
+                tmrQuickSave.Enabled = true;
             }
         }
 
@@ -619,26 +663,25 @@ namespace QText {
         }
 
         private void mnuFolderEdit_Click(object sender, EventArgs e) {
+            tmrQuickSave.Enabled = false;
+            tabFiles.Enabled = false;
             tabFiles.FolderSave();
-            try {
-                tabFiles.Enabled = false;
-                using (var frm = new FolderEditForm(tabFiles.CurrentFolder)) {
-                    frm.ShowDialog(this);
-                    if (string.Equals(tabFiles.CurrentFolder, frm.CurrentFolder, StringComparison.Ordinal) == false) {
-                        tabFiles.FolderOpen(frm.CurrentFolder, false);
-                        mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
-                        Settings.LastFolder = tabFiles.CurrentFolder;
-                    }
+            using (var frm = new FolderEditForm(tabFiles.CurrentFolder)) {
+                frm.ShowDialog(this);
+                if (string.Equals(tabFiles.CurrentFolder, frm.CurrentFolder, StringComparison.Ordinal) == false) {
+                    tabFiles.FolderOpen(frm.CurrentFolder, false);
+                    mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
+                    Settings.LastFolder = tabFiles.CurrentFolder;
                 }
-            } finally {
-                tabFiles.Enabled = true;
             }
+            tabFiles.Enabled = true;
+            tmrQuickSave.Enabled = true;
         }
 
 
         private void mnuOptions_Click(object sender, EventArgs e) {
+            tmrQuickSave.Enabled = false;
             using (var frm = new OptionsForm()) {
-                tmrQuickAutoSave.Enabled = false;
                 SaveAllChanged();
                 this.tmrUpdateToolbar.Enabled = false;
                 RefreshAll(null, null);
@@ -663,7 +706,7 @@ namespace QText {
                     RefreshAll(null, null);
                     Form_Resize(null, null);
                     this.tmrUpdateToolbar.Enabled = Settings.ShowToolbar;
-                    tmrQuickAutoSave.Interval = Settings.QuickAutoSaveSeconds * 1000;
+                    tmrQuickSave.Interval = Settings.QuickSaveInterval;
 
                     if ((Settings.CarbonCopyUse)) {
                         for (int i = 0; i <= tabFiles.TabPages.Count - 1; i++) {
@@ -673,18 +716,23 @@ namespace QText {
                     }
                 }
             }
+            tmrQuickSave.Enabled = true;
         }
 
 
         private void mnuAppFeedback_Click(object sender, EventArgs e) {
+            tmrQuickSave.Enabled = false;
             Medo.Diagnostics.ErrorReport.TopMost = this.TopMost;
             Medo.Diagnostics.ErrorReport.ShowDialog(this, null, new Uri("http://jmedved.com/ErrorReport/"));
+            tmrQuickSave.Enabled = true;
         }
 
         private void mnuAppUpgrade_Click(object sender, EventArgs e) {
+            tmrQuickSave.Enabled = false;
             using (var frm = new UpgradeForm()) {
                 frm.ShowDialog(this);
             }
+            tmrQuickSave.Enabled = true;
         }
 
         private void mnuAppDonate_Click(object sender, EventArgs e) {
@@ -692,12 +740,14 @@ namespace QText {
         }
 
         private void mnuAppAbout_Click(object sender, EventArgs e) {
+            tmrQuickSave.Enabled = false;
             Medo.Windows.Forms.AboutBox.ShowDialog(this, new Uri("http://www.jmedved.com/qtext/"));
 
             if (tabFiles.SelectedTab != null) {
                 TextBoxBase txt = tabFiles.SelectedTab.TextBox;
                 txt.Focus();
             }
+            tmrQuickSave.Enabled = true;
         }
 
         #endregion
@@ -1130,33 +1180,16 @@ namespace QText {
 
         #region Timers
 
-        private void tmrAutoSave_Tick(object sender, EventArgs e) {
-            for (int i = 0; i <= tabFiles.TabPages.Count - 1; i++) {
+        private void tmrQuickSave_Tick(object sender, EventArgs e) {
+            tmrQuickSave.Enabled = false;
+            foreach (TabFile file in tabFiles.TabPages) {
                 try {
-                    TabFile tf = (TabFile)tabFiles.TabPages[i];
-                    if (tf.GetIsEligibleForSave(Settings.FilesAutoSaveInterval)) {
-                        tf.Save();
-                    }
+                    if (file.IsChanged) { file.QuickSave(); }
                 } catch (Exception ex) {
-                    Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
+                    Medo.MessageBox.ShowWarning(this, string.Format("Cannot save \"{0}\".\n\n{1}", file.Title, ex.Message));
                 }
             }
-        }
-
-        private void tmrQuickAutoSave_Tick(object sender, EventArgs e) {
-            tmrQuickAutoSave.Enabled = false;
-            Debug.WriteLine("QText: QuickAutoSave");
-            for (int i = 0; i <= tabFiles.TabPages.Count - 1; i++) {
-                try {
-                    TabFile tf = (TabFile)tabFiles.TabPages[i];
-                    if (tf.IsChanged) {
-                        tf.Save();
-                        Trace.WriteLine("QText: QuickAutoSave: Saved " + tf.Title + ".");
-                        tmrQuickAutoSave.Enabled = true;
-                        break;
-                    }
-                } catch (Exception) { }
-            }
+            tmrQuickSave.Enabled = true;
         }
 
         private void tmrUpdateToolbar_Tick(object sender, EventArgs e) {

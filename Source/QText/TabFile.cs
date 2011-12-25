@@ -72,7 +72,7 @@ namespace QText {
         private bool _isChanged;
         public bool IsChanged {
             get {
-                return this._isChanged;
+                return this._isChanged && this.IsOpened; //only open file can be changed
             }
             private set {
                 this._isChanged = value;
@@ -97,9 +97,9 @@ namespace QText {
             if (File.Exists(fullFileName)) {
                 throw new IOException("File already exists.");
             } else if (File.Exists(Path.ChangeExtension(fullFileName, ".txt"))) {
-                throw new IOException("Title already exists.");
+                throw new IOException("File already exists.");
             } else if (File.Exists(Path.ChangeExtension(fullFileName, ".rtf"))) {
-                throw new IOException("Title already exists.");
+                throw new IOException("File already exists.");
             } else {
                 if (Path.GetExtension(fullFileName).Equals(".rtf", StringComparison.OrdinalIgnoreCase)) {
                     using (RichTextBox dummy = new RichTextBox()) {
@@ -156,6 +156,7 @@ namespace QText {
         }
 
         public void Reopen() {
+            this.IsOpened = false;
             if (this.IsRichTextFormat) {
                 try {
                     this.TextBox.LoadFile(this.CurrentFile.FullName, RichTextBoxStreamType.RichText);
@@ -166,12 +167,33 @@ namespace QText {
                 this.TextBox.ResetText();
                 this.TextBox.Text = File.ReadAllText(this.CurrentFile.FullName);
             }
-            base.Text = this.Title;
             this.TextBox.SelectionStart = 0;
             this.TextBox.SelectionLength = 0;
             this.TextBox.ClearUndo();
             this.LastSaveTime = DateTime.Now;
+            this.IsChanged = false;
             this.IsOpened = true;
+        }
+
+
+        public void QuickSaveWithoutException() {
+            try {
+                this.Save();
+            } catch (Exception) { }
+        }
+
+        private int QuickSaveFailedCounter;
+
+        public void QuickSave() { //allow for three failed  attempts
+            try {
+                this.Save();
+                this.QuickSaveFailedCounter = 0;
+            } catch (Exception) {
+                this.QuickSaveFailedCounter += 1;
+                if (this.QuickSaveFailedCounter == 4) {
+                    throw;
+                }
+            }
         }
 
         public void Save() {
@@ -182,8 +204,8 @@ namespace QText {
             } else {
                 using (var fileStream = new FileStream(this.CurrentFile.FullName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None)) {
                     byte[] bytes = Utf8EncodingWithoutBom.GetBytes(this.TextBox.Text);
-                    fileStream.SetLength(0);
                     fileStream.Write(bytes, 0, bytes.Length);
+                    fileStream.SetLength(bytes.Length);
                 }
             }
 
@@ -230,9 +252,9 @@ namespace QText {
             if (File.Exists(newInfo.FullName)) {
                 throw new IOException("File already exists.");
             } else if (File.Exists(Path.ChangeExtension(newInfo.FullName, ".txt"))) {
-                throw new IOException("Title already exists.");
+                throw new IOException("File already exists.");
             } else if (File.Exists(Path.ChangeExtension(newInfo.FullName, ".rtf"))) {
-                throw new IOException("Title already exists.");
+                throw new IOException("File already exists.");
             } else {
                 File.Move(oldInfo.FullName, newInfo.FullName);
                 this.CurrentFile = newInfo;
@@ -252,7 +274,7 @@ namespace QText {
         }
 
         private void txt_TextChanged(System.Object sender, System.EventArgs e) {
-            if (this.IsChanged == false) {
+            if (this.IsOpened && (this.IsChanged == false)) {
                 this.IsChanged = true;
             }
         }

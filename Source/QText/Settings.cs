@@ -144,25 +144,6 @@ namespace QText {
             get { return (ScrollBars == ScrollBars.Vertical); }
         }
 
-        public static bool EnableQuickAutoSave {
-            get { return Medo.Configuration.Settings.Read("EnableQuickAutoSave", true); }
-            set { Medo.Configuration.Settings.Write("EnableQuickAutoSave", value); }
-        }
-
-        public static int FilesAutoSaveInterval {
-            get {
-                int value = Medo.Configuration.Settings.Read("FilesAutoSaveInterval", 60);
-                if (value < 15) { return 15; }
-                if (value > 300) { return 300; }
-                return value;
-            }
-            set {
-                if (value < 15) { value = 15; }
-                if (value > 300) { value = 300; }
-                Medo.Configuration.Settings.Write("FilesAutoSaveInterval", value);
-            }
-        }
-
         public static bool FilesDeleteToRecycleBin {
             get { return Medo.Configuration.Settings.Read("FilesDeleteToRecycleBin", true); }
             set { Medo.Configuration.Settings.Write("FilesDeleteToRecycleBin", value); }
@@ -208,17 +189,17 @@ namespace QText {
             set { Medo.Configuration.Settings.Write("PrintApplicationName", value); }
         }
 
-        public static int QuickAutoSaveSeconds {
+        public static int QuickSaveInterval {
             get {
-                var value = Medo.Configuration.Settings.Read("QuickAutoSaveSeconds", 3);
-                if (value < 1) { return 1; }
-                if (value > 15) { return 15; }
+                var value = Medo.Configuration.Settings.Read("QuickSaveInterval", 3000);
+                if (value < 1000) { return 1000; }
+                if (value > 15000) { return 15000; }
                 return value;
             }
             set {
-                if (value < 1) { value = 1; }
-                if (value > 15) { value = 15; }
-                Medo.Configuration.Settings.Write("QuickAutoSaveSeconds", value);
+                if (value < 1000) { value = 1000; }
+                if (value > 15000) { value = 15000; }
+                Medo.Configuration.Settings.Write("QuickSaveInterval", value);
             }
         }
 
