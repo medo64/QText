@@ -271,29 +271,35 @@ namespace QText {
                     e.Handled = true; e.SuppressKeyPress = true; break;
 
 
-                case Keys.Alt | Keys.Left:
-                    if ((tabFiles.TabPages.Count >= 1) && (tabFiles.SelectedTab == null)) {
-                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[0];
-                    }
-                    if (tabFiles.TabPages.Count >= 2) {
-                        int i = tabFiles.TabPages.IndexOf(tabFiles.SelectedTab);
-                        i = (tabFiles.TabPages.Count + i - 1) % tabFiles.TabPages.Count;
-                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[i];
-                    }
-                    this._suppressMenuKey = true;
-                    e.Handled = true; e.SuppressKeyPress = true; break;
+                case Keys.Alt | Keys.Left: {
+                        if (tabFiles.SelectedTab == null) {
+                            if (tabFiles.TabPages.Count > 0) {
+                                tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[0];
+                            }
+                        } else {
+                            var newIndex = tabFiles.TabPages.IndexOf(tabFiles.SelectedTab) - 1;
+                            if (newIndex >= 0) {
+                                tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[newIndex];
+                            }
+                        }
+                        this._suppressMenuKey = true;
+                        e.Handled = true; e.SuppressKeyPress = true;
+                    } break;
 
-                case Keys.Alt | Keys.Right:
-                    if ((tabFiles.TabPages.Count >= 1) && (tabFiles.SelectedTab == null)) {
-                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[0];
-                    }
-                    if ((tabFiles.TabPages.Count >= 2)) {
-                        int i = tabFiles.TabPages.IndexOf(tabFiles.SelectedTab);
-                        i = (i + 1) % tabFiles.TabPages.Count;
-                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[i];
-                    }
-                    this._suppressMenuKey = true;
-                    e.Handled = true; e.SuppressKeyPress = true; break;
+                case Keys.Alt | Keys.Right: {
+                        if (tabFiles.SelectedTab == null) {
+                            if (tabFiles.TabPages.Count > 0) {
+                                tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[tabFiles.TabPages.Count - 1];
+                            }
+                        } else {
+                            var newIndex = tabFiles.TabPages.IndexOf(tabFiles.SelectedTab) + 1;
+                            if (newIndex < tabFiles.TabPages.Count) {
+                                tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[newIndex];
+                            }
+                        }
+                        this._suppressMenuKey = true;
+                        e.Handled = true; e.SuppressKeyPress = true;
+                    } break;
 
 
                 case Keys.Alt | Keys.Home:
