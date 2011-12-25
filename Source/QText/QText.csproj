@@ -131,10 +131,10 @@
     </Compile>
     <Compile Include="SearchStatus.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="TabFiles.cs">
+    <Compile Include="TabFile.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="TabFile.cs">
+    <Compile Include="TabFiles.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Tray.cs" />

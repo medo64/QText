@@ -97,12 +97,13 @@ namespace QText {
         }
 
         internal static IEnumerable<string> GetSubFolders() {
-            var directories = new List<string>();
-            directories.AddRange(Directory.GetDirectories(Settings.FilesLocation));
-            directories.Sort();
-            foreach (var directory in directories) {
-                var di = new DirectoryInfo(directory);
-                yield return di.Name;
+            var folders = new List<string>();
+            foreach (var directory in Directory.GetDirectories(Settings.FilesLocation)) {
+                folders.Add(new DirectoryInfo(directory).Name);
+            }
+            folders.Sort();
+            foreach (var folder in folders) {
+                yield return folder;
             }
         }
 

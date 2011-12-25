@@ -47,6 +47,9 @@ Shortcut keys
    Alt+0                   Selects 10th tab.
    Alt+Left                Select tab on the left.
    Alt+Right               Select tab on the right.
+   Alt+Up                  Select previous folder.
+   Alt+Down                Select next folder.
+   Alt+Home                Select default folder.
 
 
 Version history

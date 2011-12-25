@@ -183,6 +183,23 @@ namespace QText {
                     e.Handled = true; e.SuppressKeyPress = true; break;
 
 
+                case Keys.Escape:
+                    this.Close();
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                    break;
+
+                case Keys.Alt | Keys.Back:
+                    mnuUndo_Click(null, null);
+                    this._suppressMenuKey = true;
+                    e.Handled = true; e.SuppressKeyPress = true; break;
+
+                case Keys.Alt | Keys.Shift | Keys.Back:
+                    mnuRedo_Click(null, null);
+                    this._suppressMenuKey = true;
+                    e.Handled = true; e.SuppressKeyPress = true; break;
+
+
                 case Keys.Alt | Keys.D1:
                     if (tabFiles.TabPages.Count >= 1) {
                         tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[0];
@@ -253,21 +270,6 @@ namespace QText {
                     this._suppressMenuKey = true;
                     e.Handled = true; e.SuppressKeyPress = true; break;
 
-                case Keys.Escape:
-                    this.Close();
-                    e.Handled = true;
-                    e.SuppressKeyPress = true;
-                    break;
-
-                case Keys.Alt | Keys.Back:
-                    mnuUndo_Click(null, null);
-                    this._suppressMenuKey = true;
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-                case Keys.Alt | Keys.Shift | Keys.Back:
-                    mnuRedo_Click(null, null);
-                    this._suppressMenuKey = true;
-                    e.Handled = true; e.SuppressKeyPress = true; break;
 
                 case Keys.Alt | Keys.Left:
                     if ((tabFiles.TabPages.Count >= 1) && (tabFiles.SelectedTab == null)) {
@@ -294,6 +296,41 @@ namespace QText {
                     e.Handled = true; e.SuppressKeyPress = true; break;
 
 
+                case Keys.Alt | Keys.Home:
+                    tabFiles.FolderOpen(null);
+                    mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
+                    Settings.LastFolder = tabFiles.CurrentFolder;
+                    this._suppressMenuKey = true;
+                    e.Handled = true; e.SuppressKeyPress = true; break;
+
+                case Keys.Alt | Keys.Up: {
+                        var currFolder = tabFiles.CurrentFolder;
+                        var list = new List<string>(new string[] { null });
+                        list.AddRange(TabFiles.GetSubFolders());
+                        var index = list.FindIndex(delegate(string folder) { return string.Equals(folder, currFolder, StringComparison.OrdinalIgnoreCase); });
+                        if (index > 0) {
+                            tabFiles.FolderOpen(list[index - 1]);
+                            mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
+                            Settings.LastFolder = tabFiles.CurrentFolder;
+                        }
+                        this._suppressMenuKey = true;
+                        e.Handled = true; e.SuppressKeyPress = true;
+                    } break;
+
+                case Keys.Alt | Keys.Down: {
+                        var currFolder = tabFiles.CurrentFolder;
+                        var list = new List<string>(new string[] { null });
+                        list.AddRange(TabFiles.GetSubFolders());
+                        var index = list.FindIndex(delegate(string folder) { return string.Equals(folder, currFolder, StringComparison.OrdinalIgnoreCase); });
+                        if (index < list.Count - 1) {
+                            tabFiles.FolderOpen(list[index + 1]);
+                            mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
+                            Settings.LastFolder = tabFiles.CurrentFolder;
+                        }
+                        this._suppressMenuKey = true;
+                        e.Handled = true; e.SuppressKeyPress = true;
+                    } break;
+
 
                 case Keys.Alt | Keys.Menu: //just to prevent suppressing menu key
                     break;
@@ -301,8 +338,7 @@ namespace QText {
                 default:
                     if (e.Alt) {
                         this._suppressMenuKey = true;
-                    }
-                    break;
+                    } break;
             }
 
             tmrQuickSave.Enabled = true;
