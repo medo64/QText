@@ -405,7 +405,7 @@ namespace QText {
                     txt.Focus();
                     SetSelectedTab(tabFiles.SelectedTab);
                 } catch (IOException ex) {
-                    Medo.MessageBox.ShowError(this, string.Format(CultureInfo.CurrentUICulture, "Cannot open file!\n\n{0}", ex.Message));
+                    Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot open file.\n\n{0}", ex.Message));
                     tabFiles.SelectedTab = this._CurrSelectedTab;
                 }
                 tmrQuickSave.Enabled = true;
@@ -422,7 +422,7 @@ namespace QText {
                     try {
                         tabFiles.AddTab(frm.Title, frm.IsRichText);
                     } catch (Exception ex) {
-                        Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Operation failed.\n\n{0}", ex.Message), MessageBoxButtons.OK);
+                        Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot create file.\n\n{0}", ex.Message));
                     }
                 }
             }
@@ -434,7 +434,7 @@ namespace QText {
                 try {
                     tabFiles.SelectedTab.Save();
                 } catch (Exception ex) {
-                    Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
+                    Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot save file.\n\n{0}", ex.Message));
                 }
             }
         }
@@ -449,7 +449,7 @@ namespace QText {
                             tabFiles.WriteOrderedTitles();
                         }
                     } catch (Exception ex) {
-                        Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
+                        Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot rename file.\n\n{0}", ex.Message));
                     }
                 }
                 tmrQuickSave.Enabled = true;
@@ -471,7 +471,7 @@ namespace QText {
                         }
                     }
                 } catch (Exception ex) {
-                    Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
+                    Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Operation failed.\n\n{0}", ex.Message));
                 }
                 tmrQuickSave.Enabled = true;
             }
@@ -488,7 +488,7 @@ namespace QText {
                         ol.Print();
                     }
                 } catch (Exception ex) {
-                    Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
+                    Medo.MessageBox.ShowWarning(this, string.Format("Operation failed.\n\n{0}", ex.Message));
                 }
             }
         }
@@ -501,7 +501,7 @@ namespace QText {
                     tabFiles.SelectedTab.Cut(Settings.ForceTextCopyPaste);
                 }
             } catch (Exception ex) {
-                Medo.MessageBox.ShowWarning(this, "Operation could not be completed." + Environment.NewLine + Environment.NewLine + ex.Message);
+                Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Operation could not be completed.\n\n{0}", ex.Message));
             }
             tmrQuickSave.Enabled = true;
         }
@@ -513,7 +513,7 @@ namespace QText {
                     tabFiles.SelectedTab.Copy(Settings.ForceTextCopyPaste);
                 }
             } catch (Exception ex) {
-                Medo.MessageBox.ShowWarning(this, "Operation could not be completed." + Environment.NewLine + Environment.NewLine + ex.Message);
+                Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Operation could not be completed.\n\n{0}", ex.Message));
             }
             tmrQuickSave.Enabled = true;
         }
@@ -525,7 +525,7 @@ namespace QText {
                     tabFiles.SelectedTab.Paste(Settings.ForceTextCopyPaste);
                 }
             } catch (Exception ex) {
-                Medo.MessageBox.ShowWarning(this, "Operation could not be completed." + Environment.NewLine + Environment.NewLine + ex.Message);
+                Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Operation could not be completed.\n\n{0}", ex.Message));
             }
             tmrQuickSave.Enabled = true;
         }
@@ -653,6 +653,12 @@ namespace QText {
         }
 
         private void mnuFolder_Click(object sender, EventArgs e) {
+            try {
+                tabFiles.FolderSave();
+            } catch (Exception ex) {
+                Medo.MessageBox.ShowWarning(this, string.Format("Cannot save folder.\n\n{0}", ex.Message));
+                return;
+            }
             var oldFolder = tabFiles.CurrentFolder;
             var newFolder = ((ToolStripMenuItem)sender).Tag as string;
             if (string.Equals(oldFolder, newFolder, StringComparison.OrdinalIgnoreCase) == false) {
@@ -782,7 +788,7 @@ namespace QText {
                             try {
                                 tf.Reopen();
                             } catch (Exception ex) {
-                                Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
+                                Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot open file.\n\n{0}", ex.Message));
                             }
                             break;
 
@@ -806,7 +812,7 @@ namespace QText {
                 try {
                     tabFiles.RemoveTab(tabFiles.SelectedTab);
                 } catch (Exception ex) {
-                    Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Operation failed.\n\n{0}", ex.Message));
+                    Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot delete file.\n\n{0}", ex.Message));
                 }
             }
         }
@@ -901,7 +907,7 @@ namespace QText {
                     tabFiles.SelectedTab.Cut(true);
                 }
             } catch (Exception ex) {
-                Medo.MessageBox.ShowWarning(this, "Operation could not be completed." + Environment.NewLine + Environment.NewLine + ex.Message);
+                Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Operation could not be completed.\n\n{0}", ex.Message));
             }
         }
 
@@ -911,7 +917,7 @@ namespace QText {
                     tabFiles.SelectedTab.Copy(true);
                 }
             } catch (Exception ex) {
-                Medo.MessageBox.ShowWarning(this, "Operation could not be completed." + Environment.NewLine + Environment.NewLine + ex.Message);
+                Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Operation could not be completed.\n\n{0}", ex.Message));
             }
         }
 
@@ -921,7 +927,7 @@ namespace QText {
                     tabFiles.SelectedTab.Paste(true);
                 }
             } catch (Exception ex) {
-                Medo.MessageBox.ShowWarning(this, "Operation could not be completed." + Environment.NewLine + Environment.NewLine + ex.Message);
+                Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Operation could not be completed.\n\n{0}", ex.Message));
             }
         }
 
@@ -1068,7 +1074,7 @@ namespace QText {
             try {
                 tabFiles.FolderSave();
             } catch (Exception ex) {
-                Medo.MessageBox.ShowWarning(this, "Operation failed." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
+                Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot save files.\n\n{0}", ex.Message));
             }
         }
 
@@ -1096,12 +1102,14 @@ namespace QText {
                 }
             }
 
+            var currentFolder = tabFiles.CurrentFolder;
             try {
                 tabFiles.FolderOpen(Settings.LastFolder);
-                mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
             } catch (Exception ex) {
-                Medo.MessageBox.ShowWarning(this, "Files could not be loaded." + Environment.NewLine + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
+                Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot load folder.\n\n{0}", ex.Message));
+                tabFiles.FolderOpen(currentFolder);
             }
+            mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
         }
 
         private static void ToogleStyle(RichTextBoxEx richTextBox, FontStyle fontStyle) {
