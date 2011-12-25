@@ -17,7 +17,10 @@ namespace QText {
                 return Path.Combine(Settings.FilesLocation, CurrentFolder);
             }
         }
-        internal string CurrentFolder { get; private set; }
+        public string CurrentFolder { get; private set; }
+
+        public ContextMenuStrip FileContextMenuStrip { get; set; }
+
 
         public void FolderOpen() { //Reopens
             this.FolderOpen(this.CurrentFolder);
@@ -49,8 +52,8 @@ namespace QText {
             IList<string> orderedTitles = ReadOrderedTitles(out selectedTitle);
 
             files.Sort(delegate(string file1, string file2) {
-                var title1 = Helper.GetTitle(file1);
-                var title2 = Helper.GetTitle(file2);
+                var title1 = Path.GetFileNameWithoutExtension(file1);
+                var title2 = Path.GetFileNameWithoutExtension(file2);
                 if (orderedTitles != null) {
                     var titleIndex1 = orderedTitles.IndexOf(title1);
                     var titleIndex2 = orderedTitles.IndexOf(title2);
@@ -67,7 +70,8 @@ namespace QText {
 
             TabFile selectedTab = null;
             foreach (var file in files) {
-                var tab = new TabFile(file, App.Form.mnxText);
+                var tab = new TabFile(file);
+                tab.ContextMenuStrip = this.FileContextMenuStrip;
                 this.TabPages.Add(tab);
                 if ((Settings.StartupRememberSelectedFile) && (tab.Title == selectedTitle)) {
                     selectedTab = tab;
@@ -132,10 +136,11 @@ namespace QText {
         public void AddTab(string title, bool isRichText) {
             TabFile t = default(TabFile);
             if (isRichText) {
-                t = new TabFile(System.IO.Path.Combine(this.CurrentDirectory, title + ".rtf"), App.Form.mnxText, true);
+                t = new TabFile(System.IO.Path.Combine(this.CurrentDirectory, title + ".rtf"));
             } else {
-                t = new TabFile(System.IO.Path.Combine(this.CurrentDirectory, title + ".txt"), App.Form.mnxText, true);
+                t = new TabFile(System.IO.Path.Combine(this.CurrentDirectory, title + ".txt"));
             }
+            t.ContextMenuStrip = this.FileContextMenuStrip;
             if (this.SelectedTab != null) {
                 this.TabPages.Insert(this.TabPages.IndexOf(this.SelectedTab) + 1, t);
             } else {
@@ -149,9 +154,9 @@ namespace QText {
             this.SelectedTab = GetNextTab();
             this.TabPages.Remove(tab);
             if (Settings.FilesDeleteToRecycleBin) {
-                SHFile.Delete(tab.FullFileName);
+                SHFile.Delete(tab.CurrentFile.FullName);
             } else {
-                File.Delete(tab.FullFileName);
+                File.Delete(tab.CurrentFile.FullName);
             }
             WriteOrderedTitles();
         }
@@ -161,7 +166,7 @@ namespace QText {
             this.SelectedTab = GetNextTab();
             this.TabPages.Remove(tab);
             string destFolder = string.IsNullOrEmpty(newFolder) ? Settings.FilesLocation : Path.Combine(Settings.FilesLocation, newFolder);
-            var oldFile = new FileInfo(tab.FullFileName);
+            var oldFile = new FileInfo(tab.CurrentFile.FullName);
             oldFile.MoveTo(Path.Combine(destFolder, oldFile.Name));
             WriteOrderedTitles();
         }

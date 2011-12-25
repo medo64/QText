@@ -795,7 +795,7 @@ namespace QText {
 
         private void mnxTabOpenContainingFolder_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
-                string file = tabFiles.SelectedTab.FullFileName;
+                string file = tabFiles.SelectedTab.CurrentFile.FullName;
                 var exe = new ProcessStartInfo("explorer.exe", "/select,\"" + file + "\"");
                 Process.Start(exe);
             }
@@ -1203,7 +1203,7 @@ namespace QText {
             if (tabFiles.TabCount > 0) {
                 nextIndexToCheck = nextIndexToCheck % tabFiles.TabPages.Count;
                 var currTab = (TabFile)tabFiles.TabPages[nextIndexToCheck];
-                var fi = new FileInfo(currTab.FullFileName);
+                var fi = new FileInfo(currTab.CurrentFile.FullName);
                 if (fi.LastWriteTimeUtc != currTab.LastWriteTimeUtc) { //change
                     if (currTab.IsChanged) {
                         currTab.Save();

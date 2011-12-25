@@ -28,14 +28,5 @@ namespace QText {
             }
         }
 
-
-        public static string GetTitle(string fileName) {
-            return GetTitle(new FileInfo(fileName));
-        }
-
-        public static string GetTitle(FileInfo fileInfo) {
-            return fileInfo.Name.Remove(fileInfo.Name.Length - fileInfo.Extension.Length, fileInfo.Extension.Length);
-        }
-
     }
 }

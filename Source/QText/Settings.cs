@@ -105,7 +105,7 @@ namespace QText {
             set { Medo.Configuration.Settings.Write("DisplayMultilineTabHeader", value); }
         }
 
-        public static ScrollBars DisplayScrollbars {
+        public static ScrollBars ScrollBars {
             get {
                 try {
                     return (ScrollBars)Medo.Configuration.Settings.Read("DisplayScrollbars", Convert.ToInt32(ScrollBars.Vertical));
@@ -135,13 +135,13 @@ namespace QText {
             }
         }
 
-        public static bool DisplayUnderlineURLs {
+        public static bool DetectUrls {
             get { return Medo.Configuration.Settings.Read("DisplayUnderlineURLs", true); }
             set { Medo.Configuration.Settings.Write("DisplayUnderlineURLs", value); }
         }
 
         public static bool DisplayWordWrap {
-            get { return (DisplayScrollbars == ScrollBars.Vertical); }
+            get { return (ScrollBars == ScrollBars.Vertical); }
         }
 
         public static bool EnableQuickAutoSave {

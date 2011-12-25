@@ -15,7 +15,7 @@ namespace QText {
 
         private void OptionsForm_Load(object sender, EventArgs e) {
             //Appearance
-            chkDisplayURLs.Checked = Settings.DisplayUnderlineURLs;
+            chkDisplayURLs.Checked = Settings.DetectUrls;
             chkFollowURLs.Checked = Settings.FollowURLs;
             nudTabWidth.Value = Settings.DisplayTabWidth;
             txtFont.Text = GetFontText(Settings.DisplayFont);
@@ -29,8 +29,8 @@ namespace QText {
             chkShowInTaskbar.Checked = Settings.DisplayShowInTaskbar;
             chbMultilineTabHeaders.Checked = Settings.DisplayMultilineTabHeader;
             chbShowMinimizeMaximizeButtons.Checked = Settings.DisplayMinimizeMaximizeButtons;
-            chbHorizontalScrollbar.Checked = (Settings.DisplayScrollbars == ScrollBars.Horizontal) || (Settings.DisplayScrollbars == ScrollBars.Both);
-            chbVerticalScrollbar.Checked = (Settings.DisplayScrollbars == ScrollBars.Vertical) || (Settings.DisplayScrollbars == ScrollBars.Both);
+            chbHorizontalScrollbar.Checked = (Settings.ScrollBars == ScrollBars.Horizontal) || (Settings.ScrollBars == ScrollBars.Both);
+            chbVerticalScrollbar.Checked = (Settings.ScrollBars == ScrollBars.Vertical) || (Settings.ScrollBars == ScrollBars.Both);
             chbZoomToolbarWithDpi.Checked = Settings.ZoomToolbarWithDpiChange;
 
             //Files
@@ -288,7 +288,7 @@ namespace QText {
 
         private void btnOk_Click(object sender, EventArgs e) {
             //Appearance
-            Settings.DisplayUnderlineURLs = chkDisplayURLs.Checked;
+            Settings.DetectUrls = chkDisplayURLs.Checked;
             Settings.FollowURLs = chkFollowURLs.Checked;
             Settings.DisplayTabWidth = Convert.ToInt32(nudTabWidth.Value);
             Settings.DisplayFont = (System.Drawing.Font)txtFont.Tag;
@@ -301,13 +301,13 @@ namespace QText {
             Settings.DisplayMultilineTabHeader = chbMultilineTabHeaders.Checked;
             Settings.DisplayMinimizeMaximizeButtons = chbShowMinimizeMaximizeButtons.Checked;
             if ((chbHorizontalScrollbar.Checked && chbVerticalScrollbar.Checked)) {
-                Settings.DisplayScrollbars = ScrollBars.Both;
+                Settings.ScrollBars = ScrollBars.Both;
             } else if ((chbHorizontalScrollbar.Checked)) {
-                Settings.DisplayScrollbars = ScrollBars.Horizontal;
+                Settings.ScrollBars = ScrollBars.Horizontal;
             } else if ((chbVerticalScrollbar.Checked)) {
-                Settings.DisplayScrollbars = ScrollBars.Vertical;
+                Settings.ScrollBars = ScrollBars.Vertical;
             } else {
-                Settings.DisplayScrollbars = ScrollBars.None;
+                Settings.ScrollBars = ScrollBars.None;
             }
             Settings.ZoomToolbarWithDpiChange = chbZoomToolbarWithDpi.Checked;
 
