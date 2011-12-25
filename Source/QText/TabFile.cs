@@ -76,7 +76,7 @@ namespace QText {
             }
             private set {
                 this._isChanged = value;
-                base.Text = value ? this.Title + "*" : this.Title;
+                UpdateText();
             }
         }
 
@@ -171,6 +171,7 @@ namespace QText {
             this.TextBox.SelectionLength = 0;
             this.TextBox.ClearUndo();
             this.LastSaveTime = DateTime.Now;
+            this.CurrentFile.Refresh();
             this.IsChanged = false;
             this.IsOpened = true;
         }
@@ -258,6 +259,7 @@ namespace QText {
             } else {
                 File.Move(oldInfo.FullName, newInfo.FullName);
                 this.CurrentFile = newInfo;
+                UpdateText(); 
             }
         }
 
@@ -482,6 +484,11 @@ namespace QText {
             int[] array = lot.ToArray();
             NativeMethods.SendMessage(this.TextBox.Handle, NativeMethods.EM_SETTABSTOPS, lot.Count, array[0]);
         }
+
+        private void UpdateText() {
+            base.Text = this.IsChanged ? this.Title + "*" : this.Title;
+        }
+
 
         #region Zoom
 
