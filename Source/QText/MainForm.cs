@@ -16,30 +16,13 @@ namespace QText {
     internal partial class MainForm : Form {
 
         internal bool _suppressMenuKey = false;
-        internal float _dpiX;
-        internal float _dpiY;
-        internal float _dpiRatioX;
-        internal float _dpiRatioY;
 
         public MainForm() {
             InitializeComponent();
             this.Font = SystemFonts.MessageBoxFont;
 
-            using (var g = this.CreateGraphics()) {
-                _dpiX = g.DpiX;
-                _dpiY = g.DpiY;
-                _dpiRatioX = Convert.ToSingle(Math.Round(_dpiX / 96, 2));
-                _dpiRatioY = Convert.ToSingle(Math.Round(_dpiY / 96, 2));
-                System.Diagnostics.Trace.TraceInformation("DPI: {0}x{1}; Ratio:{2}x{3}", this._dpiX, this._dpiY, this._dpiRatioX, this._dpiRatioY);
-            }
-            if (Settings.ZoomToolbarWithDpiChange) {
-                mnu.ImageScalingSize = new Size(Convert.ToInt32(16 * _dpiRatioX), Convert.ToInt32(16 * _dpiRatioY));
-                mnu.Scale(new SizeF(_dpiRatioX, _dpiRatioY));
-            }
-
             tmrQuickSave.Interval = Settings.QuickSaveInterval;
 
-            tabFiles.Multiline = Settings.DisplayMultilineTabHeader;
             if (Settings.DisplayMinimizeMaximizeButtons) {
                 this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
             } else {
@@ -748,20 +731,10 @@ namespace QText {
                 this.tmrUpdateToolbar.Enabled = false;
                 RefreshAll(null, null);
                 if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK) {
-                    tabFiles.Multiline = Settings.DisplayMultilineTabHeader;
                     if (Settings.DisplayMinimizeMaximizeButtons) {
                         this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
                     } else {
                         this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-                    }
-                    if (Settings.ZoomToolbarWithDpiChange) {
-                        mnu.ImageScalingSize = new Size(Convert.ToInt32(16 * _dpiRatioX), Convert.ToInt32(16 * _dpiRatioY));
-                        mnu.Scale(new SizeF(_dpiRatioX, _dpiRatioY));
-                    } else {
-                        float rx = Convert.ToSingle(16 / mnu.ImageScalingSize.Width);
-                        float ry = Convert.ToSingle(16 / mnu.ImageScalingSize.Height);
-                        mnu.ImageScalingSize = new Size(16, 16);
-                        mnu.Scale(new SizeF(rx, ry));
                     }
                     this.ShowInTaskbar = Settings.DisplayShowInTaskbar;
                     this.TopMost = Settings.DisplayAlwaysOnTop;

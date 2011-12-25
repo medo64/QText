@@ -92,11 +92,6 @@ namespace QText {
             set { Medo.Configuration.Settings.Write("DisplayMinimizeMaximizeButtons", value); }
         }
 
-        public static bool DisplayMultilineTabHeader {
-            get { return Medo.Configuration.Settings.Read("DisplayMultilineTabHeader", false); }
-            set { Medo.Configuration.Settings.Write("DisplayMultilineTabHeader", value); }
-        }
-
         public static ScrollBars ScrollBars {
             get {
                 try {
@@ -195,11 +190,6 @@ namespace QText {
             }
         }
 
-        public static bool StartupRememberSelectedFile {
-            get { return Medo.Configuration.Settings.Read("StartupRememberSelectedFile", true); }
-            set { Medo.Configuration.Settings.Write("StartupRememberSelectedFile", value); }
-        }
-
         public static bool StartupRun {
             get {
                 return StartupConfig.RunForCurrentUser;
@@ -219,11 +209,6 @@ namespace QText {
         public static bool TrayOneClickActivation {
             get { return Medo.Configuration.Settings.Read("TrayOneClickActivation", true); }
             set { Medo.Configuration.Settings.Write("TrayOneClickActivation", value); }
-        }
-
-        public static bool ZoomToolbarWithDpiChange {
-            get { return Medo.Configuration.Settings.Read("ZoomToolbarWithDpiChange", true); }
-            set { Medo.Configuration.Settings.Write("ZoomToolbarWithDpiChange", value); }
         }
 
         public static string LastFolder {

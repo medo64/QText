@@ -70,7 +70,7 @@ namespace QText {
                 var tab = new TabFile(file);
                 tab.ContextMenuStrip = this.TabContextMenuStrip;
                 this.TabPages.Add(tab);
-                if ((Settings.StartupRememberSelectedFile) && (tab.Title == selectedTitle)) {
+                if (tab.Title.Equals(selectedTitle, StringComparison.OrdinalIgnoreCase)) {
                     selectedTab = tab;
                 }
             }

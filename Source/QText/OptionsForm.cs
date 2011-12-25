@@ -27,14 +27,11 @@ namespace QText {
             //Display
             chkShowToolbar.Checked = Settings.ShowToolbar;
             chkShowInTaskbar.Checked = Settings.DisplayShowInTaskbar;
-            chbMultilineTabHeaders.Checked = Settings.DisplayMultilineTabHeader;
             chbShowMinimizeMaximizeButtons.Checked = Settings.DisplayMinimizeMaximizeButtons;
             chbHorizontalScrollbar.Checked = (Settings.ScrollBars == ScrollBars.Horizontal) || (Settings.ScrollBars == ScrollBars.Both);
             chbVerticalScrollbar.Checked = (Settings.ScrollBars == ScrollBars.Vertical) || (Settings.ScrollBars == ScrollBars.Both);
-            chbZoomToolbarWithDpi.Checked = Settings.ZoomToolbarWithDpiChange;
 
             //Files
-            chkRememberSelectedFile.Checked = Settings.StartupRememberSelectedFile;
             chkPreloadFilesOnStartup.Checked = Settings.FilesPreload;
             chkDeleteToRecycleBin.Checked = Settings.FilesDeleteToRecycleBin;
             nudQuickSaveIntervalInSeconds.Value = Settings.QuickSaveInterval / 1000;
@@ -290,7 +287,6 @@ namespace QText {
             //Display
             Settings.ShowToolbar = chkShowToolbar.Checked;
             Settings.DisplayShowInTaskbar = chkShowInTaskbar.Checked;
-            Settings.DisplayMultilineTabHeader = chbMultilineTabHeaders.Checked;
             Settings.DisplayMinimizeMaximizeButtons = chbShowMinimizeMaximizeButtons.Checked;
             if ((chbHorizontalScrollbar.Checked && chbVerticalScrollbar.Checked)) {
                 Settings.ScrollBars = ScrollBars.Both;
@@ -301,10 +297,8 @@ namespace QText {
             } else {
                 Settings.ScrollBars = ScrollBars.None;
             }
-            Settings.ZoomToolbarWithDpiChange = chbZoomToolbarWithDpi.Checked;
 
             //Files
-            Settings.StartupRememberSelectedFile = chkRememberSelectedFile.Checked;
             Settings.FilesPreload = chkPreloadFilesOnStartup.Checked;
             Settings.FilesDeleteToRecycleBin = chkDeleteToRecycleBin.Checked;
             Settings.QuickSaveInterval = Convert.ToInt32(nudQuickSaveIntervalInSeconds.Value) * 1000;

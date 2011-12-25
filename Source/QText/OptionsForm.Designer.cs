@@ -37,11 +37,9 @@
             this.chkDisplayURLs = new System.Windows.Forms.CheckBox();
             this.txtFont = new System.Windows.Forms.TextBox();
             this.tab_pagDisplay = new System.Windows.Forms.TabPage();
-            this.chbZoomToolbarWithDpi = new System.Windows.Forms.CheckBox();
             this.chbVerticalScrollbar = new System.Windows.Forms.CheckBox();
             this.chbHorizontalScrollbar = new System.Windows.Forms.CheckBox();
             this.chbShowMinimizeMaximizeButtons = new System.Windows.Forms.CheckBox();
-            this.chbMultilineTabHeaders = new System.Windows.Forms.CheckBox();
             this.chkShowToolbar = new System.Windows.Forms.CheckBox();
             this.chkShowInTaskbar = new System.Windows.Forms.CheckBox();
             this.tab_pagFiles = new System.Windows.Forms.TabPage();
@@ -51,7 +49,6 @@
             this.lblQuickSaveInterval = new System.Windows.Forms.Label();
             this.chkDeleteToRecycleBin = new System.Windows.Forms.CheckBox();
             this.chkPreloadFilesOnStartup = new System.Windows.Forms.CheckBox();
-            this.chkRememberSelectedFile = new System.Windows.Forms.CheckBox();
             this.btnChangeLocation = new System.Windows.Forms.Button();
             this.tab_pagBehavior = new System.Windows.Forms.TabPage();
             this.txtHotkey = new System.Windows.Forms.TextBox();
@@ -242,11 +239,9 @@
             // 
             // tab_pagDisplay
             // 
-            this.tab_pagDisplay.Controls.Add(this.chbZoomToolbarWithDpi);
             this.tab_pagDisplay.Controls.Add(this.chbVerticalScrollbar);
             this.tab_pagDisplay.Controls.Add(this.chbHorizontalScrollbar);
             this.tab_pagDisplay.Controls.Add(this.chbShowMinimizeMaximizeButtons);
-            this.tab_pagDisplay.Controls.Add(this.chbMultilineTabHeaders);
             this.tab_pagDisplay.Controls.Add(this.chkShowToolbar);
             this.tab_pagDisplay.Controls.Add(this.chkShowInTaskbar);
             this.tab_pagDisplay.Location = new System.Drawing.Point(4, 25);
@@ -256,20 +251,10 @@
             this.tab_pagDisplay.Text = "Display";
             this.tab_pagDisplay.UseVisualStyleBackColor = true;
             // 
-            // chbZoomToolbarWithDpi
-            // 
-            this.chbZoomToolbarWithDpi.AutoSize = true;
-            this.chbZoomToolbarWithDpi.Location = new System.Drawing.Point(3, 57);
-            this.chbZoomToolbarWithDpi.Name = "chbZoomToolbarWithDpi";
-            this.chbZoomToolbarWithDpi.Size = new System.Drawing.Size(219, 21);
-            this.chbZoomToolbarWithDpi.TabIndex = 5;
-            this.chbZoomToolbarWithDpi.Text = "Zoom toolbar with DPI change";
-            this.chbZoomToolbarWithDpi.UseVisualStyleBackColor = true;
-            // 
             // chbVerticalScrollbar
             // 
             this.chbVerticalScrollbar.AutoSize = true;
-            this.chbVerticalScrollbar.Location = new System.Drawing.Point(3, 165);
+            this.chbVerticalScrollbar.Location = new System.Drawing.Point(3, 111);
             this.chbVerticalScrollbar.Name = "chbVerticalScrollbar";
             this.chbVerticalScrollbar.Size = new System.Drawing.Size(135, 21);
             this.chbVerticalScrollbar.TabIndex = 10;
@@ -279,7 +264,7 @@
             // chbHorizontalScrollbar
             // 
             this.chbHorizontalScrollbar.AutoSize = true;
-            this.chbHorizontalScrollbar.Location = new System.Drawing.Point(3, 138);
+            this.chbHorizontalScrollbar.Location = new System.Drawing.Point(3, 84);
             this.chbHorizontalScrollbar.Name = "chbHorizontalScrollbar";
             this.chbHorizontalScrollbar.Size = new System.Drawing.Size(152, 21);
             this.chbHorizontalScrollbar.TabIndex = 9;
@@ -289,23 +274,13 @@
             // chbShowMinimizeMaximizeButtons
             // 
             this.chbShowMinimizeMaximizeButtons.AutoSize = true;
-            this.chbShowMinimizeMaximizeButtons.Location = new System.Drawing.Point(3, 111);
+            this.chbShowMinimizeMaximizeButtons.Location = new System.Drawing.Point(3, 57);
             this.chbShowMinimizeMaximizeButtons.Name = "chbShowMinimizeMaximizeButtons";
             this.chbShowMinimizeMaximizeButtons.Size = new System.Drawing.Size(234, 21);
             this.chbShowMinimizeMaximizeButtons.TabIndex = 7;
             this.chbShowMinimizeMaximizeButtons.Text = "Show minimize/maximize buttons";
             this.chbShowMinimizeMaximizeButtons.UseVisualStyleBackColor = true;
             this.chbShowMinimizeMaximizeButtons.CheckedChanged += new System.EventHandler(this.chbShowMinimizeMaximizeButtons_CheckedChanged);
-            // 
-            // chbMultilineTabHeaders
-            // 
-            this.chbMultilineTabHeaders.AutoSize = true;
-            this.chbMultilineTabHeaders.Location = new System.Drawing.Point(3, 84);
-            this.chbMultilineTabHeaders.Name = "chbMultilineTabHeaders";
-            this.chbMultilineTabHeaders.Size = new System.Drawing.Size(161, 21);
-            this.chbMultilineTabHeaders.TabIndex = 6;
-            this.chbMultilineTabHeaders.Text = "Multiline tab headers";
-            this.chbMultilineTabHeaders.UseVisualStyleBackColor = true;
             // 
             // chkShowToolbar
             // 
@@ -336,7 +311,6 @@
             this.tab_pagFiles.Controls.Add(this.lblQuickSaveInterval);
             this.tab_pagFiles.Controls.Add(this.chkDeleteToRecycleBin);
             this.tab_pagFiles.Controls.Add(this.chkPreloadFilesOnStartup);
-            this.tab_pagFiles.Controls.Add(this.chkRememberSelectedFile);
             this.tab_pagFiles.Controls.Add(this.btnChangeLocation);
             this.tab_pagFiles.Location = new System.Drawing.Point(4, 25);
             this.tab_pagFiles.Name = "tab_pagFiles";
@@ -417,16 +391,6 @@
             this.chkPreloadFilesOnStartup.TabIndex = 7;
             this.chkPreloadFilesOnStartup.Text = "Preload files on startup";
             this.chkPreloadFilesOnStartup.UseVisualStyleBackColor = true;
-            // 
-            // chkRememberSelectedFile
-            // 
-            this.chkRememberSelectedFile.AutoSize = true;
-            this.chkRememberSelectedFile.Location = new System.Drawing.Point(7, 93);
-            this.chkRememberSelectedFile.Name = "chkRememberSelectedFile";
-            this.chkRememberSelectedFile.Size = new System.Drawing.Size(178, 21);
-            this.chkRememberSelectedFile.TabIndex = 9;
-            this.chkRememberSelectedFile.Text = "Remember selected file";
-            this.chkRememberSelectedFile.UseVisualStyleBackColor = true;
             // 
             // btnChangeLocation
             // 
@@ -672,11 +636,9 @@
         internal System.Windows.Forms.CheckBox chkDisplayURLs;
         internal System.Windows.Forms.TextBox txtFont;
         internal System.Windows.Forms.TabPage tab_pagDisplay;
-        internal System.Windows.Forms.CheckBox chbZoomToolbarWithDpi;
         internal System.Windows.Forms.CheckBox chbVerticalScrollbar;
         internal System.Windows.Forms.CheckBox chbHorizontalScrollbar;
         internal System.Windows.Forms.CheckBox chbShowMinimizeMaximizeButtons;
-        internal System.Windows.Forms.CheckBox chbMultilineTabHeaders;
         internal System.Windows.Forms.CheckBox chkShowToolbar;
         internal System.Windows.Forms.CheckBox chkShowInTaskbar;
         internal System.Windows.Forms.TabPage tab_pagFiles;
@@ -686,7 +648,6 @@
         internal System.Windows.Forms.Label lblQuickSaveInterval;
         internal System.Windows.Forms.CheckBox chkDeleteToRecycleBin;
         internal System.Windows.Forms.CheckBox chkPreloadFilesOnStartup;
-        internal System.Windows.Forms.CheckBox chkRememberSelectedFile;
         internal System.Windows.Forms.Button btnChangeLocation;
         internal System.Windows.Forms.TabPage tab_pagBehavior;
         internal System.Windows.Forms.TextBox txtHotkey;
