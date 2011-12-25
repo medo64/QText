@@ -236,7 +236,7 @@ namespace QText {
 
         public static string LastFolder {
             get { return Medo.Configuration.Settings.Read("LastFolder", ""); }
-            set { Medo.Configuration.Settings.Write("LastFolder", (value != null) ? value : ""); }
+            set { Medo.Configuration.Settings.Write("LastFolder", value); }
         }
 
     }

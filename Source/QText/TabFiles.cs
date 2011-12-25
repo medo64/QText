@@ -22,15 +22,12 @@ namespace QText {
         public ContextMenuStrip TabContextMenuStrip { get; set; }
 
 
-        public void FolderOpen() { //Reopens
-            this.FolderOpen(this.CurrentFolder);
-        }
-
         public void FolderOpen(string folder, bool saveBeforeOpen = true) {
+            if (folder == null) { throw new ArgumentNullException("folder", "Folder cannot be null."); }
             if ((this.CurrentFolder != null) && (saveBeforeOpen)) { FolderSave(); }
 
             //check if it exists
-            string newFolder = null;
+            string newFolder = "";
             foreach (var iFolder in TabFiles.GetSubFolders()) {
                 if (string.Equals(iFolder, folder, StringComparison.OrdinalIgnoreCase)) {
                     newFolder = iFolder;

@@ -303,7 +303,7 @@ namespace QText {
 
 
                 case Keys.Alt | Keys.Home:
-                    tabFiles.FolderOpen(null);
+                    tabFiles.FolderOpen("");
                     mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
                     Settings.LastFolder = tabFiles.CurrentFolder;
                     this._suppressMenuKey = true;
@@ -311,7 +311,7 @@ namespace QText {
 
                 case Keys.Alt | Keys.Up: {
                         var currFolder = tabFiles.CurrentFolder;
-                        var list = new List<string>(new string[] { null });
+                        var list = new List<string>(new string[] { "" });
                         list.AddRange(TabFiles.GetSubFolders());
                         var index = list.FindIndex(delegate(string folder) { return string.Equals(folder, currFolder, StringComparison.OrdinalIgnoreCase); });
                         if (index > 0) {
@@ -325,7 +325,7 @@ namespace QText {
 
                 case Keys.Alt | Keys.Down: {
                         var currFolder = tabFiles.CurrentFolder;
-                        var list = new List<string>(new string[] { null });
+                        var list = new List<string>(new string[] { "" });
                         list.AddRange(TabFiles.GetSubFolders());
                         var index = list.FindIndex(delegate(string folder) { return string.Equals(folder, currFolder, StringComparison.OrdinalIgnoreCase); });
                         if (index < list.Count - 1) {
@@ -697,7 +697,7 @@ namespace QText {
 
         private void mnuFolder_DropDownOpening(object sender, EventArgs e) {
             mnuFolder.DropDownItems.Clear();
-            mnuFolder.DropDownItems.Add(new ToolStripMenuItem("(Default)", null, mnuFolder_Click) { Tag = null });
+            mnuFolder.DropDownItems.Add(new ToolStripMenuItem("(Default)", null, mnuFolder_Click) { Tag = "" });
             foreach (var folder in TabFiles.GetSubFolders()) {
                 mnuFolder.DropDownItems.Add(new ToolStripMenuItem(folder, null, mnuFolder_Click) { Tag = folder });
             }
