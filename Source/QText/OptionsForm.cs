@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace QText {
     internal partial class OptionsForm : Form {
@@ -138,86 +139,90 @@ namespace QText {
         }
 
         private void btnChangeLocation_Click(object sender, EventArgs e) {
+            var oldPath = Settings.FilesLocation;
             using (var fd = new SaveFileDialog()) {
                 fd.CheckFileExists = false;
                 fd.CheckPathExists = true;
                 fd.CreatePrompt = false;
-                fd.Filter = "All files|" + Guid.Empty.ToString();
+                fd.Filter = "|" + Guid.Empty.ToString();
                 fd.FileName = "any";
-                fd.InitialDirectory = Settings.FilesLocation;
+                fd.InitialDirectory = oldPath;
                 fd.OverwritePrompt = false;
                 fd.Title = "Please select folder for storage of files";
                 fd.ValidateNames = false;
                 if (fd.ShowDialog(this) == System.Windows.Forms.DialogResult.OK) {
-                    System.IO.FileInfo selectedFile = new System.IO.FileInfo(fd.FileName);
-                    string selectedPath = selectedFile.DirectoryName;
-                    if ((string.Compare(selectedPath, Settings.CarbonCopyFolder, true) == 0)) {
-                        global::Medo.MessageBox.ShowWarning(this, "This folder is currenly used for carbon copy. Move will be aborted.");
-                    } else if ((string.Compare(selectedPath, Settings.FilesLocation, true) == 0)) {
-                        global::Medo.MessageBox.ShowWarning(this, "This folder is already used for storage. Move will be aborted.");
-                    } else {
-                        string newPath = selectedPath;
+                    var selectedFile = new System.IO.FileInfo(fd.FileName);
+                    var newPath = selectedFile.DirectoryName;
+                    if (string.Equals(newPath, Settings.CarbonCopyFolder, StringComparison.OrdinalIgnoreCase)) {
+                        Medo.MessageBox.ShowWarning(this, "This folder is currenly used for carbon copy. Move will be aborted.");
+                        return;
+                    } else if (string.Equals(newPath, Settings.FilesLocation, StringComparison.OrdinalIgnoreCase)) {
+                        Medo.MessageBox.ShowWarning(this, "This folder is already used for storage. Move will be aborted.");
+                        return;
+                    } else if (newPath.StartsWith(Settings.FilesLocation, StringComparison.OrdinalIgnoreCase)) {
+                        Medo.MessageBox.ShowWarning(this, "This folder is already used for storage. Move will be aborted.");
+                        return;
+                    }
 
-                        bool isOK = true;
-                        try {
-                            Helper.CreatePath(newPath);
-                            try {
-                                var oldFiles = new List<string>();
-                                oldFiles.AddRange(System.IO.Directory.GetFiles(Settings.FilesLocation, "*.txt"));
-                                oldFiles.AddRange(System.IO.Directory.GetFiles(Settings.FilesLocation, "*.rtf"));
-                                if ((oldFiles.Count > 0)) {
-                                    switch (Medo.MessageBox.ShowQuestion(this, "Do you want to copy existing files to new location?", MessageBoxButtons.YesNo)) {
-                                        case DialogResult.Yes:
-                                            try {
-                                                System.IO.File.Copy(System.IO.Path.Combine(Settings.FilesLocation, "QText.xml"), System.IO.Path.Combine(newPath, "QText.xml"));
-                                            } catch (Exception) { }
-                                            for (int i = 0; i <= oldFiles.Count - 1; i++) {
-                                                try {
-                                                    string oldFile = oldFiles[i];
-                                                    System.IO.FileInfo oldFI = new System.IO.FileInfo(oldFile);
-                                                    string newFile = System.IO.Path.Combine(newPath, oldFI.Name);
-                                                    if (System.IO.File.Exists(newFile)) {
-                                                        switch (Medo.MessageBox.ShowQuestion(this, "File \"" + oldFI.Name + "\" already exists at destination. Do you want to overwrite?", MessageBoxButtons.YesNoCancel)) {
-                                                            case DialogResult.Yes:
-                                                                var oldAttr = File.GetAttributes(oldFile);
-                                                                File.SetAttributes(newFile, FileAttributes.Normal);
-                                                                File.Copy(oldFile, newFile, true);
-                                                                File.SetAttributes(newFile, oldAttr);
-                                                                break;
-                                                            case DialogResult.No:
-                                                                continue;
-                                                            case DialogResult.Cancel:
-                                                                return;
-                                                        }
-                                                    } else {
-                                                        System.IO.File.Copy(oldFile, newFile);
-                                                    }
-                                                } catch (Exception ex) {
-                                                    Medo.MessageBox.ShowWarning(this, "Error copying files." + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
-                                                    isOK = false;
+                    var mapping = new Dictionary<FileInfo, FileInfo>();
+                    try {
+                        FillMapping(mapping, oldPath, newPath, "");
+                        foreach (var folder in TabFiles.GetSubFolders()) {
+                            FillMapping(mapping, oldPath, newPath, folder);
+                        }
+                    } catch (Exception ex) {
+                        Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot enumerate current folder. Move will be aborted.\n\n{0}", ex.Message));
+                        return;
+                    }
+
+                    if (mapping.Count > 0) {
+                        switch (Medo.MessageBox.ShowQuestion(this, "Do you want to copy existing files to new location?", MessageBoxButtons.YesNoCancel)) {
+                            case DialogResult.Yes: {
+                                    try {
+                                        foreach (var map in mapping) {
+                                            var oldFile = map.Key;
+                                            var newFile = map.Value;
+                                            if (Directory.Exists(newFile.DirectoryName) == false) { Helper.CreatePath(newFile.DirectoryName); }
+                                            if (newFile.Exists) {
+                                                switch (Medo.MessageBox.ShowQuestion(this, string.Format(CultureInfo.CurrentUICulture, "File \"{0}\" already exists at destination. Do you wish to overwrite it?", newFile.Name), MessageBoxButtons.YesNoCancel)) {
+                                                    case DialogResult.Yes: break;
+                                                    case DialogResult.No: continue;
+                                                    case DialogResult.Cancel: return;
                                                 }
                                             }
-
-                                            break;
+                                            File.Copy(oldFile.FullName, newFile.FullName, true);
+                                        }
+                                    } catch (Exception ex) {
+                                        Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot copy files to new location. Move will be aborted.\n\n{0}", ex.Message));
+                                        return;
                                     }
-                                }
-                                this.DialogResult = System.Windows.Forms.DialogResult.OK;
-                            } catch (Exception ex) {
-                                Medo.MessageBox.ShowWarning(this, "Error retrieving old path." + Environment.NewLine + ex.Message, MessageBoxButtons.OK);
-                                isOK = false;
-                            }
-                            if (isOK) {
-                                Settings.FilesLocation = newPath;
-                                Medo.MessageBox.ShowInformation(this, "Data location transfer succeeded.");
-                            } else {
-                                Medo.MessageBox.ShowWarning(this, "Data location transfer succeeded with some errors.");
-                            }
-                        } catch (Exception ex) {
-                            Medo.MessageBox.ShowWarning(this, ex.Message, MessageBoxButtons.OK);
-                        }
+                                } break;
 
+                            case DialogResult.No: break;
+                            case DialogResult.Cancel: return;
+                        }
                     }
+
+                    Settings.FilesLocation = newPath;
+                    Medo.MessageBox.ShowInformation(this, "Data location transfer succeeded.");
+                    this.DialogResult = DialogResult.OK;
                 }
+            }
+        }
+
+        private void FillMapping(Dictionary<FileInfo, FileInfo> mapping, string oldBasePath, string newBasePath, string folder) {
+            var oldPath = string.IsNullOrEmpty(folder) ? oldBasePath : Path.Combine(oldBasePath, folder);
+            var newPath = string.IsNullOrEmpty(folder) ? newBasePath : Path.Combine(newBasePath, folder);
+            if (File.Exists(Path.Combine(oldPath, ".qtext"))) {
+                mapping.Add(new FileInfo(Path.Combine(oldPath, ".qtext")), new FileInfo(Path.Combine(newPath, ".qtext")));
+            }
+            foreach (var file in Directory.GetFiles(oldPath, "*.txt")) {
+                var oldFile = new FileInfo(file);
+                mapping.Add(oldFile, new FileInfo(Path.Combine(newPath, oldFile.Name)));
+            }
+            foreach (var file in Directory.GetFiles(oldPath, "*.rtf")) {
+                var oldFile = new FileInfo(file);
+                mapping.Add(oldFile, new FileInfo(Path.Combine(newPath, oldFile.Name)));
             }
         }
 
