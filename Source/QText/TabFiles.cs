@@ -19,7 +19,7 @@ namespace QText {
         }
         public string CurrentFolder { get; private set; }
 
-        public ContextMenuStrip FileContextMenuStrip { get; set; }
+        public ContextMenuStrip TabContextMenuStrip { get; set; }
 
 
         public void FolderOpen() { //Reopens
@@ -71,7 +71,7 @@ namespace QText {
             TabFile selectedTab = null;
             foreach (var file in files) {
                 var tab = new TabFile(file);
-                tab.ContextMenuStrip = this.FileContextMenuStrip;
+                tab.ContextMenuStrip = this.TabContextMenuStrip;
                 this.TabPages.Add(tab);
                 if ((Settings.StartupRememberSelectedFile) && (tab.Title == selectedTitle)) {
                     selectedTab = tab;
@@ -135,7 +135,7 @@ namespace QText {
 
         public void AddTab(string title, bool isRichText) {
             TabFile t = TabFile.Create(Path.Combine(this.CurrentDirectory, title + (isRichText ? ".rtf" : ".txt")));
-            t.ContextMenuStrip = this.FileContextMenuStrip;
+            t.ContextMenuStrip = this.TabContextMenuStrip;
             if (this.SelectedTab != null) {
                 this.TabPages.Insert(this.TabPages.IndexOf(this.SelectedTab) + 1, t);
             } else {
@@ -269,7 +269,7 @@ namespace QText {
                     using (var sw = new StreamWriter(fs)) {
                         sw.WriteLine("/["); //always start block with /[
                         foreach (TabFile tab in this.TabPages) {
-                            if (this.SelectedTab.Equals(tab)) { //selected file is written with //selected
+                            if (tab.Equals(this.SelectedTab)) { //selected file is written with //selected
                                 sw.WriteLine(tab.Title + "//selected");
                             } else {
                                 sw.WriteLine(tab.Title);

@@ -1,5 +1,5 @@
                                               Josip Medved
-                                              http://www.jmedved.com
+                                              http://www.jmedved.com/
 
 
                                  QText
@@ -13,16 +13,6 @@ Shortcut keys
    F3                      Find next
    F5                      Refresh
 
-   Ctrl+1                  Selects 1st tab
-   Ctrl+2                  Selects 2nd tab
-   Ctrl+3                  Selects 3rd tab
-   Ctrl+4                  Selects 4th tab
-   Ctrl+5                  Selects 5th tab
-   Ctrl+6                  Selects 6th tab
-   Ctrl+7                  Selects 7th tab
-   Ctrl+8                  Selects 8th tab
-   Ctrl+9                  Selects 9th tab
-   Ctrl+0                  Selects 10th tab
    Ctrl+A                  Select all
    Ctrl+C                  Copy
    Ctrl+F                  Find
@@ -34,8 +24,6 @@ Shortcut keys
    Ctrl+X                  Cut
    Ctrl+Y                  Redo
    Ctrl+Z                  Undo
-   Ctrl+PageUp             Selects tab to the left
-   Ctrl+PageDown           Selects tab to the right
    Ctrl+Tab                Alternates between two last used tabs
 
    Ctrl+Shift+S            File, Save all
@@ -47,6 +35,18 @@ Shortcut keys
    Ctrl+Backspace          Delete word on left.
    Ctrl+Delete             Delete word on right.
 
+   Alt+1                   Selects 1st tab.
+   Alt+2                   Selects 2nd tab.
+   Alt+3                   Selects 3rd tab.
+   Alt+4                   Selects 4th tab.
+   Alt+5                   Selects 5th tab.
+   Alt+6                   Selects 6th tab.
+   Alt+7                   Selects 7th tab.
+   Alt+8                   Selects 8th tab.
+   Alt+9                   Selects 9th tab.
+   Alt+0                   Selects 10th tab.
+   Alt+Left                Select tab on the left.
+   Alt+Right               Select tab on the right.
 
 
 Version history

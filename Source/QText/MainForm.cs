@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Security.Permissions;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using System.Globalization;
-using System.Collections.Generic;
-using System.Text;
 
 namespace QText {
 
@@ -183,66 +183,74 @@ namespace QText {
                     e.Handled = true; e.SuppressKeyPress = true; break;
 
 
-                case Keys.Control | Keys.D1:
+                case Keys.Alt | Keys.D1:
                     if (tabFiles.TabPages.Count >= 1) {
                         tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[0];
                     }
+                    this._suppressMenuKey = true;
                     e.Handled = true; e.SuppressKeyPress = true; break;
 
-                case Keys.Control | Keys.D2:
+                case Keys.Alt | Keys.D2:
                     if (tabFiles.TabPages.Count >= 2) {
                         tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[1];
                     }
+                    this._suppressMenuKey = true;
                     e.Handled = true; e.SuppressKeyPress = true; break;
 
-                case Keys.Control | Keys.D3:
+                case Keys.Alt | Keys.D3:
                     if (tabFiles.TabPages.Count >= 3) {
                         tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[2];
                     }
+                    this._suppressMenuKey = true;
                     e.Handled = true; e.SuppressKeyPress = true; break;
 
-                case Keys.Control | Keys.D4:
+                case Keys.Alt | Keys.D4:
                     if (tabFiles.TabPages.Count >= 4) {
                         tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[3];
                     }
+                    this._suppressMenuKey = true;
                     e.Handled = true; e.SuppressKeyPress = true; break;
 
-                case Keys.Control | Keys.D5:
+                case Keys.Alt | Keys.D5:
                     if (tabFiles.TabPages.Count >= 5) {
                         tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[4];
                     }
+                    this._suppressMenuKey = true;
                     e.Handled = true; e.SuppressKeyPress = true; break;
 
-                case Keys.Control | Keys.D6:
+                case Keys.Alt | Keys.D6:
                     if (tabFiles.TabPages.Count >= 6) {
                         tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[5];
                     }
+                    this._suppressMenuKey = true;
                     e.Handled = true; e.SuppressKeyPress = true; break;
 
-                case Keys.Control | Keys.D7:
+                case Keys.Alt | Keys.D7:
                     if (tabFiles.TabPages.Count >= 7) {
                         tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[6];
                     }
-                    e.Handled = true;
-                    e.SuppressKeyPress = true;
-                    break;
+                    this._suppressMenuKey = true;
+                    e.Handled = true; e.SuppressKeyPress = true; break;
 
-                case Keys.Control | Keys.D8:
+                case Keys.Alt | Keys.D8:
                     if (tabFiles.TabPages.Count >= 8) {
                         tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[7];
                     }
+                    this._suppressMenuKey = true;
                     e.Handled = true; e.SuppressKeyPress = true; break;
 
-                case Keys.Control | Keys.D9:
+                case Keys.Alt | Keys.D9:
                     if (tabFiles.TabPages.Count >= 9) {
                         tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[8];
                     }
+                    this._suppressMenuKey = true;
                     e.Handled = true; e.SuppressKeyPress = true; break;
 
-                case Keys.Control | Keys.D0:
+                case Keys.Alt | Keys.D0:
                     if (tabFiles.TabPages.Count >= 10) {
                         tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[9];
                     }
+                    this._suppressMenuKey = true;
                     e.Handled = true; e.SuppressKeyPress = true; break;
 
                 case Keys.Escape:
@@ -262,7 +270,6 @@ namespace QText {
                     e.Handled = true; e.SuppressKeyPress = true; break;
 
                 case Keys.Alt | Keys.Left:
-                case Keys.Control | Keys.PageDown:
                     if ((tabFiles.TabPages.Count >= 1) && (tabFiles.SelectedTab == null)) {
                         tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[0];
                     }
@@ -275,7 +282,6 @@ namespace QText {
                     e.Handled = true; e.SuppressKeyPress = true; break;
 
                 case Keys.Alt | Keys.Right:
-                case Keys.Control | Keys.PageUp:
                     if ((tabFiles.TabPages.Count >= 1) && (tabFiles.SelectedTab == null)) {
                         tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[0];
                     }
@@ -323,6 +329,10 @@ namespace QText {
                     e.SuppressKeyPress = true;
                     break;
 
+                case Keys.Alt | (Keys)93:
+                    tabFiles.ContextMenuStrip.Show(tabFiles, tabFiles.Width / 2, tabFiles.Height / 2);
+                    break;
+
                 case Keys.Control | Keys.B:
                     e.Handled = true;
                     e.SuppressKeyPress = true;
@@ -336,12 +346,18 @@ namespace QText {
 
         private void Form_MouseDown(object sender, MouseEventArgs e) {
             if (e.Button == System.Windows.Forms.MouseButtons.Right) {
-                Rectangle rect = tabFiles.ClientRectangle;
-                if (tabFiles.TabPages.Count > 0) { rect = tabFiles.GetTabRect(tabFiles.TabCount - 1); }
-                rect = new Rectangle(tabFiles.Left + rect.Left, tabFiles.Top + rect.Top, rect.Width, rect.Height);
-                if ((e.Y >= rect.Top) && (e.Y <= rect.Bottom) && (e.X >= rect.Right)) {
-                    tabFiles.SelectedTab = null;
-                    mnxTab.Show(tabFiles, e.X - tabFiles.Left, e.Y - tabFiles.Top);
+                if (tabFiles.TabPages.Count > 0) {
+                    var rect = tabFiles.GetTabRect(tabFiles.TabCount - 1);
+                    rect.Offset(tabFiles.Left, tabFiles.Top);
+                    if ((e.Y >= rect.Top) && (e.Y <= rect.Bottom) && (e.X >= rect.Right)) {
+                        tabFiles.SelectedTab = null;
+                        tabFiles.ContextMenuStrip.Show(tabFiles, e.X - tabFiles.Left, e.Y - tabFiles.Top);
+                    }
+                } else {
+                    Rectangle rect = tabFiles.ClientRectangle;
+                    if ((e.Y >= rect.Top) && (e.Y <= rect.Bottom)) {
+                        tabFiles.ContextMenuStrip.Show(tabFiles, e.X - tabFiles.Left, e.Y - tabFiles.Top);
+                    }
                 }
             }
         }
@@ -381,13 +397,11 @@ namespace QText {
         private void tabFiles_MouseDown(object sender, MouseEventArgs e) {
             if (e.Button == System.Windows.Forms.MouseButtons.Right) {
                 for (int i = 0; i <= tabFiles.TabPages.Count - 1; i++) {
-                    if ((tabFiles.GetTabRect(i).Contains(e.X, e.Y))) {
+                    if (tabFiles.GetTabRect(i).Contains(e.X, e.Y)) {
                         tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[i];
-                        mnxTab.Show(tabFiles, e.X, e.Y);
-                        return;
+                        break;
                     }
                 }
-
             }
         }
 
@@ -775,7 +789,10 @@ namespace QText {
             mnxTabMoveTo.Enabled = isTabSelected;
             mnxTabPrintPreview.Enabled = isTabSelected;
             mnxTabPrint.Enabled = isTabSelected;
-            mnxTabOpenContainingFolder.Enabled = isTabSelected;
+        }
+
+        private void mnxTab_Closed(object sender, ToolStripDropDownClosedEventArgs e) {
+            mnxTab.Tag = null;
         }
 
 
@@ -853,6 +870,9 @@ namespace QText {
             if (tabFiles.SelectedTab != null) {
                 string file = tabFiles.SelectedTab.CurrentFile.FullName;
                 var exe = new ProcessStartInfo("explorer.exe", "/select,\"" + file + "\"");
+                Process.Start(exe);
+            } else {
+                var exe = new ProcessStartInfo("explorer.exe", "\"" + tabFiles.CurrentDirectory + "\"");
                 Process.Start(exe);
             }
         }

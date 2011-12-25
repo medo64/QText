@@ -84,12 +84,8 @@ namespace QText {
 
 
         public override ContextMenuStrip ContextMenuStrip {
-            get {
-                return this.TextBox.ContextMenuStrip;
-            }
-            set {
-                this.TextBox.ContextMenuStrip = value;
-            }
+            get { return this.TextBox.ContextMenuStrip; }
+            set { this.TextBox.ContextMenuStrip = value; }
         }
 
 
@@ -259,7 +255,7 @@ namespace QText {
             } else {
                 File.Move(oldInfo.FullName, newInfo.FullName);
                 this.CurrentFile = newInfo;
-                UpdateText(); 
+                UpdateText();
             }
         }
 

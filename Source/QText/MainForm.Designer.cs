@@ -710,7 +710,8 @@
             this.ToolStripMenuItem14,
             this.mnxTabOpenContainingFolder});
             this.mnxTab.Name = "mnxTab";
-            this.mnxTab.Size = new System.Drawing.Size(233, 292);
+            this.mnxTab.Size = new System.Drawing.Size(233, 314);
+            this.mnxTab.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.mnxTab_Closed);
             this.mnxTab.Opening += new System.ComponentModel.CancelEventHandler(this.mnxTab_Opening);
             // 
             // mnxTabNew
@@ -841,14 +842,15 @@
             // 
             // tabFiles
             // 
+            this.tabFiles.ContextMenuStrip = this.mnxTab;
             this.tabFiles.Cursor = System.Windows.Forms.Cursors.Default;
             this.tabFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabFiles.FileContextMenuStrip = this.mnxText;
             this.tabFiles.Location = new System.Drawing.Point(0, 27);
             this.tabFiles.Margin = new System.Windows.Forms.Padding(0);
             this.tabFiles.Name = "tabFiles";
             this.tabFiles.SelectedIndex = 0;
             this.tabFiles.Size = new System.Drawing.Size(582, 288);
+            this.tabFiles.TabContextMenuStrip = this.mnxText;
             this.tabFiles.TabIndex = 0;
             this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
             this.tabFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabFiles_MouseDown);
