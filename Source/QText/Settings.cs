@@ -10,15 +10,7 @@ namespace QText {
 
         public static Keys ActivationHotkey {
             get { return (Keys)Medo.Configuration.Settings.Read("ActivationHotkey", Convert.ToInt32(Keys.Control | Keys.Shift | Keys.Q)); }
-            set {
-                Medo.Configuration.Settings.Write("ActivationHotkey", (int)value);
-                if (App.Hotkey.IsRegistered) {
-                    App.Hotkey.Unregister();
-                }
-                if (Settings.ActivationHotkey != Keys.None) {
-                    App.Hotkey.Register(Settings.ActivationHotkey);
-                }
-            }
+            set { Medo.Configuration.Settings.Write("ActivationHotkey", (int)value); }
         }
 
         public static bool CarbonCopyCreateFolder {
