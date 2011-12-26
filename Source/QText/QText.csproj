@@ -97,6 +97,7 @@
     <Compile Include="FolderEditForm.Designer.cs">
       <DependentUpon>FolderEditForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="FolderOpenDialog.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Legacy.cs" />
     <Compile Include="MainForm.cs">

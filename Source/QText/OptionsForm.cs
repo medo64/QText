@@ -140,19 +140,9 @@ namespace QText {
 
         private void btnChangeLocation_Click(object sender, EventArgs e) {
             var oldPath = Settings.FilesLocation;
-            using (var fd = new SaveFileDialog()) {
-                fd.CheckFileExists = false;
-                fd.CheckPathExists = true;
-                fd.CreatePrompt = false;
-                fd.Filter = "|" + Guid.Empty.ToString();
-                fd.FileName = "any";
-                fd.InitialDirectory = oldPath;
-                fd.OverwritePrompt = false;
-                fd.Title = "Please select folder for storage of files";
-                fd.ValidateNames = false;
-                if (fd.ShowDialog(this) == System.Windows.Forms.DialogResult.OK) {
-                    var selectedFile = new System.IO.FileInfo(fd.FileName);
-                    var newPath = selectedFile.DirectoryName;
+            using (var frm = new FolderOpenDialog() { InitialFolder = Settings.FilesLocation }) {
+                if (frm.ShowDialog(this) == DialogResult.OK) {
+                    var newPath = frm.InitialFolder;
                     if (string.Equals(newPath, Settings.CarbonCopyFolder, StringComparison.OrdinalIgnoreCase)) {
                         Medo.MessageBox.ShowWarning(this, "This folder is currenly used for carbon copy. Move will be aborted.");
                         return;
@@ -252,20 +242,17 @@ namespace QText {
         }
 
         private void btnCarbonCopyFolderSelect_Click(object sender, EventArgs e) {
-            using (var fd = new FolderBrowserDialog()) {
-                fd.RootFolder = Environment.SpecialFolder.Desktop;
-                fd.Description = "Please select folder for carbon copy. It cannot be same folder that is used for main storage.";
-                fd.ShowNewFolderButton = true;
+            using (var frm = new FolderOpenDialog()) {
                 if (string.IsNullOrEmpty(Settings.CarbonCopyFolder)) {
-                    fd.SelectedPath = Settings.FilesLocation;
+                    frm.InitialFolder = Settings.FilesLocation;
                 } else {
-                    fd.SelectedPath = Settings.CarbonCopyFolder;
+                    frm.InitialFolder = Settings.CarbonCopyFolder;
                 }
-                if (fd.ShowDialog(this) == System.Windows.Forms.DialogResult.OK) {
-                    if ((string.Compare(fd.SelectedPath, Settings.FilesLocation, true) == 0)) {
+                if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK) {
+                    if (frm.InitialFolder.StartsWith(Settings.FilesLocation, StringComparison.OrdinalIgnoreCase)) {
                         Medo.MessageBox.ShowWarning(this, "Carbon copy folder cannot be same as one used for main program storage.");
                     } else {
-                        txtCarbonCopyFolder.Text = fd.SelectedPath;
+                        txtCarbonCopyFolder.Text = frm.InitialFolder;
                     }
                 }
             }
