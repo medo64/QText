@@ -1,5 +1,5 @@
                                               Josip Medved
-                                              http://www.jmedved.com
+                                              http://www.jmedved.com/
 
 
                                  QText
@@ -51,7 +51,7 @@ Shortcut keys
 
 Version history
 
-   Version 2.50 (2011-12)
+   Version 2.50 (2011-12-28)
 
       o  Greatly improved text manipulation (especially multiline tabs).
       o  Some interface tweaks.
