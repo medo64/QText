@@ -77,6 +77,7 @@ namespace QText {
                             var origLen = this.SelectionLength;
                             var startIndex = this.GetFirstCharIndexFromLine(startLine);
                             var endIndex = this.GetFirstCharIndexFromLine(endLine + 1) - 1;
+                            if (endIndex < 0) { endIndex = this.Text.Length - 1; }
                             if ((this.Text[endIndex] == '\r') || (this.Text[endIndex] == '\n')) { endIndex -= 1; } //if this is CRFL
                             var text = this.Text.Substring(startIndex, endIndex - startIndex);
                             var endOfLine = "\n"; if (text.Contains("\r\n")) { endOfLine = "\r\n"; } //to see whether LF or CRLF is used.
@@ -114,6 +115,7 @@ namespace QText {
                         } else {
                             var startIndex = this.GetFirstCharIndexFromLine(startLine);
                             var endIndex = this.GetFirstCharIndexFromLine(endLine + 1) - 1;
+                            if (endIndex < 0) { endIndex = this.Text.Length - 1; }
                             if ((this.Text[endIndex] == '\r') || (this.Text[endIndex] == '\n')) { endIndex -= 1; } //if this is CRFL
                             var text = this.Text.Substring(startIndex, endIndex - startIndex);
                             var endOfLine = "\n"; if (text.Contains("\r\n")) { endOfLine = "\r\n"; } //to see whether LF or CRLF is used.
