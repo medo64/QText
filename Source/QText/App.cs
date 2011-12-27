@@ -25,9 +25,11 @@ namespace QText {
             Application.SetCompatibleTextRenderingDefault(false);
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(Medo.Configuration.Settings.Read("CultureName", "en-US"));
 
-            Legacy.Settings.Upgrade();
-            Legacy.OrderedFiles.Upgrade();
-            Legacy.HiddenFiles.Upgrade();
+            if (Medo.Application.Args.Current.ContainsKey("setup")) {
+                Legacy.Settings.Upgrade();
+                Legacy.OrderedFiles.Upgrade();
+                Legacy.HiddenFiles.Upgrade();
+            }
 
             Medo.Application.UnhandledCatch.ThreadException += new System.EventHandler<ThreadExceptionEventArgs>(UnhandledException);
             Medo.Application.UnhandledCatch.Attach();

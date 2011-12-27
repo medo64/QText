@@ -35,8 +35,8 @@ Root: HKCU;  Subkey: "Software\Josip Medved";                                   
 Root: HKCU;  Subkey: "Software\Microsoft\Windows\CurrentVersion\Run";  ValueType: string;  ValueName: "QText";      ValueData: """{app}\QText.exe"" /hide";  Flags: uninsdeletevalue;
 
 [Run]
-Description: "View ReadMe.txt";         Filename: "{app}\ReadMe.txt";                        Flags: postinstall runasoriginaluser shellexec nowait skipifsilent unchecked
-Description: "Launch application now";  Filename: "{app}\QText.exe";   Parameters: "/hide";  Flags: postinstall nowait skipifsilent runasoriginaluser shellexec
+Description: "View ReadMe.txt";         Filename: "{app}\ReadMe.txt";                         Flags: postinstall runasoriginaluser shellexec nowait skipifsilent unchecked
+Description: "Launch application now";  Filename: "{app}\QText.exe";   Parameters: "/setup";  Flags: postinstall nowait skipifsilent runasoriginaluser shellexec
 
 [Code]
 function InitializeSetup(): Boolean;
