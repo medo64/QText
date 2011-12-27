@@ -241,6 +241,16 @@ namespace QText {
             this.Refresh();
         }
 
+        public void SelectLineBlock() {
+            var startLine = this.GetLineFromCharIndex(this.SelectionStart);
+            var endLine = this.GetLineFromCharIndex(this.SelectionStart + this.SelectionLength - 1);
+            var startIndex = this.GetFirstCharIndexFromLine(startLine);
+            var endIndex = this.GetFirstCharIndexFromLine(endLine + 1) - 1;
+            if (endIndex < 0) { endIndex = this.Text.Length; }
+            this.SelectionStart = startIndex;
+            this.SelectionLength = endIndex - startIndex + 1;
+        }
+
 
         private class NativeMethods {
 

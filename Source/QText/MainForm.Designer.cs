@@ -79,14 +79,14 @@
             this.mnxTextUnderline = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextStrikeout = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextRtfSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.mnxTextFormat = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnxTextFormatSortAsc = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnxTextFormatSortDesc = new System.Windows.Forms.ToolStripMenuItem();
-            this.ToolStripMenuItem9 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnxTextFormatConvertUpper = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnxTextFormatConvertLower = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnxTextFormatConvertTitleCase = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnxTextFormatConvertDrGrammar = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTextSelection = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTextSelectionUpper = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTextSelectionLower = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTextSelectionTitle = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTextSelectionDrGrammar = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTextLines = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTextLinesSortAsc = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTextLinesSortDesc = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTab = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnxTabNew = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTab0 = new System.Windows.Forms.ToolStripSeparator();
@@ -466,9 +466,10 @@
             this.mnxTextUnderline,
             this.mnxTextStrikeout,
             this.mnxTextRtfSeparator,
-            this.mnxTextFormat});
+            this.mnxTextSelection,
+            this.mnxTextLines});
             this.mnxText.Name = "mnxTextBox";
-            this.mnxText.Size = new System.Drawing.Size(323, 394);
+            this.mnxText.Size = new System.Drawing.Size(323, 440);
             this.mnxText.Opening += new System.ComponentModel.CancelEventHandler(this.mnxText_Opening);
             // 
             // mnxTextUndo
@@ -622,7 +623,7 @@
             this.mnxTextStrikeout.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextStrikeout.Image")));
             this.mnxTextStrikeout.Name = "mnxTextStrikeout";
             this.mnxTextStrikeout.Size = new System.Drawing.Size(322, 24);
-            this.mnxTextStrikeout.Text = "&Strikeout";
+            this.mnxTextStrikeout.Text = "S&trikeout";
             this.mnxTextStrikeout.Click += new System.EventHandler(this.mnuStrikeout_Click);
             // 
             // mnxTextRtfSeparator
@@ -630,66 +631,67 @@
             this.mnxTextRtfSeparator.Name = "mnxTextRtfSeparator";
             this.mnxTextRtfSeparator.Size = new System.Drawing.Size(319, 6);
             // 
-            // mnxTextFormat
+            // mnxTextSelection
             // 
-            this.mnxTextFormat.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnxTextFormatSortAsc,
-            this.mnxTextFormatSortDesc,
-            this.ToolStripMenuItem9,
-            this.mnxTextFormatConvertUpper,
-            this.mnxTextFormatConvertLower,
-            this.mnxTextFormatConvertTitleCase,
-            this.mnxTextFormatConvertDrGrammar});
-            this.mnxTextFormat.Name = "mnxTextFormat";
-            this.mnxTextFormat.Size = new System.Drawing.Size(322, 24);
-            this.mnxTextFormat.Text = "&Format";
+            this.mnxTextSelection.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnxTextSelectionUpper,
+            this.mnxTextSelectionLower,
+            this.mnxTextSelectionTitle,
+            this.mnxTextSelectionDrGrammar});
+            this.mnxTextSelection.Name = "mnxTextSelection";
+            this.mnxTextSelection.Size = new System.Drawing.Size(322, 24);
+            this.mnxTextSelection.Text = "&Selection";
             // 
-            // mnxTextFormatSortAsc
+            // mnxTextSelectionUpper
             // 
-            this.mnxTextFormatSortAsc.Name = "mnxTextFormatSortAsc";
-            this.mnxTextFormatSortAsc.Size = new System.Drawing.Size(344, 24);
-            this.mnxTextFormatSortAsc.Text = "Sort &ascending";
-            this.mnxTextFormatSortAsc.Click += new System.EventHandler(this.mnxTextSortAsc_Click);
+            this.mnxTextSelectionUpper.Name = "mnxTextSelectionUpper";
+            this.mnxTextSelectionUpper.Size = new System.Drawing.Size(344, 24);
+            this.mnxTextSelectionUpper.Text = "Convert to &upper case";
+            this.mnxTextSelectionUpper.Click += new System.EventHandler(this.mnxTextSelectionUpper_Click);
             // 
-            // mnxTextFormatSortDesc
+            // mnxTextSelectionLower
             // 
-            this.mnxTextFormatSortDesc.Name = "mnxTextFormatSortDesc";
-            this.mnxTextFormatSortDesc.Size = new System.Drawing.Size(344, 24);
-            this.mnxTextFormatSortDesc.Text = "Sort &descending";
-            this.mnxTextFormatSortDesc.Click += new System.EventHandler(this.mnxTextSortDesc_Click);
+            this.mnxTextSelectionLower.Name = "mnxTextSelectionLower";
+            this.mnxTextSelectionLower.Size = new System.Drawing.Size(344, 24);
+            this.mnxTextSelectionLower.Text = "Convert to &lower case";
+            this.mnxTextSelectionLower.Click += new System.EventHandler(this.mnxTextSelectionLower_Click);
             // 
-            // ToolStripMenuItem9
+            // mnxTextSelectionTitle
             // 
-            this.ToolStripMenuItem9.Name = "ToolStripMenuItem9";
-            this.ToolStripMenuItem9.Size = new System.Drawing.Size(341, 6);
+            this.mnxTextSelectionTitle.Name = "mnxTextSelectionTitle";
+            this.mnxTextSelectionTitle.Size = new System.Drawing.Size(344, 24);
+            this.mnxTextSelectionTitle.Text = "Convert to &title case";
+            this.mnxTextSelectionTitle.Click += new System.EventHandler(this.mnxTextSelectionTitle_Click);
             // 
-            // mnxTextFormatConvertUpper
+            // mnxTextSelectionDrGrammar
             // 
-            this.mnxTextFormatConvertUpper.Name = "mnxTextFormatConvertUpper";
-            this.mnxTextFormatConvertUpper.Size = new System.Drawing.Size(344, 24);
-            this.mnxTextFormatConvertUpper.Text = "Convert to &upper case";
-            this.mnxTextFormatConvertUpper.Click += new System.EventHandler(this.mnxTextConvertUpper_Click);
+            this.mnxTextSelectionDrGrammar.Name = "mnxTextSelectionDrGrammar";
+            this.mnxTextSelectionDrGrammar.Size = new System.Drawing.Size(344, 24);
+            this.mnxTextSelectionDrGrammar.Text = "Convert to title case (Dr. &Grammar rules)";
+            this.mnxTextSelectionDrGrammar.Click += new System.EventHandler(this.mnxTextSelectionDrGrammar_Click);
             // 
-            // mnxTextFormatConvertLower
+            // mnxTextLines
             // 
-            this.mnxTextFormatConvertLower.Name = "mnxTextFormatConvertLower";
-            this.mnxTextFormatConvertLower.Size = new System.Drawing.Size(344, 24);
-            this.mnxTextFormatConvertLower.Text = "Convert to &lower case";
-            this.mnxTextFormatConvertLower.Click += new System.EventHandler(this.mnxTextConvertLower_Click);
+            this.mnxTextLines.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnxTextLinesSortAsc,
+            this.mnxTextLinesSortDesc});
+            this.mnxTextLines.Name = "mnxTextLines";
+            this.mnxTextLines.Size = new System.Drawing.Size(322, 24);
+            this.mnxTextLines.Text = "&Lines";
             // 
-            // mnxTextFormatConvertTitleCase
+            // mnxTextLinesSortAsc
             // 
-            this.mnxTextFormatConvertTitleCase.Name = "mnxTextFormatConvertTitleCase";
-            this.mnxTextFormatConvertTitleCase.Size = new System.Drawing.Size(344, 24);
-            this.mnxTextFormatConvertTitleCase.Text = "Convert to &title case";
-            this.mnxTextFormatConvertTitleCase.Click += new System.EventHandler(this.mnxTextConvertTitle_Click);
+            this.mnxTextLinesSortAsc.Name = "mnxTextLinesSortAsc";
+            this.mnxTextLinesSortAsc.Size = new System.Drawing.Size(185, 24);
+            this.mnxTextLinesSortAsc.Text = "Sort &ascending";
+            this.mnxTextLinesSortAsc.Click += new System.EventHandler(this.mnxTextLinesSortAsc_Click);
             // 
-            // mnxTextFormatConvertDrGrammar
+            // mnxTextLinesSortDesc
             // 
-            this.mnxTextFormatConvertDrGrammar.Name = "mnxTextFormatConvertDrGrammar";
-            this.mnxTextFormatConvertDrGrammar.Size = new System.Drawing.Size(344, 24);
-            this.mnxTextFormatConvertDrGrammar.Text = "Convert to title case (Dr. &Grammar rules)";
-            this.mnxTextFormatConvertDrGrammar.Click += new System.EventHandler(this.mnxTextConvertDrGrammar_Click);
+            this.mnxTextLinesSortDesc.Name = "mnxTextLinesSortDesc";
+            this.mnxTextLinesSortDesc.Size = new System.Drawing.Size(185, 24);
+            this.mnxTextLinesSortDesc.Text = "Sort &descending";
+            this.mnxTextLinesSortDesc.Click += new System.EventHandler(this.mnxTextLinesSortDesc_Click);
             // 
             // mnxTab
             // 
@@ -936,14 +938,11 @@
         internal System.Windows.Forms.ToolStripMenuItem mnxTextUnderline;
         internal System.Windows.Forms.ToolStripMenuItem mnxTextStrikeout;
         internal System.Windows.Forms.ToolStripSeparator mnxTextRtfSeparator;
-        internal System.Windows.Forms.ToolStripMenuItem mnxTextFormat;
-        internal System.Windows.Forms.ToolStripMenuItem mnxTextFormatSortAsc;
-        internal System.Windows.Forms.ToolStripMenuItem mnxTextFormatSortDesc;
-        internal System.Windows.Forms.ToolStripSeparator ToolStripMenuItem9;
-        internal System.Windows.Forms.ToolStripMenuItem mnxTextFormatConvertUpper;
-        internal System.Windows.Forms.ToolStripMenuItem mnxTextFormatConvertLower;
-        internal System.Windows.Forms.ToolStripMenuItem mnxTextFormatConvertTitleCase;
-        internal System.Windows.Forms.ToolStripMenuItem mnxTextFormatConvertDrGrammar;
+        internal System.Windows.Forms.ToolStripMenuItem mnxTextSelection;
+        internal System.Windows.Forms.ToolStripMenuItem mnxTextSelectionUpper;
+        internal System.Windows.Forms.ToolStripMenuItem mnxTextSelectionLower;
+        internal System.Windows.Forms.ToolStripMenuItem mnxTextSelectionTitle;
+        internal System.Windows.Forms.ToolStripMenuItem mnxTextSelectionDrGrammar;
         internal System.Windows.Forms.ContextMenuStrip mnxTab;
         internal System.Windows.Forms.ToolStripMenuItem mnxTabNew;
         internal System.Windows.Forms.ToolStripSeparator mnxTab0;
@@ -970,5 +969,8 @@
         private System.Windows.Forms.ToolStripDropDownButton mnuFolder;
         private System.Windows.Forms.ToolStripMenuItem mnxTabMoveTo;
         private System.Windows.Forms.ToolStripMenuItem mnxTabMoveToDummy;
+        private System.Windows.Forms.ToolStripMenuItem mnxTextLines;
+        private System.Windows.Forms.ToolStripMenuItem mnxTextLinesSortAsc;
+        private System.Windows.Forms.ToolStripMenuItem mnxTextLinesSortDesc;
     }
 }

@@ -902,6 +902,7 @@ namespace QText {
             bool isTabRichText = isTabSelected && tabFiles.SelectedTab.IsRichTextFormat;
             bool isTabPlainText = isTabSelected && (tabFiles.SelectedTab.IsRichTextFormat == false);
             bool isTextSelected = isTabSelected && (tabFiles.SelectedTab.TextBox.SelectedText.Length > 0);
+            bool hasText = isTabSelected && (tabFiles.SelectedTab.TextBox.Text.Length > 0);
 
             mnxTextUndo.Enabled = isTabSelected && tabFiles.SelectedTab.CanUndo;
             mnxTextRedo.Enabled = isTabSelected && tabFiles.SelectedTab.CanRedo;
@@ -927,13 +928,15 @@ namespace QText {
             mnxTextStrikeout.Visible = isTabRichText;
             mnxTextRtfSeparator.Visible = isTabRichText;
 
-            mnxTextFormatSortAsc.Enabled = isTextSelected;
-            mnxTextFormatSortDesc.Enabled = isTextSelected;
-            mnxTextFormatConvertLower.Enabled = isTextSelected;
-            mnxTextFormatConvertUpper.Enabled = isTextSelected;
-            mnxTextFormatConvertTitleCase.Enabled = isTextSelected;
-            mnxTextFormatConvertDrGrammar.Enabled = isTextSelected;
-            mnxTextFormat.Enabled = mnxTextFormatSortAsc.Enabled || mnxTextFormatSortDesc.Enabled || mnxTextFormatConvertLower.Enabled || mnxTextFormatConvertUpper.Enabled || mnxTextFormatConvertTitleCase.Enabled || mnxTextFormatConvertDrGrammar.Enabled;
+            mnxTextSelectionLower.Enabled = isTextSelected;
+            mnxTextSelectionUpper.Enabled = isTextSelected;
+            mnxTextSelectionTitle.Enabled = isTextSelected;
+            mnxTextSelectionDrGrammar.Enabled = isTextSelected;
+            mnxTextSelection.Enabled = mnxTextSelectionLower.Enabled || mnxTextSelectionUpper.Enabled || mnxTextSelectionTitle.Enabled || mnxTextSelectionDrGrammar.Enabled;
+
+            mnxTextLinesSortAsc.Enabled = hasText;
+            mnxTextLinesSortDesc.Enabled = hasText;
+            mnxTextLines.Enabled = mnxTextLinesSortAsc.Enabled || mnxTextLinesSortDesc.Enabled;
         }
 
         private void mnxTextCutPlain_Click(object sender, EventArgs e) {
@@ -973,38 +976,7 @@ namespace QText {
             }
         }
 
-        private void mnxTextSortAsc_Click(object sender, EventArgs e) {
-            if (tabFiles.SelectedTab != null) {
-                TextBoxBase txt = ((TabFile)tabFiles.SelectedTab).TextBox;
-                int ss = txt.SelectionStart;
-                int sl = txt.SelectionLength;
-
-                string[] selSplit = txt.SelectedText.Split(new string[] { new string(new char[] { System.Convert.ToChar(13), System.Convert.ToChar(10) }), System.Convert.ToChar(13).ToString(), System.Convert.ToChar(10).ToString() }, StringSplitOptions.None);
-                Array.Sort(selSplit, new SortAZ());
-                txt.SelectedText = string.Join(Environment.NewLine, selSplit);
-
-                txt.SelectionStart = ss;
-                txt.SelectionLength = sl;
-            }
-
-        }
-
-        private void mnxTextSortDesc_Click(object sender, EventArgs e) {
-            if (tabFiles.SelectedTab != null) {
-                TextBoxBase txt = tabFiles.SelectedTab.TextBox;
-                int ss = txt.SelectionStart;
-                int sl = txt.SelectionLength;
-
-                string[] selSplit = txt.SelectedText.Split(new string[] { new string(new char[] { System.Convert.ToChar(13), System.Convert.ToChar(10) }), System.Convert.ToChar(13).ToString(), System.Convert.ToChar(10).ToString() }, StringSplitOptions.None);
-                Array.Sort(selSplit, new SortZA());
-                txt.SelectedText = string.Join(Environment.NewLine, selSplit);
-
-                txt.SelectionStart = ss;
-                txt.SelectionLength = sl;
-            }
-        }
-
-        private void mnxTextConvertLower_Click(object sender, EventArgs e) {
+        private void mnxTextSelectionLower_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 TextBoxBase txt = tabFiles.SelectedTab.TextBox;
                 int ss = txt.SelectionStart;
@@ -1017,7 +989,7 @@ namespace QText {
             }
         }
 
-        private void mnxTextConvertUpper_Click(object sender, EventArgs e) {
+        private void mnxTextSelectionUpper_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 TextBoxBase txt = tabFiles.SelectedTab.TextBox;
                 int ss = txt.SelectionStart;
@@ -1030,7 +1002,7 @@ namespace QText {
             }
         }
 
-        private void mnxTextConvertTitle_Click(object sender, EventArgs e) {
+        private void mnxTextSelectionTitle_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 TextBoxBase txt = tabFiles.SelectedTab.TextBox;
                 int ss = txt.SelectionStart;
@@ -1043,7 +1015,7 @@ namespace QText {
             }
         }
 
-        private void mnxTextConvertDrGrammar_Click(object sender, EventArgs e) {
+        private void mnxTextSelectionDrGrammar_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 TextBoxBase txt = tabFiles.SelectedTab.TextBox;
                 int ss = txt.SelectionStart;
@@ -1077,6 +1049,56 @@ namespace QText {
                 }
 
                 txt.SelectedText = sb.ToString();
+
+                txt.SelectionStart = ss;
+                txt.SelectionLength = sl;
+            }
+        }
+
+        private void mnxTextLinesSortAsc_Click(object sender, EventArgs e) {
+            if (tabFiles.SelectedTab != null) {
+                var txt = tabFiles.SelectedTab.TextBox;
+                txt.SelectLineBlock();
+
+                int ss = txt.SelectionStart;
+                int sl = txt.SelectionLength;
+
+                var text = txt.SelectedText;
+                bool addLf = false;
+                if (text.EndsWith("\n")) {
+                    addLf = true;
+                    text = text.Remove(text.Length - 1);
+                }
+                string[] selSplit = text.Split(new string[] { "\n" }, StringSplitOptions.None);
+                Array.Sort(selSplit, new SortAZ());
+                text = string.Join("\n", selSplit);
+                if (addLf) { text += "\n"; }
+                txt.SelectedText = text;
+
+                txt.SelectionStart = ss;
+                txt.SelectionLength = sl;
+            }
+        }
+
+        private void mnxTextLinesSortDesc_Click(object sender, EventArgs e) {
+            if (tabFiles.SelectedTab != null) {
+                var txt = tabFiles.SelectedTab.TextBox;
+                txt.SelectLineBlock();
+
+                int ss = txt.SelectionStart;
+                int sl = txt.SelectionLength;
+
+                var text = txt.SelectedText;
+                bool addLf = false;
+                if (text.EndsWith("\n")) {
+                    addLf = true;
+                    text = text.Remove(text.Length - 1);
+                }
+                string[] selSplit = text.Split(new string[] { "\n" }, StringSplitOptions.None);
+                Array.Sort(selSplit, new SortZA());
+                text = string.Join("\n", selSplit);
+                if (addLf) { text += "\n"; }
+                txt.SelectedText = text;
 
                 txt.SelectionStart = ss;
                 txt.SelectionLength = sl;
