@@ -25,7 +25,7 @@ namespace QText {
         [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
         protected override bool ProcessCmdKey(ref System.Windows.Forms.Message msg, System.Windows.Forms.Keys keyData) {
             switch (keyData) {
-                case System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Back: { //deletes word before cursor
+                case Keys.Control | Keys.Back: { //deletes word before cursor
                         if (this.SelectionStart <= 0) { break; }
                         var endIndex = this.SelectionStart + this.SelectionLength - 1;
                         var startIndex = this.SelectionStart - 1;
@@ -44,7 +44,7 @@ namespace QText {
                         this.SelectedText = "";
                     } return true;
 
-                case System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Delete: { //delete word
+                case Keys.Control | Keys.Delete: { //delete word
                         if (this.SelectionStart >= this.TextLength - 1) { break; }
                         var startIndex = this.SelectionStart;
                         var endIndex = this.SelectionStart;
@@ -63,11 +63,11 @@ namespace QText {
                         this.SelectedText = "";
                     } return true;
 
-                case System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A: {
+                case Keys.Control | Keys.A: {
                         this.SelectAll();
                     } return true;
 
-                case System.Windows.Forms.Keys.Tab: {
+                case Keys.Tab: {
                         var startLine = this.GetLineFromCharIndex(this.SelectionStart);
                         var endLine = this.GetLineFromCharIndex(this.SelectionStart + this.SelectionLength - 1);
                         if (startLine >= endLine) { //single line tab
@@ -95,7 +95,7 @@ namespace QText {
                         }
                     } return true;
 
-                case System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.Tab: {
+                case Keys.Shift | Keys.Tab: {
                         var startLine = this.GetLineFromCharIndex(this.SelectionStart);
                         var endLine = this.GetLineFromCharIndex(this.SelectionStart + this.SelectionLength - 1);
                         var origStart = this.SelectionStart;

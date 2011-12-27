@@ -282,37 +282,36 @@ namespace QText {
             switch (e.KeyData) {
 
                 case Keys.Control | Keys.X:
-                case Keys.Shift | Keys.Delete:
                     this.Cut(QText.Settings.ForceTextCopyPaste);
                     e.IsInputKey = false;
                     break;
 
-                case Keys.Control | Keys.Alt | Keys.X:
-                    this.Cut(true);
-                    e.IsInputKey = false;
-                    break;
-
                 case Keys.Control | Keys.C:
-                case Keys.Control | Keys.Insert:
                     this.Copy(QText.Settings.ForceTextCopyPaste);
                     e.IsInputKey = false;
                     break;
 
-                case Keys.Control | Keys.Alt | Keys.C:
-                    this.Copy(true);
-                    e.IsInputKey = false;
-                    break;
-
                 case Keys.Control | Keys.V:
-                case Keys.Shift | Keys.Insert:
                     this.Paste(QText.Settings.ForceTextCopyPaste);
                     e.IsInputKey = false;
                     break;
 
-                case Keys.Control | Keys.Alt | Keys.V:
+
+                case Keys.Shift | Keys.Delete:
+                    this.Cut(true);
+                    e.IsInputKey = false;
+                    break;
+
+                case Keys.Control | Keys.Insert:
+                    this.Copy(true);
+                    e.IsInputKey = false;
+                    break;
+
+                case Keys.Shift | Keys.Insert:
                     this.Paste(true);
                     e.IsInputKey = false;
                     break;
+
 
                 case Keys.Control | Keys.Z:
                 case Keys.Alt | Keys.Back:

@@ -371,7 +371,6 @@
             this.mnuApp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuApp.Name = "mnuApp";
             this.mnuApp.Size = new System.Drawing.Size(29, 24);
-            this.mnuApp.Text = "QText";
             // 
             // mnuAppFeedback
             // 
@@ -469,7 +468,7 @@
             this.mnxTextSelection,
             this.mnxTextLines});
             this.mnxText.Name = "mnxTextBox";
-            this.mnxText.Size = new System.Drawing.Size(323, 440);
+            this.mnxText.Size = new System.Drawing.Size(310, 418);
             this.mnxText.Opening += new System.ComponentModel.CancelEventHandler(this.mnxText_Opening);
             // 
             // mnxTextUndo
@@ -477,8 +476,8 @@
             this.mnxTextUndo.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextUndo.Image")));
             this.mnxTextUndo.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextUndo.Name = "mnxTextUndo";
-            this.mnxTextUndo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.mnxTextUndo.Size = new System.Drawing.Size(322, 24);
+            this.mnxTextUndo.ShortcutKeyDisplayString = "Ctrl+Z";
+            this.mnxTextUndo.Size = new System.Drawing.Size(309, 24);
             this.mnxTextUndo.Text = "&Undo";
             this.mnxTextUndo.Click += new System.EventHandler(this.mnuUndo_Click);
             // 
@@ -487,23 +486,23 @@
             this.mnxTextRedo.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextRedo.Image")));
             this.mnxTextRedo.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextRedo.Name = "mnxTextRedo";
-            this.mnxTextRedo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-            this.mnxTextRedo.Size = new System.Drawing.Size(322, 24);
+            this.mnxTextRedo.ShortcutKeyDisplayString = "Ctrl+Y";
+            this.mnxTextRedo.Size = new System.Drawing.Size(309, 24);
             this.mnxTextRedo.Text = "&Redo";
             this.mnxTextRedo.Click += new System.EventHandler(this.mnuRedo_Click);
             // 
             // mnxTextBox0
             // 
             this.mnxTextBox0.Name = "mnxTextBox0";
-            this.mnxTextBox0.Size = new System.Drawing.Size(319, 6);
+            this.mnxTextBox0.Size = new System.Drawing.Size(306, 6);
             // 
             // mnxTextCut
             // 
             this.mnxTextCut.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextCut.Image")));
             this.mnxTextCut.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextCut.Name = "mnxTextCut";
-            this.mnxTextCut.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.mnxTextCut.Size = new System.Drawing.Size(322, 24);
+            this.mnxTextCut.ShortcutKeyDisplayString = "Ctrl+X";
+            this.mnxTextCut.Size = new System.Drawing.Size(309, 24);
             this.mnxTextCut.Text = "Cu&t";
             this.mnxTextCut.Click += new System.EventHandler(this.mnuCut_Click);
             // 
@@ -512,8 +511,8 @@
             this.mnxTextCopy.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextCopy.Image")));
             this.mnxTextCopy.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextCopy.Name = "mnxTextCopy";
-            this.mnxTextCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.mnxTextCopy.Size = new System.Drawing.Size(322, 24);
+            this.mnxTextCopy.ShortcutKeyDisplayString = "Ctrl+C";
+            this.mnxTextCopy.Size = new System.Drawing.Size(309, 24);
             this.mnxTextCopy.Text = "&Copy";
             this.mnxTextCopy.Click += new System.EventHandler(this.mnuCopy_Click);
             // 
@@ -522,23 +521,22 @@
             this.mnxTextPaste.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextPaste.Image")));
             this.mnxTextPaste.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextPaste.Name = "mnxTextPaste";
-            this.mnxTextPaste.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.mnxTextPaste.Size = new System.Drawing.Size(322, 24);
+            this.mnxTextPaste.ShortcutKeyDisplayString = "Ctrl+V";
+            this.mnxTextPaste.Size = new System.Drawing.Size(309, 24);
             this.mnxTextPaste.Text = "&Paste";
             this.mnxTextPaste.Click += new System.EventHandler(this.mnuPaste_Click);
             // 
             // mnxTextBoxCutCopyPasteAsTextSeparator
             // 
             this.mnxTextBoxCutCopyPasteAsTextSeparator.Name = "mnxTextBoxCutCopyPasteAsTextSeparator";
-            this.mnxTextBoxCutCopyPasteAsTextSeparator.Size = new System.Drawing.Size(319, 6);
+            this.mnxTextBoxCutCopyPasteAsTextSeparator.Size = new System.Drawing.Size(306, 6);
             // 
             // mnxTextCutPlain
             // 
             this.mnxTextCutPlain.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextCutPlain.Image")));
             this.mnxTextCutPlain.Name = "mnxTextCutPlain";
-            this.mnxTextCutPlain.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
-            | System.Windows.Forms.Keys.X)));
-            this.mnxTextCutPlain.Size = new System.Drawing.Size(322, 24);
+            this.mnxTextCutPlain.ShortcutKeyDisplayString = "Shift+Del";
+            this.mnxTextCutPlain.Size = new System.Drawing.Size(309, 24);
             this.mnxTextCutPlain.Text = "Cut without formatting";
             this.mnxTextCutPlain.Click += new System.EventHandler(this.mnxTextCutPlain_Click);
             // 
@@ -546,9 +544,8 @@
             // 
             this.mnxTextCopyPlain.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextCopyPlain.Image")));
             this.mnxTextCopyPlain.Name = "mnxTextCopyPlain";
-            this.mnxTextCopyPlain.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
-            | System.Windows.Forms.Keys.C)));
-            this.mnxTextCopyPlain.Size = new System.Drawing.Size(322, 24);
+            this.mnxTextCopyPlain.ShortcutKeyDisplayString = "Ctrl+Ins";
+            this.mnxTextCopyPlain.Size = new System.Drawing.Size(309, 24);
             this.mnxTextCopyPlain.Text = "Copy without formatting";
             this.mnxTextCopyPlain.Click += new System.EventHandler(this.mnxTextCopyPlain_Click);
             // 
@@ -556,36 +553,35 @@
             // 
             this.mnxTextPastePlain.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextPastePlain.Image")));
             this.mnxTextPastePlain.Name = "mnxTextPastePlain";
-            this.mnxTextPastePlain.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
-            | System.Windows.Forms.Keys.V)));
-            this.mnxTextPastePlain.Size = new System.Drawing.Size(322, 24);
+            this.mnxTextPastePlain.ShortcutKeyDisplayString = "Shift+Ins";
+            this.mnxTextPastePlain.Size = new System.Drawing.Size(309, 24);
             this.mnxTextPastePlain.Text = "Paste without formatting";
             this.mnxTextPastePlain.Click += new System.EventHandler(this.mnxTextPastePlain_Click);
             // 
             // ToolStripMenuItem16
             // 
             this.ToolStripMenuItem16.Name = "ToolStripMenuItem16";
-            this.ToolStripMenuItem16.Size = new System.Drawing.Size(319, 6);
+            this.ToolStripMenuItem16.Size = new System.Drawing.Size(306, 6);
             // 
             // mnxTextSelectAll
             // 
             this.mnxTextSelectAll.Name = "mnxTextSelectAll";
-            this.mnxTextSelectAll.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.mnxTextSelectAll.Size = new System.Drawing.Size(322, 24);
+            this.mnxTextSelectAll.ShortcutKeyDisplayString = "Ctrl+A";
+            this.mnxTextSelectAll.Size = new System.Drawing.Size(309, 24);
             this.mnxTextSelectAll.Text = "Select &all";
             this.mnxTextSelectAll.Click += new System.EventHandler(this.mnxTextSelectAll_Click);
             // 
             // ToolStripMenuItem4
             // 
             this.ToolStripMenuItem4.Name = "ToolStripMenuItem4";
-            this.ToolStripMenuItem4.Size = new System.Drawing.Size(319, 6);
+            this.ToolStripMenuItem4.Size = new System.Drawing.Size(306, 6);
             // 
             // mnxTextFont
             // 
             this.mnxTextFont.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextFont.Image")));
             this.mnxTextFont.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextFont.Name = "mnxTextFont";
-            this.mnxTextFont.Size = new System.Drawing.Size(322, 24);
+            this.mnxTextFont.Size = new System.Drawing.Size(309, 24);
             this.mnxTextFont.Text = "&Font...";
             this.mnxTextFont.Click += new System.EventHandler(this.mnuFont_Click);
             // 
@@ -594,8 +590,8 @@
             this.mnxTextBold.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextBold.Image")));
             this.mnxTextBold.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextBold.Name = "mnxTextBold";
-            this.mnxTextBold.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
-            this.mnxTextBold.Size = new System.Drawing.Size(322, 24);
+            this.mnxTextBold.ShortcutKeyDisplayString = "Ctrl+B";
+            this.mnxTextBold.Size = new System.Drawing.Size(309, 24);
             this.mnxTextBold.Text = "&Bold";
             this.mnxTextBold.Click += new System.EventHandler(this.mnuBold_Click);
             // 
@@ -604,8 +600,8 @@
             this.mnxTextItalic.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextItalic.Image")));
             this.mnxTextItalic.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextItalic.Name = "mnxTextItalic";
-            this.mnxTextItalic.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
-            this.mnxTextItalic.Size = new System.Drawing.Size(322, 24);
+            this.mnxTextItalic.ShortcutKeyDisplayString = "Ctrl+I";
+            this.mnxTextItalic.Size = new System.Drawing.Size(309, 24);
             this.mnxTextItalic.Text = "&Italic";
             this.mnxTextItalic.Click += new System.EventHandler(this.mnuItalic_Click);
             // 
@@ -613,8 +609,8 @@
             // 
             this.mnxTextUnderline.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextUnderline.Image")));
             this.mnxTextUnderline.Name = "mnxTextUnderline";
-            this.mnxTextUnderline.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U)));
-            this.mnxTextUnderline.Size = new System.Drawing.Size(322, 24);
+            this.mnxTextUnderline.ShortcutKeyDisplayString = "Ctrl+U";
+            this.mnxTextUnderline.Size = new System.Drawing.Size(309, 24);
             this.mnxTextUnderline.Text = "&Underline";
             this.mnxTextUnderline.Click += new System.EventHandler(this.mnuUnderline_Click);
             // 
@@ -622,14 +618,14 @@
             // 
             this.mnxTextStrikeout.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextStrikeout.Image")));
             this.mnxTextStrikeout.Name = "mnxTextStrikeout";
-            this.mnxTextStrikeout.Size = new System.Drawing.Size(322, 24);
+            this.mnxTextStrikeout.Size = new System.Drawing.Size(309, 24);
             this.mnxTextStrikeout.Text = "S&trikeout";
             this.mnxTextStrikeout.Click += new System.EventHandler(this.mnuStrikeout_Click);
             // 
             // mnxTextRtfSeparator
             // 
             this.mnxTextRtfSeparator.Name = "mnxTextRtfSeparator";
-            this.mnxTextRtfSeparator.Size = new System.Drawing.Size(319, 6);
+            this.mnxTextRtfSeparator.Size = new System.Drawing.Size(306, 6);
             // 
             // mnxTextSelection
             // 
@@ -639,7 +635,7 @@
             this.mnxTextSelectionTitle,
             this.mnxTextSelectionDrGrammar});
             this.mnxTextSelection.Name = "mnxTextSelection";
-            this.mnxTextSelection.Size = new System.Drawing.Size(322, 24);
+            this.mnxTextSelection.Size = new System.Drawing.Size(309, 24);
             this.mnxTextSelection.Text = "&Selection";
             // 
             // mnxTextSelectionUpper
@@ -676,7 +672,7 @@
             this.mnxTextLinesSortAsc,
             this.mnxTextLinesSortDesc});
             this.mnxTextLines.Name = "mnxTextLines";
-            this.mnxTextLines.Size = new System.Drawing.Size(322, 24);
+            this.mnxTextLines.Size = new System.Drawing.Size(309, 24);
             this.mnxTextLines.Text = "&Lines";
             // 
             // mnxTextLinesSortAsc
@@ -712,7 +708,7 @@
             this.ToolStripMenuItem14,
             this.mnxTabOpenContainingFolder});
             this.mnxTab.Name = "mnxTab";
-            this.mnxTab.Size = new System.Drawing.Size(233, 314);
+            this.mnxTab.Size = new System.Drawing.Size(233, 292);
             this.mnxTab.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.mnxTab_Closed);
             this.mnxTab.Opening += new System.ComponentModel.CancelEventHandler(this.mnxTab_Opening);
             // 
@@ -721,7 +717,7 @@
             this.mnxTabNew.Image = ((System.Drawing.Image)(resources.GetObject("mnxTabNew.Image")));
             this.mnxTabNew.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTabNew.Name = "mnxTabNew";
-            this.mnxTabNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.mnxTabNew.ShortcutKeyDisplayString = "Ctrl+N";
             this.mnxTabNew.Size = new System.Drawing.Size(232, 24);
             this.mnxTabNew.Text = "&New";
             this.mnxTabNew.Click += new System.EventHandler(this.mnuNew_Click);
@@ -734,7 +730,7 @@
             // mnxTabReopen
             // 
             this.mnxTabReopen.Name = "mnxTabReopen";
-            this.mnxTabReopen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
+            this.mnxTabReopen.ShortcutKeyDisplayString = "Ctrl+R";
             this.mnxTabReopen.Size = new System.Drawing.Size(232, 24);
             this.mnxTabReopen.Text = "Re&open";
             this.mnxTabReopen.Click += new System.EventHandler(this.mnxTabReopen_Click);
@@ -744,7 +740,7 @@
             this.mnxTabSaveNow.Image = ((System.Drawing.Image)(resources.GetObject("mnxTabSaveNow.Image")));
             this.mnxTabSaveNow.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTabSaveNow.Name = "mnxTabSaveNow";
-            this.mnxTabSaveNow.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.mnxTabSaveNow.ShortcutKeyDisplayString = "Ctrl+S";
             this.mnxTabSaveNow.Size = new System.Drawing.Size(232, 24);
             this.mnxTabSaveNow.Text = "&Save";
             this.mnxTabSaveNow.Click += new System.EventHandler(this.mnuSaveNow_Click);
@@ -767,7 +763,7 @@
             // 
             this.mnxTabRename.Image = ((System.Drawing.Image)(resources.GetObject("mnxTabRename.Image")));
             this.mnxTabRename.Name = "mnxTabRename";
-            this.mnxTabRename.ShortcutKeys = System.Windows.Forms.Keys.F2;
+            this.mnxTabRename.ShortcutKeyDisplayString = "F2";
             this.mnxTabRename.Size = new System.Drawing.Size(232, 24);
             this.mnxTabRename.Text = "&Rename";
             this.mnxTabRename.Click += new System.EventHandler(this.mnuRename_Click);
@@ -821,7 +817,7 @@
             this.mnxTabPrint.Image = ((System.Drawing.Image)(resources.GetObject("mnxTabPrint.Image")));
             this.mnxTabPrint.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTabPrint.Name = "mnxTabPrint";
-            this.mnxTabPrint.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
+            this.mnxTabPrint.ShortcutKeyDisplayString = "Ctrl+P";
             this.mnxTabPrint.Size = new System.Drawing.Size(232, 24);
             this.mnxTabPrint.Text = "&Print";
             this.mnxTabPrint.Click += new System.EventHandler(this.mnuPrint_Click);

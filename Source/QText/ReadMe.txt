@@ -26,11 +26,9 @@ Shortcut keys
    Ctrl+Z                  Undo
    Ctrl+Tab                Alternates between two last used tabs
 
-   Ctrl+Shift+S            File, Save all
-
-   Ctrl+Alt+C              Copy without formatting
-   Ctrl+Alt+V              Paste without formatting
-   Ctrl+Alt+X              Cut without formatting
+   Shift+Del               Cut without formatting
+   Ctrl+Ins                Copy without formatting
+   Shift+Ins               Paste without formatting
 
    Ctrl+Backspace          Delete word on left.
    Ctrl+Delete             Delete word on right.
@@ -49,7 +47,6 @@ Shortcut keys
    Alt+Right               Select tab on the right.
    Alt+Up                  Select previous folder.
    Alt+Down                Select next folder.
-   Alt+Home                Select default folder.
 
 
 Version history
@@ -58,6 +55,7 @@ Version history
 
       o  Removed support for hidden files.
       o  Changed how file order is saved.
+      o  Lot of small tweaks.
 
    Version 2.50 (2011-12-27)
 

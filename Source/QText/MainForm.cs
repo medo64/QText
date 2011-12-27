@@ -138,20 +138,38 @@ namespace QText {
             switch (e.KeyData) {
 
                 case Keys.Control | Keys.N:
-                    mnuNew_Click(null, null);
+                    mnuNew.PerformClick();
+                    e.Handled = true; e.SuppressKeyPress = true; break;
+
+                case Keys.Control | Keys.R:
+                    mnxTabReopen.PerformClick();
                     e.Handled = true; e.SuppressKeyPress = true; break;
 
                 case Keys.Control | Keys.S:
-                    mnuSaveNow_Click(null, null);
+                    mnuSaveNow.PerformClick();
                     e.Handled = true; e.SuppressKeyPress = true; break;
 
                 case Keys.F2:
-                    mnuRename_Click(null, null);
+                    mnuRename.PerformClick();
                     e.Handled = true; e.SuppressKeyPress = true; break;
 
                 case Keys.Control | Keys.P:
-                    mnuPrint_Click(null, null);
+                    mnuPrint.PerformClick();
                     e.Handled = true; e.SuppressKeyPress = true; break;
+
+
+                case Keys.Control | Keys.B:
+                    mnuBold.PerformClick();
+                    e.Handled = true; e.SuppressKeyPress = true; break;
+
+                case Keys.Control | Keys.I:
+                    mnuItalic.PerformClick();
+                    e.Handled = true; e.SuppressKeyPress = true; break;
+
+                case Keys.Control | Keys.U:
+                    mnuUnderline.PerformClick();
+                    e.Handled = true; e.SuppressKeyPress = true; break;
+
 
                 case Keys.Control | Keys.F:
                     mnuFind_Click(null, null);
@@ -160,6 +178,7 @@ namespace QText {
                 case Keys.F3:
                     FindNext();
                     e.Handled = true; e.SuppressKeyPress = true; break;
+
 
                 case Keys.Control | Keys.T:
                     mnuAlwaysOnTop_Click(null, null);
@@ -171,16 +190,6 @@ namespace QText {
                     e.Handled = true;
                     e.SuppressKeyPress = true;
                     break;
-
-                case Keys.Alt | Keys.Back:
-                    mnuUndo_Click(null, null);
-                    this._suppressMenuKey = true;
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-                case Keys.Alt | Keys.Shift | Keys.Back:
-                    mnuRedo_Click(null, null);
-                    this._suppressMenuKey = true;
-                    e.Handled = true; e.SuppressKeyPress = true; break;
 
 
                 case Keys.Alt | Keys.D1:
@@ -285,13 +294,6 @@ namespace QText {
                     } break;
 
 
-                case Keys.Alt | Keys.Home:
-                    tabFiles.FolderOpen("");
-                    mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
-                    Settings.LastFolder = tabFiles.CurrentFolder;
-                    this._suppressMenuKey = true;
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
                 case Keys.Alt | Keys.Up: {
                         var currFolder = tabFiles.CurrentFolder;
                         var list = new List<string>(new string[] { "" });
@@ -326,8 +328,10 @@ namespace QText {
 
                 default:
                     if (e.Alt) {
+                        e.Handled = true;
                         this._suppressMenuKey = true;
                     } break;
+
             }
 
             tmrQuickSave.Enabled = true;
