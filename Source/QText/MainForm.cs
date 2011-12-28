@@ -81,6 +81,8 @@ namespace QText {
             }
 #endif
 
+            tabFiles.WriteOrderedTitles();
+
             var failedTitles = new List<string>();
             var failedExceptions = new List<Exception>();
             foreach (TabFile file in tabFiles.TabPages) {
