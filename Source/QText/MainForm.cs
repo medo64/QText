@@ -471,6 +471,8 @@ namespace QText {
                 if (frm.ShowDialog(this) == DialogResult.OK) {
                     try {
                         tabFiles.AddTab(frm.Title, frm.IsRichText);
+                        SetSelectedTab(tabFiles.SelectedTab);
+                        tabFiles.SelectedTab.TextBox.Focus();
                     } catch (Exception ex) {
                         Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot create file.\n\n{0}", ex.Message));
                     }
