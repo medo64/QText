@@ -31,6 +31,9 @@ namespace QText {
             this.ShowInTaskbar = Settings.DisplayShowInTaskbar;
 
             Medo.Windows.Forms.State.Load(this);
+
+            mnuOptions.Visible = Settings.Installed;
+            mnuAppUpgrade.Visible = Settings.Installed;
         }
 
 

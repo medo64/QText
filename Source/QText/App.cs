@@ -36,6 +36,8 @@ namespace QText {
 
             Application.ApplicationExit += new System.EventHandler(ApplicationExit);
 
+            Medo.Configuration.Settings.NoRegistryWrites = !Settings.Installed;
+            Medo.Windows.Forms.State.NoRegistryWrites = !Settings.Installed;
 
             App.Form = new MainForm();
 

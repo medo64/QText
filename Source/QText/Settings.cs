@@ -8,6 +8,10 @@ namespace QText {
 
         private static readonly Medo.Configuration.RunOnStartup StartupConfig = new Medo.Configuration.RunOnStartup(Medo.Configuration.RunOnStartup.Current.Title, Medo.Configuration.RunOnStartup.Current.ExecutablePath, "/hide");
 
+        public static bool Installed {
+            get { return Medo.Configuration.Settings.Read("Installed", false); }
+        }
+
         public static Keys ActivationHotkey {
             get { return (Keys)Medo.Configuration.Settings.Read("ActivationHotkey", Convert.ToInt32(Keys.Control | Keys.Shift | Keys.Q)); }
             set { Medo.Configuration.Settings.Write("ActivationHotkey", (int)value); }
@@ -137,7 +141,13 @@ namespace QText {
         }
 
         public static string FilesLocation {
-            get { return Medo.Configuration.Settings.Read("DataPath", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Medo.Reflection.EntryAssembly.Company + "\\" + Medo.Reflection.EntryAssembly.Name)); }
+            get {
+                if (Installed) {
+                    return Medo.Configuration.Settings.Read("DataPath", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Medo.Reflection.EntryAssembly.Company + "\\" + Medo.Reflection.EntryAssembly.Name));
+                } else {
+                    return Path.Combine(Application.StartupPath, "Data");
+                }
+            }
             set { Medo.Configuration.Settings.Write("DataPath", value); }
         }
 
