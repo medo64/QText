@@ -21,7 +21,6 @@ namespace QText {
             }
         }
 
-
         [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
         protected override bool ProcessCmdKey(ref System.Windows.Forms.Message msg, System.Windows.Forms.Keys keyData) {
             switch (keyData) {
@@ -143,6 +142,29 @@ namespace QText {
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
+        protected override bool ProcessKeyMessage(ref Message m) {
+            if (m.Msg == NativeMethods.WM_SYSKEYUP) {
+                switch ((Keys)m.WParam.ToInt32()) {
+                    case Keys.D0:
+                    case Keys.D1:
+                    case Keys.D2:
+                    case Keys.D3:
+                    case Keys.D4:
+                    case Keys.D5:
+                    case Keys.D6:
+                    case Keys.D7:
+                    case Keys.D8:
+                    case Keys.D9:
+                    case Keys.Left:
+                    case Keys.Right:
+                    case Keys.Up:
+                    case Keys.Down:
+                        return true;
+                }
+            }
+            return base.ProcessKeyMessage(ref m);
+        }
+
         protected override void WndProc(ref Message m) {
             switch (m.Msg) {
                 case NativeMethods.WM_LBUTTONDBLCLK: {
@@ -255,7 +277,7 @@ namespace QText {
             internal const int WM_SETREDRAW = 11;
             internal const int EM_SETEVENTMASK = 1073;
             internal const int WM_LBUTTONDBLCLK = 0x0203;
-
+            internal const int WM_SYSKEYUP = 0x105;
 
             public static IntPtr SendMessage(IntPtr hWnd, uint Msg, int wParam, IntPtr lParam) {
                 return SendMessageW(hWnd, Msg, new IntPtr(wParam), ref lParam);
