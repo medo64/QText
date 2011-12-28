@@ -155,13 +155,12 @@ namespace QText {
             this.IsOpened = false;
             if (this.IsRichTextFormat) {
                 try {
-                    this.TextBox.LoadFile(this.CurrentFile.FullName, RichTextBoxStreamType.RichText);
+                    OpenAsRtf();
                 } catch (System.ArgumentException) {
-                    this.TextBox.Text = File.ReadAllText(this.CurrentFile.FullName);
+                    OpenAsTxt();
                 }
             } else {
-                this.TextBox.ResetText();
-                this.TextBox.Text = File.ReadAllText(this.CurrentFile.FullName);
+                OpenAsTxt();
             }
             this.TextBox.SelectionStart = 0;
             this.TextBox.SelectionLength = 0;
@@ -171,7 +170,6 @@ namespace QText {
             this.IsChanged = false;
             this.IsOpened = true;
         }
-
 
         public void QuickSaveWithoutException() {
             try {
@@ -197,13 +195,9 @@ namespace QText {
             if (this.IsOpened == false) { return; }
 
             if (this.IsRichTextFormat) {
-                this.TextBox.SaveFile(this.CurrentFile.FullName, RichTextBoxStreamType.RichText);
+                SaveAsRtf();
             } else {
-                using (var fileStream = new FileStream(this.CurrentFile.FullName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None)) {
-                    byte[] bytes = Utf8EncodingWithoutBom.GetBytes(this.TextBox.Text);
-                    fileStream.Write(bytes, 0, bytes.Length);
-                    fileStream.SetLength(bytes.Length);
-                }
+                SaveAsTxt();
             }
 
             this.LastSaveTime = DateTime.Now;
@@ -510,6 +504,36 @@ namespace QText {
         public override string ToString() {
             return this.Title;
         }
+
+
+        #region File loading
+
+        private void OpenAsTxt() {
+            this.TextBox.ResetText();
+            var text = File.ReadAllText(this.CurrentFile.FullName, Utf8EncodingWithoutBom);
+            var lines = text.Split(new string[] { "\r\n", "\n", "\r" }, StringSplitOptions.None);
+            text = string.Join("\n", lines);
+            this.TextBox.Text = text;
+        }
+
+        private void SaveAsTxt() {
+            using (var fileStream = new FileStream(this.CurrentFile.FullName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None)) {
+                var text = string.Join(Environment.NewLine, this.TextBox.Lines);
+                byte[] bytes = Utf8EncodingWithoutBom.GetBytes(text);
+                fileStream.Write(bytes, 0, bytes.Length);
+                fileStream.SetLength(bytes.Length);
+            }
+        }
+
+        private void OpenAsRtf() {
+            this.TextBox.LoadFile(this.CurrentFile.FullName, RichTextBoxStreamType.RichText);
+        }
+
+        private void SaveAsRtf() {
+            this.TextBox.SaveFile(this.CurrentFile.FullName, RichTextBoxStreamType.RichText);
+        }
+
+        #endregion
 
 
         private class NativeMethods {
