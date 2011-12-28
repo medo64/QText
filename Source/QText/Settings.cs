@@ -188,14 +188,14 @@ namespace QText {
 
         public static int QuickSaveInterval {
             get {
-                var value = Medo.Configuration.Settings.Read("QuickSaveInterval", 3000);
-                if (value < 1000) { return 1000; }
-                if (value > 15000) { return 15000; }
+                var value = Medo.Configuration.Settings.Read("QuickSaveInterval", 2500);
+                if (value < 500) { return 500; }
+                if (value > 10000) { return 10000; }
                 return value;
             }
             set {
-                if (value < 1000) { value = 1000; }
-                if (value > 15000) { value = 15000; }
+                if (value < 500) { value = 500; }
+                if (value > 10000) { value = 10000; }
                 Medo.Configuration.Settings.Write("QuickSaveInterval", value);
             }
         }

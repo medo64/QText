@@ -322,17 +322,23 @@
             // 
             // nudQuickSaveIntervalInSeconds
             // 
+            this.nudQuickSaveIntervalInSeconds.DecimalPlaces = 1;
+            this.nudQuickSaveIntervalInSeconds.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
             this.nudQuickSaveIntervalInSeconds.Location = new System.Drawing.Point(155, 5);
             this.nudQuickSaveIntervalInSeconds.Maximum = new decimal(new int[] {
-            300,
+            10,
             0,
             0,
             0});
             this.nudQuickSaveIntervalInSeconds.Minimum = new decimal(new int[] {
-            1,
+            5,
             0,
             0,
-            0});
+            65536});
             this.nudQuickSaveIntervalInSeconds.Name = "nudQuickSaveIntervalInSeconds";
             this.nudQuickSaveIntervalInSeconds.Size = new System.Drawing.Size(50, 22);
             this.nudQuickSaveIntervalInSeconds.TabIndex = 4;

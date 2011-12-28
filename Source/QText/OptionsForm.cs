@@ -35,7 +35,7 @@ namespace QText {
             //Files
             chkPreloadFilesOnStartup.Checked = Settings.FilesPreload;
             chkDeleteToRecycleBin.Checked = Settings.FilesDeleteToRecycleBin;
-            nudQuickSaveIntervalInSeconds.Value = Settings.QuickSaveInterval / 1000;
+            nudQuickSaveIntervalInSeconds.Value = Settings.QuickSaveInterval / 1000M;
 
             //Behavior
             txtHotkey.Text = GetKeyString(Settings.ActivationHotkey);
@@ -293,7 +293,7 @@ namespace QText {
             //Files
             Settings.FilesPreload = chkPreloadFilesOnStartup.Checked;
             Settings.FilesDeleteToRecycleBin = chkDeleteToRecycleBin.Checked;
-            Settings.QuickSaveInterval = Convert.ToInt32(nudQuickSaveIntervalInSeconds.Value) * 1000;
+            Settings.QuickSaveInterval = Convert.ToInt32(nudQuickSaveIntervalInSeconds.Value * 1000);
 
             //Behavior
             Settings.ActivationHotkey = (Keys)txtHotkey.Tag;
