@@ -75,6 +75,10 @@ namespace QText {
                     selectedTab = tab;
                 }
             }
+            if ((selectedTab == null) && (this.TabCount > 0)) {
+                selectedTab = (TabFile)this.TabPages[0];
+            }
+
             if (selectedTab != null) {
                 while (true) {
                     try {
@@ -87,8 +91,6 @@ namespace QText {
                         selectedTab = (TabFile)this.TabPages[index];
                     }
                 }
-            } else if (this.TabCount > 0) {
-                this.SelectedTab = (TabFile)this.TabPages[0];
             }
             this.Visible = initialVisibility;
             if (this.SelectedTab != null) {
