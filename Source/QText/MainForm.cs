@@ -85,7 +85,7 @@ namespace QText {
             var failedExceptions = new List<Exception>();
             foreach (TabFile file in tabFiles.TabPages) {
                 try {
-                    file.Save();
+                    if (file.IsChanged) { file.Save(); }
                 } catch (Exception ex) {
                     failedTitles.Add(file.Title);
                     failedExceptions.Add(ex);
