@@ -11,6 +11,12 @@ namespace QText {
         }
 
 
+        protected override void OnGotFocus(EventArgs e) {
+            base.OnGotFocus(e);
+            if (this.SelectedTab != null) { this.SelectedTab.Select(); }
+        }
+
+
         internal string CurrentDirectory {
             get {
                 if (string.IsNullOrEmpty(this.CurrentFolder)) { return Settings.FilesLocation; }
