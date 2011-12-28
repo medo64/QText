@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace QText {
     internal partial class FolderEditForm : Form {
@@ -13,6 +14,41 @@ namespace QText {
 
             this.CurrentFolder = currentFolder;
         }
+
+
+        protected override bool ProcessDialogKey(Keys keyData) {
+            Debug.WriteLine("ProcessDialogKey: " + keyData.ToString());
+            switch (keyData) {
+                case Keys.F10:
+                case Keys.Apps:
+                    if (mnu.ContainsFocus) {
+                        this.SelectNextControl(mnu, true, true, true, true);
+                    } else {
+                        mnu.Select();
+                        mnuNew.Select();
+                    }
+                    return true;
+
+                case Keys.Control | Keys.N:
+                    mnuNew.PerformClick();
+                    return true;
+
+                case Keys.F2:
+                    mnuRename.PerformClick();
+                    return true;
+
+                case Keys.Delete:
+                    mnuDelete.PerformClick();
+                    return true;
+
+                case Keys.Escape:
+                    this.Close();
+                    return true;
+
+                default: return base.ProcessDialogKey(keyData);
+            }
+        }
+
 
         public string CurrentFolder { get; private set; }
 
@@ -32,19 +68,9 @@ namespace QText {
             }
         }
 
-        private void Form_KeyUp(object sender, KeyEventArgs e) {
-            switch (e.KeyData) {
-                case Keys.Escape: this.Close(); break;
-                case Keys.Control | Keys.N: mnuNew_Click(null, null); break;
-                case Keys.F2: mnuRename_Click(null, null); break;
-                case Keys.Delete: mnuDelete_Click(null, null); break;
-            }
-
-        }
-
 
         private void lsv_AfterLabelEdit(object sender, LabelEditEventArgs e) {
-            if (e.Label == null) { return; }
+            if (e.Label == null) { e.CancelEdit = true; return; }
             var oldName = lsv.Items[e.Item].Text;
             var newName = e.Label.Trim();
             try {
@@ -91,6 +117,7 @@ namespace QText {
             }
         }
 
+        #region Menu
 
         private void mnuNew_Click(object sender, System.EventArgs e) {
             var newFolder = "New folder";
@@ -143,6 +170,8 @@ namespace QText {
                 }
             }
         }
+
+        #endregion
 
     }
 }

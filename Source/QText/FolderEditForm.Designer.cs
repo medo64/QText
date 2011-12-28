@@ -46,7 +46,7 @@
             this.lsv.Location = new System.Drawing.Point(0, 27);
             this.lsv.MultiSelect = false;
             this.lsv.Name = "lsv";
-            this.lsv.Size = new System.Drawing.Size(294, 315);
+            this.lsv.Size = new System.Drawing.Size(314, 315);
             this.lsv.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lsv.TabIndex = 0;
             this.lsv.UseCompatibleStateImageBehavior = false;
@@ -65,7 +65,7 @@
             this.mnu.Location = new System.Drawing.Point(0, 0);
             this.mnu.Name = "mnu";
             this.mnu.Padding = new System.Windows.Forms.Padding(1, 0, 1, 0);
-            this.mnu.Size = new System.Drawing.Size(294, 27);
+            this.mnu.Size = new System.Drawing.Size(314, 27);
             this.mnu.TabIndex = 1;
             // 
             // mnuNew
@@ -108,7 +108,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(294, 342);
+            this.ClientSize = new System.Drawing.Size(314, 342);
             this.Controls.Add(this.lsv);
             this.Controls.Add(this.mnu);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -121,7 +121,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Edit folders";
             this.Load += new System.EventHandler(this.Form_Load);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form_KeyUp);
             this.mnu.ResumeLayout(false);
             this.mnu.PerformLayout();
             this.ResumeLayout(false);
