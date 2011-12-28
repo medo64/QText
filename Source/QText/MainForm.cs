@@ -32,8 +32,13 @@ namespace QText {
 
             Medo.Windows.Forms.State.Load(this);
 
-            mnuOptions.Visible = Settings.Installed;
-            mnuAppUpgrade.Visible = Settings.Installed;
+            if (Settings.Installed == false) {
+                var text = "Program must be installed to use this function.";
+                mnuOptions.Enabled = false;
+                mnuOptions.ToolTipText = text;
+                mnuAppUpgrade.Enabled = false;
+                mnuAppUpgrade.ToolTipText = text;
+            }
         }
 
 
