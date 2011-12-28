@@ -65,7 +65,7 @@ namespace QText {
                     lblStatus.Text = "Upgrade is available.";
                     btnDownload.Tag = location;
                     btnDownload.Visible = true;
-                    btnDownload.Focus();
+                    btnDownload.Select();
                 } else {
                     lblStatus.Text = "No upgrade at this time.";
                     btnCancel.Text = "&Close";

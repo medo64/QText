@@ -21,7 +21,7 @@ namespace QText {
             switch (keyData) {
                 case Keys.Control | Keys.F:
                     txtText.SelectAll();
-                    txtText.Focus();
+                    txtText.Select();
 
                     return true;
                 case Keys.F3:

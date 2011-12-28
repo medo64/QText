@@ -94,7 +94,7 @@ namespace QText {
             }
             this.Visible = initialVisibility;
             if (this.SelectedTab != null) {
-                this.SelectedTab.Focus();
+                this.SelectedTab.Select();
             }
         }
 

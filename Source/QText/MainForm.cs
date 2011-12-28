@@ -133,7 +133,7 @@ namespace QText {
             if (tabFiles == null) { return; }
 
             if ((tabFiles.SelectedTab != null) && (tabFiles.SelectedTab.IsOpened)) {
-                tabFiles.SelectedTab.Focus();
+                tabFiles.SelectedTab.Select();
             }
         }
 
@@ -458,6 +458,9 @@ namespace QText {
                     Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot open file.\n\n{0}", ex.Message));
                     tabFiles.SelectedTab = this._CurrSelectedTab;
                 }
+                if (tabFiles.SelectedTab != null) {
+                    tabFiles.SelectedTab.TextBox.Select();
+                }
                 tmrQuickSave.Enabled = true;
             }
         }
@@ -472,7 +475,7 @@ namespace QText {
                     try {
                         tabFiles.AddTab(frm.Title, frm.IsRichText);
                         SetSelectedTab(tabFiles.SelectedTab);
-                        tabFiles.SelectedTab.TextBox.Focus();
+                        tabFiles.SelectedTab.TextBox.Select();
                     } catch (Exception ex) {
                         Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot create file.\n\n{0}", ex.Message));
                     }
@@ -792,8 +795,7 @@ namespace QText {
             Medo.Windows.Forms.AboutBox.ShowDialog(this, new Uri("http://www.jmedved.com/qtext/"));
 
             if (tabFiles.SelectedTab != null) {
-                TextBoxBase txt = tabFiles.SelectedTab.TextBox;
-                txt.Focus();
+                tabFiles.SelectedTab.TextBox.Select();
             }
             tmrQuickSave.Enabled = true;
         }
