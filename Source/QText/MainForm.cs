@@ -122,7 +122,7 @@ namespace QText {
             this.tmrUpdateToolbar.Enabled = Settings.ShowToolbar;
             if (tabFiles == null) { return; }
 
-            if (tabFiles.SelectedTab != null) {
+            if ((tabFiles.SelectedTab != null) && (tabFiles.SelectedTab.IsOpened)) {
                 tabFiles.SelectedTab.Focus();
             }
         }
@@ -442,12 +442,9 @@ namespace QText {
                     if (file.IsChanged) { file.QuickSaveWithoutException(); }
                 }
                 try {
-                    TextBoxBase txt = tabFiles.SelectedTab.TextBox;
-                    txt.Refresh();
-                    txt.Select();
-                    txt.Focus();
+                    tabFiles.SelectedTab.Open();
                     SetSelectedTab(tabFiles.SelectedTab);
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot open file.\n\n{0}", ex.Message));
                     tabFiles.SelectedTab = this._CurrSelectedTab;
                 }
@@ -1164,8 +1161,10 @@ namespace QText {
             }
 
             var currentFolder = tabFiles.CurrentFolder;
+            if (currentFolder == null) { currentFolder = ""; }
             try {
                 tabFiles.FolderOpen(Settings.LastFolder);
+                SetSelectedTab(tabFiles.SelectedTab);
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot load folder.\n\n{0}", ex.Message));
                 tabFiles.FolderOpen(currentFolder);
@@ -1310,7 +1309,9 @@ namespace QText {
                     if (currTab.IsChanged) {
                         currTab.Save();
                     } else {
-                        currTab.Reopen();
+                        try {
+                            currTab.Reopen();
+                        } catch (Exception) { }
                     }
                 }
                 nextIndexToCheck += 1;

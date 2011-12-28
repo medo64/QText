@@ -156,7 +156,7 @@ namespace QText {
             if (this.IsRichTextFormat) {
                 try {
                     OpenAsRtf();
-                } catch (System.ArgumentException) {
+                } catch (ArgumentException) {
                     OpenAsTxt();
                 }
             } else {

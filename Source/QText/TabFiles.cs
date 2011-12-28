@@ -38,6 +38,7 @@ namespace QText {
 
             var initialVisibility = this.Visible;
             this.Visible = false;
+            this.SelectedTab = null;
             this.TabPages.Clear();
             this.CurrentFolder = folder;
 
@@ -75,20 +76,29 @@ namespace QText {
                 }
             }
             if (selectedTab != null) {
-                this.SelectedTab = selectedTab;
+                while (true) {
+                    try {
+                        selectedTab.Open();
+                        this.SelectedTab = selectedTab;
+                        break;
+                    } catch (IOException) {
+                        var index = this.TabPages.IndexOf(selectedTab) + 1;
+                        if (index >= this.TabPages.Count) { throw; }
+                        selectedTab = (TabFile)this.TabPages[index];
+                    }
+                }
             } else if (this.TabCount > 0) {
                 this.SelectedTab = (TabFile)this.TabPages[0];
             }
             this.Visible = initialVisibility;
             if (this.SelectedTab != null) {
-                this.SelectedTab.Reopen();
                 this.SelectedTab.Focus();
             }
         }
 
         public void FolderSave() {
             foreach (TabFile file in this.TabPages) {
-                file.Save();
+                if (file.IsChanged) { file.Save(); }
             }
             WriteOrderedTitles();
         }
