@@ -78,19 +78,18 @@ namespace QText {
                             var startIndex = this.GetFirstCharIndexFromLine(startLine);
                             var endIndex = this.GetFirstCharIndexFromLine(endLine + 1) - 1;
                             if (endIndex < 0) { endIndex = this.Text.Length - 1; }
-                            if ((this.Text[endIndex] == '\r') || (this.Text[endIndex] == '\n')) { endIndex -= 1; } //if this is CRFL
+                            if (this.Text[endIndex] == '\n') { endIndex -= 1; } //if this is end of line
                             var text = this.Text.Substring(startIndex, endIndex - startIndex);
-                            var endOfLine = "\n"; if (text.Contains("\r\n")) { endOfLine = "\r\n"; } //to see whether LF or CRLF is used.
-                            var lines = text.Split(new string[] { endOfLine }, StringSplitOptions.None);
+                            var lines = text.Split(new string[] { "\n" }, StringSplitOptions.None);
                             for (int i = 0; i < lines.Length; i++) {
                                 lines[i] = "\t" + lines[i];
                             }
                             this.BeginUpdate();
                             this.SelectionStart = startIndex;
                             this.SelectionLength = endIndex - startIndex;
-                            this.SelectedText = string.Join(endOfLine, lines);
+                            this.SelectedText = string.Join("\n", lines);
                             this.SelectionStart = (origStart == startIndex) ? origStart : origStart + 1;
-                            this.SelectionLength = (origStart == startIndex) ? origLen + lines.Length * (endOfLine.Length) : origLen + lines.Length * (endOfLine.Length) - 1;
+                            this.SelectionLength = (origStart == startIndex) ? origLen + lines.Length : origLen + lines.Length - 1;
                             this.EndUpdate();
                         }
                     } return true;
@@ -116,10 +115,9 @@ namespace QText {
                             var startIndex = this.GetFirstCharIndexFromLine(startLine);
                             var endIndex = this.GetFirstCharIndexFromLine(endLine + 1) - 1;
                             if (endIndex < 0) { endIndex = this.Text.Length - 1; }
-                            if ((this.Text[endIndex] == '\r') || (this.Text[endIndex] == '\n')) { endIndex -= 1; } //if this is CRFL
+                            if (this.Text[endIndex] == '\n') { endIndex -= 1; } //if this is end of line
                             var text = this.Text.Substring(startIndex, endIndex - startIndex);
-                            var endOfLine = "\n"; if (text.Contains("\r\n")) { endOfLine = "\r\n"; } //to see whether LF or CRLF is used.
-                            var lines = text.Split(new string[] { endOfLine }, StringSplitOptions.None);
+                            var lines = text.Split(new string[] { "\n" }, StringSplitOptions.None);
                             var countRemoved = 0;
                             for (int i = 0; i < lines.Length; i++) {
                                 if (lines[i].StartsWith("\t", StringComparison.InvariantCultureIgnoreCase)) {
@@ -131,7 +129,7 @@ namespace QText {
                                 this.BeginUpdate();
                                 this.SelectionStart = startIndex;
                                 this.SelectionLength = endIndex - startIndex;
-                                this.SelectedText = string.Join(endOfLine, lines);
+                                this.SelectedText = string.Join("\n", lines);
                                 this.SelectionStart = (origStart == startIndex) ? origStart : origStart - 1;
                                 this.SelectionLength = (origStart == startIndex) ? origLen - countRemoved : origLen - countRemoved + 1;
                                 this.EndUpdate();
