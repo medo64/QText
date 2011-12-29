@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
-using System.Diagnostics;
 
 namespace QText {
     internal partial class FolderEditForm : Form {
@@ -16,17 +16,16 @@ namespace QText {
         }
 
 
+        internal bool SuppressMenuKey = false;
+
         protected override bool ProcessDialogKey(Keys keyData) {
-            Debug.WriteLine("ProcessDialogKey: " + keyData.ToString());
+            Debug.WriteLine("FolderEditForm_ProcessDialogKey: " + keyData.ToString());
+            if (((keyData & Keys.Alt) == Keys.Alt) && (keyData != (Keys.Alt | Keys.Menu))) { this.SuppressMenuKey = true; }
+
             switch (keyData) {
                 case Keys.F10:
                 case Keys.Apps:
-                    if (mnu.ContainsFocus) {
-                        this.SelectNextControl(mnu, true, true, true, true);
-                    } else {
-                        mnu.Select();
-                        mnuNew.Select();
-                    }
+                    ToggleMenu();
                     return true;
 
                 case Keys.Control | Keys.N:
@@ -46,6 +45,18 @@ namespace QText {
                     return true;
 
                 default: return base.ProcessDialogKey(keyData);
+            }
+        }
+
+        protected override void OnKeyUp(KeyEventArgs e) {
+            Debug.WriteLine("FolderEditForm_OnKeyUp: " + e.KeyData.ToString());
+            if (e.KeyData == Keys.Menu) {
+                if (this.SuppressMenuKey) { this.SuppressMenuKey = false; return; }
+                ToggleMenu();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            } else {
+                base.OnKeyUp(e);
             }
         }
 
@@ -116,6 +127,17 @@ namespace QText {
                 this.DialogResult = DialogResult.OK;
             }
         }
+
+
+        private void ToggleMenu() {
+            if (mnu.ContainsFocus) {
+                lsv.Select();
+            } else {
+                mnu.Select();
+                mnuNew.Select();
+            }
+        }
+
 
         #region Menu
 

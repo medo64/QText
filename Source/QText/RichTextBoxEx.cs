@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
@@ -8,22 +9,81 @@ namespace QText {
     internal class RichTextBoxEx : RichTextBox {
 
         public RichTextBoxEx() {
+            this.ShortcutsEnabled = false;
         }
 
 
-        protected override void OnLinkClicked(System.Windows.Forms.LinkClickedEventArgs e) {
-            if (Settings.FollowURLs) {
-                try {
-                    System.Diagnostics.Process.Start(e.LinkText);
-                } catch (Exception ex) {
-                    Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot execute link \"{0}\".\n\n{1}", e.LinkText, ex.Message));
-                }
-            }
-        }
-
-        [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
-        protected override bool ProcessCmdKey(ref System.Windows.Forms.Message msg, System.Windows.Forms.Keys keyData) {
+        [UIPermissionAttribute(SecurityAction.InheritanceDemand, Window = UIPermissionWindow.AllWindows)]
+        protected override bool IsInputKey(Keys keyData) {
+            Debug.WriteLine("RichTextBoxEx_IsInputKey: " + keyData.ToString());
             switch (keyData) {
+                case Keys.F1: return false;
+                case Keys.F2: return false;
+                case Keys.F3: return false;
+                case Keys.F4: return false;
+                case Keys.F5: return false;
+                case Keys.F6: return false;
+                case Keys.F7: return false;
+                case Keys.F8: return false;
+                case Keys.F9: return false;
+                case Keys.F10: return false;
+                case Keys.F11: return false;
+                case Keys.F12: return false;
+                case Keys.F13: return false;
+                case Keys.F14: return false;
+                case Keys.F15: return false;
+                case Keys.F16: return false;
+                case Keys.F17: return false;
+                case Keys.F18: return false;
+                case Keys.F19: return false;
+                case Keys.F20: return false;
+                case Keys.Control | Keys.B: return false;
+                case Keys.Control | Keys.C: return false;
+                case Keys.Control | Keys.D: return false;
+                case Keys.Control | Keys.E: return false;
+                case Keys.Control | Keys.F: return false;
+                case Keys.Control | Keys.G: return false;
+                case Keys.Control | Keys.H: return false;
+                case Keys.Control | Keys.I: return false;
+                case Keys.Control | Keys.J: return false;
+                case Keys.Control | Keys.K: return false;
+                case Keys.Control | Keys.L: return false;
+                case Keys.Control | Keys.M: return false;
+                case Keys.Control | Keys.N: return false;
+                case Keys.Control | Keys.O: return false;
+                case Keys.Control | Keys.P: return false;
+                case Keys.Control | Keys.Q: return false;
+                case Keys.Control | Keys.R: return false;
+                case Keys.Control | Keys.S: return false;
+                case Keys.Control | Keys.T: return false;
+                case Keys.Control | Keys.U: return false;
+                case Keys.Control | Keys.V: return false;
+                case Keys.Control | Keys.W: return false;
+                case Keys.Control | Keys.X: return false;
+                case Keys.Control | Keys.Y: return false;
+                case Keys.Control | Keys.Z: return false;
+                case Keys.Alt | Keys.D0: return false;
+                case Keys.Alt | Keys.D1: return false;
+                case Keys.Alt | Keys.D2: return false;
+                case Keys.Alt | Keys.D3: return false;
+                case Keys.Alt | Keys.D4: return false;
+                case Keys.Alt | Keys.D5: return false;
+                case Keys.Alt | Keys.D6: return false;
+                case Keys.Alt | Keys.D7: return false;
+                case Keys.Alt | Keys.D8: return false;
+                case Keys.Alt | Keys.D9: return false;
+            }
+            return base.IsInputKey(keyData);
+        }
+
+        [SecurityPermissionAttribute(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
+        [SecurityPermissionAttribute(SecurityAction.InheritanceDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
+        protected override bool ProcessCmdKey(ref System.Windows.Forms.Message msg, System.Windows.Forms.Keys keyData) {
+            Debug.WriteLine("RichTextBoxEx_ProcessCmdKey: " + keyData.ToString());
+            switch (keyData) {
+                case Keys.Control | Keys.R:
+                    return false;
+
                 case Keys.Control | Keys.Back: { //deletes word before cursor
                         if (this.SelectionStart <= 0) { break; }
                         var endIndex = this.SelectionStart + this.SelectionLength - 1;
@@ -142,29 +202,8 @@ namespace QText {
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        protected override bool ProcessKeyMessage(ref Message m) {
-            if (m.Msg == NativeMethods.WM_SYSKEYUP) {
-                switch ((Keys)m.WParam.ToInt32()) {
-                    case Keys.D0:
-                    case Keys.D1:
-                    case Keys.D2:
-                    case Keys.D3:
-                    case Keys.D4:
-                    case Keys.D5:
-                    case Keys.D6:
-                    case Keys.D7:
-                    case Keys.D8:
-                    case Keys.D9:
-                    case Keys.Left:
-                    case Keys.Right:
-                    case Keys.Up:
-                    case Keys.Down:
-                        return true;
-                }
-            }
-            return base.ProcessKeyMessage(ref m);
-        }
-
+        [SecurityPermissionAttribute(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
+        [SecurityPermissionAttribute(SecurityAction.InheritanceDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
         protected override void WndProc(ref Message m) {
             switch (m.Msg) {
                 case NativeMethods.WM_LBUTTONDBLCLK: {
@@ -228,13 +267,13 @@ namespace QText {
             base.WndProc(ref m);
         }
 
-        private UnicodeCategory GetLikeUnicodeCategory(char ch) {
-            if (char.IsWhiteSpace(ch)) {
-                return UnicodeCategory.SpaceSeparator;
-            } else if (char.IsPunctuation(ch)) {
-                return UnicodeCategory.OtherSymbol;
-            } else {
-                return UnicodeCategory.LetterNumber;
+        protected override void OnLinkClicked(System.Windows.Forms.LinkClickedEventArgs e) {
+            if (Settings.FollowURLs) {
+                try {
+                    System.Diagnostics.Process.Start(e.LinkText);
+                } catch (Exception ex) {
+                    Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot execute link \"{0}\".\n\n{1}", e.LinkText, ex.Message));
+                }
             }
         }
 
@@ -269,6 +308,17 @@ namespace QText {
             if (endIndex < 0) { endIndex = this.Text.Length; }
             this.SelectionStart = startIndex;
             this.SelectionLength = endIndex - startIndex + 1;
+        }
+
+
+        private UnicodeCategory GetLikeUnicodeCategory(char ch) {
+            if (char.IsWhiteSpace(ch)) {
+                return UnicodeCategory.SpaceSeparator;
+            } else if (char.IsPunctuation(ch)) {
+                return UnicodeCategory.OtherSymbol;
+            } else {
+                return UnicodeCategory.LetterNumber;
+            }
         }
 
 

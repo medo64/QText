@@ -15,8 +15,6 @@ namespace QText {
 
     internal partial class MainForm : Form {
 
-        internal bool _suppressMenuKey = false;
-
         public MainForm() {
             InitializeComponent();
             this.Font = SystemFonts.MessageBoxFont;
@@ -42,8 +40,198 @@ namespace QText {
         }
 
 
+        internal bool SuppressMenuKey = false;
+
+        protected override bool ProcessDialogKey(Keys keyData) {
+            Debug.WriteLine("MainForm_ProcessDialogKey: " + keyData.ToString());
+            if (((keyData & Keys.Alt) == Keys.Alt) && (keyData != (Keys.Alt | Keys.Menu))) { this.SuppressMenuKey = true; }
+
+            switch (keyData) {
+
+                case Keys.F10:
+                    ToggleMenu();
+                    return true;
+
+                case Keys.Control | Keys.N:
+                    mnuNew.PerformClick();
+                    return true;
+
+                case Keys.Control | Keys.R:
+                    mnxTabReopen.PerformClick();
+                    return true;
+
+                case Keys.Control | Keys.S:
+                    mnuSaveNow.PerformClick();
+                    return true;
+
+                case Keys.F2:
+                    mnuRename.PerformClick();
+                    return true;
+
+                case Keys.Control | Keys.P:
+                    mnuPrint.PerformClick();
+                    return true;
+
+
+                case Keys.Control | Keys.B:
+                    mnuBold.PerformClick();
+                    return true;
+
+                case Keys.Control | Keys.I:
+                    mnuItalic.PerformClick();
+                    return true;
+
+                case Keys.Control | Keys.U:
+                    mnuUnderline.PerformClick();
+                    return true;
+
+
+                case Keys.Control | Keys.F:
+                    mnuFind_Click(null, null);
+                    return true;
+
+                case Keys.F3:
+                    FindNext();
+                    return true;
+
+
+                case Keys.Control | Keys.T:
+                    mnuAlwaysOnTop_Click(null, null);
+                    return true;
+
+
+                case Keys.Escape:
+                    this.Close();
+                    return true;
+
+
+                case Keys.Alt | Keys.Apps:
+                    tabFiles.ContextMenuStrip.Show(tabFiles, tabFiles.Width / 2, tabFiles.Height / 2);
+                    break;
+
+
+                case Keys.Alt | Keys.D1:
+                    if (tabFiles.TabPages.Count >= 1) {
+                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[0];
+                    }
+                    return true;
+
+                case Keys.Alt | Keys.D2:
+                    if (tabFiles.TabPages.Count >= 2) {
+                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[1];
+                    }
+                    return true;
+
+                case Keys.Alt | Keys.D3:
+                    if (tabFiles.TabPages.Count >= 3) {
+                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[2];
+                    }
+                    return true;
+
+                case Keys.Alt | Keys.D4:
+                    if (tabFiles.TabPages.Count >= 4) {
+                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[3];
+                    }
+                    return true;
+
+                case Keys.Alt | Keys.D5:
+                    if (tabFiles.TabPages.Count >= 5) {
+                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[4];
+                    }
+                    return true;
+
+                case Keys.Alt | Keys.D6:
+                    if (tabFiles.TabPages.Count >= 6) {
+                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[5];
+                    }
+                    return true;
+
+                case Keys.Alt | Keys.D7:
+                    if (tabFiles.TabPages.Count >= 7) {
+                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[6];
+                    }
+                    return true;
+
+                case Keys.Alt | Keys.D8:
+                    if (tabFiles.TabPages.Count >= 8) {
+                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[7];
+                    }
+                    return true;
+
+                case Keys.Alt | Keys.D9:
+                    if (tabFiles.TabPages.Count >= 9) {
+                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[8];
+                    }
+                    return true;
+
+                case Keys.Alt | Keys.D0:
+                    if (tabFiles.TabPages.Count >= 10) {
+                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[9];
+                    }
+                    return true;
+
+
+                case Keys.Alt | Keys.Left: {
+                        if (tabFiles.SelectedTab == null) {
+                            if (tabFiles.TabPages.Count > 0) {
+                                tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[0];
+                            }
+                        } else {
+                            var newIndex = tabFiles.TabPages.IndexOf(tabFiles.SelectedTab) - 1;
+                            if (newIndex >= 0) {
+                                tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[newIndex];
+                            }
+                        }
+                    } return true;
+
+
+                case Keys.Alt | Keys.Right: {
+                        if (tabFiles.SelectedTab == null) {
+                            if (tabFiles.TabPages.Count > 0) {
+                                tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[tabFiles.TabPages.Count - 1];
+                            }
+                        } else {
+                            var newIndex = tabFiles.TabPages.IndexOf(tabFiles.SelectedTab) + 1;
+                            if (newIndex < tabFiles.TabPages.Count) {
+                                tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[newIndex];
+                            }
+                        }
+                    } return true;
+
+
+                case Keys.Alt | Keys.Up: {
+                        var currFolder = tabFiles.CurrentFolder;
+                        var list = new List<string>(new string[] { "" });
+                        list.AddRange(TabFiles.GetSubFolders());
+                        var index = list.FindIndex(delegate(string folder) { return string.Equals(folder, currFolder, StringComparison.OrdinalIgnoreCase); });
+                        if (index > 0) {
+                            tabFiles.FolderOpen(list[index - 1]);
+                            mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
+                            Settings.LastFolder = tabFiles.CurrentFolder;
+                        }
+                    } return true;
+
+                case Keys.Alt | Keys.Down: {
+                        var currFolder = tabFiles.CurrentFolder;
+                        var list = new List<string>(new string[] { "" });
+                        list.AddRange(TabFiles.GetSubFolders());
+                        var index = list.FindIndex(delegate(string folder) { return string.Equals(folder, currFolder, StringComparison.OrdinalIgnoreCase); });
+                        if (index < list.Count - 1) {
+                            tabFiles.FolderOpen(list[index + 1]);
+                            mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
+                            Settings.LastFolder = tabFiles.CurrentFolder;
+                        }
+                    } return true;
+
+            }
+
+            return base.ProcessDialogKey(keyData);
+        }
+
+
         [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
         protected override bool ProcessCmdKey(ref System.Windows.Forms.Message msg, System.Windows.Forms.Keys keyData) {
+            Debug.WriteLine("MainForm_ProcessCmdKey: " + keyData.ToString());
             switch (keyData) {
 
                 case Keys.Control | Keys.Tab:
@@ -63,11 +251,26 @@ namespace QText {
                     keyData = Keys.None;
                     return true;
 
-                default:
-                    return base.ProcessCmdKey(ref msg, keyData);
             }
+
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
+        protected override void OnKeyUp(KeyEventArgs e) {
+            Debug.WriteLine("MainForm_OnKeyUp: " + e.KeyData.ToString());
+            tmrQuickSave.Enabled = false;
+
+            if (e.KeyData == Keys.Menu) {
+                if (this.SuppressMenuKey) { this.SuppressMenuKey = false; return; }
+                ToggleMenu();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            } else {
+                base.OnKeyUp(e);
+            }
+
+            tmrQuickSave.Enabled = true;
+        }
 
         private void Form_Load(object sender, EventArgs e) {
             RefreshAll(null, null);
@@ -142,247 +345,6 @@ namespace QText {
         }
 
 
-        private void Form_KeyDown(object sender, KeyEventArgs e) {
-            tmrQuickSave.Enabled = false;
-
-            switch (e.KeyData) {
-
-                case Keys.Control | Keys.N:
-                    mnuNew.PerformClick();
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-                case Keys.Control | Keys.R:
-                    mnxTabReopen.PerformClick();
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-                case Keys.Control | Keys.S:
-                    mnuSaveNow.PerformClick();
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-                case Keys.F2:
-                    mnuRename.PerformClick();
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-                case Keys.Control | Keys.P:
-                    mnuPrint.PerformClick();
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-
-                case Keys.Control | Keys.B:
-                    mnuBold.PerformClick();
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-                case Keys.Control | Keys.I:
-                    mnuItalic.PerformClick();
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-                case Keys.Control | Keys.U:
-                    mnuUnderline.PerformClick();
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-
-                case Keys.Control | Keys.F:
-                    mnuFind_Click(null, null);
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-                case Keys.F3:
-                    FindNext();
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-
-                case Keys.Control | Keys.T:
-                    mnuAlwaysOnTop_Click(null, null);
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-
-                case Keys.Escape:
-                    this.Close();
-                    e.Handled = true;
-                    e.SuppressKeyPress = true;
-                    break;
-
-
-                case Keys.Alt | Keys.D1:
-                    if (tabFiles.TabPages.Count >= 1) {
-                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[0];
-                    }
-                    this._suppressMenuKey = true;
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-                case Keys.Alt | Keys.D2:
-                    if (tabFiles.TabPages.Count >= 2) {
-                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[1];
-                    }
-                    this._suppressMenuKey = true;
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-                case Keys.Alt | Keys.D3:
-                    if (tabFiles.TabPages.Count >= 3) {
-                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[2];
-                    }
-                    this._suppressMenuKey = true;
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-                case Keys.Alt | Keys.D4:
-                    if (tabFiles.TabPages.Count >= 4) {
-                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[3];
-                    }
-                    this._suppressMenuKey = true;
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-                case Keys.Alt | Keys.D5:
-                    if (tabFiles.TabPages.Count >= 5) {
-                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[4];
-                    }
-                    this._suppressMenuKey = true;
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-                case Keys.Alt | Keys.D6:
-                    if (tabFiles.TabPages.Count >= 6) {
-                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[5];
-                    }
-                    this._suppressMenuKey = true;
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-                case Keys.Alt | Keys.D7:
-                    if (tabFiles.TabPages.Count >= 7) {
-                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[6];
-                    }
-                    this._suppressMenuKey = true;
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-                case Keys.Alt | Keys.D8:
-                    if (tabFiles.TabPages.Count >= 8) {
-                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[7];
-                    }
-                    this._suppressMenuKey = true;
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-                case Keys.Alt | Keys.D9:
-                    if (tabFiles.TabPages.Count >= 9) {
-                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[8];
-                    }
-                    this._suppressMenuKey = true;
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-                case Keys.Alt | Keys.D0:
-                    if (tabFiles.TabPages.Count >= 10) {
-                        tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[9];
-                    }
-                    this._suppressMenuKey = true;
-                    e.Handled = true; e.SuppressKeyPress = true; break;
-
-
-                case Keys.Alt | Keys.Left: {
-                        if (tabFiles.SelectedTab == null) {
-                            if (tabFiles.TabPages.Count > 0) {
-                                tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[0];
-                            }
-                        } else {
-                            var newIndex = tabFiles.TabPages.IndexOf(tabFiles.SelectedTab) - 1;
-                            if (newIndex >= 0) {
-                                tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[newIndex];
-                            }
-                        }
-                        this._suppressMenuKey = true;
-                        e.Handled = true; e.SuppressKeyPress = true;
-                    } break;
-
-                case Keys.Alt | Keys.Right: {
-                        if (tabFiles.SelectedTab == null) {
-                            if (tabFiles.TabPages.Count > 0) {
-                                tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[tabFiles.TabPages.Count - 1];
-                            }
-                        } else {
-                            var newIndex = tabFiles.TabPages.IndexOf(tabFiles.SelectedTab) + 1;
-                            if (newIndex < tabFiles.TabPages.Count) {
-                                tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[newIndex];
-                            }
-                        }
-                        this._suppressMenuKey = true;
-                        e.Handled = true; e.SuppressKeyPress = true;
-                    } break;
-
-
-                case Keys.Alt | Keys.Up: {
-                        var currFolder = tabFiles.CurrentFolder;
-                        var list = new List<string>(new string[] { "" });
-                        list.AddRange(TabFiles.GetSubFolders());
-                        var index = list.FindIndex(delegate(string folder) { return string.Equals(folder, currFolder, StringComparison.OrdinalIgnoreCase); });
-                        if (index > 0) {
-                            tabFiles.FolderOpen(list[index - 1]);
-                            mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
-                            Settings.LastFolder = tabFiles.CurrentFolder;
-                        }
-                        this._suppressMenuKey = true;
-                        e.Handled = true; e.SuppressKeyPress = true;
-                    } break;
-
-                case Keys.Alt | Keys.Down: {
-                        var currFolder = tabFiles.CurrentFolder;
-                        var list = new List<string>(new string[] { "" });
-                        list.AddRange(TabFiles.GetSubFolders());
-                        var index = list.FindIndex(delegate(string folder) { return string.Equals(folder, currFolder, StringComparison.OrdinalIgnoreCase); });
-                        if (index < list.Count - 1) {
-                            tabFiles.FolderOpen(list[index + 1]);
-                            mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
-                            Settings.LastFolder = tabFiles.CurrentFolder;
-                        }
-                        this._suppressMenuKey = true;
-                        e.Handled = true; e.SuppressKeyPress = true;
-                    } break;
-
-
-                case Keys.Alt | Keys.Menu: //just to prevent suppressing menu key
-                    break;
-
-                default:
-                    if (e.Alt) {
-                        e.Handled = true;
-                        this._suppressMenuKey = true;
-                    } break;
-
-            }
-
-            tmrQuickSave.Enabled = true;
-        }
-
-        private void Form_KeyUp(object sender, KeyEventArgs e) {
-            tmrQuickSave.Enabled = false;
-
-            switch (e.KeyData) {
-
-                case Keys.Menu:
-                    if (this._suppressMenuKey) {
-                        this._suppressMenuKey = false;
-                        return;
-                    }
-                    if (Settings.ShowToolbar == false) {
-                        mnu.Visible = !mnu.Visible;
-                    }
-                    if (mnu.Visible) {
-                        mnu.Select();
-                        mnu.Items[0].Select();
-                    }
-                    e.Handled = true;
-                    e.SuppressKeyPress = true;
-                    break;
-
-                case Keys.Alt | (Keys)93:
-                    tabFiles.ContextMenuStrip.Show(tabFiles, tabFiles.Width / 2, tabFiles.Height / 2);
-                    break;
-
-                case Keys.Control | Keys.B:
-                    e.Handled = true;
-                    e.SuppressKeyPress = true;
-                    break;
-
-            }
-
-            tmrQuickSave.Enabled = true;
-        }
-
-
         private void Form_MouseDown(object sender, MouseEventArgs e) {
             if (e.Button == System.Windows.Forms.MouseButtons.Right) {
                 if (tabFiles.TabPages.Count > 0) {
@@ -413,7 +375,7 @@ namespace QText {
             if (this.WindowState != FormWindowState.Minimized) {
                 if (this.Visible) { Medo.Windows.Forms.State.Save(this); }
                 mnu.Visible = Settings.ShowToolbar;
-            } else if (Settings.TrayOnMinimize) { //Window has been minimized.
+            } else if (Settings.TrayOnMinimize) {
                 this.Visible = false;
                 this.Close();
             }
@@ -1319,7 +1281,7 @@ namespace QText {
                 nextIndexToCheck = nextIndexToCheck % tabFiles.TabPages.Count;
                 var currTab = (TabFile)tabFiles.TabPages[nextIndexToCheck];
                 var fi = new FileInfo(currTab.CurrentFile.FullName);
-                if (fi.LastWriteTimeUtc != currTab.LastWriteTimeUtc) { //change
+                if (fi.LastWriteTimeUtc != currTab.LastWriteTimeUtc) {
                     if (currTab.IsChanged) {
                         currTab.Save();
                     } else {
@@ -1362,6 +1324,20 @@ namespace QText {
                 }
             } else {
                 _findForm.FindNext();
+            }
+        }
+
+        private void ToggleMenu() {
+            if (Settings.ShowToolbar == false) {
+                mnu.Visible = !mnu.Visible;
+            }
+            if (mnu.Visible) {
+                if (mnu.ContainsFocus) {
+                    if (tabFiles.SelectedTab != null) { tabFiles.SelectedTab.Select(); }
+                } else {
+                    mnu.Select();
+                    mnuNew.Select();
+                }
             }
         }
 

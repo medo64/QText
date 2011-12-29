@@ -10,6 +10,7 @@ SHORTCUT KEYS
     F2                      Rename
     F3                      Find next
     F5                      Refresh
+    F10                     Activate toolbar.
 
     Ctrl+A                  Select all
     Ctrl+F                  Find

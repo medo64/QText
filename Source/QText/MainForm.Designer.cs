@@ -871,8 +871,6 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form_FormClosed);
             this.Load += new System.EventHandler(this.Form_Load);
             this.VisibleChanged += new System.EventHandler(this.Form_VisibleChanged);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form_KeyDown);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form_KeyUp);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form_MouseDown);
             this.Move += new System.EventHandler(this.Form_Move);
             this.Resize += new System.EventHandler(this.Form_Resize);
