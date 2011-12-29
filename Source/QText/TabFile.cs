@@ -125,7 +125,7 @@ namespace QText {
             this.Open();
             string oldFileName = this.CurrentFile.FullName;
             string newFileName = Path.ChangeExtension(oldFileName, ".txt");
-            File.Move(oldFileName, newFileName);
+            Helper.MovePath(oldFileName, newFileName);
             this.CurrentFile = new FileInfo(newFileName);
             this.Save();
             this.Reopen();
@@ -139,7 +139,7 @@ namespace QText {
 
             string oldFileName = this.CurrentFile.FullName;
             string newFileName = Path.ChangeExtension(oldFileName, ".rtf");
-            File.Move(oldFileName, newFileName);
+            Helper.MovePath(oldFileName, newFileName);
             this.CurrentFile = new FileInfo(newFileName);
             this.Save();
             this.Reopen();
@@ -240,17 +240,19 @@ namespace QText {
             var oldInfo = new FileInfo(this.CurrentFile.FullName);
             var newInfo = new FileInfo(Path.Combine(oldInfo.DirectoryName, newTitle) + oldInfo.Extension);
 
-            if (File.Exists(newInfo.FullName)) {
-                throw new IOException("File already exists.");
-            } else if (File.Exists(Path.ChangeExtension(newInfo.FullName, ".txt"))) {
-                throw new IOException("File already exists.");
-            } else if (File.Exists(Path.ChangeExtension(newInfo.FullName, ".rtf"))) {
-                throw new IOException("File already exists.");
-            } else {
-                File.Move(oldInfo.FullName, newInfo.FullName);
-                this.CurrentFile = newInfo;
-                UpdateText();
+            if (string.Equals(this.Title, newTitle, StringComparison.OrdinalIgnoreCase) == false) {
+                if (File.Exists(newInfo.FullName)) {
+                    throw new IOException("File already exists.");
+                } else if (File.Exists(Path.ChangeExtension(newInfo.FullName, ".txt"))) {
+                    throw new IOException("File already exists.");
+                } else if (File.Exists(Path.ChangeExtension(newInfo.FullName, ".rtf"))) {
+                    throw new IOException("File already exists.");
+                }
             }
+
+            Helper.MovePath(oldInfo.FullName, newInfo.FullName);
+            this.CurrentFile = newInfo;
+            UpdateText();
         }
 
         public bool GetIsEligibleForSave(int timeout) {

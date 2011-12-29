@@ -87,27 +87,9 @@ namespace QText {
             try {
                 if (string.Equals(oldName, newName, StringComparison.Ordinal)) {
                     e.CancelEdit = true;
-                } else if (string.Equals(oldName, newName, StringComparison.OrdinalIgnoreCase)) {
-                    var tempName = Guid.NewGuid().ToString();
-                    try {
-                        Directory.Move(Path.Combine(Settings.FilesLocation, oldName), Path.Combine(Settings.FilesLocation, tempName));
-                    } catch (Exception) {
-                        e.CancelEdit = true;
-                        throw;
-                    }
-                    try {
-                        Directory.Move(Path.Combine(Settings.FilesLocation, tempName), Path.Combine(Settings.FilesLocation, newName));
-                    } catch (Exception) { //something is wrong - at least give current name to user
-                        lsv.Items[e.Item].Text = tempName;
-                        if (string.Equals(oldName, this.CurrentFolder, StringComparison.Ordinal)) {
-                            this.CurrentFolder = tempName;
-                        }
-                        e.CancelEdit = true;
-                        throw;
-                    }
                 } else {
                     try {
-                        Directory.Move(Path.Combine(Settings.FilesLocation, oldName), Path.Combine(Settings.FilesLocation, newName));
+                        Helper.MovePath(Path.Combine(Settings.FilesLocation, oldName), Path.Combine(Settings.FilesLocation, newName));
                     } catch (Exception) {
                         e.CancelEdit = true;
                         throw;

@@ -46,7 +46,7 @@ namespace QText {
                 alreadyTaken |= Directory.Exists(Path.Combine(this.BasePath, txtTitle.Text + ".rtf"));
                 if (alreadyTaken) { erp.SetError(txtTitle, "File with same name already exists."); } else { erp.SetError(txtTitle, null); }
             }
-            btnOK.Enabled = (txtTitle.Text.Length > 0) && (alreadyTaken == false) && (txtTitle.Text.Equals(this.OldTitle, StringComparison.OrdinalIgnoreCase) == false);
+            btnOK.Enabled = (txtTitle.Text.Length > 0) && (alreadyTaken == false) && (txtTitle.Text.Equals(this.OldTitle, StringComparison.Ordinal) == false);
         }
 
 

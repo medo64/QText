@@ -178,7 +178,9 @@ namespace QText {
             this.TabPages.Remove(tab);
             string destFolder = string.IsNullOrEmpty(newFolder) ? Settings.FilesLocation : Path.Combine(Settings.FilesLocation, newFolder);
             var oldFile = new FileInfo(tab.CurrentFile.FullName);
-            oldFile.MoveTo(Path.Combine(destFolder, oldFile.Name));
+            var oldPath = oldFile.FullName;
+            var newPath = Path.Combine(destFolder, oldFile.Name);
+            Helper.MovePath(oldPath, newPath);
             WriteOrderedTitles();
         }
 
