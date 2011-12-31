@@ -50,7 +50,7 @@ SHORTCUT KEYS
 
 VERSION HISTORY
 
-    3.00 (beta)
+    3.00 (beta 1)
 
         o Added support for folders.
         o Removed support for hidden files (replaced by folders).
