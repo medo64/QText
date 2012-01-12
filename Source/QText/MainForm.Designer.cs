@@ -106,6 +106,8 @@
             this.mnxTabOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.tmrCheckFileUpdate = new System.Windows.Forms.Timer(this.components);
             this.tabFiles = new QText.TabFiles();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnxTextSelectionSpelling = new System.Windows.Forms.ToolStripMenuItem();
             this.mnu.SuspendLayout();
             this.mnxText.SuspendLayout();
             this.mnxTab.SuspendLayout();
@@ -468,7 +470,7 @@
             this.mnxTextSelection,
             this.mnxTextLines});
             this.mnxText.Name = "mnxTextBox";
-            this.mnxText.Size = new System.Drawing.Size(310, 418);
+            this.mnxText.Size = new System.Drawing.Size(310, 440);
             this.mnxText.Opening += new System.ComponentModel.CancelEventHandler(this.mnxText_Opening);
             // 
             // mnxTextUndo
@@ -633,7 +635,9 @@
             this.mnxTextSelectionUpper,
             this.mnxTextSelectionLower,
             this.mnxTextSelectionTitle,
-            this.mnxTextSelectionDrGrammar});
+            this.mnxTextSelectionDrGrammar,
+            this.toolStripMenuItem1,
+            this.mnxTextSelectionSpelling});
             this.mnxTextSelection.Name = "mnxTextSelection";
             this.mnxTextSelection.Size = new System.Drawing.Size(309, 24);
             this.mnxTextSelection.Text = "&Selection";
@@ -853,6 +857,19 @@
             this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
             this.tabFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabFiles_MouseDown);
             // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(341, 6);
+            // 
+            // mnxTextSelectionSpelling
+            // 
+            this.mnxTextSelectionSpelling.Name = "mnxTextSelectionSpelling";
+            this.mnxTextSelectionSpelling.ShortcutKeyDisplayString = "Shift+F1";
+            this.mnxTextSelectionSpelling.Size = new System.Drawing.Size(344, 24);
+            this.mnxTextSelectionSpelling.Text = "Spelling";
+            this.mnxTextSelectionSpelling.Click += new System.EventHandler(this.mnxTextSelectionSpelling_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -966,5 +983,7 @@
         private System.Windows.Forms.ToolStripMenuItem mnxTextLines;
         private System.Windows.Forms.ToolStripMenuItem mnxTextLinesSortAsc;
         private System.Windows.Forms.ToolStripMenuItem mnxTextLinesSortDesc;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem mnxTextSelectionSpelling;
     }
 }

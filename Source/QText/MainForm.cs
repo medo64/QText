@@ -239,6 +239,11 @@ namespace QText {
             Debug.WriteLine("MainForm_ProcessCmdKey: " + keyData.ToString());
             switch (keyData) {
 
+                case Keys.Shift | Keys.F1: {
+                        mnxTextSelectionSpelling_Click(null, null);
+                    } return true;
+
+
                 case Keys.Control | Keys.Tab:
                 case Keys.Control | Keys.Shift | Keys.Tab:
                     if ((tabFiles.TabPages.Count >= 1) && (tabFiles.SelectedTab == null))
@@ -914,7 +919,6 @@ namespace QText {
             mnxTextSelectionUpper.Enabled = isTextSelected;
             mnxTextSelectionTitle.Enabled = isTextSelected;
             mnxTextSelectionDrGrammar.Enabled = isTextSelected;
-            mnxTextSelection.Enabled = mnxTextSelectionLower.Enabled || mnxTextSelectionUpper.Enabled || mnxTextSelectionTitle.Enabled || mnxTextSelectionDrGrammar.Enabled;
 
             mnxTextLinesSortAsc.Enabled = hasText;
             mnxTextLinesSortDesc.Enabled = hasText;
@@ -1036,6 +1040,19 @@ namespace QText {
                 txt.SelectionLength = sl;
             }
         }
+
+        private void mnxTextSelectionSpelling_Click(object sender, EventArgs e) {
+            if (tabFiles.SelectedTab != null) {
+                using (var frm = new SpellingForm(tabFiles.SelectedTab.TextBox.SelectedText.Replace('\n', ' '))) {
+                    frm.ShowDialog(this);
+                }
+            } else {
+                using (var frm = new SpellingForm()) {
+                    frm.ShowDialog(this);
+                }
+            }
+        }
+
 
         private void mnxTextLinesSortAsc_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {

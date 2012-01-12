@@ -124,14 +124,14 @@
   <data name="mnuNew.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAGfSURBVDhPjZLLSwJRFMaHoJW0ahv0B7RqUZuofeWmdcv6
-        J4SgZYvcVChkT8xAC4Q0CIVeVJBJSGiiaQ3iC/NtmjozztcddW6GNXnhcC537vc793xnGKa9Mpn5Gs/P
-        BbDFAF4GPD/LxuNqTv6umBsBlY3TECF0wCnJ/ta+eVaePPoXIgRUj1SwT0QnTEtMIIXgBKwXPlgcHpjs
-        LhzYXatdQE5LLutIrEkiaZlbLzGQMMtnwPbxFcZnFrshrJ/h91YGRay3+sdbP3BJcm0UiA61oaSGyQHn
-        na8JMdrutfQlgqB20xakiqQ69QTLFLBhPGuK5fgGlKeuqWCHAMJ93yZikwJ4oQEJIoN+eCFmRpYaoQE9
-        rAQQGwayGjKBLSoWRRGVKodUttIEjE0v4Nfp7FpvqKhzU+cE5IpVRJJFZYDBctEFEBoiSpU6EukyXiI5
-        ZYD+0NkFqNZ4pPOfYOMFeENpZYDUX+eSjCt81BBNlRBgs3A/J3sHdBoXjubxFHzHrSfWO6DTuOfXDFze
-        BM4fIr0B5Hn/lf8cozxj6cJ/If0HX8gPNs8IG9GvAAAAAElFTkSuQmCC
+        YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAGhSURBVDhPjZLLSwJRFMaHoJW0ahv0B7RqUZuofeWmdcv6
+        J4SgXZvcVCikJWEGPUDoAVGQFRVkEhKWaFoiPqJ8l6bNjPN17+hcJ8zRC4dzuXO/37nnO8Nx9ZVOT1cE
+        YSoAKwf4OAjCZCSR0PPKd81cDegOeAMRwgQckeyv7eWz4uhuW4gY0N0zwQYR7XM1MYHkgyNwuh6xc+KF
+        49CNzUP3YhOQN5LLJhJLVETXdu0lFhLbyhmwtneB4YnZZkjEzwm2hV4Jy7X+8doNnJNcGQRifXUoqeE4
+        wenNowyxH9wa2UtEUe9hLdCKpDrzBPMMsGI/lsVKNADFsUsmWCeAcFfDRKwygCBWQSEK6I8XUnpgrhrq
+        McNJAPF+IGMgE7AysSRJKJV5vGdKMmBofAb/TsfmvGIi9eaHF5EtlBF9K2gDLDuuJoBYlfBZ+kEyVcRz
+        NKsNMG+dNgHKFQGp3DciiTx8oZQ2gPanXtS4/FcFsfdPBCIZeJ7eOgeojQvHcngIfuDaG+8coDbu6SUN
+        ty+Js7toZwBl3q1yyzEqM6YX2gX9D34Bwgo2zVGP9pwAAAAASUVORK5CYII=
 </value>
   </data>
   <data name="mnuSaveNow.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -281,13 +281,13 @@
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAHZSURBVDhPY2CgJZi05VvMxI1fd8zc/fHRsgNfjqzY/2XK
         siNfpYiys3fD1x31G6786V739Xnjio+P6xd/uTN358fHy3Z9/YTVkO5Vr/4vOfnFAGR619ovy/rn3/+d
-        0vPqjUv8id9aqdv/6Ces/25fdvfjzK1f36za/+UmiitWHvvH2bjk5f95+79erV/+taF+05U/cfXt/1wL
+        0vPqjUv8id9aqdv/6Ces/25fdvfjzK1f36za/+UmiitWHvvH2bjk5f95+79erV/+taF+05U/cfVt/1wL
         jv+3y9j0yyR21XH7/K0PteLr/4R1vPy5+MDn+xjeKJ75/H/WrM//C+d8+R/Z9e6Flf2Wv2bRi3+YRK/M
         Byn2rd+hYhi84IVr+fX39Uu/7MEwIKnv2X/vpjf/o3s//y+b8+a/htek1UZRKxzhCkNDmeXjD/12Lbvz
         un7ll0MYBgQ1P/1vVnz/v2fTK7BLEnse/a9d+NYSptDYOI3Vzn7/X7e6Z9+aVnzegmGAU8Xj/w5F1/5b
-        ZR7/bxK/7b9h1Nr/Gj5T/8MUmiSuUbLNrP9n37L/b/60R6UEoxIUsMiK1L0nu2uVXfmTVt//r37VfzaC
-        BqArsEjZdzGkfsK/sLqzuSRpTuz7oGSfdz7GH6jZrfLKNwaG/4wkGeBR+cTZp/7pL/us/T+NI1d4kaQZ
-        pDii53Okc8nVRoPElaIka6aLBgC48fJdPGPmgQAAAABJRU5ErkJggg==
+        ZR7/bxK/7b9h1Nr/Gj5T/8MUmiSuUbLNrP9n37L/b/60R6UEoxIUsMiK1L0nu2uVXfmTVt/3r37VfzaC
+        BqArsEjZdzGkvv9fWN3ZXJI0J/Z9ULLPOx/jD9TsVnnlGwPDf0aSDPCofOLsU//0l33W/p/GkSu8SNIM
+        UhzR8znSueRqo0HiSlGSNdNFAwCx+/JZvu38VQAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="mnuRedo.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -299,9 +299,9 @@
         4+f/tp+8/2/65PfPsuZ+jpy3/+tV68zj/1ceQ/Na/dIve1zLr79X9ei55Vu/QwVkg0n0yny1yKVfJX1m
         //Jvef8c6JL/WbM+/zeJ34rpgvqVXw45Fd97peLZd5ghNJQZ5kSjqBWOGl6TVpfNefM/uvfzf++mN//1
         QhdjGtC04vMW+6IXX1W8J9w0Nk5jhRkweetn3Slbv4Jt9mx69d+s+P5/DZ+pmAbkT3tUat+6/6+kz5pf
-        4q7F3DADQAFmBfSzSfy2/3ohS8CaVd26sHhh1X+2tPr+f1plV/6oe092Rw5ljADDFadhdWdzQ+on/LNI
-        2XeRYLxjV/Cf0bvy2kv7lv1/7fPOxyT2fVAi2SAVj8V8XpU3TwW0fvrqUfnEmWQDYBq8G1+FRvR8jiTb
-        ALpqBADKBuiOwyLHkgAAAABJRU5ErkJggg==
+        4q7F3DADQAFmBfSzSfy2/3ohS8CaVd26sHhh1X+2tPq+f1plV/6oe092Rw5ljADDFadhdWdzQ+r7/1mk
+        7LtIMN6xK/jP6F157aV9y/6/9nnnYxL7PiiRbJCKx2I+r8qbpwJaP331qHziTLIBMA3eja9CI3o+R5Jt
+        AF01AgDG0+iMvtBlQAAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="mnuFind.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

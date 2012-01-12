@@ -131,6 +131,12 @@
     </Compile>
     <Compile Include="SearchStatus.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="SpellingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SpellingForm.Designer.cs">
+      <DependentUpon>SpellingForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="TabFile.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -167,6 +173,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FileRenameForm.resx">
       <DependentUpon>FileRenameForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SpellingForm.resx">
+      <DependentUpon>SpellingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UpgradeForm.resx">
       <DependentUpon>UpgradeForm.cs</DependentUpon>
