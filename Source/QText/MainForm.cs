@@ -100,6 +100,11 @@ namespace QText {
                     return true;
 
 
+                case Keys.F1:
+                    mnuApp.ShowDropDown();
+                    mnuAppAbout.Select();
+                    return true;
+
                 case Keys.Escape:
                     this.Close();
                     return true;
