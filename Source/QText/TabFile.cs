@@ -310,13 +310,11 @@ namespace QText {
 
 
                 case Keys.Control | Keys.Z:
-                case Keys.Alt | Keys.Back:
                     this.Undo();
                     e.IsInputKey = false;
                     break;
 
                 case Keys.Control | Keys.Y:
-                case Keys.Alt | Keys.Shift | Keys.Back:
                     this.Redo();
                     e.IsInputKey = false;
                     break;
@@ -387,6 +385,7 @@ namespace QText {
                 if (CanPaste) {
                     if ((this.IsRichTextFormat == false) || forceText) {
                         var text = Clipboard.GetText(TextDataFormat.UnicodeText);
+                        this.TextBox.SelectionFont = Settings.DisplayFont;
                         this.TextBox.SelectedText = text;
                     } else {
                         this.TextBox.Paste();
