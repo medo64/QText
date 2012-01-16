@@ -343,7 +343,7 @@ namespace QText {
                 if (this.CanCopy) {
                     if ((this.IsRichTextFormat == false) || forceText) {
                         Clipboard.Clear();
-                        Clipboard.SetText(this.TextBox.SelectedText, TextDataFormat.UnicodeText);
+                        Clipboard.SetText(this.TextBox.SelectedText.Replace("\n", "\r\n"), TextDataFormat.UnicodeText);
                         this.TextBox.SelectedText = "";
                     } else {
                         this.TextBox.Cut();
@@ -362,7 +362,7 @@ namespace QText {
                 if (this.CanCopy) {
                     if ((this.IsRichTextFormat == false) || forceText) {
                         Clipboard.Clear();
-                        Clipboard.SetText(this.TextBox.SelectedText, TextDataFormat.UnicodeText);
+                        Clipboard.SetText(this.TextBox.SelectedText.Replace("\n", "\r\n"), TextDataFormat.UnicodeText);
                     } else {
                         this.TextBox.Copy();
                     }
