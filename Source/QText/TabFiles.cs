@@ -20,7 +20,7 @@ namespace QText {
         internal string CurrentDirectory {
             get {
                 if (string.IsNullOrEmpty(this.CurrentFolder)) { return Settings.FilesLocation; }
-                return Path.Combine(Settings.FilesLocation, CurrentFolder);
+                return Path.Combine(Settings.FilesLocation, Helper.EncodeFileName(CurrentFolder));
             }
         }
         public string CurrentFolder { get; private set; }
@@ -114,7 +114,7 @@ namespace QText {
         internal static IEnumerable<string> GetSubFolders() {
             var folders = new List<string>();
             foreach (var directory in Directory.GetDirectories(Settings.FilesLocation)) {
-                folders.Add(new DirectoryInfo(directory).Name);
+                folders.Add(Helper.DecodeFileName(new DirectoryInfo(directory).Name));
             }
             folders.Sort();
             foreach (var folder in folders) {
@@ -176,7 +176,7 @@ namespace QText {
             tab.Save();
             this.SelectedTab = GetNextTab();
             this.TabPages.Remove(tab);
-            string destFolder = string.IsNullOrEmpty(newFolder) ? Settings.FilesLocation : Path.Combine(Settings.FilesLocation, newFolder);
+            string destFolder = string.IsNullOrEmpty(newFolder) ? Settings.FilesLocation : Path.Combine(Settings.FilesLocation, Helper.EncodeFileName(newFolder));
             var oldFile = new FileInfo(tab.CurrentFile.FullName);
             var oldPath = oldFile.FullName;
             var newPath = Path.Combine(destFolder, oldFile.Name);

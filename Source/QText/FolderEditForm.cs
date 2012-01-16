@@ -89,7 +89,9 @@ namespace QText {
                     e.CancelEdit = true;
                 } else {
                     try {
-                        Helper.MovePath(Path.Combine(Settings.FilesLocation, oldName), Path.Combine(Settings.FilesLocation, newName));
+                        var oldPath = Path.Combine(Settings.FilesLocation, Helper.EncodeFileName(oldName));
+                        var newPath = Path.Combine(Settings.FilesLocation, Helper.EncodeFileName(newName));
+                        Helper.MovePath(oldPath, newPath);
                     } catch (Exception) {
                         e.CancelEdit = true;
                         throw;
