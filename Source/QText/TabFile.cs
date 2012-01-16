@@ -63,7 +63,7 @@ namespace QText {
         private static readonly UTF8Encoding Utf8EncodingWithoutBom = new UTF8Encoding(false);
 
         public FileInfo CurrentFile { get; private set; }
-        public string Title { get { return Path.GetFileNameWithoutExtension(this.CurrentFile.FullName); } }
+        public string Title { get { return Helper.DecodeFileName(Path.GetFileNameWithoutExtension(this.CurrentFile.FullName)); } }
         public DateTime LastWriteTimeUtc { get { return this.CurrentFile.LastWriteTimeUtc; } }
         public DateTime LastSaveTime { get; private set; }
 
@@ -238,7 +238,7 @@ namespace QText {
 
         public void Rename(string newTitle) {
             var oldInfo = new FileInfo(this.CurrentFile.FullName);
-            var newInfo = new FileInfo(Path.Combine(oldInfo.DirectoryName, newTitle) + oldInfo.Extension);
+            var newInfo = new FileInfo(Path.Combine(oldInfo.DirectoryName, Helper.EncodeFileName(newTitle)) + oldInfo.Extension);
 
             if (string.Equals(this.Title, newTitle, StringComparison.OrdinalIgnoreCase) == false) {
                 if (File.Exists(newInfo.FullName)) {

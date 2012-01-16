@@ -43,7 +43,6 @@
             this.txtTitle.Size = new System.Drawing.Size(260, 22);
             this.txtTitle.TabIndex = 1;
             this.txtTitle.TextChanged += new System.EventHandler(this.txtTitle_TextChanged);
-            this.txtTitle.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtTitle_KeyPress);
             // 
             // lblFileName
             // 

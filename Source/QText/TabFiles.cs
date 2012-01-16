@@ -56,8 +56,8 @@ namespace QText {
             IList<string> orderedTitles = ReadOrderedTitles(out selectedTitle);
 
             files.Sort(delegate(string file1, string file2) {
-                var title1 = Path.GetFileNameWithoutExtension(file1);
-                var title2 = Path.GetFileNameWithoutExtension(file2);
+                var title1 = Helper.DecodeFileName(Path.GetFileNameWithoutExtension(file1));
+                var title2 = Helper.DecodeFileName(Path.GetFileNameWithoutExtension(file2));
                 if (orderedTitles != null) {
                     var titleIndex1 = orderedTitles.IndexOf(title1);
                     var titleIndex2 = orderedTitles.IndexOf(title2);
@@ -150,7 +150,7 @@ namespace QText {
         #region File operations
 
         public void AddTab(string title, bool isRichText) {
-            TabFile t = TabFile.Create(Path.Combine(this.CurrentDirectory, title + (isRichText ? ".rtf" : ".txt")));
+            TabFile t = TabFile.Create(Path.Combine(this.CurrentDirectory, Helper.EncodeFileName(title) + (isRichText ? ".rtf" : ".txt")));
             t.ContextMenuStrip = this.TabContextMenuStrip;
             if (this.SelectedTab != null) {
                 this.TabPages.Insert(this.TabPages.IndexOf(this.SelectedTab) + 1, t);
@@ -266,7 +266,7 @@ namespace QText {
                             } else {
                                 if (currentOrderedTitles != null) {
                                     var parts = line.Split(new string[] { "//" }, StringSplitOptions.RemoveEmptyEntries);
-                                    var title = parts[0];
+                                    var title = Helper.DecodeFileName(parts[0]);
                                     var attrs = parts.Length > 1 ? parts[1] : null;
                                     if ("selected".Equals(attrs)) { currentSelectedTitle = title; }
                                     currentOrderedTitles.Add(title);
