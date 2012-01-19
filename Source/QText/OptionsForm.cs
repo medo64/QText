@@ -26,9 +26,10 @@ namespace QText {
             chkDisplayURLs_CheckedChanged(null, null);
 
             //Display
-            chkShowToolbar.Checked = Settings.ShowToolbar;
             chkShowInTaskbar.Checked = Settings.DisplayShowInTaskbar;
             chbShowMinimizeMaximizeButtons.Checked = Settings.DisplayMinimizeMaximizeButtons;
+            chkShowToolbar.Checked = Settings.ShowToolbar;
+            chbMultilineTabs.Checked = Settings.MultilineTabs; 
             chbHorizontalScrollbar.Checked = (Settings.ScrollBars == ScrollBars.Horizontal) || (Settings.ScrollBars == ScrollBars.Both);
             chbVerticalScrollbar.Checked = (Settings.ScrollBars == ScrollBars.Vertical) || (Settings.ScrollBars == ScrollBars.Both);
 
@@ -277,9 +278,10 @@ namespace QText {
             Settings.DisplayForegroundColor = lblColorExample.ForeColor;
 
             //Display
-            Settings.ShowToolbar = chkShowToolbar.Checked;
             Settings.DisplayShowInTaskbar = chkShowInTaskbar.Checked;
             Settings.DisplayMinimizeMaximizeButtons = chbShowMinimizeMaximizeButtons.Checked;
+            Settings.ShowToolbar = chkShowToolbar.Checked;
+            Settings.MultilineTabs = chbMultilineTabs.Checked;
             if ((chbHorizontalScrollbar.Checked && chbVerticalScrollbar.Checked)) {
                 Settings.ScrollBars = ScrollBars.Both;
             } else if ((chbHorizontalScrollbar.Checked)) {
@@ -368,5 +370,6 @@ namespace QText {
         }
 
         #endregion
+
     }
 }

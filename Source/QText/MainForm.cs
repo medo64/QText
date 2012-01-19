@@ -28,6 +28,8 @@ namespace QText {
             }
             this.ShowInTaskbar = Settings.DisplayShowInTaskbar;
 
+            tabFiles.Multiline = Settings.MultilineTabs;
+
             Medo.Windows.Forms.State.Load(this);
 
             if (Settings.Installed == false) {
@@ -574,7 +576,7 @@ namespace QText {
                         }
                         f.ShowColor = true;
                         f.ShowEffects = true;
-                        if (f.ShowDialog(this) == System.Windows.Forms.DialogResult.OK) {
+                        if (f.ShowDialog(this) == DialogResult.OK) {
                             tf.TextBox.SelectionColor = f.Color;
                             tf.TextBox.SelectionFont = f.Font;
                         }
@@ -713,13 +715,14 @@ namespace QText {
                 SaveAllChanged();
                 this.tmrUpdateToolbar.Enabled = false;
                 RefreshAll(null, null);
-                if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK) {
+                if (frm.ShowDialog(this) == DialogResult.OK) {
                     if (Settings.DisplayMinimizeMaximizeButtons) {
                         this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
                     } else {
                         this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
                     }
                     this.ShowInTaskbar = Settings.DisplayShowInTaskbar;
+                    tabFiles.Multiline = Settings.MultilineTabs;
                     this.TopMost = Settings.DisplayAlwaysOnTop;
                     RefreshAll(null, null);
                     Form_Resize(null, null);

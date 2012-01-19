@@ -96,6 +96,11 @@ namespace QText {
             set { Medo.Configuration.Settings.Write("DisplayMinimizeMaximizeButtons", value); }
         }
 
+        public static bool MultilineTabs {
+            get { return Medo.Configuration.Settings.Read("MultilineTabs", false); }
+            set { Medo.Configuration.Settings.Write("MultilineTabs", value); }
+        }
+
         public static ScrollBars ScrollBars {
             get {
                 try {
