@@ -66,6 +66,7 @@
             this.lblCarbonCopyFolder = new System.Windows.Forms.Label();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.chbMultilineTabs = new System.Windows.Forms.CheckBox();
             this.tab.SuspendLayout();
             this.tab_pagAppearance.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudTabWidth)).BeginInit();
@@ -239,6 +240,7 @@
             // 
             // tab_pagDisplay
             // 
+            this.tab_pagDisplay.Controls.Add(this.chbMultilineTabs);
             this.tab_pagDisplay.Controls.Add(this.chbVerticalScrollbar);
             this.tab_pagDisplay.Controls.Add(this.chbHorizontalScrollbar);
             this.tab_pagDisplay.Controls.Add(this.chbShowMinimizeMaximizeButtons);
@@ -254,7 +256,7 @@
             // chbVerticalScrollbar
             // 
             this.chbVerticalScrollbar.AutoSize = true;
-            this.chbVerticalScrollbar.Location = new System.Drawing.Point(3, 111);
+            this.chbVerticalScrollbar.Location = new System.Drawing.Point(3, 144);
             this.chbVerticalScrollbar.Name = "chbVerticalScrollbar";
             this.chbVerticalScrollbar.Size = new System.Drawing.Size(135, 21);
             this.chbVerticalScrollbar.TabIndex = 10;
@@ -264,7 +266,8 @@
             // chbHorizontalScrollbar
             // 
             this.chbHorizontalScrollbar.AutoSize = true;
-            this.chbHorizontalScrollbar.Location = new System.Drawing.Point(3, 84);
+            this.chbHorizontalScrollbar.Location = new System.Drawing.Point(3, 117);
+            this.chbHorizontalScrollbar.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
             this.chbHorizontalScrollbar.Name = "chbHorizontalScrollbar";
             this.chbHorizontalScrollbar.Size = new System.Drawing.Size(152, 21);
             this.chbHorizontalScrollbar.TabIndex = 9;
@@ -274,7 +277,7 @@
             // chbShowMinimizeMaximizeButtons
             // 
             this.chbShowMinimizeMaximizeButtons.AutoSize = true;
-            this.chbShowMinimizeMaximizeButtons.Location = new System.Drawing.Point(3, 57);
+            this.chbShowMinimizeMaximizeButtons.Location = new System.Drawing.Point(3, 30);
             this.chbShowMinimizeMaximizeButtons.Name = "chbShowMinimizeMaximizeButtons";
             this.chbShowMinimizeMaximizeButtons.Size = new System.Drawing.Size(234, 21);
             this.chbShowMinimizeMaximizeButtons.TabIndex = 7;
@@ -285,7 +288,7 @@
             // chkShowToolbar
             // 
             this.chkShowToolbar.AutoSize = true;
-            this.chkShowToolbar.Location = new System.Drawing.Point(3, 30);
+            this.chkShowToolbar.Location = new System.Drawing.Point(3, 57);
             this.chkShowToolbar.Name = "chkShowToolbar";
             this.chkShowToolbar.Size = new System.Drawing.Size(112, 21);
             this.chkShowToolbar.TabIndex = 4;
@@ -589,6 +592,17 @@
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
+            // chbMultilineTabs
+            // 
+            this.chbMultilineTabs.AutoSize = true;
+            this.chbMultilineTabs.Location = new System.Drawing.Point(3, 87);
+            this.chbMultilineTabs.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
+            this.chbMultilineTabs.Name = "chbMultilineTabs";
+            this.chbMultilineTabs.Size = new System.Drawing.Size(161, 21);
+            this.chbMultilineTabs.TabIndex = 11;
+            this.chbMultilineTabs.Text = "Multiline tab headers";
+            this.chbMultilineTabs.UseVisualStyleBackColor = true;
+            // 
             // OptionsForm
             // 
             this.AcceptButton = this.btnOk;
@@ -671,5 +685,6 @@
         internal System.Windows.Forms.Label lblCarbonCopyFolder;
         internal System.Windows.Forms.Button btnOk;
         internal System.Windows.Forms.Button btnCancel;
+        internal System.Windows.Forms.CheckBox chbMultilineTabs;
     }
 }
