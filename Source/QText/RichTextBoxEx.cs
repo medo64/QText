@@ -196,7 +196,6 @@ namespace QText {
                         }
                     } return true;
 
-
             }
 
             return base.ProcessCmdKey(ref msg, keyData);
@@ -263,6 +262,15 @@ namespace QText {
                         this.SelectionStart = startIndex;
                         this.SelectionLength = endIndex - startIndex + 1;
                     } return;
+
+                case NativeMethods.WM_SYSKEYDOWN:
+                case NativeMethods.WM_SYSKEYUP:
+                    switch (m.WParam.ToInt32()) { //keys to process
+                        case NativeMethods.VK_MENU: base.WndProc(ref m); break;
+                        case NativeMethods.VK_F4: base.WndProc(ref m); break;
+                    }
+                    Debug.WriteLine("WndProc:WParam: " + m.WParam.ToInt64().ToString()); 
+                    return;                    
             }
             base.WndProc(ref m);
         }
@@ -324,10 +332,16 @@ namespace QText {
 
         private class NativeMethods {
 
-            internal const int WM_SETREDRAW = 11;
+            internal const int VK_F4 = 0x73;
+            internal const int VK_MENU = 0x12;
+            
             internal const int EM_SETEVENTMASK = 1073;
+            
             internal const int WM_LBUTTONDBLCLK = 0x0203;
-            internal const int WM_SYSKEYUP = 0x105;
+            internal const int WM_SETREDRAW = 11;
+            internal const int WM_SYSKEYDOWN = 0x0104;
+            internal const int WM_SYSKEYUP = 0x0105;
+
 
             public static IntPtr SendMessage(IntPtr hWnd, uint Msg, int wParam, IntPtr lParam) {
                 return SendMessageW(hWnd, Msg, new IntPtr(wParam), ref lParam);
