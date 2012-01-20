@@ -268,6 +268,7 @@ namespace QText {
                     switch (m.WParam.ToInt32()) { //keys to process
                         case NativeMethods.VK_MENU: base.WndProc(ref m); break;
                         case NativeMethods.VK_F4: base.WndProc(ref m); break;
+                        case NativeMethods.VK_BACK: base.WndProc(ref m); break;
                     }
                     Debug.WriteLine("WndProc:WParam: " + m.WParam.ToInt64().ToString()); 
                     return;                    
@@ -332,6 +333,7 @@ namespace QText {
 
         private class NativeMethods {
 
+            internal const int VK_BACK = 0x08;
             internal const int VK_F4 = 0x73;
             internal const int VK_MENU = 0x12;
             
