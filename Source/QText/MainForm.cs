@@ -749,7 +749,7 @@ namespace QText {
         private void mnuAppFeedback_Click(object sender, EventArgs e) {
             tmrQuickSave.Enabled = false;
             Medo.Diagnostics.ErrorReport.TopMost = this.TopMost;
-            Medo.Diagnostics.ErrorReport.ShowDialog(this, null, new Uri("http://jmedved.com/ErrorReport/"));
+            Medo.Diagnostics.ErrorReport.ShowDialog(this, null, new Uri("http://jmedved.com/feedback/"));
             tmrQuickSave.Enabled = true;
         }
 
