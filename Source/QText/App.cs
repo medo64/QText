@@ -130,7 +130,7 @@ namespace QText {
         }
 
         private static void UnhandledException(object sender, ThreadExceptionEventArgs e) {
-            Medo.Diagnostics.ErrorReport.SaveToTemp(e.Exception);
+            if (Settings.Installed) { Medo.Diagnostics.ErrorReport.SaveToTemp(e.Exception); }
 #if !DEBUG
             Medo.Diagnostics.ErrorReport.ShowDialog(null, e.Exception, new Uri("http://jmedved.com/feedback/"));
 #else
