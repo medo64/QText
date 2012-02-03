@@ -123,6 +123,7 @@ namespace QText {
         [ComImport(), Guid("42F85136-DB7E-439C-85F1-E4075D135FC8"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         internal interface IFileDialog {
             [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+            [PreserveSig()]
             uint Show([In, Optional] IntPtr hwndOwner); //IModalWindow 
 
 
