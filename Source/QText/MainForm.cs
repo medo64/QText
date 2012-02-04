@@ -862,7 +862,13 @@ namespace QText {
         private void mnxTabMoveTo_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 var folder = ((ToolStripMenuItem)sender).Tag as string;
-                tabFiles.MoveTab(tabFiles.SelectedTab, folder);
+                string oldPath, newPath;
+                tabFiles.MoveTabPreview(tabFiles.SelectedTab, folder, out oldPath, out newPath);
+                if (File.Exists(newPath)) {
+                    Medo.MessageBox.ShowError(this, "File already exists at destination.");
+                } else {
+                    tabFiles.MoveTab(tabFiles.SelectedTab, folder);
+                }
             }
         }
 
