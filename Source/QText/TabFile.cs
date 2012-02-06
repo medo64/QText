@@ -49,8 +49,6 @@ namespace QText {
             this.TextBox = tb;
             if (Settings.FilesPreload) { this.Open(); }
 
-            UpdateTabWidth();
-
             this.GotFocus += txt_GotFocus;
             this.TextBox.Enter += txt_GotFocus;
             this.TextBox.TextChanged += txt_TextChanged;
@@ -162,6 +160,7 @@ namespace QText {
             } else {
                 OpenAsTxt();
             }
+            UpdateTabWidth();
             this.TextBox.SelectionStart = 0;
             this.TextBox.SelectionLength = 0;
             this.TextBox.ClearUndo();
@@ -467,12 +466,32 @@ namespace QText {
         #endregion
 
         public void UpdateTabWidth() {
-            List<int> lot = new List<int>();
-            for (int i = 1; i <= 32; i++) {
-                lot.Add(4 * i * Settings.DisplayTabWidth);
+            {
+                List<int> tabs = new List<int>();
+                for (int i = 1; i <= 32; i++) {
+                    tabs.Add(4 * i * Settings.DisplayTabWidth);
+                }
+                int[] array = tabs.ToArray();
+                NativeMethods.SendMessage(this.TextBox.Handle, NativeMethods.EM_SETTABSTOPS, tabs.Count, array[0]);
             }
-            int[] array = lot.ToArray();
-            NativeMethods.SendMessage(this.TextBox.Handle, NativeMethods.EM_SETTABSTOPS, lot.Count, array[0]);
+
+            if (this.IsRichTextFormat) {
+                int unitWidth;
+                using (var g = this.CreateGraphics()) {
+                    unitWidth = (int)Math.Ceiling(g.MeasureString("WMWM", Settings.DisplayFont).Width / 8);
+                }
+                var tabs2 = new List<int>();
+                for (int j = 1; j <= 32; j++) { tabs2.Add((j * unitWidth) * Settings.DisplayTabWidth); }
+
+                var ss = this.TextBox.SelectionStart;
+                var sl = this.TextBox.SelectionLength;
+                this.TextBox.SelectAll();
+                this.TextBox.SelectionTabs = tabs2.ToArray();
+                this.TextBox.SelectionStart = ss;
+                this.TextBox.SelectionLength = sl;
+            }
+
+            this.TextBox.Refresh();
         }
 
         private void UpdateText() {
@@ -549,8 +568,8 @@ namespace QText {
                 return SendMessageW(hWnd, Msg, new IntPtr(wParam), ref x);
             }
 
-            [System.Runtime.InteropServices.DllImportAttribute("user32.dll", EntryPoint = "SendMessageW")]
-            public static extern IntPtr SendMessageW([System.Runtime.InteropServices.InAttribute()] System.IntPtr hWnd, uint Msg, IntPtr wParam, ref IntPtr lParam);
+            [DllImportAttribute("user32.dll", EntryPoint = "SendMessageW")]
+            public static extern IntPtr SendMessageW([InAttribute()] IntPtr hWnd, UInt32 Msg, IntPtr wParam, ref IntPtr lParam);
 
         }
 

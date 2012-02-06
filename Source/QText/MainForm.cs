@@ -734,9 +734,10 @@ namespace QText {
                     this.tmrUpdateToolbar.Enabled = Settings.ShowToolbar;
                     tmrQuickSave.Interval = Settings.QuickSaveInterval;
 
-                    if ((Settings.CarbonCopyUse)) {
-                        for (int i = 0; i <= tabFiles.TabPages.Count - 1; i++) {
-                            TabFile currTab = (TabFile)tabFiles.TabPages[i];
+                    for (int i = 0; i <= tabFiles.TabPages.Count - 1; i++) {
+                        TabFile currTab = (TabFile)tabFiles.TabPages[i];
+                        currTab.UpdateTabWidth();
+                        if (Settings.CarbonCopyUse) {
                             currTab.SaveCarbonCopy();
                         }
                     }
