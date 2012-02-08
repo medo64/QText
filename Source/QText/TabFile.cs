@@ -476,12 +476,12 @@ namespace QText {
             }
 
             if (this.IsRichTextFormat) {
-                int unitWidth;
-                using (var g = this.CreateGraphics()) {
-                    unitWidth = (int)Math.Ceiling(g.MeasureString("WMWM", Settings.DisplayFont).Width / 8);
-                }
+                int dotWidth = TextRenderer.MeasureText(".", Settings.DisplayFont, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding).Width;
+                int dotXWidth = TextRenderer.MeasureText("X.", Settings.DisplayFont, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding).Width;
+                int charWidth = dotXWidth - dotWidth;
+                
                 var tabs2 = new List<int>();
-                for (int j = 1; j <= 32; j++) { tabs2.Add((j * unitWidth) * Settings.DisplayTabWidth); }
+                for (int i = 1; i <= 32; i++) { tabs2.Add((i * charWidth) * Settings.DisplayTabWidth); }
 
                 var ss = this.TextBox.SelectionStart;
                 var sl = this.TextBox.SelectionLength;
