@@ -252,10 +252,10 @@ namespace QText {
                     frm.InitialFolder = Settings.CarbonCopyFolder;
                 }
                 if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK) {
-                    if (frm.InitialFolder.StartsWith(Settings.FilesLocation, StringComparison.OrdinalIgnoreCase)) {
+                    if (frm.Folder.StartsWith(Settings.FilesLocation, StringComparison.OrdinalIgnoreCase)) {
                         Medo.MessageBox.ShowWarning(this, "Carbon copy folder cannot be same as one used for main program storage.");
                     } else {
-                        txtCarbonCopyFolder.Text = frm.InitialFolder;
+                        txtCarbonCopyFolder.Text = frm.Folder;
                     }
                 }
             }
