@@ -145,7 +145,7 @@ namespace QText {
             var oldPath = Settings.FilesLocation;
             using (var frm = new FolderOpenDialog() { InitialFolder = Settings.FilesLocation }) {
                 if (frm.ShowDialog(this) == DialogResult.OK) {
-                    var newPath = frm.InitialFolder;
+                    var newPath = frm.Folder;
                     if (string.Equals(newPath, Settings.CarbonCopyFolder, StringComparison.OrdinalIgnoreCase)) {
                         Medo.MessageBox.ShowWarning(this, "This folder is currenly used for carbon copy. Move will be aborted.");
                         return;
@@ -153,7 +153,7 @@ namespace QText {
                         Medo.MessageBox.ShowWarning(this, "This folder is already used for storage. Move will be aborted.");
                         return;
                     } else if (newPath.StartsWith(Settings.FilesLocation, StringComparison.OrdinalIgnoreCase)) {
-                        Medo.MessageBox.ShowWarning(this, "This folder is already used for storage. Move will be aborted.");
+                        Medo.MessageBox.ShowWarning(this, "This folder is already used as part of storage. Move will be aborted.");
                         return;
                     }
 
