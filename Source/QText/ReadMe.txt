@@ -50,6 +50,10 @@ SHORTCUT KEYS
 
 VERSION HISTORY
 
+    3.01 (2012-02-22)
+
+        o Fixed data location change.
+
     3.00 (2012-02-14)
 
         o Added support for folders.
