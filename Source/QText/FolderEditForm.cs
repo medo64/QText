@@ -168,7 +168,7 @@ namespace QText {
                         lsv.Items.RemoveAt(lsv.SelectedItems[0].Index);
                         if (lsv.FocusedItem != null) { lsv.FocusedItem.Selected = true; }
                         if (string.Equals(folder, this.CurrentFolder, StringComparison.Ordinal)) {
-                            this.CurrentFolder = null;
+                            this.CurrentFolder = "";
                         }
                     } catch (Exception ex) {
                         Medo.MessageBox.ShowError(this, string.Format(CultureInfo.CurrentUICulture, "Cannot delete folder.\n\n{0}", ex.Message));
