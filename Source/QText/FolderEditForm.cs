@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -159,11 +160,21 @@ namespace QText {
             if (lsv.SelectedItems.Count == 1) {
                 var folder = lsv.SelectedItems[0].Text;
                 if (Medo.MessageBox.ShowQuestion(this, string.Format(CultureInfo.CurrentUICulture, "Do you really want to delete folder \"{0}\"?", folder), MessageBoxButtons.YesNo, MessageBoxDefaultButton.Button2) == DialogResult.Yes) {
+                    var directory = Path.Combine(Settings.FilesLocation, folder);
+                    var files = new List<string>();
+                    files.AddRange(Directory.GetFiles(directory, "*.txt"));
+                    files.AddRange(Directory.GetFiles(directory, "*.rtf"));
+                    if (files.Count > 0) {
+                        if (Medo.MessageBox.ShowQuestion(this, string.Format(CultureInfo.CurrentUICulture, "Folder \"{0}\" is not empty. Do you really want to delete it?", folder), MessageBoxButtons.YesNo, MessageBoxDefaultButton.Button2) != DialogResult.Yes) {
+                            return;
+                        }
+                    }
+
                     try {
                         if (Settings.FilesDeleteToRecycleBin) {
-                            SHFile.DeleteDirectory(Path.Combine(Settings.FilesLocation, folder));
+                            SHFile.DeleteDirectory(directory);
                         } else {
-                            Directory.Delete(Path.Combine(Settings.FilesLocation, folder), true);
+                            Directory.Delete(directory, true);
                         }
                         lsv.Items.RemoveAt(lsv.SelectedItems[0].Index);
                         if (lsv.FocusedItem != null) { lsv.FocusedItem.Selected = true; }
