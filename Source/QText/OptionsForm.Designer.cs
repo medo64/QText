@@ -37,6 +37,7 @@
             this.chkDisplayURLs = new System.Windows.Forms.CheckBox();
             this.txtFont = new System.Windows.Forms.TextBox();
             this.tab_pagDisplay = new System.Windows.Forms.TabPage();
+            this.chbMultilineTabs = new System.Windows.Forms.CheckBox();
             this.chbVerticalScrollbar = new System.Windows.Forms.CheckBox();
             this.chbHorizontalScrollbar = new System.Windows.Forms.CheckBox();
             this.chbShowMinimizeMaximizeButtons = new System.Windows.Forms.CheckBox();
@@ -66,7 +67,6 @@
             this.lblCarbonCopyFolder = new System.Windows.Forms.Label();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.chbMultilineTabs = new System.Windows.Forms.CheckBox();
             this.tab.SuspendLayout();
             this.tab_pagAppearance.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudTabWidth)).BeginInit();
@@ -253,6 +253,17 @@
             this.tab_pagDisplay.Text = "Display";
             this.tab_pagDisplay.UseVisualStyleBackColor = true;
             // 
+            // chbMultilineTabs
+            // 
+            this.chbMultilineTabs.AutoSize = true;
+            this.chbMultilineTabs.Location = new System.Drawing.Point(3, 87);
+            this.chbMultilineTabs.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
+            this.chbMultilineTabs.Name = "chbMultilineTabs";
+            this.chbMultilineTabs.Size = new System.Drawing.Size(161, 21);
+            this.chbMultilineTabs.TabIndex = 11;
+            this.chbMultilineTabs.Text = "Multiline tab headers";
+            this.chbMultilineTabs.UseVisualStyleBackColor = true;
+            // 
             // chbVerticalScrollbar
             // 
             this.chbVerticalScrollbar.AutoSize = true;
@@ -436,6 +447,8 @@
             this.txtHotkey.ReadOnly = true;
             this.txtHotkey.Size = new System.Drawing.Size(346, 22);
             this.txtHotkey.TabIndex = 7;
+            this.txtHotkey.Enter += new System.EventHandler(this.txtHotkey_Enter);
+            this.txtHotkey.Leave += new System.EventHandler(this.txtHotkey_Leave);
             this.txtHotkey.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.txtHotkey_PreviewKeyDown);
             // 
             // lblHotkey
@@ -591,17 +604,6 @@
             this.btnCancel.TabIndex = 5;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
-            // 
-            // chbMultilineTabs
-            // 
-            this.chbMultilineTabs.AutoSize = true;
-            this.chbMultilineTabs.Location = new System.Drawing.Point(3, 87);
-            this.chbMultilineTabs.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
-            this.chbMultilineTabs.Name = "chbMultilineTabs";
-            this.chbMultilineTabs.Size = new System.Drawing.Size(161, 21);
-            this.chbMultilineTabs.TabIndex = 11;
-            this.chbMultilineTabs.Text = "Multiline tab headers";
-            this.chbMultilineTabs.UseVisualStyleBackColor = true;
             // 
             // OptionsForm
             // 

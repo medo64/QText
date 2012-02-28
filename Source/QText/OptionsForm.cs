@@ -51,10 +51,6 @@ namespace QText {
             chkCarbonCopyFolderCreate.Checked = Settings.CarbonCopyCreateFolder;
             chbCarbonCopyIgnoreCopyErrors.Checked = Settings.CarbonCopyIgnoreErrors;
             chbUseCarbonCopy_CheckedChanged(null, null);
-
-            if (App.Hotkey.IsRegistered) {
-                App.Hotkey.Unregister();
-            }
         }
 
         private void OptionsForm_FormClosing(object sender, FormClosingEventArgs e) {
@@ -216,6 +212,26 @@ namespace QText {
             foreach (var file in Directory.GetFiles(oldPath, "*.rtf")) {
                 var oldFile = new FileInfo(file);
                 mapping.Add(oldFile, new FileInfo(Path.Combine(newPath, oldFile.Name)));
+            }
+        }
+
+
+        private bool hadRegistered;
+
+        private void txtHotkey_Enter(object sender, EventArgs e) {
+            if (App.Hotkey.IsRegistered) {
+                hadRegistered = true;
+                App.Hotkey.Unregister();
+            }
+        }
+
+        private void txtHotkey_Leave(object sender, EventArgs e) {
+            if (hadRegistered && (Settings.ActivationHotkey != Keys.None)) {
+                try {
+                    App.Hotkey.Register(Settings.ActivationHotkey);
+                } catch (InvalidOperationException) {
+                    Medo.MessageBox.ShowWarning(this, "Cannot register hotkey.");
+                }
             }
         }
 

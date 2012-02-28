@@ -80,7 +80,7 @@ namespace QText {
             App.Tray.Show();
 
             App.Hotkey.HotkeyActivated += new EventHandler<EventArgs>(Hotkey_HotkeyActivated);
-            if ((Settings.ActivationHotkey != Keys.None)) {
+            if (Settings.ActivationHotkey != Keys.None) {
                 try {
                     App.Hotkey.Register(Settings.ActivationHotkey);
                 } catch (InvalidOperationException) {
