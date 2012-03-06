@@ -466,30 +466,22 @@ namespace QText {
         #endregion
 
         public void UpdateTabWidth() {
-            {
-                List<int> tabs = new List<int>();
-                for (int i = 1; i <= 32; i++) {
-                    tabs.Add(4 * i * Settings.DisplayTabWidth);
-                }
-                int[] array = tabs.ToArray();
-                NativeMethods.SendMessage(this.TextBox.Handle, NativeMethods.EM_SETTABSTOPS, tabs.Count, array[0]);
-            }
+            int dotWidth = TextRenderer.MeasureText(".", Settings.DisplayFont, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding).Width;
+            int dotXWidth = TextRenderer.MeasureText("X.", Settings.DisplayFont, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding).Width;
+            int charWidth = dotXWidth - dotWidth;
 
-            if (this.IsRichTextFormat) {
-                int dotWidth = TextRenderer.MeasureText(".", Settings.DisplayFont, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding).Width;
-                int dotXWidth = TextRenderer.MeasureText("X.", Settings.DisplayFont, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding).Width;
-                int charWidth = dotXWidth - dotWidth;
-                
-                var tabs2 = new List<int>();
-                for (int i = 1; i <= 32; i++) { tabs2.Add((i * charWidth) * Settings.DisplayTabWidth); }
+            var tabs2 = new List<int>();
+            for (int i = 1; i <= 32; i++) { tabs2.Add((i * charWidth) * Settings.DisplayTabWidth); }
 
-                var ss = this.TextBox.SelectionStart;
-                var sl = this.TextBox.SelectionLength;
-                this.TextBox.SelectAll();
-                this.TextBox.SelectionTabs = tabs2.ToArray();
-                this.TextBox.SelectionStart = ss;
-                this.TextBox.SelectionLength = sl;
-            }
+            var ss = this.TextBox.SelectionStart;
+            var sl = this.TextBox.SelectionLength;
+            this.TextBox.SelectAll();
+            this.TextBox.SelectionTabs = tabs2.ToArray();
+            this.TextBox.SelectionStart = this.TextBox.TextLength;
+            this.TextBox.SelectionLength = 0;
+            this.TextBox.SelectionTabs = tabs2.ToArray();
+            this.TextBox.SelectionStart = ss;
+            this.TextBox.SelectionLength = sl;
 
             this.TextBox.Refresh();
         }
