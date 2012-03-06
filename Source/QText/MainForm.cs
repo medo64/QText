@@ -756,9 +756,7 @@ namespace QText {
 
         private void mnuAppUpgrade_Click(object sender, EventArgs e) {
             tmrQuickSave.Enabled = false;
-            using (var frm = new UpgradeForm()) {
-                frm.ShowDialog(this);
-            }
+            Medo.Services.Upgrade.ShowDialog(this, new Uri("http://jmedved.com/upgrade/"));
             tmrQuickSave.Enabled = true;
         }
 
