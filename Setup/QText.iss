@@ -1,23 +1,38 @@
+#define AppName        GetStringFileInfo('..\Binaries\QText.exe', 'ProductName')
+#define AppVersion     GetStringFileInfo('..\Binaries\QText.exe', 'ProductVersion')
+#define AppFileVersion GetStringFileInfo('..\Binaries\QText.exe', 'FileVersion')
+#define AppCompany     GetStringFileInfo('..\Binaries\QText.exe', 'CompanyName')
+#define AppCopyright   GetStringFileInfo('..\Binaries\QText.exe', 'LegalCopyright')
+#define AppBase        LowerCase(StringChange(AppName, ' ', ''))
+#define AppSetupFile   AppBase + StringChange(AppVersion, '.', '')
+
 [Setup]
-AppName=QText
-AppVerName=QText 0.00
-DefaultDirName={pf}\Josip Medved\QText
-OutputBaseFilename=qtext000
+AppName={#AppName}
+AppVersion={#AppVersion}
+AppVerName={#AppName} {#AppVersion}
+AppPublisher={#AppCompany}
+AppPublisherURL=http://www.jmedved.com/{#AppBase}/
+AppCopyright={#AppCopyright}
+VersionInfoProductVersion={#AppVersion}
+VersionInfoProductTextVersion={#AppVersion}
+VersionInfoVersion={#AppFileVersion}
+DefaultDirName={pf}\{#AppCompany}\{#AppName}
+OutputBaseFilename={#AppSetupFile}
 OutputDir=..\Releases
 SourceDir=..\Binaries
 AppId=JosipMedved_QText
 AppMutex=Global\JosipMedved_QText
-AppPublisher=Josip Medved
-AppPublisherURL=http://www.jmedved.com/qtext/
 UninstallDisplayIcon={app}\QText.exe
 AlwaysShowComponentsList=no
 ArchitecturesInstallIn64BitMode=x64
 DisableProgramGroupPage=yes
 MergeDuplicateFiles=yes
-MinVersion=0,5.01
+MinVersion=0,5.1
 PrivilegesRequired=admin
 ShowLanguageDialog=no
 SolidCompression=yes
+ChangesAssociations=no
+DisableWelcomePage=yes
 
 [Dirs]
 Name: "{userappdata}\Josip Medved\QText";  Flags: uninsalwaysuninstall
