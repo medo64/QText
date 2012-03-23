@@ -50,6 +50,12 @@ SHORTCUT KEYS
 
 VERSION HISTORY
 
+    3.10 (2012-03-22)
+
+        o Fixed behavior when installed under non-administrative account.
+        o File names can include special characters (e.g. *).
+        o Bug-fixing.
+
     3.01 (2012-02-22)
 
         o Fixed data location change.
