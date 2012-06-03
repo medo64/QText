@@ -315,6 +315,7 @@ namespace QText {
                     failedTitles.Add(file.Title);
                     failedExceptions.Add(ex);
                 }
+                file.Password = null; //forget passwords
             }
             if (failedTitles.Count > 0) {
                 var sb = new StringBuilder("Cannot save ");
@@ -564,7 +565,7 @@ namespace QText {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
                 TabFile tf = tabFiles.SelectedTab;
-                if (tf.IsRichTextFormat) {
+                if (tf.CurrentFile.IsRich) {
                     using (var f = new System.Windows.Forms.FontDialog()) {
                         f.AllowScriptChange = true;
                         f.AllowSimulations = true;
@@ -595,7 +596,7 @@ namespace QText {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
                 TabFile tf = tabFiles.SelectedTab;
-                if (tf.IsRichTextFormat) {
+                if (tf.CurrentFile.IsRich) {
                     ToogleStyle(tf.TextBox, FontStyle.Bold);
                 }
                 tmrQuickSave.Enabled = true;
@@ -606,7 +607,7 @@ namespace QText {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
                 TabFile tf = tabFiles.SelectedTab;
-                if (tf.IsRichTextFormat) {
+                if (tf.CurrentFile.IsRich) {
                     ToogleStyle(tf.TextBox, FontStyle.Italic);
                 }
                 tmrQuickSave.Enabled = true;
@@ -617,7 +618,7 @@ namespace QText {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
                 TabFile tf = tabFiles.SelectedTab;
-                if (tf.IsRichTextFormat) {
+                if (tf.CurrentFile.IsRich) {
                     if (tf.TextBox.SelectionFont != null) {
                         ToogleStyle(tf.TextBox, FontStyle.Underline);
                     }
@@ -630,7 +631,7 @@ namespace QText {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
                 TabFile tf = tabFiles.SelectedTab;
-                if (tf.IsRichTextFormat) {
+                if (tf.CurrentFile.IsRich) {
                     if (tf.TextBox.SelectionFont != null) {
                         ToogleStyle(tf.TextBox, FontStyle.Strikeout);
                     }
@@ -781,15 +782,20 @@ namespace QText {
 
         private void mnxTab_Opening(object sender, CancelEventArgs e) {
             bool isTabSelected = (tabFiles.SelectedTab != null);
-            bool isTabRichText = isTabSelected && tabFiles.SelectedTab.IsRichTextFormat;
-            bool isTabPlainText = isTabSelected && (tabFiles.SelectedTab.IsRichTextFormat == false);
+            bool isTabRich = isTabSelected && tabFiles.SelectedTab.CurrentFile.IsRich;
+            bool isTabPlain = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsRich == false);
+            bool isTabEncryptable = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsEncrypted == false);
+            bool isTabDecryptable = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsEncrypted);
 
             mnxTabReopen.Enabled = isTabSelected;
             mnxTabSaveNow.Enabled = isTabSelected;
             mnxTabDelete.Enabled = isTabSelected;
             mnxTabRename.Enabled = isTabSelected;
-            mnxTabConvertPlain.Enabled = isTabRichText;
-            mnxTabConvertRich.Enabled = isTabPlainText;
+            mnxTabConvert.Visible = isTabRich || isTabPlain || isTabEncryptable || isTabDecryptable;
+            mnxTabConvertPlain.Visible = isTabRich;
+            mnxTabConvertRich.Visible = isTabPlain;
+            mnxTabEncrypt.Visible = isTabEncryptable;
+            mnxTabDecrypt.Visible = isTabDecryptable;
             mnxTabMoveTo.Enabled = isTabSelected;
             mnxTabPrintPreview.Enabled = isTabSelected;
             mnxTabPrint.Enabled = isTabSelected;
@@ -838,20 +844,6 @@ namespace QText {
             }
         }
 
-        private void mnxTabConvertPlain_Click(object sender, EventArgs e) {
-            if (tabFiles.SelectedTab != null) {
-                if (Medo.MessageBox.ShowQuestion(this, "Conversion will remove all formating (font, style, etc.). Do you want to continue?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
-                    tabFiles.SelectedTab.ConvertToPlainText();
-                }
-            }
-        }
-
-        private void mnxTabConvertRich_Click(object sender, EventArgs e) {
-            if (tabFiles.SelectedTab != null) {
-                tabFiles.SelectedTab.ConvertToRichText();
-            }
-        }
-
         private void mnxTabMoveTo_DropDownOpening(object sender, EventArgs e) {
             mnxTabMoveTo.DropDownItems.Clear();
             mnxTabMoveTo.DropDownItems.Add(new ToolStripMenuItem("(Default)", null, mnxTabMoveTo_Click) { Tag = null });
@@ -876,6 +868,33 @@ namespace QText {
             }
         }
 
+
+        private void mnxTabConvertPlain_Click(object sender, EventArgs e) {
+            if (tabFiles.SelectedTab != null) {
+                if (Medo.MessageBox.ShowQuestion(this, "Conversion will remove all formating (font, style, etc.). Do you want to continue?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+                    tabFiles.SelectedTab.ConvertToPlainText();
+                }
+            }
+        }
+
+        private void mnxTabConvertRich_Click(object sender, EventArgs e) {
+            if (tabFiles.SelectedTab != null) {
+                tabFiles.SelectedTab.ConvertToRichText();
+            }
+        }
+
+        private void mnxTabEncrypt_Click(object sender, EventArgs e) {
+            if (tabFiles.SelectedTab != null) {
+                tabFiles.SelectedTab.Encrypt(""); //TODO: Password from form
+            }
+        }
+
+        private void mnxTabDecrypt_Click(object sender, EventArgs e) {
+            if (tabFiles.SelectedTab != null) {
+                tabFiles.SelectedTab.Decrypt();
+            }
+        }
+
         private void mnxTabOpenContainingFolder_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 string file = tabFiles.SelectedTab.CurrentFile.FullName;
@@ -894,8 +913,8 @@ namespace QText {
 
         private void mnxText_Opening(object sender, CancelEventArgs e) {
             bool isTabSelected = (tabFiles.SelectedTab != null);
-            bool isTabRichText = isTabSelected && tabFiles.SelectedTab.IsRichTextFormat;
-            bool isTabPlainText = isTabSelected && (tabFiles.SelectedTab.IsRichTextFormat == false);
+            bool isTabRichText = isTabSelected && tabFiles.SelectedTab.CurrentFile.IsRich;
+            bool isTabPlainText = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsRich == false);
             bool isTextSelected = isTabSelected && (tabFiles.SelectedTab.TextBox.SelectedText.Length > 0);
             bool hasText = isTabSelected && (tabFiles.SelectedTab.TextBox.Text.Length > 0);
 
@@ -1268,8 +1287,8 @@ namespace QText {
 
         private void tmrUpdateToolbar_Tick(object sender, EventArgs e) {
             bool isTabSelected = (tabFiles.SelectedTab != null);
-            bool isTabRichText = isTabSelected && tabFiles.SelectedTab.IsRichTextFormat;
-            bool isTabPlainText = isTabSelected && (tabFiles.SelectedTab.IsRichTextFormat == false);
+            bool isTabRichText = isTabSelected && tabFiles.SelectedTab.CurrentFile.IsRich;
+            bool isTabPlainText = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsRich == false);
 
             mnuSaveNow.Enabled = isTabSelected;
             mnuRename.Enabled = isTabSelected;

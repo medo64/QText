@@ -84,6 +84,8 @@
             this.mnxTextSelectionLower = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextSelectionTitle = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextSelectionDrGrammar = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnxTextSelectionSpelling = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextLines = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextLinesSortAsc = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextLinesSortDesc = new System.Windows.Forms.ToolStripMenuItem();
@@ -95,10 +97,13 @@
             this.mnxTab1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTabDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabRename = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnxTabConvertPlain = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnxTabConvertRich = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabMoveTo = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabMoveToDummy = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTabConvert = new System.Windows.Forms.ToolStripSeparator();
+            this.mnxTabConvertPlain = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTabConvertRich = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTabEncrypt = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTabDecrypt = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTab2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTabPrintPreview = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabPrint = new System.Windows.Forms.ToolStripMenuItem();
@@ -106,8 +111,6 @@
             this.mnxTabOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.tmrCheckFileUpdate = new System.Windows.Forms.Timer(this.components);
             this.tabFiles = new QText.TabFiles();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnxTextSelectionSpelling = new System.Windows.Forms.ToolStripMenuItem();
             this.mnu.SuspendLayout();
             this.mnxText.SuspendLayout();
             this.mnxTab.SuspendLayout();
@@ -470,7 +473,7 @@
             this.mnxTextSelection,
             this.mnxTextLines});
             this.mnxText.Name = "mnxTextBox";
-            this.mnxText.Size = new System.Drawing.Size(310, 440);
+            this.mnxText.Size = new System.Drawing.Size(310, 418);
             this.mnxText.Opening += new System.ComponentModel.CancelEventHandler(this.mnxText_Opening);
             // 
             // mnxTextUndo
@@ -670,6 +673,19 @@
             this.mnxTextSelectionDrGrammar.Text = "Convert to title case (Dr. &Grammar rules)";
             this.mnxTextSelectionDrGrammar.Click += new System.EventHandler(this.mnxTextSelectionDrGrammar_Click);
             // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(341, 6);
+            // 
+            // mnxTextSelectionSpelling
+            // 
+            this.mnxTextSelectionSpelling.Name = "mnxTextSelectionSpelling";
+            this.mnxTextSelectionSpelling.ShortcutKeyDisplayString = "Shift+F1";
+            this.mnxTextSelectionSpelling.Size = new System.Drawing.Size(344, 24);
+            this.mnxTextSelectionSpelling.Text = "Spelling";
+            this.mnxTextSelectionSpelling.Click += new System.EventHandler(this.mnxTextSelectionSpelling_Click);
+            // 
             // mnxTextLines
             // 
             this.mnxTextLines.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -703,16 +719,19 @@
             this.mnxTab1,
             this.mnxTabDelete,
             this.mnxTabRename,
+            this.mnxTabMoveTo,
+            this.mnxTabConvert,
             this.mnxTabConvertPlain,
             this.mnxTabConvertRich,
-            this.mnxTabMoveTo,
+            this.mnxTabEncrypt,
+            this.mnxTabDecrypt,
             this.mnxTab2,
             this.mnxTabPrintPreview,
             this.mnxTabPrint,
             this.ToolStripMenuItem14,
             this.mnxTabOpenContainingFolder});
             this.mnxTab.Name = "mnxTab";
-            this.mnxTab.Size = new System.Drawing.Size(233, 292);
+            this.mnxTab.Size = new System.Drawing.Size(233, 346);
             this.mnxTab.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.mnxTab_Closed);
             this.mnxTab.Opening += new System.ComponentModel.CancelEventHandler(this.mnxTab_Opening);
             // 
@@ -772,20 +791,6 @@
             this.mnxTabRename.Text = "&Rename";
             this.mnxTabRename.Click += new System.EventHandler(this.mnuRename_Click);
             // 
-            // mnxTabConvertPlain
-            // 
-            this.mnxTabConvertPlain.Name = "mnxTabConvertPlain";
-            this.mnxTabConvertPlain.Size = new System.Drawing.Size(232, 24);
-            this.mnxTabConvertPlain.Text = "Convert to plain text";
-            this.mnxTabConvertPlain.Click += new System.EventHandler(this.mnxTabConvertPlain_Click);
-            // 
-            // mnxTabConvertRich
-            // 
-            this.mnxTabConvertRich.Name = "mnxTabConvertRich";
-            this.mnxTabConvertRich.Size = new System.Drawing.Size(232, 24);
-            this.mnxTabConvertRich.Text = "Convert to rich text";
-            this.mnxTabConvertRich.Click += new System.EventHandler(this.mnxTabConvertRich_Click);
-            // 
             // mnxTabMoveTo
             // 
             this.mnxTabMoveTo.AccessibleDescription = "";
@@ -801,6 +806,39 @@
             this.mnxTabMoveToDummy.Name = "mnxTabMoveToDummy";
             this.mnxTabMoveToDummy.Size = new System.Drawing.Size(128, 24);
             this.mnxTabMoveToDummy.Text = "dummy";
+            // 
+            // mnxTabConvert
+            // 
+            this.mnxTabConvert.Name = "mnxTabConvert";
+            this.mnxTabConvert.Size = new System.Drawing.Size(229, 6);
+            // 
+            // mnxTabConvertPlain
+            // 
+            this.mnxTabConvertPlain.Name = "mnxTabConvertPlain";
+            this.mnxTabConvertPlain.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabConvertPlain.Text = "Convert to plain text";
+            this.mnxTabConvertPlain.Click += new System.EventHandler(this.mnxTabConvertPlain_Click);
+            // 
+            // mnxTabConvertRich
+            // 
+            this.mnxTabConvertRich.Name = "mnxTabConvertRich";
+            this.mnxTabConvertRich.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabConvertRich.Text = "Convert to rich text";
+            this.mnxTabConvertRich.Click += new System.EventHandler(this.mnxTabConvertRich_Click);
+            // 
+            // mnxTabEncrypt
+            // 
+            this.mnxTabEncrypt.Name = "mnxTabEncrypt";
+            this.mnxTabEncrypt.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabEncrypt.Text = "Encrypt";
+            this.mnxTabEncrypt.Click += new System.EventHandler(this.mnxTabEncrypt_Click);
+            // 
+            // mnxTabDecrypt
+            // 
+            this.mnxTabDecrypt.Name = "mnxTabDecrypt";
+            this.mnxTabDecrypt.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabDecrypt.Text = "Decrypt";
+            this.mnxTabDecrypt.Click += new System.EventHandler(this.mnxTabDecrypt_Click);
             // 
             // mnxTab2
             // 
@@ -856,19 +894,6 @@
             this.tabFiles.TabIndex = 0;
             this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
             this.tabFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabFiles_MouseDown);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(341, 6);
-            // 
-            // mnxTextSelectionSpelling
-            // 
-            this.mnxTextSelectionSpelling.Name = "mnxTextSelectionSpelling";
-            this.mnxTextSelectionSpelling.ShortcutKeyDisplayString = "Shift+F1";
-            this.mnxTextSelectionSpelling.Size = new System.Drawing.Size(344, 24);
-            this.mnxTextSelectionSpelling.Text = "Spelling";
-            this.mnxTextSelectionSpelling.Click += new System.EventHandler(this.mnxTextSelectionSpelling_Click);
             // 
             // MainForm
             // 
@@ -985,5 +1010,8 @@
         private System.Windows.Forms.ToolStripMenuItem mnxTextLinesSortDesc;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem mnxTextSelectionSpelling;
+        private System.Windows.Forms.ToolStripSeparator mnxTabConvert;
+        private System.Windows.Forms.ToolStripMenuItem mnxTabEncrypt;
+        private System.Windows.Forms.ToolStripMenuItem mnxTabDecrypt;
     }
 }

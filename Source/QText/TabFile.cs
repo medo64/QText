@@ -68,6 +68,7 @@ namespace QText {
         public DateTime LastSaveTime { get; private set; }
 
         public bool IsOpened { get; private set; }
+        public string Password { get; set; }
 
         private bool _isChanged;
         public bool IsChanged {
@@ -119,7 +120,7 @@ namespace QText {
         }
 
         public void ConvertToPlainText() {
-            if (this.IsRichTextFormat == false) { return; }
+            if (this.CurrentFile.IsRich == false) { return; }
 
             this.Open();
             var newFile = this.CurrentFile.ChangeExtension(this.CurrentFile.IsEncrypted ? QFileInfo.Extensions.PlainEncrypted : QFileInfo.Extensions.Plain);
@@ -130,7 +131,7 @@ namespace QText {
         }
 
         public void ConvertToRichText() {
-            if (this.IsRichTextFormat) { return; }
+            if (this.CurrentFile.IsRich) { return; }
 
             this.Open();
             string text = this.TextBox.Text;
@@ -142,15 +143,40 @@ namespace QText {
             this.Reopen();
         }
 
-        public bool IsRichTextFormat {
-            get {
-                return this.CurrentFile.IsRich;
-            }
+
+        public void Encrypt(string password) {
+            if (this.CurrentFile.IsEncrypted) { return; }
+
+            this.Open();
+            string text = this.TextBox.Text;
+
+            var newFile = this.CurrentFile.ChangeExtension(this.CurrentFile.IsRich ? QFileInfo.Extensions.RichEncrypted : QFileInfo.Extensions.PlainEncrypted);
+            Helper.MovePath(this.CurrentFile.FullName, newFile.FullName);
+            this.CurrentFile = newFile;
+            this.Password = password;
+            this.Save();
+            this.Reopen();
         }
+
+        public void Decrypt() {
+            if (this.CurrentFile.IsEncrypted == false) { return; }
+            if (this.Password == null) { throw new InvalidOperationException("No decryption password found."); }
+
+            this.Open();
+            string text = this.TextBox.Text;
+
+            var newFile = this.CurrentFile.ChangeExtension(this.CurrentFile.IsRich ? QFileInfo.Extensions.Rich : QFileInfo.Extensions.Plain);
+            Helper.MovePath(this.CurrentFile.FullName, newFile.FullName);
+            this.CurrentFile = newFile;
+            this.Password = null;
+            this.Save();
+            this.Reopen();
+        }
+
 
         public void Reopen() {
             this.IsOpened = false;
-            if (this.IsRichTextFormat) {
+            if (this.CurrentFile.IsRich) {
                 try {
                     OpenAsRich();
                 } catch (ArgumentException) {
@@ -192,7 +218,7 @@ namespace QText {
         public void Save() {
             if (this.IsOpened == false) { return; }
 
-            if (this.IsRichTextFormat) {
+            if (this.CurrentFile.IsRich) {
                 SaveAsRich();
             } else {
                 SaveAsPlain();
@@ -218,7 +244,7 @@ namespace QText {
 
                 var fiBase = new QFileInfo(this.CurrentFile.FullName);
                 destFile = Path.Combine(Settings.CarbonCopyFolder, fiBase.Name);
-                if (this.IsRichTextFormat) {
+                if (this.CurrentFile.IsRich) {
                     this.TextBox.SaveFile(destFile, RichTextBoxStreamType.RichText);
                 } else {
                     File.WriteAllText(destFile, this.TextBox.Text);
@@ -335,7 +361,7 @@ namespace QText {
         public void Cut(bool forceText) {
             try {
                 if (this.CanCopy) {
-                    if ((this.IsRichTextFormat == false) || forceText) {
+                    if ((this.CurrentFile.IsRich == false) || forceText) {
                         Clipboard.Clear();
                         Clipboard.SetText(this.TextBox.SelectedText.Replace("\n", "\r\n"), TextDataFormat.UnicodeText);
                         this.TextBox.SelectedText = "";
@@ -354,7 +380,7 @@ namespace QText {
         public void Copy(bool forceText) {
             try {
                 if (this.CanCopy) {
-                    if ((this.IsRichTextFormat == false) || forceText) {
+                    if ((this.CurrentFile.IsRich == false) || forceText) {
                         Clipboard.Clear();
                         Clipboard.SetText(this.TextBox.SelectedText.Replace("\n", "\r\n"), TextDataFormat.UnicodeText);
                     } else {
@@ -377,7 +403,7 @@ namespace QText {
         public void Paste(bool forceText) {
             try {
                 if (CanPaste) {
-                    if ((this.IsRichTextFormat == false) || forceText) {
+                    if ((this.CurrentFile.IsRich == false) || forceText) {
                         var text = Clipboard.GetText(TextDataFormat.UnicodeText);
                         this.TextBox.SelectionFont = Settings.DisplayFont;
                         this.TextBox.SelectedText = text;
