@@ -733,7 +733,7 @@
             this.ToolStripMenuItem14,
             this.mnxTabOpenContainingFolder});
             this.mnxTab.Name = "mnxTab";
-            this.mnxTab.Size = new System.Drawing.Size(233, 370);
+            this.mnxTab.Size = new System.Drawing.Size(233, 392);
             this.mnxTab.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.mnxTab_Closed);
             this.mnxTab.Opening += new System.ComponentModel.CancelEventHandler(this.mnxTab_Opening);
             // 
@@ -830,6 +830,7 @@
             // 
             // mnxTabEncrypt
             // 
+            this.mnxTabEncrypt.Image = ((System.Drawing.Image)(resources.GetObject("mnxTabEncrypt.Image")));
             this.mnxTabEncrypt.Name = "mnxTabEncrypt";
             this.mnxTabEncrypt.Size = new System.Drawing.Size(232, 24);
             this.mnxTabEncrypt.Text = "Encrypt";
@@ -844,6 +845,7 @@
             // 
             // mnxTabChangePassword
             // 
+            this.mnxTabChangePassword.Image = ((System.Drawing.Image)(resources.GetObject("mnxTabChangePassword.Image")));
             this.mnxTabChangePassword.Name = "mnxTabChangePassword";
             this.mnxTabChangePassword.Size = new System.Drawing.Size(232, 24);
             this.mnxTabChangePassword.Text = "Change password";
