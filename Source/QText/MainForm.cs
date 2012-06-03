@@ -727,6 +727,7 @@ namespace QText {
             using (var frm = new FolderEditForm(tabFiles.CurrentFolder)) {
                 frm.ShowDialog(this);
                 if (string.Equals(tabFiles.CurrentFolder, frm.CurrentFolder, StringComparison.Ordinal) == false) {
+                    tabFiles.Enabled = true;
                     tabFiles.FolderOpen(frm.CurrentFolder, false);
                     mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
                     Settings.LastFolder = tabFiles.CurrentFolder;
