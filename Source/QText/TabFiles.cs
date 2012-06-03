@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Windows.Forms;
 
@@ -8,8 +10,32 @@ namespace QText {
 
         public TabFiles()
             : base() {
+            this.SetStyle(ControlStyles.DoubleBuffer, true);
+            this.SetStyle(ControlStyles.ResizeRedraw, true);
+            this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+            this.DrawMode = TabDrawMode.OwnerDrawFixed;
         }
 
+        private readonly StringFormat StringFormat = new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
+
+        protected override void OnDrawItem(DrawItemEventArgs e) {
+            base.OnDrawItem(e);
+
+            var tab = (TabFile)this.TabPages[e.Index];
+
+            e.Graphics.FillRectangle(SystemBrushes.Control, e.Bounds);
+            if ((e.State & DrawItemState.Selected) == DrawItemState.Selected) {
+                var selectionColor = Color.FromArgb(128, SystemColors.Highlight.R, SystemColors.Highlight.G, SystemColors.Highlight.B);
+                using (var selectionBrush = new LinearGradientBrush(e.Bounds, selectionColor, SystemColors.Control, LinearGradientMode.Vertical) { Blend = new Blend() { Positions = new float[] { 0.75F, 1 } } }) {
+                    e.Graphics.FillRectangle(selectionBrush, e.Bounds);
+                }
+            }
+            if (tab.CurrentFile.IsEncrypted) {
+                e.Graphics.DrawString(tab.Text, this.Font, Brushes.DarkGreen, e.Bounds, this.StringFormat);
+            } else {
+                e.Graphics.DrawString(tab.Text, this.Font, SystemBrushes.ControlText, e.Bounds, this.StringFormat);
+            }
+        }
 
         protected override void OnGotFocus(EventArgs e) {
             base.OnGotFocus(e);
