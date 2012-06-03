@@ -818,6 +818,7 @@ namespace QText {
             mnxTabConvertPlain.Visible = isTabRich;
             mnxTabConvertRich.Visible = isTabPlain;
             mnxTabEncrypt.Visible = isTabEncryptable;
+            mnxTabChangePassword.Visible = isTabDecryptable;
             mnxTabDecrypt.Visible = isTabDecryptable;
             mnxTabMoveTo.Enabled = isTabSelected;
             mnxTabPrintPreview.Enabled = isTabSelected;
@@ -908,9 +909,20 @@ namespace QText {
 
         private void mnxTabEncrypt_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
-                using (var frm = new PasswordForm(this.Text)) {
+                using (var frm = new ChangePasswordForm(this.Text)) {
                     if (frm.ShowDialog(this) == DialogResult.OK) {
                         tabFiles.SelectedTab.Encrypt(frm.Password);
+                    }
+                }
+            }
+        }
+
+        private void mnxTabChangePassword_Click(object sender, EventArgs e) {
+            if (tabFiles.SelectedTab != null) {
+                using (var frm = new ChangePasswordForm(this.Text)) {
+                    if (frm.ShowDialog(this) == DialogResult.OK) {
+                        tabFiles.SelectedTab.Password = frm.Password;
+                        tabFiles.SelectedTab.Save(); ;
                     }
                 }
             }

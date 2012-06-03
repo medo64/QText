@@ -104,6 +104,7 @@
             this.mnxTabConvertRich = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabEncrypt = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabDecrypt = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTabChangePassword = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTab2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTabPrintPreview = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabPrint = new System.Windows.Forms.ToolStripMenuItem();
@@ -724,6 +725,7 @@
             this.mnxTabConvertPlain,
             this.mnxTabConvertRich,
             this.mnxTabEncrypt,
+            this.mnxTabChangePassword,
             this.mnxTabDecrypt,
             this.mnxTab2,
             this.mnxTabPrintPreview,
@@ -731,7 +733,7 @@
             this.ToolStripMenuItem14,
             this.mnxTabOpenContainingFolder});
             this.mnxTab.Name = "mnxTab";
-            this.mnxTab.Size = new System.Drawing.Size(233, 346);
+            this.mnxTab.Size = new System.Drawing.Size(233, 370);
             this.mnxTab.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.mnxTab_Closed);
             this.mnxTab.Opening += new System.ComponentModel.CancelEventHandler(this.mnxTab_Opening);
             // 
@@ -839,6 +841,13 @@
             this.mnxTabDecrypt.Size = new System.Drawing.Size(232, 24);
             this.mnxTabDecrypt.Text = "Decrypt";
             this.mnxTabDecrypt.Click += new System.EventHandler(this.mnxTabDecrypt_Click);
+            // 
+            // mnxTabChangePassword
+            // 
+            this.mnxTabChangePassword.Name = "mnxTabChangePassword";
+            this.mnxTabChangePassword.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabChangePassword.Text = "Change password";
+            this.mnxTabChangePassword.Click += new System.EventHandler(this.mnxTabChangePassword_Click);
             // 
             // mnxTab2
             // 
@@ -1013,5 +1022,6 @@
         private System.Windows.Forms.ToolStripSeparator mnxTabConvert;
         private System.Windows.Forms.ToolStripMenuItem mnxTabEncrypt;
         private System.Windows.Forms.ToolStripMenuItem mnxTabDecrypt;
+        private System.Windows.Forms.ToolStripMenuItem mnxTabChangePassword;
     }
 }
