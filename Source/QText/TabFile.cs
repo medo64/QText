@@ -4,8 +4,10 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
+using Medo.Security.Cryptography;
 
 namespace QText {
 
@@ -150,12 +152,12 @@ namespace QText {
             this.IsOpened = false;
             if (this.IsRichTextFormat) {
                 try {
-                    OpenAsRtf();
+                    OpenAsRich();
                 } catch (ArgumentException) {
-                    OpenAsTxt();
+                    OpenAsPlain();
                 }
             } else {
-                OpenAsTxt();
+                OpenAsPlain();
             }
             UpdateTabWidth();
             this.TextBox.SelectionStart = 0;
@@ -191,9 +193,9 @@ namespace QText {
             if (this.IsOpened == false) { return; }
 
             if (this.IsRichTextFormat) {
-                SaveAsRtf();
+                SaveAsRich();
             } else {
-                SaveAsTxt();
+                SaveAsPlain();
             }
 
             this.LastSaveTime = DateTime.Now;
@@ -513,29 +515,107 @@ namespace QText {
 
         #region Open/Save
 
-        private void OpenAsTxt() {
-            this.TextBox.ResetText();
-            var text = File.ReadAllText(this.CurrentFile.FullName, Utf8EncodingWithoutBom);
-            var lines = text.Split(new string[] { "\r\n", "\n", "\r" }, StringSplitOptions.None);
-            text = string.Join("\n", lines);
-            this.TextBox.Text = text;
-        }
-
-        private void SaveAsTxt() {
-            using (var fileStream = new FileStream(this.CurrentFile.FullName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None)) {
-                var text = string.Join(Environment.NewLine, this.TextBox.Lines);
-                byte[] bytes = Utf8EncodingWithoutBom.GetBytes(text);
-                fileStream.Write(bytes, 0, bytes.Length);
-                fileStream.SetLength(bytes.Length);
+        private void OpenAsPlain() {
+            using (var stream = new FileStream(this.CurrentFile.FullName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+                if (this.CurrentFile.IsEncrypted) {
+                    OpenAsPlainEncrypted(stream);
+                } else {
+                    OpenAsPlain(stream);
+                }
             }
         }
 
-        private void OpenAsRtf() {
-            this.TextBox.LoadFile(this.CurrentFile.FullName, RichTextBoxStreamType.RichText);
+        private void OpenAsPlain(Stream stream) {
+            string text;
+            using (var sr = new StreamReader(stream, Utf8EncodingWithoutBom)) {
+                text = sr.ReadToEnd();
+                var lines = text.Split(new string[] { "\r\n", "\n", "\r" }, StringSplitOptions.None);
+                text = string.Join("\n", lines);
+            }
+            this.TextBox.ResetText();
+            this.TextBox.Text = text;
         }
 
-        private void SaveAsRtf() {
-            this.TextBox.SaveFile(this.CurrentFile.FullName, RichTextBoxStreamType.RichText);
+        private void OpenAsPlainEncrypted(Stream stream) {
+            using (var aesStream = new OpenSslAesStream(stream, "", CryptoStreamMode.Read, 256, CipherMode.CBC)) {
+                OpenAsPlain(aesStream);
+            }
+        }
+
+
+        private void SaveAsPlain() {
+            using (var stream = new FileStream(this.CurrentFile.FullName, FileMode.Create, FileAccess.Write, FileShare.Read)) {
+                if (this.CurrentFile.IsEncrypted) {
+                    SaveAsPlainEncrypted(stream);
+                } else {
+                    SaveAsPlain(stream);
+                }
+            }
+        }
+
+        private void SaveAsPlain(Stream stream) {
+            var text = string.Join(Environment.NewLine, this.TextBox.Lines);
+            var bytes = Utf8EncodingWithoutBom.GetBytes(text);
+            stream.Write(bytes, 0, bytes.Length);
+        }
+
+        private void SaveAsPlainEncrypted(Stream stream) {
+            using (var aesStream = new OpenSslAesStream(stream, "", CryptoStreamMode.Write, 256, CipherMode.CBC)) {
+                SaveAsPlain(aesStream);
+            }
+        }
+
+
+        private void OpenAsRich() {
+            using (var stream = new FileStream(this.CurrentFile.FullName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+                if (this.CurrentFile.IsEncrypted) {
+                    OpenAsRichEncrypted(stream);
+                } else {
+                    OpenAsRich(stream);
+                }
+            }
+        }
+
+        private void OpenAsRich(Stream stream) {
+            this.TextBox.LoadFile(stream, RichTextBoxStreamType.RichText);
+        }
+
+        private void OpenAsRichEncrypted(Stream stream) {
+            using (var aesStream = new OpenSslAesStream(stream, "", CryptoStreamMode.Read, 256, CipherMode.CBC)) {
+                var buffer = new byte[65536];
+                using (var memStream = new MemoryStream()) { //because RichTextBox seeks through stream
+                    while (true) {
+                        var len = aesStream.Read(buffer, 0, buffer.Length);
+                        if (len == 0) {
+                            memStream.Position = 0;
+                            break;
+                        }
+                        memStream.Write(buffer, 0, len);
+                    }
+                    OpenAsRich(memStream);
+                }
+            }
+        }
+
+
+        private void SaveAsRich() {
+            using (var stream = new FileStream(this.CurrentFile.FullName, FileMode.Create, FileAccess.Write, FileShare.Read)) {
+                if (this.CurrentFile.IsEncrypted) {
+                    SaveAsRichEncrypted(stream);
+                } else {
+                    SaveAsRich(stream);
+                }
+            }
+        }
+
+        private void SaveAsRich(Stream stream) {
+            this.TextBox.SaveFile(stream, RichTextBoxStreamType.RichText);
+        }
+
+        private void SaveAsRichEncrypted(Stream stream) {
+            using (var aesStream = new OpenSslAesStream(stream, "", CryptoStreamMode.Write, 256, CipherMode.CBC)) {
+                SaveAsRich(aesStream);
+            }
         }
 
         #endregion
