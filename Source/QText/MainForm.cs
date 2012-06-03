@@ -439,7 +439,7 @@ namespace QText {
                                 SetSelectedTab(tabFiles.SelectedTab);
                             } else {
                                 tabFiles.SelectedTab.Password = null;
-                                tabFiles.SelectedTab = this._CurrSelectedTab;
+                                tabFiles.SelectedTab = null;
                             }
                         }
                     } else {
@@ -449,7 +449,7 @@ namespace QText {
                 } catch (CryptographicException) {
                     Medo.MessageBox.ShowWarning(this, "File cannot be decrypted. Possible password mismatch.");
                     tabFiles.SelectedTab.Password = null;
-                    tabFiles.SelectedTab = this._CurrSelectedTab;
+                    tabFiles.SelectedTab = null;
                 } catch (Exception ex) {
                     Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot open file.\n\n{0}", ex.Message));
                     tabFiles.SelectedTab = this._CurrSelectedTab;
@@ -748,7 +748,7 @@ namespace QText {
             }
             tabFiles.FolderSave();
             tabFiles.Enabled = true;
-            if (tabFiles.SelectedTab != null) { tabFiles.SelectedTab.Select(); }
+            if (tabFiles.SelectedTab != null) { tabFiles_SelectedIndexChanged(null, null); }
             tmrQuickSave.Enabled = true;
         }
 
