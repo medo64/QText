@@ -142,6 +142,17 @@ namespace QText {
             }
         }
 
+        public void Close() {
+            if (this.IsOpened) {
+                if (this.TextBox != null) {
+                    this.Controls.Remove(this.TextBox);
+                    this.TextBox = null;
+                }
+                this.Password = null;
+                this.IsOpened = false;
+            }
+        }
+
         public void ConvertToPlainText() {
             if (this.IsOpened == false) { throw new InvalidOperationException("File is not loaded."); }
             if (this.CurrentFile.IsRich == false) { throw new InvalidOperationException("File is already in plain text format."); }

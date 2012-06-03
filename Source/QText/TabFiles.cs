@@ -112,20 +112,10 @@ namespace QText {
                 selectedTab = (TabFile)this.TabPages[0];
             }
 
-            if (selectedTab != null) {
-                if (selectedTab.CurrentFile.IsEncrypted) {
-                    var currIndex = this.TabPages.IndexOf(selectedTab);
-                    selectedTab = null; //remove it in case that no unencrypted tab is found
-                    for (int i = 1; i < this.TabPages.Count; i++) {
-                        var nextIndex = (currIndex + i) % this.TabPages.Count;
-                        var nextTab = (TabFile)this.TabPages[nextIndex];
-                        if (nextTab.CurrentFile.IsEncrypted == false) {
-                            selectedTab = nextTab;
-                            break;
-                        }
-                    }
-                }
-                this.SelectedTab = selectedTab;
+            SelectNextTab(selectedTab);
+            if (this.SelectedTab != null) {
+                this.SelectedTab.Select();
+                this.OnSelectedIndexChanged(new EventArgs());
             }
 
             this.Visible = initialVisibility;
@@ -133,6 +123,23 @@ namespace QText {
                 this.SelectedTab.Select();
                 this.OnSelectedIndexChanged(new EventArgs());
             }
+        }
+
+        public void SelectNextTab(TabFile preferredTab) {
+            if (preferredTab == null) { return; }
+            if (preferredTab.CurrentFile.IsEncrypted) {
+                var currIndex = this.TabPages.IndexOf(preferredTab);
+                preferredTab = null; //remove it in case that no unencrypted tab is found
+                for (int i = 0; i < this.TabPages.Count; i++) {
+                    var nextIndex = (currIndex + i) % this.TabPages.Count;
+                    var nextTab = (TabFile)this.TabPages[nextIndex];
+                    if (nextTab.CurrentFile.IsEncrypted == false) {
+                        preferredTab = nextTab;
+                        break;
+                    }
+                }
+            }
+            this.SelectedTab = preferredTab;
         }
 
         public void FolderSave() {
