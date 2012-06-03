@@ -49,15 +49,16 @@ namespace QText {
             this.CurrentFolder = folder;
 
             var files = new List<string>();
-            files.AddRange(Directory.GetFiles(this.CurrentDirectory, "*.txt"));
-            files.AddRange(Directory.GetFiles(this.CurrentDirectory, "*.rtf"));
+            foreach (var extension in QFileInfo.GetExtensions()) {
+                files.AddRange(Directory.GetFiles(this.CurrentDirectory, "*" + extension));
+            }
 
             string selectedTitle;
             IList<string> orderedTitles = ReadOrderedTitles(out selectedTitle);
 
             files.Sort(delegate(string file1, string file2) {
-                var title1 = Helper.DecodeFileName(Path.GetFileNameWithoutExtension(file1));
-                var title2 = Helper.DecodeFileName(Path.GetFileNameWithoutExtension(file2));
+                var title1 = Helper.DecodeFileName(QFileInfo.GetFileNameWithoutExtension(file1));
+                var title2 = Helper.DecodeFileName(QFileInfo.GetFileNameWithoutExtension(file2));
                 if (orderedTitles != null) {
                     var titleIndex1 = orderedTitles.IndexOf(title1);
                     var titleIndex2 = orderedTitles.IndexOf(title2);
@@ -150,7 +151,7 @@ namespace QText {
         #region File operations
 
         public void AddTab(string title, bool isRichText) {
-            TabFile t = TabFile.Create(Path.Combine(this.CurrentDirectory, Helper.EncodeFileName(title) + (isRichText ? ".rtf" : ".txt")));
+            TabFile t = TabFile.Create(Path.Combine(this.CurrentDirectory, Helper.EncodeFileName(title) + (isRichText ? QFileInfo.Extensions.Rich : QFileInfo.Extensions.Plain)));
             t.ContextMenuStrip = this.TabContextMenuStrip;
             if (this.SelectedTab != null) {
                 this.TabPages.Insert(this.TabPages.IndexOf(this.SelectedTab) + 1, t);
@@ -184,7 +185,7 @@ namespace QText {
 
         public void MoveTabPreview(TabFile tab, string newFolder, out string oldPath, out string newPath) {
             string destFolder = string.IsNullOrEmpty(newFolder) ? Settings.FilesLocation : Path.Combine(Settings.FilesLocation, newFolder);
-            var oldFile = new FileInfo(tab.CurrentFile.FullName);
+            var oldFile = new QFileInfo(tab.CurrentFile.FullName);
             oldPath = oldFile.FullName;
             newPath = Path.Combine(destFolder, oldFile.Name);
         }
@@ -285,7 +286,7 @@ namespace QText {
 
         public void WriteOrderedTitles() {
             try {
-                var fi = new FileInfo(this.OrderFile);
+                var fi = new QFileInfo(this.OrderFile);
                 if (fi.Exists == false) {
                     fi.Create();
                 }

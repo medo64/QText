@@ -153,7 +153,7 @@ namespace QText {
                         return;
                     }
 
-                    var mapping = new Dictionary<FileInfo, FileInfo>();
+                    var mapping = new Dictionary<QFileInfo, QFileInfo>();
                     try {
                         FillMapping(mapping, oldPath, newPath, "");
                         foreach (var folder in TabFiles.GetSubFolders()) {
@@ -199,19 +199,19 @@ namespace QText {
             }
         }
 
-        private void FillMapping(Dictionary<FileInfo, FileInfo> mapping, string oldBasePath, string newBasePath, string folder) {
+        private void FillMapping(Dictionary<QFileInfo, QFileInfo> mapping, string oldBasePath, string newBasePath, string folder) {
             var oldPath = string.IsNullOrEmpty(folder) ? oldBasePath : Path.Combine(oldBasePath, folder);
             var newPath = string.IsNullOrEmpty(folder) ? newBasePath : Path.Combine(newBasePath, folder);
             if (File.Exists(Path.Combine(oldPath, ".qtext"))) {
-                mapping.Add(new FileInfo(Path.Combine(oldPath, ".qtext")), new FileInfo(Path.Combine(newPath, ".qtext")));
+                mapping.Add(new QFileInfo(Path.Combine(oldPath, ".qtext")), new QFileInfo(Path.Combine(newPath, ".qtext")));
             }
             foreach (var file in Directory.GetFiles(oldPath, "*.txt")) {
-                var oldFile = new FileInfo(file);
-                mapping.Add(oldFile, new FileInfo(Path.Combine(newPath, oldFile.Name)));
+                var oldFile = new QFileInfo(file);
+                mapping.Add(oldFile, new QFileInfo(Path.Combine(newPath, oldFile.Name)));
             }
             foreach (var file in Directory.GetFiles(oldPath, "*.rtf")) {
-                var oldFile = new FileInfo(file);
-                mapping.Add(oldFile, new FileInfo(Path.Combine(newPath, oldFile.Name)));
+                var oldFile = new QFileInfo(file);
+                mapping.Add(oldFile, new QFileInfo(Path.Combine(newPath, oldFile.Name)));
             }
         }
 

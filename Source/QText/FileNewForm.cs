@@ -25,12 +25,8 @@ namespace QText {
 
 
         private void txtTitle_TextChanged(object sender, EventArgs e) {
-            bool alreadyTaken = false;
             var newFileTitle = Helper.EncodeFileName(txtTitle.Text);
-            alreadyTaken |= File.Exists(Path.Combine(this.BasePath, newFileTitle + ".txt"));
-            alreadyTaken |= File.Exists(Path.Combine(this.BasePath, newFileTitle + ".rtf"));
-            alreadyTaken |= Directory.Exists(Path.Combine(this.BasePath, newFileTitle + ".txt"));
-            alreadyTaken |= Directory.Exists(Path.Combine(this.BasePath, newFileTitle + ".rtf"));
+            bool alreadyTaken = QFileInfo.IsNameAlreadyTaken(this.BasePath, newFileTitle);
             if (alreadyTaken) { erp.SetError(txtTitle, "File with same name already exists."); } else { erp.SetError(txtTitle, null); }
             btnOK.Enabled = (txtTitle.Text.Length > 0) && (alreadyTaken == false);
         }

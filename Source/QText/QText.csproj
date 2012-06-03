@@ -112,6 +112,7 @@
     <Compile Include="OptionsForm.Designer.cs">
       <DependentUpon>OptionsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="QFileInfo.cs" />
     <Compile Include="SHFile.cs" />
     <Compile Include="FileNewForm.cs">
       <SubType>Form</SubType>

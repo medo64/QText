@@ -14,7 +14,7 @@ namespace QText {
         public TabFile(string fullFileName)
             : base() {
 
-            this.CurrentFile = new FileInfo(fullFileName);
+            this.CurrentFile = new QFileInfo(fullFileName);
             this.LastSaveTime = System.DateTime.Now;
 
             base.Text = this.Title;
@@ -60,8 +60,8 @@ namespace QText {
 
         private static readonly UTF8Encoding Utf8EncodingWithoutBom = new UTF8Encoding(false);
 
-        public FileInfo CurrentFile { get; private set; }
-        public string Title { get { return Helper.DecodeFileName(Path.GetFileNameWithoutExtension(this.CurrentFile.FullName)); } }
+        public QFileInfo CurrentFile { get; private set; }
+        public string Title { get { return Helper.DecodeFileName(QFileInfo.GetFileNameWithoutExtension(this.CurrentFile.FullName)); } }
         public DateTime LastWriteTimeUtc { get { return this.CurrentFile.LastWriteTimeUtc; } }
         public DateTime LastSaveTime { get; private set; }
 
@@ -88,23 +88,22 @@ namespace QText {
 
 
         public static TabFile Create(string fullFileName) {
-            if (File.Exists(fullFileName)) {
-                throw new IOException("File already exists.");
-            } else if (File.Exists(Path.ChangeExtension(fullFileName, ".txt"))) {
-                throw new IOException("File already exists.");
-            } else if (File.Exists(Path.ChangeExtension(fullFileName, ".rtf"))) {
-                throw new IOException("File already exists.");
-            } else {
-                if (Path.GetExtension(fullFileName).Equals(".rtf", StringComparison.OrdinalIgnoreCase)) {
-                    using (RichTextBox dummy = new RichTextBox()) {
-                        dummy.BackColor = Settings.DisplayBackgroundColor;
-                        dummy.Font = Settings.DisplayFont;
-                        dummy.ForeColor = Settings.DisplayForegroundColor;
-                        dummy.SaveFile(fullFileName, RichTextBoxStreamType.RichText);
-                    }
-                } else {
-                    File.WriteAllText(fullFileName, "");
+            foreach (var extension in QFileInfo.GetExtensions()) {
+                var altFileName = QFileInfo.GetPathWithoutExtension(fullFileName) + extension;
+                if (File.Exists(altFileName)) {
+                    throw new IOException("File already exists.");
                 }
+            }
+
+            if (QFileInfo.IsFileRich(fullFileName)) {
+                using (RichTextBox dummy = new RichTextBox()) {
+                    dummy.BackColor = Settings.DisplayBackgroundColor;
+                    dummy.Font = Settings.DisplayFont;
+                    dummy.ForeColor = Settings.DisplayForegroundColor;
+                    dummy.SaveFile(fullFileName, RichTextBoxStreamType.RichText);
+                }
+            } else {
+                File.WriteAllText(fullFileName, "");
             }
             return new TabFile(fullFileName);
         }
@@ -121,10 +120,9 @@ namespace QText {
             if (this.IsRichTextFormat == false) { return; }
 
             this.Open();
-            string oldFileName = this.CurrentFile.FullName;
-            string newFileName = Path.ChangeExtension(oldFileName, ".txt");
-            Helper.MovePath(oldFileName, newFileName);
-            this.CurrentFile = new FileInfo(newFileName);
+            var newFile = this.CurrentFile.ChangeExtension(this.CurrentFile.IsEncrypted ? QFileInfo.Extensions.PlainEncrypted : QFileInfo.Extensions.Plain);
+            Helper.MovePath(this.CurrentFile.FullName, newFile.FullName);
+            this.CurrentFile = newFile;
             this.Save();
             this.Reopen();
         }
@@ -135,17 +133,16 @@ namespace QText {
             this.Open();
             string text = this.TextBox.Text;
 
-            string oldFileName = this.CurrentFile.FullName;
-            string newFileName = Path.ChangeExtension(oldFileName, ".rtf");
-            Helper.MovePath(oldFileName, newFileName);
-            this.CurrentFile = new FileInfo(newFileName);
+            var newFile = this.CurrentFile.ChangeExtension(this.CurrentFile.IsEncrypted ? QFileInfo.Extensions.RichEncrypted : QFileInfo.Extensions.Rich);
+            Helper.MovePath(this.CurrentFile.FullName, newFile.FullName);
+            this.CurrentFile = newFile;
             this.Save();
             this.Reopen();
         }
 
         public bool IsRichTextFormat {
             get {
-                return (string.Compare(this.CurrentFile.Extension, ".rtf", StringComparison.OrdinalIgnoreCase) == 0);
+                return this.CurrentFile.IsRich;
             }
         }
 
@@ -217,7 +214,7 @@ namespace QText {
                     Helper.CreatePath(Settings.CarbonCopyFolder);
                 }
 
-                var fiBase = new FileInfo(this.CurrentFile.FullName);
+                var fiBase = new QFileInfo(this.CurrentFile.FullName);
                 destFile = Path.Combine(Settings.CarbonCopyFolder, fiBase.Name);
                 if (this.IsRichTextFormat) {
                     this.TextBox.SaveFile(destFile, RichTextBoxStreamType.RichText);
@@ -236,15 +233,11 @@ namespace QText {
         }
 
         public void Rename(string newTitle) {
-            var oldInfo = new FileInfo(this.CurrentFile.FullName);
-            var newInfo = new FileInfo(Path.Combine(oldInfo.DirectoryName, Helper.EncodeFileName(newTitle)) + oldInfo.Extension);
+            var oldInfo = new QFileInfo(this.CurrentFile.FullName);
+            var newInfo = oldInfo.ChangeName(Helper.EncodeFileName(newTitle));
 
             if (string.Equals(this.Title, newTitle, StringComparison.OrdinalIgnoreCase) == false) {
-                if (File.Exists(newInfo.FullName)) {
-                    throw new IOException("File already exists.");
-                } else if (File.Exists(Path.ChangeExtension(newInfo.FullName, ".txt"))) {
-                    throw new IOException("File already exists.");
-                } else if (File.Exists(Path.ChangeExtension(newInfo.FullName, ".rtf"))) {
+                if (QFileInfo.IsNameAlreadyTaken(newInfo.DirectoryName, newInfo.Name)) {
                     throw new IOException("File already exists.");
                 }
             }
@@ -518,7 +511,7 @@ namespace QText {
         }
 
 
-        #region File loading
+        #region Open/Save
 
         private void OpenAsTxt() {
             this.TextBox.ResetText();
@@ -548,11 +541,7 @@ namespace QText {
         #endregion
 
 
-        private class NativeMethods {
-
-            private NativeMethods() {
-            }
-
+        private static class NativeMethods {
 
             internal const int EM_SETTABSTOPS = 0xcb;
             public static IntPtr SendMessage(IntPtr hWnd, uint Msg, int wParam, int lParam) {
