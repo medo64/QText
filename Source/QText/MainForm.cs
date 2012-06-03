@@ -702,6 +702,7 @@ namespace QText {
             }
             mnuFolder.DropDownItems.Add(new ToolStripSeparator());
             mnuFolder.DropDownItems.Add(new ToolStripMenuItem("Edit folders", null, mnuFolderEdit_Click));
+            mnuFolder.DropDownItems.Add(new ToolStripMenuItem("Edit files", null, mnuFilesEdit_Click));
         }
 
         private void mnuFolder_Click(object sender, EventArgs e) {
@@ -734,6 +735,20 @@ namespace QText {
                 }
             }
             tabFiles.Enabled = true;
+            if (tabFiles.SelectedTab != null) { tabFiles.SelectedTab.Select(); }
+            tmrQuickSave.Enabled = true;
+        }
+
+        private void mnuFilesEdit_Click(object sender, EventArgs e) {
+            tmrQuickSave.Enabled = false;
+            tabFiles.Enabled = false;
+            tabFiles.FolderSave();
+            using (var frm = new FilesEditForm(tabFiles)) {
+                frm.ShowDialog(this);
+            }
+            tabFiles.FolderSave();
+            tabFiles.Enabled = true;
+            if (tabFiles.SelectedTab != null) { tabFiles.SelectedTab.Select(); }
             tmrQuickSave.Enabled = true;
         }
 
@@ -847,17 +862,7 @@ namespace QText {
 
         private void mnxTabDelete_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
-                var currTab = tabFiles.SelectedTab;
-                if (currTab.TextBox.Text.Length > 0) {
-                    if (Medo.MessageBox.ShowQuestion(this, string.Format(CultureInfo.CurrentUICulture, "Do you really want to delete \"{0}\"?", tabFiles.SelectedTab.Title), MessageBoxButtons.YesNo, MessageBoxDefaultButton.Button2) == DialogResult.No) {
-                        return;
-                    }
-                }
-                try {
-                    tabFiles.RemoveTab(tabFiles.SelectedTab);
-                } catch (Exception ex) {
-                    Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot delete file.\n\n{0}", ex.Message));
-                }
+                Helper.DeleteTabFile(this, tabFiles, tabFiles.SelectedTab);
             }
         }
 

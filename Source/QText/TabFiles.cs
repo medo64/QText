@@ -315,6 +315,24 @@ namespace QText {
             } catch (IOException) { }
         }
 
+        public void CleanOrderedTitles() {
+            try {
+                var fi = new QFileInfo(this.OrderFile);
+                if (fi.Exists == false) {
+                    fi.Create();
+                }
+                fi.Attributes = FileAttributes.Hidden;
+                using (var fs = new FileStream(this.OrderFile, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read)) {
+                    try { fs.SetLength(0); } catch (IOException) { } //try to delete content
+                    fs.Position = fs.Length;
+                    using (var sw = new StreamWriter(fs)) {
+                        sw.WriteLine("/["); //always start block with /[
+                        sw.WriteLine("]/"); //always end block with ]/
+                    }
+                }
+            } catch (IOException) { }
+        }
+
         #endregion
 
         public void SaveCarbonCopies(IWin32Window owner) {

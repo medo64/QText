@@ -103,8 +103,8 @@
             this.mnxTabConvertPlain = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabConvertRich = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabEncrypt = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnxTabDecrypt = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabChangePassword = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTabDecrypt = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTab2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTabPrintPreview = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabPrint = new System.Windows.Forms.ToolStripMenuItem();
@@ -718,9 +718,9 @@
             this.mnxTabReopen,
             this.mnxTabSaveNow,
             this.mnxTab1,
-            this.mnxTabDelete,
             this.mnxTabRename,
             this.mnxTabMoveTo,
+            this.mnxTabDelete,
             this.mnxTabConvert,
             this.mnxTabConvertPlain,
             this.mnxTabConvertRich,
@@ -806,7 +806,7 @@
             // mnxTabMoveToDummy
             // 
             this.mnxTabMoveToDummy.Name = "mnxTabMoveToDummy";
-            this.mnxTabMoveToDummy.Size = new System.Drawing.Size(128, 24);
+            this.mnxTabMoveToDummy.Size = new System.Drawing.Size(152, 24);
             this.mnxTabMoveToDummy.Text = "dummy";
             // 
             // mnxTabConvert
@@ -836,13 +836,6 @@
             this.mnxTabEncrypt.Text = "Encrypt";
             this.mnxTabEncrypt.Click += new System.EventHandler(this.mnxTabEncrypt_Click);
             // 
-            // mnxTabDecrypt
-            // 
-            this.mnxTabDecrypt.Name = "mnxTabDecrypt";
-            this.mnxTabDecrypt.Size = new System.Drawing.Size(232, 24);
-            this.mnxTabDecrypt.Text = "Decrypt";
-            this.mnxTabDecrypt.Click += new System.EventHandler(this.mnxTabDecrypt_Click);
-            // 
             // mnxTabChangePassword
             // 
             this.mnxTabChangePassword.Image = ((System.Drawing.Image)(resources.GetObject("mnxTabChangePassword.Image")));
@@ -850,6 +843,13 @@
             this.mnxTabChangePassword.Size = new System.Drawing.Size(232, 24);
             this.mnxTabChangePassword.Text = "Change password";
             this.mnxTabChangePassword.Click += new System.EventHandler(this.mnxTabChangePassword_Click);
+            // 
+            // mnxTabDecrypt
+            // 
+            this.mnxTabDecrypt.Name = "mnxTabDecrypt";
+            this.mnxTabDecrypt.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabDecrypt.Text = "Decrypt";
+            this.mnxTabDecrypt.Click += new System.EventHandler(this.mnxTabDecrypt_Click);
             // 
             // mnxTab2
             // 

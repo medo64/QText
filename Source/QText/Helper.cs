@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Globalization;
+using System.Windows.Forms;
 
 namespace QText {
 
@@ -38,6 +39,36 @@ namespace QText {
             if (NativeMethods.MoveFileExW(currentPath, newPath, NativeMethods.MOVEFILE_COPY_ALLOWED | NativeMethods.MOVEFILE_WRITE_THROUGH) == false) {
                 var ex = new Win32Exception();
                 throw new IOException(ex.Message, ex);
+            }
+        }
+
+        public static bool DeleteTabFile(IWin32Window owner, TabFiles tabFiles, TabFile tabToDelete) {
+            if (tabFiles == null) { throw new ArgumentNullException("Tab parent cannot be null."); }
+            if (tabToDelete == null) { throw new ArgumentNullException("Tab cannot be null."); }
+
+            bool askForConfirmation = false;
+            if (tabToDelete.CurrentFile.IsEncrypted) {
+                askForConfirmation = true;
+            } else {
+                tabToDelete.Open();
+                if (tabToDelete.TextBox.Text.Length > 0) { askForConfirmation |= true; }
+            }
+            if (askForConfirmation) {
+                if (Medo.MessageBox.ShowQuestion(owner, string.Format(CultureInfo.CurrentUICulture, "Do you really want to delete \"{0}\"?", tabToDelete), MessageBoxButtons.YesNo, MessageBoxDefaultButton.Button2) == DialogResult.No) {
+                    return false;
+                }
+            }
+            try {
+                tabFiles.Enabled = false;
+                try {
+                    tabFiles.RemoveTab(tabToDelete);
+                    return true;
+                } catch (Exception ex) {
+                    Medo.MessageBox.ShowWarning(owner, string.Format(CultureInfo.CurrentUICulture, "Cannot delete file.\n\n{0}", ex.Message));
+                    return false;
+                }
+            } finally {
+                tabFiles.Enabled = true;
             }
         }
 

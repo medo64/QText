@@ -291,6 +291,10 @@ namespace QText {
         }
 
         public void Rename(string newTitle) {
+            if (newTitle == null) { throw new ArgumentNullException("newTitle", "Title cannot be null."); }
+            newTitle = newTitle.Trim();
+            if (newTitle == null) { throw new ArgumentException("Title cannot be empty.", "newTitle"); }
+
             var oldInfo = new QFileInfo(this.CurrentFile.FullName);
             var newInfo = oldInfo.ChangeName(Helper.EncodeFileName(newTitle));
 
