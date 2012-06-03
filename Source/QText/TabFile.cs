@@ -259,34 +259,33 @@ namespace QText {
             this.IsChanged = false;
             base.Text = this.Title;
 
-            SaveCarbonCopy();
+            SaveCarbonCopy(null);
         }
 
-        public void SaveCarbonCopy() {
-            //TODO: Perform copy without actually opening file.
-            this.Open();
-            if ((!Settings.CarbonCopyUse) || (string.IsNullOrEmpty(Settings.CarbonCopyFolder))) { return; }
+        public void SaveCarbonCopy(IWin32Window owner) {
+            SaveCarbonCopy(owner, this.CurrentFile.FullName);
+        }
 
-            string destFile = null;
+        public static void SaveCarbonCopy(IWin32Window owner, string fullFileName) {
+            if ((Settings.CarbonCopyUse == false) || string.IsNullOrEmpty(Settings.CarbonCopyFolder)) { return; }
+
             try {
-                if ((!Directory.Exists(Settings.CarbonCopyFolder)) && (Settings.CarbonCopyCreateFolder)) {
-                    Helper.CreatePath(Settings.CarbonCopyFolder);
-                }
-
-                var fiBase = new QFileInfo(this.CurrentFile.FullName);
-                destFile = Path.Combine(Settings.CarbonCopyFolder, fiBase.Name);
-                if (this.CurrentFile.IsRich) {
-                    this.TextBox.SaveFile(destFile, RichTextBoxStreamType.RichText);
-                } else {
-                    File.WriteAllText(destFile, this.TextBox.Text);
-                }
-            } catch (Exception) {
-                if (Settings.CarbonCopyIgnoreErrors == false) {
-                    if (!string.IsNullOrEmpty(destFile)) {
-                        Medo.MessageBox.ShowWarning(this, "Error making carbon copy to \"" + destFile + "\".", MessageBoxButtons.OK);
-                    } else {
-                        Medo.MessageBox.ShowWarning(this, "Error making carbon copy from \"" + this.CurrentFile.FullName + "\".", MessageBoxButtons.OK);
+                var baseDirectory = new DirectoryInfo(Settings.FilesLocation).FullName;
+                if (fullFileName.StartsWith(baseDirectory, StringComparison.OrdinalIgnoreCase)) {
+                    var sufix = fullFileName.Remove(0, baseDirectory.Length);
+                    if (sufix.StartsWith("\\", StringComparison.Ordinal)) { sufix = sufix.Remove(0, 1); }
+                    var newFile = new FileInfo(Path.Combine(Settings.CarbonCopyFolder, sufix));
+                    if ((Directory.Exists(newFile.DirectoryName) == false) && Settings.CarbonCopyCreateFolder) {
+                        Helper.CreatePath(newFile.DirectoryName);
                     }
+                    File.Copy(fullFileName, newFile.FullName, true);
+                } else {
+                    throw new InvalidOperationException("Cannot determine base path for carbon copy.");
+                }
+            } catch (Exception ex) {
+                if (Settings.CarbonCopyIgnoreErrors == false) {
+                    var title = QFileInfo.GetFileNameWithoutExtension(fullFileName);
+                    Medo.MessageBox.ShowWarning(owner, string.Format("Error making carbon copy of \"{0}\".\n\n{1}", title, ex.Message), MessageBoxButtons.OK);
                 }
             }
         }

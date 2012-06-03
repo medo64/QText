@@ -317,6 +317,18 @@ namespace QText {
 
         #endregion
 
+        public void SaveCarbonCopies(IWin32Window owner) {
+            var directories = new List<string>();
+            directories.Add(Settings.FilesLocation);
+            directories.AddRange(Directory.GetDirectories(Settings.FilesLocation));
+            foreach (var directory in directories) {
+                foreach (var extension in QFileInfo.GetExtensions()) {
+                    foreach (var file in Directory.GetFiles(directory, "*" + extension)) {
+                        TabFile.SaveCarbonCopy(owner, file);
+                    }
+                }
+            }
+        }
 
         private TabFile GetNextTab() {
             int tindex = this.TabPages.IndexOf(this.SelectedTab) + 1; //select next tab
