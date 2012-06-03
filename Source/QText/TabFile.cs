@@ -539,6 +539,8 @@ namespace QText {
         #endregion
 
         public void UpdateTabWidth() {
+            if (this.TextBox == null) { return; }
+
             int dotWidth = TextRenderer.MeasureText(".", Settings.DisplayFont, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding).Width;
             int dotXWidth = TextRenderer.MeasureText("X.", Settings.DisplayFont, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding).Width;
             int charWidth = dotXWidth - dotWidth;
