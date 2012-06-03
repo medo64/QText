@@ -205,6 +205,7 @@ CONTRIBUTORS (in alphabetic order)
     Radu Capan              Romaina
     Marc Desbiens           Canada
     Ivan Gabajček           Croatia
+    Igor Griner             Croatia
     Michael Jagersberger    Austria
     Randy Simat
     Steven Yarnot           United States
