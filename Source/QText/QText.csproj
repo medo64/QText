@@ -113,6 +113,12 @@
     <Compile Include="OptionsForm.Designer.cs">
       <DependentUpon>OptionsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="PasswordForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PasswordForm.Designer.cs">
+      <DependentUpon>PasswordForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="QFileInfo.cs" />
     <Compile Include="SHFile.cs" />
     <Compile Include="FileNewForm.cs">
@@ -170,6 +176,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FileRenameForm.resx">
       <DependentUpon>FileRenameForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PasswordForm.resx">
+      <DependentUpon>PasswordForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SpellingForm.resx">
       <DependentUpon>SpellingForm.cs</DependentUpon>

@@ -21,6 +21,27 @@ namespace QText {
 
             base.Text = this.Title;
 
+            this.GotFocus += txt_GotFocus;
+
+            if (Settings.FilesPreload && (this.CurrentFile.IsEncrypted == false)) {
+                this.Open();
+            }
+        }
+
+        private void AddTextBox(RichTextBoxEx txt) {
+            if (this.TextBox != null) { throw new InvalidOperationException("TextBox already exists"); }
+
+            this.TextBox = txt;
+            this.TextBox.ContextMenuStrip = this.ContextMenuStrip;
+
+            this.TextBox.Enter += txt_GotFocus;
+            this.TextBox.TextChanged += txt_TextChanged;
+            this.TextBox.PreviewKeyDown += txt_PreviewKeyDown;
+
+            base.Controls.Add(this.TextBox);
+        }
+
+        private static RichTextBoxEx GetEmptyTextBox() {
             var tb = new RichTextBoxEx();
             tb.AcceptsTab = true;
             tb.BackColor = Settings.DisplayBackgroundColor;
@@ -47,16 +68,7 @@ namespace QText {
                     break;
             }
             tb.WordWrap = Settings.DisplayWordWrap;
-
-            this.TextBox = tb;
-            if (Settings.FilesPreload) { this.Open(); }
-
-            this.GotFocus += txt_GotFocus;
-            this.TextBox.Enter += txt_GotFocus;
-            this.TextBox.TextChanged += txt_TextChanged;
-            this.TextBox.PreviewKeyDown += txt_PreviewKeyDown;
-
-            base.Controls.Add(this.TextBox);
+            return tb;
         }
 
 
@@ -69,6 +81,11 @@ namespace QText {
 
         public bool IsOpened { get; private set; }
         public string Password { get; set; }
+        public bool NeedsPassword {
+            get {
+                return (this.CurrentFile.IsEncrypted && (this.Password == null));
+            }
+        }
 
         private bool _isChanged;
         public bool IsChanged {
@@ -84,9 +101,15 @@ namespace QText {
         public RichTextBoxEx TextBox { get; private set; }
 
 
+        private ContextMenuStrip _contextMenuStrip;
         public override ContextMenuStrip ContextMenuStrip {
-            get { return this.TextBox.ContextMenuStrip; }
-            set { this.TextBox.ContextMenuStrip = value; }
+            get { return this._contextMenuStrip; }
+            set {
+                this._contextMenuStrip = value;
+                if (this.TextBox != null) {
+                    this.TextBox.ContextMenuStrip = value;
+                }
+            }
         }
 
 
@@ -120,9 +143,9 @@ namespace QText {
         }
 
         public void ConvertToPlainText() {
-            if (this.CurrentFile.IsRich == false) { return; }
+            if (this.IsOpened == false) { throw new InvalidOperationException("File is not loaded."); }
+            if (this.CurrentFile.IsRich == false) { throw new InvalidOperationException("File is already in plain text format."); }
 
-            this.Open();
             var newFile = this.CurrentFile.ChangeExtension(this.CurrentFile.IsEncrypted ? QFileInfo.Extensions.PlainEncrypted : QFileInfo.Extensions.Plain);
             Helper.MovePath(this.CurrentFile.FullName, newFile.FullName);
             this.CurrentFile = newFile;
@@ -131,9 +154,9 @@ namespace QText {
         }
 
         public void ConvertToRichText() {
-            if (this.CurrentFile.IsRich) { return; }
+            if (this.IsOpened == false) { throw new InvalidOperationException("File is not loaded."); }
+            if (this.CurrentFile.IsRich) { throw new InvalidOperationException("File is already in rich text format."); }
 
-            this.Open();
             string text = this.TextBox.Text;
 
             var newFile = this.CurrentFile.ChangeExtension(this.CurrentFile.IsEncrypted ? QFileInfo.Extensions.RichEncrypted : QFileInfo.Extensions.Rich);
@@ -145,9 +168,9 @@ namespace QText {
 
 
         public void Encrypt(string password) {
-            if (this.CurrentFile.IsEncrypted) { return; }
+            if (this.IsOpened == false) { throw new InvalidOperationException("File is not loaded."); }
+            if (this.CurrentFile.IsEncrypted) { throw new InvalidOperationException("File is already encrypted."); }
 
-            this.Open();
             string text = this.TextBox.Text;
 
             var newFile = this.CurrentFile.ChangeExtension(this.CurrentFile.IsRich ? QFileInfo.Extensions.RichEncrypted : QFileInfo.Extensions.PlainEncrypted);
@@ -159,10 +182,10 @@ namespace QText {
         }
 
         public void Decrypt() {
-            if (this.CurrentFile.IsEncrypted == false) { return; }
+            if (this.IsOpened == false) { throw new InvalidOperationException("File is not loaded."); }
+            if (this.CurrentFile.IsEncrypted == false) { throw new InvalidOperationException("File is already decrypted."); }
             if (this.Password == null) { throw new InvalidOperationException("No decryption password found."); }
 
-            this.Open();
             string text = this.TextBox.Text;
 
             var newFile = this.CurrentFile.ChangeExtension(this.CurrentFile.IsRich ? QFileInfo.Extensions.Rich : QFileInfo.Extensions.Plain);
@@ -175,16 +198,23 @@ namespace QText {
 
 
         public void Reopen() {
+            if ((this.CurrentFile.IsEncrypted) && (this.Password == null)) { throw new CryptographicException("No password provided."); }
+
+            var txt = (this.TextBox != null) ? this.TextBox : GetEmptyTextBox();
+
             this.IsOpened = false;
             if (this.CurrentFile.IsRich) {
                 try {
-                    OpenAsRich();
+                    OpenAsRich(txt);
                 } catch (ArgumentException) {
-                    OpenAsPlain();
+                    OpenAsPlain(txt);
                 }
             } else {
-                OpenAsPlain();
+                OpenAsPlain(txt);
             }
+
+            if (this.TextBox == null) { AddTextBox(txt); }
+
             UpdateTabWidth();
             this.TextBox.SelectionStart = 0;
             this.TextBox.SelectionLength = 0;
@@ -233,6 +263,7 @@ namespace QText {
         }
 
         public void SaveCarbonCopy() {
+            //TODO: Perform copy without actually opening file.
             this.Open();
             if ((!Settings.CarbonCopyUse) || (string.IsNullOrEmpty(Settings.CarbonCopyFolder))) { return; }
 
@@ -283,8 +314,9 @@ namespace QText {
         #region txt
 
         private void txt_GotFocus(System.Object sender, System.EventArgs e) {
-            this.Open();
-            this.TextBox.Select();
+            if (this.TextBox != null) {
+                this.TextBox.Select();
+            }
         }
 
         private void txt_TextChanged(System.Object sender, System.EventArgs e) {
@@ -355,7 +387,7 @@ namespace QText {
         #region Cut/Copy/Paste/Undo/Redo
 
         public bool CanCut {
-            get { return this.TextBox.SelectionLength > 0; }
+            get { return (this.TextBox != null) && (this.TextBox.SelectionLength > 0); }
         }
 
         public void Cut(bool forceText) {
@@ -374,7 +406,7 @@ namespace QText {
         }
 
         public bool CanCopy {
-            get { return this.TextBox.SelectionLength > 0; }
+            get { return (this.TextBox != null) && (this.TextBox.SelectionLength > 0); }
         }
 
         public void Copy(bool forceText) {
@@ -393,7 +425,7 @@ namespace QText {
         public bool CanPaste {
             get {
                 try {
-                    return Clipboard.ContainsText();
+                    return (this.TextBox != null) && Clipboard.ContainsText();
                 } catch (ExternalException) {
                     return false;
                 }
@@ -416,7 +448,7 @@ namespace QText {
 
 
         public bool CanUndo {
-            get { return this.TextBox.CanUndo; }
+            get { return (this.TextBox != null) && this.TextBox.CanUndo; }
         }
 
         public void Undo() {
@@ -426,13 +458,33 @@ namespace QText {
         }
 
         public bool CanRedo {
-            get { return this.TextBox.CanRedo; }
+            get { return (this.TextBox != null) && this.TextBox.CanRedo; }
         }
 
         public void Redo() {
             if (this.CanRedo) {
                 this.TextBox.Redo();
             }
+        }
+
+        #endregion
+
+        #region Font
+
+        public bool IsTextBold {
+            get { return (this.TextBox != null) && (this.TextBox.SelectionFont != null) && (this.TextBox.SelectionFont.Bold); }
+        }
+
+        public bool IsTextItalic {
+            get { return (this.TextBox != null) && (this.TextBox.SelectionFont != null) && (this.TextBox.SelectionFont.Italic); }
+        }
+
+        public bool IsTextUnderline {
+            get { return (this.TextBox != null) && (this.TextBox.SelectionFont != null) && (this.TextBox.SelectionFont.Underline); }
+        }
+
+        public bool IsTextStrikeout {
+            get { return (this.TextBox != null) && (this.TextBox.SelectionFont != null) && (this.TextBox.SelectionFont.Strikeout); }
         }
 
         #endregion
@@ -541,30 +593,30 @@ namespace QText {
 
         #region Open/Save
 
-        private void OpenAsPlain() {
+        private void OpenAsPlain(RichTextBoxEx txt) {
             using (var stream = new FileStream(this.CurrentFile.FullName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                 if (this.CurrentFile.IsEncrypted) {
-                    OpenAsPlainEncrypted(stream);
+                    this.OpenAsPlainEncrypted(txt, stream);
                 } else {
-                    OpenAsPlain(stream);
+                    this.OpenAsPlain(txt, stream);
                 }
             }
         }
 
-        private void OpenAsPlain(Stream stream) {
+        private void OpenAsPlain(RichTextBoxEx txt, Stream stream) {
             string text;
             using (var sr = new StreamReader(stream, Utf8EncodingWithoutBom)) {
                 text = sr.ReadToEnd();
                 var lines = text.Split(new string[] { "\r\n", "\n", "\r" }, StringSplitOptions.None);
                 text = string.Join("\n", lines);
             }
-            this.TextBox.ResetText();
-            this.TextBox.Text = text;
+            txt.ResetText();
+            txt.Text = text;
         }
 
-        private void OpenAsPlainEncrypted(Stream stream) {
-            using (var aesStream = new OpenSslAesStream(stream, "", CryptoStreamMode.Read, 256, CipherMode.CBC)) {
-                OpenAsPlain(aesStream);
+        private void OpenAsPlainEncrypted(RichTextBoxEx txt, Stream stream) {
+            using (var aesStream = new OpenSslAesStream(stream, this.Password, CryptoStreamMode.Read, 256, CipherMode.CBC)) {
+                this.OpenAsPlain(txt, aesStream);
             }
         }
 
@@ -586,28 +638,28 @@ namespace QText {
         }
 
         private void SaveAsPlainEncrypted(Stream stream) {
-            using (var aesStream = new OpenSslAesStream(stream, "", CryptoStreamMode.Write, 256, CipherMode.CBC)) {
+            using (var aesStream = new OpenSslAesStream(stream, this.Password, CryptoStreamMode.Write, 256, CipherMode.CBC)) {
                 SaveAsPlain(aesStream);
             }
         }
 
 
-        private void OpenAsRich() {
+        private void OpenAsRich(RichTextBoxEx txt) {
             using (var stream = new FileStream(this.CurrentFile.FullName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                 if (this.CurrentFile.IsEncrypted) {
-                    OpenAsRichEncrypted(stream);
+                    this.OpenAsRichEncrypted(txt, stream);
                 } else {
-                    OpenAsRich(stream);
+                    this.OpenAsRich(txt, stream);
                 }
             }
         }
 
-        private void OpenAsRich(Stream stream) {
-            this.TextBox.LoadFile(stream, RichTextBoxStreamType.RichText);
+        private void OpenAsRich(RichTextBoxEx txt, Stream stream) {
+            txt.LoadFile(stream, RichTextBoxStreamType.RichText);
         }
 
-        private void OpenAsRichEncrypted(Stream stream) {
-            using (var aesStream = new OpenSslAesStream(stream, "", CryptoStreamMode.Read, 256, CipherMode.CBC)) {
+        private void OpenAsRichEncrypted(RichTextBoxEx txt, Stream stream) {
+            using (var aesStream = new OpenSslAesStream(stream, this.Password, CryptoStreamMode.Read, 256, CipherMode.CBC)) {
                 var buffer = new byte[65536];
                 using (var memStream = new MemoryStream()) { //because RichTextBox seeks through stream
                     while (true) {
@@ -618,7 +670,7 @@ namespace QText {
                         }
                         memStream.Write(buffer, 0, len);
                     }
-                    OpenAsRich(memStream);
+                    this.OpenAsRich(txt, memStream);
                 }
             }
         }
@@ -639,7 +691,7 @@ namespace QText {
         }
 
         private void SaveAsRichEncrypted(Stream stream) {
-            using (var aesStream = new OpenSslAesStream(stream, "", CryptoStreamMode.Write, 256, CipherMode.CBC)) {
+            using (var aesStream = new OpenSslAesStream(stream, this.Password, CryptoStreamMode.Write, 256, CipherMode.CBC)) {
                 SaveAsRich(aesStream);
             }
         }

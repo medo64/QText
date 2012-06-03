@@ -87,21 +87,25 @@ namespace QText {
             }
 
             if (selectedTab != null) {
-                while (true) {
-                    try {
-                        selectedTab.Open();
-                        this.SelectedTab = selectedTab;
-                        break;
-                    } catch (IOException) {
-                        var index = this.TabPages.IndexOf(selectedTab) + 1;
-                        if (index >= this.TabPages.Count) { throw; }
-                        selectedTab = (TabFile)this.TabPages[index];
+                if (selectedTab.CurrentFile.IsEncrypted) {
+                    var currIndex = this.TabPages.IndexOf(selectedTab);
+                    selectedTab = null; //remove it in case that no unencrypted tab is found
+                    for (int i = 1; i < this.TabPages.Count; i++) {
+                        var nextIndex = (currIndex + i) % this.TabPages.Count;
+                        var nextTab = (TabFile)this.TabPages[nextIndex];
+                        if (nextTab.CurrentFile.IsEncrypted == false) {
+                            selectedTab = nextTab;
+                            break;
+                        }
                     }
                 }
+                this.SelectedTab = selectedTab;
             }
+
             this.Visible = initialVisibility;
             if (this.SelectedTab != null) {
                 this.SelectedTab.Select();
+                this.OnSelectedIndexChanged(new EventArgs());
             }
         }
 
@@ -229,6 +233,7 @@ namespace QText {
                 TabPage currTabPage = GetTabPageFromXY(e.X, e.Y);
                 if ((currTabPage != null) && (!currTabPage.Equals(this._dragTabPage))) {
                     var currRect = base.GetTabRect(base.TabPages.IndexOf(currTabPage));
+                    base.Enabled = false;
                     if ((base.TabPages.IndexOf(currTabPage) < base.TabPages.IndexOf(this._dragTabPage))) {
                         base.TabPages.Remove(this._dragTabPage);
                         base.TabPages.Insert(base.TabPages.IndexOf(currTabPage), this._dragTabPage);
@@ -238,6 +243,7 @@ namespace QText {
                         base.TabPages.Insert(base.TabPages.IndexOf(currTabPage) + 1, this._dragTabPage);
                         base.SelectedTab = this._dragTabPage;
                     }
+                    base.Enabled = true;
                     this.WriteOrderedTitles();
                 }
             }

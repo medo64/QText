@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Security.Cryptography;
 using System.Security.Permissions;
 using System.Text;
 using System.Threading;
@@ -426,14 +427,34 @@ namespace QText {
                 foreach (TabFile file in tabFiles.TabPages) {
                     if (file.IsChanged) { file.QuickSaveWithoutException(); }
                 }
+
                 try {
-                    tabFiles.SelectedTab.Open();
-                    SetSelectedTab(tabFiles.SelectedTab);
+                    if (tabFiles.SelectedTab.NeedsPassword) {
+                        this.Focus();
+                        if (this.Visible == false) { return; }
+                        using (var frm = new PasswordForm(tabFiles.SelectedTab.Title)) {
+                            if (frm.ShowDialog(this) == DialogResult.OK) {
+                                tabFiles.SelectedTab.Password = frm.Password;
+                                tabFiles.SelectedTab.Open();
+                                SetSelectedTab(tabFiles.SelectedTab);
+                            } else {
+                                tabFiles.SelectedTab.Password = null;
+                                tabFiles.SelectedTab = this._CurrSelectedTab;
+                            }
+                        }
+                    } else {
+                        tabFiles.SelectedTab.Open();
+                        SetSelectedTab(tabFiles.SelectedTab);
+                    }
+                } catch (CryptographicException) {
+                    Medo.MessageBox.ShowWarning(this, "File cannot be decrypted. Possible password mismatch.");
+                    tabFiles.SelectedTab.Password = null;
+                    tabFiles.SelectedTab = this._CurrSelectedTab;
                 } catch (Exception ex) {
                     Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot open file.\n\n{0}", ex.Message));
                     tabFiles.SelectedTab = this._CurrSelectedTab;
                 }
-                if (tabFiles.SelectedTab != null) {
+                if ((tabFiles.SelectedTab != null) && (tabFiles.SelectedTab.TextBox != null)) {
                     tabFiles.SelectedTab.TextBox.Select();
                 }
                 tmrQuickSave.Enabled = true;
@@ -450,6 +471,7 @@ namespace QText {
                     try {
                         tabFiles.AddTab(frm.Title, frm.IsRichText);
                         SetSelectedTab(tabFiles.SelectedTab);
+                        tabFiles.SelectedTab.Open();
                         tabFiles.SelectedTab.TextBox.Select();
                     } catch (Exception ex) {
                         Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot create file.\n\n{0}", ex.Message));
@@ -885,7 +907,11 @@ namespace QText {
 
         private void mnxTabEncrypt_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
-                tabFiles.SelectedTab.Encrypt(""); //TODO: Password from form
+                using (var frm = new PasswordForm(this.Text)) {
+                    if (frm.ShowDialog(this) == DialogResult.OK) {
+                        tabFiles.SelectedTab.Encrypt(frm.Password);
+                    }
+                }
             }
         }
 
@@ -1187,13 +1213,15 @@ namespace QText {
 
             var currentFolder = tabFiles.CurrentFolder;
             if (currentFolder == null) { currentFolder = ""; }
+
+            tabFiles.FolderOpen(Settings.LastFolder);
             try {
-                tabFiles.FolderOpen(Settings.LastFolder);
                 SetSelectedTab(tabFiles.SelectedTab);
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot load folder.\n\n{0}", ex.Message));
                 tabFiles.FolderOpen(currentFolder);
             }
+
             mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
         }
 
@@ -1313,10 +1341,10 @@ namespace QText {
 
 
             if (isTabRichText) {
-                mnuBold.Checked = (tabFiles.SelectedTab.TextBox.SelectionFont != null) && (tabFiles.SelectedTab.TextBox.SelectionFont.Bold);
-                mnuItalic.Checked = (tabFiles.SelectedTab.TextBox.SelectionFont != null) && (tabFiles.SelectedTab.TextBox.SelectionFont.Italic);
-                mnuUnderline.Checked = (tabFiles.SelectedTab.TextBox.SelectionFont != null) && (tabFiles.SelectedTab.TextBox.SelectionFont.Underline);
-                mnuStrikeout.Checked = (tabFiles.SelectedTab.TextBox.SelectionFont != null) && (tabFiles.SelectedTab.TextBox.SelectionFont.Strikeout);
+                mnuBold.Checked = tabFiles.SelectedTab.IsTextBold;
+                mnuItalic.Checked = tabFiles.SelectedTab.IsTextItalic;
+                mnuUnderline.Checked = tabFiles.SelectedTab.IsTextUnderline;
+                mnuStrikeout.Checked = tabFiles.SelectedTab.IsTextStrikeout;
             }
         }
 
