@@ -164,6 +164,7 @@
     <Compile Include="TabFiles.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ToolStripBorderlessProfessionalRenderer.cs" />
     <Compile Include="Tray.cs" />
   </ItemGroup>
   <ItemGroup>
