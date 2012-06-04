@@ -22,6 +22,8 @@ namespace QText {
             base.OnDrawItem(e);
 
             var tab = (TabFile)this.TabPages[e.Index];
+            var x = e.Bounds.Left + e.Bounds.Width / 2;
+            var y = e.Bounds.Top + e.Bounds.Height / 2;
 
             e.Graphics.FillRectangle(SystemBrushes.Control, e.Bounds);
             if ((e.State & DrawItemState.Selected) == DrawItemState.Selected) {
@@ -29,11 +31,13 @@ namespace QText {
                 using (var selectionBrush = new LinearGradientBrush(e.Bounds, selectionColor, SystemColors.Control, LinearGradientMode.Vertical) { Blend = new Blend() { Positions = new float[] { 0.75F, 1 } } }) {
                     e.Graphics.FillRectangle(selectionBrush, e.Bounds);
                 }
+            } else {
+                y += SystemInformation.Border3DSize.Height;
             }
             if (tab.CurrentFile.IsEncrypted) {
-                e.Graphics.DrawString(tab.Text, this.Font, Brushes.DarkGreen, e.Bounds, this.StringFormat);
+                e.Graphics.DrawString(tab.Text, this.Font, Brushes.DarkGreen, x, y, this.StringFormat);
             } else {
-                e.Graphics.DrawString(tab.Text, this.Font, SystemBrushes.ControlText, e.Bounds, this.StringFormat);
+                e.Graphics.DrawString(tab.Text, this.Font, SystemBrushes.ControlText, x, y, this.StringFormat);
             }
         }
 
