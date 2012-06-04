@@ -16,13 +16,13 @@ namespace QText {
             this.DrawMode = TabDrawMode.OwnerDrawFixed;
         }
 
-        private readonly StringFormat StringFormat = new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
+        private readonly StringFormat StringFormat = new StringFormat() { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center };
 
         protected override void OnDrawItem(DrawItemEventArgs e) {
             base.OnDrawItem(e);
 
             var tab = (TabFile)this.TabPages[e.Index];
-            var x = e.Bounds.Left + e.Bounds.Width / 2;
+            var x = e.Bounds.Left;
             var y = e.Bounds.Top + e.Bounds.Height / 2;
 
             e.Graphics.FillRectangle(SystemBrushes.Control, e.Bounds);
@@ -31,7 +31,9 @@ namespace QText {
                 using (var selectionBrush = new LinearGradientBrush(e.Bounds, selectionColor, SystemColors.Control, LinearGradientMode.Vertical) { Blend = new Blend() { Positions = new float[] { 0.75F, 1 } } }) {
                     e.Graphics.FillRectangle(selectionBrush, e.Bounds);
                 }
+                x += SystemInformation.SizingBorderWidth;
             } else {
+                x += SystemInformation.Border3DSize.Width;
                 y += SystemInformation.Border3DSize.Height;
             }
             if (tab.CurrentFile.IsEncrypted) {
