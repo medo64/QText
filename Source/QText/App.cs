@@ -19,7 +19,9 @@ namespace QText {
 
         [STAThread]
         public static void Main() {
-            App.SetupMutex = new Mutex(false, @"Global\JosipMedved_QText");
+            try {
+                App.SetupMutex = new Mutex(false, @"Global\JosipMedved_QText");
+            } catch (UnauthorizedAccessException) { }
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
