@@ -50,6 +50,10 @@ SHORTCUT KEYS
 
 VERSION HISTORY
 
+    3.11 (2012-06-07)
+
+        o Bug-fixing.
+
     3.10 (2012-03-22)
 
         o Fixed behavior when installed under non-administrative account.
