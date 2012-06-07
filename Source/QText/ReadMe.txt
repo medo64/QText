@@ -55,6 +55,10 @@ VERSION HISTORY
         o Added file encryption.
         o Lot of small tweaks and bug-fixes.
 
+    3.11 (2012-06-07)
+
+        o Bug-fixing.
+
     3.10 (2012-03-22)
 
         o Fixed behavior when installed under non-administrative account.
