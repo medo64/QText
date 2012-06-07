@@ -53,6 +53,7 @@ VERSION HISTORY
     Next
 
         o Added file encryption.
+        o Lot of small tweaks and bug-fixes.
 
     3.10 (2012-03-22)
 
