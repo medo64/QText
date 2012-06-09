@@ -18,6 +18,7 @@ namespace QText {
 
             this.CurrentFile = new QFileInfo(fullFileName);
             this.LastSaveTime = System.DateTime.Now;
+            this.Padding = new Padding(0, SystemInformation.Border3DSize.Height, 0, 0);
 
             base.Text = this.Title;
 
