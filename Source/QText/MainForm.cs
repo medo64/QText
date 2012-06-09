@@ -320,8 +320,8 @@ namespace QText {
                 if (file.CurrentFile.IsEncrypted) {
                     file.Close(); //forget passwords
                 }
-                tabFiles.SelectNextTab(tabFiles.SelectedTab);
             }
+            tabFiles.SelectNextTab(tabFiles.SelectedTab);
             if (failedTitles.Count > 0) {
                 var sb = new StringBuilder("Cannot save ");
                 sb.Append((failedTitles.Count == 1) ? "file" : "files");
