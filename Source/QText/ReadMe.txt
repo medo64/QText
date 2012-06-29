@@ -50,7 +50,7 @@ SHORTCUT KEYS
 
 VERSION HISTORY
 
-    Next
+    3.20 (2012-06-30)
 
         o Added file encryption.
         o Lot of small tweaks and bug-fixes.
@@ -212,6 +212,22 @@ VERSION HISTORY
     1.00 (2004-08-28)
 
         o First public release.
+
+
+ENCRYPTION
+
+All encrypted files are compatible with salted OpenSSL 256-bit AES CBC file
+encryption (as defined at http://www.openssl.org/docs/apps/enc.html). In
+order to decrypt file OpenSSL command line would be:
+    openssl aes-256-cbc -d -in file.txt.aes256cbc -out file.txt -k "password"
+
+That means that, even if you stop using this fabulous program, you can always
+get to your data. I consider this an important feature.
+
+Downside to using this standard algorithm is that it is rather fast. And fast
+is bad when you need to deal with brute force attacks. This encryption is no
+worse than what OpenSSL normally does (it is equivalent actually) but beware
+that lot of security lies in well chosen password.
 
 
 CONTRIBUTORS (in alphabetic order)
