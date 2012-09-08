@@ -13,7 +13,12 @@ namespace QText {
             this.SetStyle(ControlStyles.DoubleBuffer, true);
             this.SetStyle(ControlStyles.ResizeRedraw, true);
             this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-            this.DrawMode = TabDrawMode.OwnerDrawFixed;
+            this.Appearance = TabAppearance.Normal;
+            this.DrawMode = TabDrawMode.Normal;
+        }
+
+        protected override void OnPaint(PaintEventArgs e) {
+            base.OnPaint(e);
         }
 
         private readonly StringFormat StringFormat = new StringFormat() { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center };
