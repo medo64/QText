@@ -95,10 +95,10 @@
             this.mnxTabReopen = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabSaveNow = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTab1 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnxTabDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabRename = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabMoveTo = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabMoveToDummy = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTabDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabConvert = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTabConvertPlain = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabConvertRich = new System.Windows.Forms.ToolStripMenuItem();
@@ -112,6 +112,8 @@
             this.mnxTabOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.tmrCheckFileUpdate = new System.Windows.Forms.Timer(this.components);
             this.tabFiles = new QText.TabFiles();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnxTextLinesTrim = new System.Windows.Forms.ToolStripMenuItem();
             this.mnu.SuspendLayout();
             this.mnxText.SuspendLayout();
             this.mnxTab.SuspendLayout();
@@ -474,7 +476,7 @@
             this.mnxTextSelection,
             this.mnxTextLines});
             this.mnxText.Name = "mnxTextBox";
-            this.mnxText.Size = new System.Drawing.Size(310, 418);
+            this.mnxText.Size = new System.Drawing.Size(310, 440);
             this.mnxText.Opening += new System.ComponentModel.CancelEventHandler(this.mnxText_Opening);
             // 
             // mnxTextUndo
@@ -691,7 +693,9 @@
             // 
             this.mnxTextLines.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnxTextLinesSortAsc,
-            this.mnxTextLinesSortDesc});
+            this.mnxTextLinesSortDesc,
+            this.toolStripMenuItem3,
+            this.mnxTextLinesTrim});
             this.mnxTextLines.Name = "mnxTextLines";
             this.mnxTextLines.Size = new System.Drawing.Size(309, 24);
             this.mnxTextLines.Text = "&Lines";
@@ -733,7 +737,7 @@
             this.ToolStripMenuItem14,
             this.mnxTabOpenContainingFolder});
             this.mnxTab.Name = "mnxTab";
-            this.mnxTab.Size = new System.Drawing.Size(233, 392);
+            this.mnxTab.Size = new System.Drawing.Size(233, 370);
             this.mnxTab.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.mnxTab_Closed);
             this.mnxTab.Opening += new System.ComponentModel.CancelEventHandler(this.mnxTab_Opening);
             // 
@@ -775,15 +779,6 @@
             this.mnxTab1.Name = "mnxTab1";
             this.mnxTab1.Size = new System.Drawing.Size(229, 6);
             // 
-            // mnxTabDelete
-            // 
-            this.mnxTabDelete.Image = ((System.Drawing.Image)(resources.GetObject("mnxTabDelete.Image")));
-            this.mnxTabDelete.ImageTransparentColor = System.Drawing.Color.Fuchsia;
-            this.mnxTabDelete.Name = "mnxTabDelete";
-            this.mnxTabDelete.Size = new System.Drawing.Size(232, 24);
-            this.mnxTabDelete.Text = "&Delete";
-            this.mnxTabDelete.Click += new System.EventHandler(this.mnxTabDelete_Click);
-            // 
             // mnxTabRename
             // 
             this.mnxTabRename.Image = ((System.Drawing.Image)(resources.GetObject("mnxTabRename.Image")));
@@ -806,8 +801,17 @@
             // mnxTabMoveToDummy
             // 
             this.mnxTabMoveToDummy.Name = "mnxTabMoveToDummy";
-            this.mnxTabMoveToDummy.Size = new System.Drawing.Size(152, 24);
+            this.mnxTabMoveToDummy.Size = new System.Drawing.Size(128, 24);
             this.mnxTabMoveToDummy.Text = "dummy";
+            // 
+            // mnxTabDelete
+            // 
+            this.mnxTabDelete.Image = ((System.Drawing.Image)(resources.GetObject("mnxTabDelete.Image")));
+            this.mnxTabDelete.ImageTransparentColor = System.Drawing.Color.Fuchsia;
+            this.mnxTabDelete.Name = "mnxTabDelete";
+            this.mnxTabDelete.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabDelete.Text = "&Delete";
+            this.mnxTabDelete.Click += new System.EventHandler(this.mnxTabDelete_Click);
             // 
             // mnxTabConvert
             // 
@@ -905,6 +909,18 @@
             this.tabFiles.TabIndex = 0;
             this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
             this.tabFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabFiles_MouseDown);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(182, 6);
+            // 
+            // mnxTextLinesTrim
+            // 
+            this.mnxTextLinesTrim.Name = "mnxTextLinesTrim";
+            this.mnxTextLinesTrim.Size = new System.Drawing.Size(185, 24);
+            this.mnxTextLinesTrim.Text = "&Trim";
+            this.mnxTextLinesTrim.Click += new System.EventHandler(this.mnxTextLinesTrim_Click);
             // 
             // MainForm
             // 
@@ -1025,5 +1041,7 @@
         private System.Windows.Forms.ToolStripMenuItem mnxTabEncrypt;
         private System.Windows.Forms.ToolStripMenuItem mnxTabDecrypt;
         private System.Windows.Forms.ToolStripMenuItem mnxTabChangePassword;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem mnxTextLinesTrim;
     }
 }

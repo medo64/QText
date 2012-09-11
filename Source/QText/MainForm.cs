@@ -1172,6 +1172,38 @@ namespace QText {
             }
         }
 
+
+        private void mnxTextLinesTrim_Click(object sender, EventArgs e) {
+            if (tabFiles.SelectedTab != null) {
+                var txt = tabFiles.SelectedTab.TextBox;
+                txt.SelectLineBlock();
+
+                int ss = txt.SelectionStart;
+                int sl = txt.SelectionLength;
+
+                var text = txt.SelectedText;
+                bool addLf = false;
+                if (text.EndsWith("\n")) {
+                    addLf = true;
+                    text = text.Remove(text.Length - 1);
+                }
+                string[] selSplit = text.Split(new string[] { "\n" }, StringSplitOptions.None);
+                var lenDiff = 0;
+                for (int i = 0; i < selSplit.Length; i++) {
+                    var beforeLen = selSplit[i].Length;
+                    selSplit[i] = selSplit[i].Trim();
+                    var afterLen = selSplit[i].Length;
+                    lenDiff += afterLen - beforeLen;
+                }
+                text = string.Join("\n", selSplit);
+                if (addLf) { text += "\n"; }
+                txt.SelectedText = text;
+
+                txt.SelectionStart = ss;
+                txt.SelectionLength = sl + lenDiff;
+            }
+        }
+
         #endregion
 
 
