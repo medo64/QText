@@ -402,11 +402,6 @@ namespace QText {
         }
 
         private void Form_VisibleChanged(object sender, EventArgs e) {
-            if ((_findForm == null) || (_findForm.IsDisposed) || (_findForm.Visible == false)) {
-            } else {
-                _findForm.Close();
-            }
-
             tmrCheckFileUpdate.Enabled = this.Visible;
             tmrQuickSave.Enabled = this.Visible;
             tmrUpdateToolbar.Enabled = this.Visible;
@@ -1424,18 +1419,10 @@ namespace QText {
         #endregion
 
 
-        private FindForm _findForm;
-
         private void FindFirst() {
-            if ((_findForm == null) || (_findForm.IsDisposed)) {
-                _findForm = new FindForm(this.tabFiles);
-                _findForm.Left = this.Left + (this.Width - _findForm.Width) / 2;
-                _findForm.Top = this.Top + (this.Height - _findForm.Height) / 2;
+            using (var frm = new FindForm(this.tabFiles)) {
+                frm.ShowDialog(this);
             }
-            if (!_findForm.Visible) {
-                _findForm.ShowDialog(this);
-            }
-            _findForm.Activate();
         }
 
         private void ToggleMenu() {

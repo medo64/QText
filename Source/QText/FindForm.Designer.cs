@@ -173,7 +173,7 @@
             this.Name = "FindForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Find";
             this.Load += new System.EventHandler(this.FindForm_Load);
             this.GroupBox1.ResumeLayout(false);
