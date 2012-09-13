@@ -55,11 +55,9 @@ namespace QText {
 
 
         internal string CurrentDirectory {
-            get {
-                if (string.IsNullOrEmpty(this.CurrentFolder)) { return Settings.FilesLocation; }
-                return Path.Combine(Settings.FilesLocation, Helper.EncodeFileName(CurrentFolder));
-            }
+            get { return DocumentFolder.GetDirectory(CurrentFolder); }
         }
+
         public string CurrentFolder { get; private set; }
 
         public ContextMenuStrip TabContextMenuStrip { get; set; }
@@ -71,7 +69,7 @@ namespace QText {
 
             //check if it exists
             string newFolder = "";
-            foreach (var iFolder in TabFiles.GetSubFolders()) {
+            foreach (var iFolder in DocumentFolder.GetSubFolders()) {
                 if (string.Equals(iFolder, folder, StringComparison.OrdinalIgnoreCase)) {
                     newFolder = iFolder;
                     break;
@@ -85,42 +83,17 @@ namespace QText {
             this.TabPages.Clear();
             this.CurrentFolder = folder;
 
-            var files = new List<string>();
-            foreach (var extension in QFileInfo.GetExtensions()) {
-                files.AddRange(Directory.GetFiles(this.CurrentDirectory, "*" + extension));
+            foreach (var tab in DocumentFolder.GetTabs(DocumentFolder.GetFilePaths(this.CurrentFolder), this.TabContextMenuStrip)) {
+                this.TabPages.Add(tab);
             }
 
             string selectedTitle;
-            IList<string> orderedTitles = ReadOrderedTitles(out selectedTitle);
-
-            files.Sort(delegate(string file1, string file2) {
-                var title1 = Helper.DecodeFileName(QFileInfo.GetFileNameWithoutExtension(file1));
-                var title2 = Helper.DecodeFileName(QFileInfo.GetFileNameWithoutExtension(file2));
-                if (orderedTitles != null) {
-                    var titleIndex1 = orderedTitles.IndexOf(title1);
-                    var titleIndex2 = orderedTitles.IndexOf(title2);
-                    if ((titleIndex1 != -1) && (titleIndex2 != -1)) { //both are ordered
-                        return (titleIndex1 < titleIndex2) ? -1 : 1;
-                    } else if (titleIndex1 != -1) { //first one is ordered
-                        return -1;
-                    } else if (titleIndex2 != -1) { //second one is ordered 
-                        return 1;
-                    }
-                }
-                return string.Compare(title1, title2); //just sort alphabetically
-            });
-
-            TabFile selectedTab = null;
-            foreach (var file in files) {
-                var tab = new TabFile(file);
-                tab.ContextMenuStrip = this.TabContextMenuStrip;
-                this.TabPages.Add(tab);
+            DocumentFolder.ReadOrderedTitles(this.CurrentFolder, out selectedTitle);
+            TabFile selectedTab = (this.TabCount > 0) ? (TabFile)this.TabPages[0] : null;
+            foreach (TabFile tab in this.TabPages) {
                 if (tab.Title.Equals(selectedTitle, StringComparison.OrdinalIgnoreCase)) {
                     selectedTab = tab;
                 }
-            }
-            if ((selectedTab == null) && (this.TabCount > 0)) {
-                selectedTab = (TabFile)this.TabPages[0];
             }
 
             SelectNextTab(selectedTab);
@@ -157,20 +130,8 @@ namespace QText {
             foreach (TabFile file in this.TabPages) {
                 if (file.IsChanged) { file.Save(); }
             }
-            WriteOrderedTitles();
+            DocumentFolder.WriteOrderedTitles(this);
         }
-
-        internal static IEnumerable<string> GetSubFolders() {
-            var folders = new List<string>();
-            foreach (var directory in Directory.GetDirectories(Settings.FilesLocation)) {
-                folders.Add(Helper.DecodeFileName(new DirectoryInfo(directory).Name));
-            }
-            folders.Sort();
-            foreach (var folder in folders) {
-                yield return folder;
-            }
-        }
-
 
         private TabPage GetTabPageFromXY(int x, int y) {
             for (int i = 0; i <= base.TabPages.Count - 1; i++) {
@@ -207,7 +168,7 @@ namespace QText {
                 this.TabPages.Add(t);
             }
             this.SelectedTab = t;
-            WriteOrderedTitles();
+            DocumentFolder.WriteOrderedTitles(this);
         }
 
         public void RemoveTab(TabFile tab) {
@@ -218,7 +179,7 @@ namespace QText {
             } else {
                 File.Delete(tab.CurrentFile.FullName);
             }
-            WriteOrderedTitles();
+            DocumentFolder.WriteOrderedTitles(this);
         }
 
         public void MoveTab(TabFile tab, string newFolder) {
@@ -228,7 +189,7 @@ namespace QText {
             this.SelectedTab = GetNextTab();
             this.TabPages.Remove(tab);
             Helper.MovePath(oldPath, newPath);
-            WriteOrderedTitles();
+            DocumentFolder.WriteOrderedTitles(this);
         }
 
         public void MoveTabPreview(TabFile tab, string newFolder, out string oldPath, out string newPath) {
@@ -288,7 +249,7 @@ namespace QText {
                         base.SelectedTab = this._dragTabPage;
                     }
                     base.Enabled = true;
-                    this.WriteOrderedTitles();
+                    DocumentFolder.WriteOrderedTitles(this);
                 }
             }
             this._dragTabPage = null;
@@ -298,86 +259,6 @@ namespace QText {
 
         #endregion
 
-        #region Ordering
-
-        private string OrderFile { get { return Path.Combine(this.CurrentDirectory, ".qtext"); } }
-
-        private IList<string> ReadOrderedTitles(out string selectedTitle) {
-            selectedTitle = null;
-            string currentSelectedTitle = null;
-            IList<string> orderedTitles = null;
-            IList<string> currentOrderedTitles = null;
-            try {
-                using (var fs = new FileStream(this.OrderFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
-                    using (var sr = new StreamReader(fs)) {
-                        while (sr.EndOfStream == false) {
-                            var line = sr.ReadLine();
-                            if (line.Equals("/[")) { //start of block
-                                currentOrderedTitles = new List<string>();
-                                currentSelectedTitle = null;
-                            } else if (line.Equals("]/")) { //end of block
-                                orderedTitles = currentOrderedTitles;
-                                selectedTitle = currentSelectedTitle;
-                            } else {
-                                if (currentOrderedTitles != null) {
-                                    var parts = line.Split(new string[] { "//" }, StringSplitOptions.RemoveEmptyEntries);
-                                    var title = Helper.DecodeFileName(parts[0]);
-                                    var attrs = parts.Length > 1 ? parts[1] : null;
-                                    if ("selected".Equals(attrs)) { currentSelectedTitle = title; }
-                                    currentOrderedTitles.Add(title);
-                                }
-                            }
-                        }
-                    }
-                }
-            } catch (IOException) { }
-            return orderedTitles;
-        }
-
-        public void WriteOrderedTitles() {
-            try {
-                var fi = new QFileInfo(this.OrderFile);
-                if (fi.Exists == false) {
-                    fi.Create();
-                }
-                fi.Attributes = FileAttributes.Hidden;
-                using (var fs = new FileStream(this.OrderFile, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read)) {
-                    try { fs.SetLength(0); } catch (IOException) { } //try to delete content
-                    fs.Position = fs.Length;
-                    using (var sw = new StreamWriter(fs)) {
-                        sw.WriteLine("/["); //always start block with /[
-                        foreach (TabFile tab in this.TabPages) {
-                            if (tab.Equals(this.SelectedTab)) { //selected file is written with //selected
-                                sw.WriteLine(tab.Title + "//selected");
-                            } else {
-                                sw.WriteLine(tab.Title);
-                            }
-                        }
-                        sw.WriteLine("]/"); //always end block with ]/
-                    }
-                }
-            } catch (IOException) { }
-        }
-
-        public void CleanOrderedTitles() {
-            try {
-                var fi = new QFileInfo(this.OrderFile);
-                if (fi.Exists == false) {
-                    fi.Create();
-                }
-                fi.Attributes = FileAttributes.Hidden;
-                using (var fs = new FileStream(this.OrderFile, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read)) {
-                    try { fs.SetLength(0); } catch (IOException) { } //try to delete content
-                    fs.Position = fs.Length;
-                    using (var sw = new StreamWriter(fs)) {
-                        sw.WriteLine("/["); //always start block with /[
-                        sw.WriteLine("]/"); //always end block with ]/
-                    }
-                }
-            } catch (IOException) { }
-        }
-
-        #endregion
 
         public void SaveCarbonCopies(IWin32Window owner) {
             var directories = new List<string>();

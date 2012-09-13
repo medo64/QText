@@ -68,7 +68,7 @@ namespace QText {
         private void Form_Load(object sender, System.EventArgs e) {
             lsv.Columns[0].Width = lsv.ClientRectangle.Width - SystemInformation.VerticalScrollBarWidth;
 
-            foreach (var folder in TabFiles.GetSubFolders()) {
+            foreach (var folder in DocumentFolder.GetSubFolders()) {
                 lsv.Items.Add(folder);
             }
             foreach (ListViewItem item in lsv.Items) {

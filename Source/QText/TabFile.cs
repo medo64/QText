@@ -514,10 +514,37 @@ namespace QText {
                 comparisionType = StringComparison.CurrentCultureIgnoreCase;
             }
 
+            if (!(this.IsOpened)) {
+                if (this.NeedsPassword && (this.Password == null)) { return false; }
+                this.Open();
+            }
             int index = this.TextBox.Text.IndexOf(text, this.TextBox.SelectionStart + this.TextBox.SelectionLength, comparisionType);
             if ((index < 0) && (this.TextBox.SelectionStart + this.TextBox.SelectionLength > 0)) {
                 index = this.TextBox.Text.IndexOf(text, 0, comparisionType);
             }
+
+            if (index >= 0) {
+                this.TextBox.SelectionStart = index;
+                this.TextBox.SelectionLength = text.Length;
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        public bool FindForward(string text, bool caseSensitive, int startingIndex) {
+            StringComparison comparisionType = default(StringComparison);
+            if (caseSensitive) {
+                comparisionType = StringComparison.CurrentCulture;
+            } else {
+                comparisionType = StringComparison.CurrentCultureIgnoreCase;
+            }
+
+            if (!(this.IsOpened)) {
+                if (this.NeedsPassword && (this.Password == null)) { return false; }
+                this.Open();
+            }
+            int index = this.TextBox.Text.IndexOf(text, startingIndex, comparisionType);
 
             if (index >= 0) {
                 this.TextBox.SelectionStart = index;

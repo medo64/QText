@@ -92,6 +92,7 @@
     <Compile Include="ChangePasswordForm.Designer.cs">
       <DependentUpon>ChangePasswordForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DocumentFolder.cs" />
     <Compile Include="FilesEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -132,6 +133,7 @@
       <DependentUpon>PasswordForm.cs</DependentUpon>
     </Compile>
     <Compile Include="QFileInfo.cs" />
+    <Compile Include="Search.cs" />
     <Compile Include="SHFile.cs" />
     <Compile Include="FileNewForm.cs">
       <SubType>Form</SubType>

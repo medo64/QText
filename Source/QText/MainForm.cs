@@ -95,7 +95,7 @@ namespace QText {
                     return true;
 
                 case Keys.F3:
-                    FindNext();
+                    Search.FindNext(this, this.tabFiles, this.tabFiles.SelectedTab);
                     return true;
 
 
@@ -211,7 +211,7 @@ namespace QText {
                 case Keys.Alt | Keys.Up: {
                         var currFolder = tabFiles.CurrentFolder;
                         var list = new List<string>(new string[] { "" });
-                        list.AddRange(TabFiles.GetSubFolders());
+                        list.AddRange(DocumentFolder.GetSubFolders());
                         var index = list.FindIndex(delegate(string folder) { return string.Equals(folder, currFolder, StringComparison.OrdinalIgnoreCase); });
                         if (index > 0) {
                             tabFiles.FolderOpen(list[index - 1]);
@@ -223,7 +223,7 @@ namespace QText {
                 case Keys.Alt | Keys.Down: {
                         var currFolder = tabFiles.CurrentFolder;
                         var list = new List<string>(new string[] { "" });
-                        list.AddRange(TabFiles.GetSubFolders());
+                        list.AddRange(DocumentFolder.GetSubFolders());
                         var index = list.FindIndex(delegate(string folder) { return string.Equals(folder, currFolder, StringComparison.OrdinalIgnoreCase); });
                         if (index < list.Count - 1) {
                             tabFiles.FolderOpen(list[index + 1]);
@@ -306,7 +306,7 @@ namespace QText {
             }
 #endif
 
-            tabFiles.WriteOrderedTitles();
+            DocumentFolder.WriteOrderedTitles(tabFiles);
 
             var failedTitles = new List<string>();
             var failedExceptions = new List<Exception>();
@@ -502,7 +502,7 @@ namespace QText {
                     try {
                         if (frm.ShowDialog(this) == DialogResult.OK) {
                             tabFiles.SelectedTab.Rename(frm.NewTitle);
-                            tabFiles.WriteOrderedTitles();
+                            DocumentFolder.WriteOrderedTitles(tabFiles);
                         }
                     } catch (Exception ex) {
                         Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot rename file.\n\n{0}", ex.Message));
@@ -698,7 +698,7 @@ namespace QText {
         private void mnuFolder_DropDownOpening(object sender, EventArgs e) {
             mnuFolder.DropDownItems.Clear();
             mnuFolder.DropDownItems.Add(new ToolStripMenuItem("(Default)", null, mnuFolder_Click) { Tag = "" });
-            foreach (var folder in TabFiles.GetSubFolders()) {
+            foreach (var folder in DocumentFolder.GetSubFolders()) {
                 mnuFolder.DropDownItems.Add(new ToolStripMenuItem(folder, null, mnuFolder_Click) { Tag = folder });
             }
             foreach (ToolStripMenuItem item in mnuFolder.DropDownItems) {
@@ -873,7 +873,7 @@ namespace QText {
         private void mnxTabMoveTo_DropDownOpening(object sender, EventArgs e) {
             mnxTabMoveTo.DropDownItems.Clear();
             mnxTabMoveTo.DropDownItems.Add(new ToolStripMenuItem("(Default)", null, mnxTabMoveTo_Click) { Tag = null });
-            foreach (var folder in TabFiles.GetSubFolders()) {
+            foreach (var folder in DocumentFolder.GetSubFolders()) {
                 mnxTabMoveTo.DropDownItems.Add(new ToolStripMenuItem(folder, null, mnxTabMoveTo_Click) { Tag = folder });
             }
             foreach (ToolStripMenuItem item in mnxTabMoveTo.DropDownItems) {
@@ -1433,22 +1433,9 @@ namespace QText {
                 _findForm.Top = this.Top + (this.Height - _findForm.Height) / 2;
             }
             if (!_findForm.Visible) {
-                _findForm.Show(this);
+                _findForm.ShowDialog(this);
             }
             _findForm.Activate();
-        }
-
-        private void FindNext() {
-            if ((_findForm == null) || (_findForm.IsDisposed) || (!_findForm.Visible)) {
-                if ((tabFiles.SelectedTab != null) && (!string.IsNullOrEmpty(SearchStatus.Text))) {
-                    TabFile tf = tabFiles.SelectedTab;
-                    if (tf.Find(SearchStatus.Text, SearchStatus.CaseSensitive) == false) {
-                        Medo.MessageBox.ShowInformation(this, "Text \"" + SearchStatus.Text + "\" cannot be found.");
-                    }
-                }
-            } else {
-                _findForm.FindNext();
-            }
         }
 
         private void ToggleMenu() {

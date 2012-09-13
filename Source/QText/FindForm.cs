@@ -40,8 +40,14 @@ namespace QText {
                     SearchStatus.Text = tf.TextBox.SelectedText;
                 }
             }
+
             txtText.Text = SearchStatus.Text;
             chbCaseSensitive.Checked = SearchStatus.CaseSensitive;
+            switch (SearchStatus.Scope) {
+                case SearchScope.Folders: radioFolders.Checked = true; break;
+                case SearchScope.Folder: radioFolder.Checked = true; break;
+                default: radioFile.Checked = true; break;
+            }
         }
 
 
@@ -50,36 +56,36 @@ namespace QText {
         }
 
         private void btnFind_Click(object sender, EventArgs e) {
-            if (txtText.Text.Length > 0) {
-                SearchStatus.Text = txtText.Text;
-                SearchStatus.CaseSensitive = chbCaseSensitive.Checked;
-                if ((_tabFiles.SelectedTab != null) && (!string.IsNullOrEmpty(SearchStatus.Text))) {
-                    TabFile tf = _tabFiles.SelectedTab;
-                    //found characters, move window if needed
-                    if ((tf.Find(SearchStatus.Text, SearchStatus.CaseSensitive))) {
-                        Rectangle selRect = tf.GetSelectedRectangle();
-                        var thisRect = this.Bounds;
-                        if ((thisRect.IntersectsWith(selRect))) {
-                            Rectangle screenRect = Screen.GetWorkingArea(selRect.Location);
-                            int rightSpace = screenRect.Right - selRect.Right;
-                            int leftSpace = selRect.Left - screenRect.Left;
-                            int topSpace = selRect.Top - screenRect.Top;
-                            int bottomSpace = screenRect.Bottom - selRect.Bottom;
+            SearchStatus.Text = txtText.Text;
+            SearchStatus.CaseSensitive = chbCaseSensitive.Checked;
+            SearchStatus.Scope = SearchStatus.GetScope(radioFile.Checked, radioFolder.Checked, radioFolders.Checked);
 
-                            if ((bottomSpace >= thisRect.Height)) {
-                                this.Location = new Point(thisRect.Left, selRect.Bottom);
-                            } else if ((topSpace >= thisRect.Height)) {
-                                this.Location = new Point(thisRect.Left, selRect.Top - thisRect.Height);
-                            } else if ((rightSpace >= thisRect.Width)) {
-                                this.Location = new Point(selRect.Right, thisRect.Top);
-                            } else if ((leftSpace >= thisRect.Width)) {
-                                this.Location = new Point(selRect.Left - thisRect.Width, thisRect.Top);
-                            }
+            try {
+                Cursor.Current = Cursors.WaitCursor;
+
+                if (Search.FindNext(this, this._tabFiles, this._tabFiles.SelectedTab)) {
+                    Rectangle selRect = this._tabFiles.SelectedTab.GetSelectedRectangle();
+                    var thisRect = this.Bounds;
+                    if ((thisRect.IntersectsWith(selRect))) {
+                        Rectangle screenRect = Screen.GetWorkingArea(selRect.Location);
+                        int rightSpace = screenRect.Right - selRect.Right;
+                        int leftSpace = selRect.Left - screenRect.Left;
+                        int topSpace = selRect.Top - screenRect.Top;
+                        int bottomSpace = screenRect.Bottom - selRect.Bottom;
+
+                        if ((bottomSpace >= thisRect.Height)) {
+                            this.Location = new Point(thisRect.Left, selRect.Bottom);
+                        } else if ((topSpace >= thisRect.Height)) {
+                            this.Location = new Point(thisRect.Left, selRect.Top - thisRect.Height);
+                        } else if ((rightSpace >= thisRect.Width)) {
+                            this.Location = new Point(selRect.Right, thisRect.Top);
+                        } else if ((leftSpace >= thisRect.Width)) {
+                            this.Location = new Point(selRect.Left - thisRect.Width, thisRect.Top);
                         }
-                    } else {
-                        Medo.MessageBox.ShowInformation(this, "Text \"" + SearchStatus.Text + "\" cannot be found.");
                     }
                 }
+            } finally {
+                Cursor.Current = Cursors.Default;
             }
         }
 
