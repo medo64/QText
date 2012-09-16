@@ -54,11 +54,17 @@ namespace QText {
                 all.RemoveAt(0);
             }
 
+            var currSearchStart = selectedTab.TextBox.SelectionStart + selectedTab.TextBox.SelectionLength;
             for (int i = 0; i < all.Count; i++) {
                 var tab = all[i];
-                if (tab.FindForward(SearchStatus.Text, SearchStatus.CaseSensitive, (i == 0) ? selectedTab.TextBox.SelectionStart + selectedTab.TextBox.SelectionLength : 0)) {
+                if (tab.FindForward(SearchStatus.Text, SearchStatus.CaseSensitive, (i == 0) ? currSearchStart : 0)) {
                     return tab;
                 }
+            }
+
+            //search current one again but only until selection
+            if (selectedTab.FindForward(SearchStatus.Text, SearchStatus.CaseSensitive, 0, currSearchStart)) {
+                return selectedTab;
             }
 
             return null;
@@ -81,9 +87,10 @@ namespace QText {
                 afterTabs.Add(currTabs[0]); //save for later
                 currTabs.RemoveAt(0);
             }
+            var currSearchStart = selectedTab.TextBox.SelectionStart + selectedTab.TextBox.SelectionLength;
             for (int i = 0; i < currTabs.Count; i++) {
                 var tab = currTabs[i];
-                if (tab.FindForward(SearchStatus.Text, SearchStatus.CaseSensitive, (i == 0) ? selectedTab.TextBox.SelectionStart + selectedTab.TextBox.SelectionLength : 0)) {
+                if (tab.FindForward(SearchStatus.Text, SearchStatus.CaseSensitive, (i == 0) ? currSearchStart : 0)) {
                     return tab;
                 }
             }
@@ -123,6 +130,11 @@ namespace QText {
                 if (tab.FindForward(SearchStatus.Text, SearchStatus.CaseSensitive, 0)) {
                     return tab;
                 }
+            }
+
+            //search current one again but only until selection
+            if (selectedTab.FindForward(SearchStatus.Text, SearchStatus.CaseSensitive, 0, currSearchStart)) {
+                return selectedTab;
             }
 
             return null;

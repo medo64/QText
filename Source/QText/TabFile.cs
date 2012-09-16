@@ -532,7 +532,7 @@ namespace QText {
             }
         }
 
-        public bool FindForward(string text, bool caseSensitive, int startingIndex) {
+        public bool FindForward(string text, bool caseSensitive, int startingIndex, int endingIndex = int.MaxValue) {
             StringComparison comparisionType = default(StringComparison);
             if (caseSensitive) {
                 comparisionType = StringComparison.CurrentCulture;
@@ -546,7 +546,7 @@ namespace QText {
             }
             int index = this.TextBox.Text.IndexOf(text, startingIndex, comparisionType);
 
-            if (index >= 0) {
+            if ((index >= 0) && (index < int.MaxValue)) {
                 this.TextBox.SelectionStart = index;
                 this.TextBox.SelectionLength = text.Length;
                 return true;
