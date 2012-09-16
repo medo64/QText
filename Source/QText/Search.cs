@@ -14,12 +14,6 @@ namespace QText {
             }
 
             if (resultTab != null) {
-                if (resultTab != null) {
-                    if (currentTabs.TabPages.Contains(resultTab) == false) {
-                        //reload
-                        System.Diagnostics.Debug.WriteLine("");
-                    }
-                }
                 currentTabs.SelectedTab = resultTab;
                 return true;
             } else {
