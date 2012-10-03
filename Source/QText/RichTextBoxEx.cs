@@ -321,6 +321,7 @@ namespace QText {
 
 
         private UnicodeCategory GetLikeUnicodeCategory(char ch) {
+            if (ch == '-') { return UnicodeCategory.LetterNumber; }
             if (char.IsWhiteSpace(ch)) {
                 return UnicodeCategory.SpaceSeparator;
             } else if (char.IsPunctuation(ch)) {
