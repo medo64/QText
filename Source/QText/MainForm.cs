@@ -91,13 +91,16 @@ namespace QText {
 
 
                 case Keys.Control | Keys.F:
-                    mnuFind_Click(null, null);
+                    mnuFindFind_Click(null, null);
                     return true;
 
                 case Keys.F3:
-                    Search.FindNext(this, this.tabFiles, this.tabFiles.SelectedTab);
+                    mnuFindFindNext_Click(null, null);
                     return true;
 
+                case Keys.Control | Keys.G:
+                    mnuFindGoto_Click(null, null);
+                    return true;
 
                 case Keys.Control | Keys.T:
                     mnuAlwaysOnTop_Click(null, null);
@@ -679,9 +682,63 @@ namespace QText {
         }
 
 
-        private void mnuFind_Click(object sender, EventArgs e) {
+        private void mnuFind_ButtonClick(object sender, EventArgs e) {
+            mnuFindFind_Click(null, null);
+        }
+
+        private void mnuFindFind_Click(object sender, EventArgs e) {
             FindFirst();
         }
+
+        private void mnuFindFindNext_Click(object sender, EventArgs e) {
+            Search.FindNext(this, this.tabFiles, this.tabFiles.SelectedTab);
+        }
+
+        private void mnuFindGoto_Click(object sender, EventArgs e) {
+            bool hasText = false;
+            if (tabFiles.SelectedTab != null) {
+                TabFile tf = tabFiles.SelectedTab;
+                hasText = tf.IsOpened;
+            }
+
+            using (var frm = new GotoForm(hasText)) {
+                if (frm.ShowDialog(this) == DialogResult.OK) {
+                    var destination = frm.SelectedItem;
+                    if (destination.IsLineNumber) {
+                        if (tabFiles.SelectedTab != null) {
+                            TabFile tf = tabFiles.SelectedTab;
+                            var index = tf.TextBox.GetFirstCharIndexFromLine(destination.LineNumber.Value - 1);
+                            if (index == -1) { //go to last line
+                                var lastLine = tf.TextBox.GetLineFromCharIndex(tf.TextBox.TextLength);
+                                index = tf.TextBox.GetFirstCharIndexFromLine(lastLine);
+                            }
+                            tf.TextBox.SelectionStart = index;
+                            tf.TextBox.SelectionLength = 0;
+                        }
+                    } else if (destination.IsDocument) {
+                        if (TryFolderSave()) {
+                            var oldFolder = tabFiles.CurrentFolder;
+                            var newFolder = destination.Folder;
+                            FolderChange(oldFolder, newFolder);
+                            foreach (TabFile tab in this.tabFiles.TabPages) {
+                                if (string.Equals(tab.Title, destination.Document)) {
+                                    tabFiles.SelectedTab = tab;
+                                    break;
+                                }
+                            }
+                        }
+                    } else if (frm.SelectedItem.IsFolder) {
+                        if (TryFolderSave()) {
+                            var oldFolder = tabFiles.CurrentFolder;
+                            var newFolder = destination.Folder;
+                            FolderChange(oldFolder, newFolder);
+                        }
+                    }
+                }
+            }
+        }
+
+
 
         private void mnuAlwaysOnTop_Click(object sender, EventArgs e) {
             mnuAlwaysOnTop.Checked = !mnuAlwaysOnTop.Checked;
@@ -705,18 +762,10 @@ namespace QText {
         }
 
         private void mnuFolder_Click(object sender, EventArgs e) {
-            try {
-                tabFiles.FolderSave();
-            } catch (Exception ex) {
-                Medo.MessageBox.ShowWarning(this, string.Format("Cannot save folder.\n\n{0}", ex.Message));
-                return;
-            }
-            var oldFolder = tabFiles.CurrentFolder;
-            var newFolder = ((ToolStripMenuItem)sender).Tag as string;
-            if (string.Equals(oldFolder, newFolder, StringComparison.OrdinalIgnoreCase) == false) {
-                tabFiles.FolderOpen(newFolder);
-                mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
-                Settings.LastFolder = tabFiles.CurrentFolder;
+            if (TryFolderSave()) {
+                var oldFolder = tabFiles.CurrentFolder;
+                var newFolder = ((ToolStripMenuItem)sender).Tag as string;
+                FolderChange(oldFolder, newFolder);
             }
         }
 
@@ -1422,6 +1471,24 @@ namespace QText {
         private void FindFirst() {
             using (var frm = new FindForm(this.tabFiles)) {
                 frm.ShowDialog(this);
+            }
+        }
+
+        private bool TryFolderSave() {
+            try {
+                tabFiles.FolderSave();
+                return true;
+            } catch (Exception ex) {
+                Medo.MessageBox.ShowWarning(this, string.Format("Cannot save folder.\n\n{0}", ex.Message));
+                return false;
+            }
+        }
+
+        private void FolderChange(string oldFolder, string newFolder) {
+            if (string.Equals(oldFolder, newFolder, StringComparison.OrdinalIgnoreCase) == false) {
+                tabFiles.FolderOpen(newFolder);
+                mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
+                Settings.LastFolder = tabFiles.CurrentFolder;
             }
         }
 

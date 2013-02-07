@@ -14,6 +14,37 @@ namespace QText {
             }
         }
 
+        public static IEnumerable<String> GetTitles(String folder) {
+            var files = new List<string>();
+            foreach (var extension in QFileInfo.GetExtensions()) {
+                files.AddRange(Directory.GetFiles(GetDirectory(folder), "*" + extension));
+            }
+
+            string selectedTitle = null;
+            var orderedTitles = ReadOrderedTitles(folder, out selectedTitle);
+            files.Sort(delegate(string file1, string file2) {
+                var title1 = Helper.DecodeFileName(QFileInfo.GetFileNameWithoutExtension(file1));
+                var title2 = Helper.DecodeFileName(QFileInfo.GetFileNameWithoutExtension(file2));
+                if (orderedTitles != null) {
+                    var titleIndex1 = orderedTitles.IndexOf(title1);
+                    var titleIndex2 = orderedTitles.IndexOf(title2);
+                    if ((titleIndex1 != -1) && (titleIndex2 != -1)) { //both are ordered
+                        return (titleIndex1 < titleIndex2) ? -1 : 1;
+                    } else if (titleIndex1 != -1) { //first one is ordered
+                        return -1;
+                    } else if (titleIndex2 != -1) { //second one is ordered 
+                        return 1;
+                    }
+                }
+                return string.Compare(title1, title2); //just sort alphabetically
+            });
+
+            foreach (var file in files) {
+                yield return Helper.DecodeFileName(QFileInfo.GetFileNameWithoutExtension(file));
+            }
+        }
+
+
         public static IEnumerable<String> GetFilePaths(String folder) {
             var files = new List<string>();
             foreach (var extension in QFileInfo.GetExtensions()) {

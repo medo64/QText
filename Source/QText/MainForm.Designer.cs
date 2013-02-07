@@ -46,7 +46,9 @@
             this.mnuUndo = new System.Windows.Forms.ToolStripButton();
             this.mnuRedo = new System.Windows.Forms.ToolStripButton();
             this.ToolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuFind = new System.Windows.Forms.ToolStripButton();
+            this.mnuFind = new System.Windows.Forms.ToolStripSplitButton();
+            this.mnuFindFind = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFindGoto = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuAlwaysOnTop = new System.Windows.Forms.ToolStripButton();
             this.mnuApp = new System.Windows.Forms.ToolStripDropDownButton();
             this.mnuAppFeedback = new System.Windows.Forms.ToolStripMenuItem();
@@ -89,6 +91,8 @@
             this.mnxTextLines = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextLinesSortAsc = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextLinesSortDesc = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnxTextLinesTrim = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTab = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnxTabNew = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTab0 = new System.Windows.Forms.ToolStripSeparator();
@@ -112,8 +116,8 @@
             this.mnxTabOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.tmrCheckFileUpdate = new System.Windows.Forms.Timer(this.components);
             this.tabFiles = new QText.TabFiles();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnxTextLinesTrim = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFindFindNext = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.mnu.SuspendLayout();
             this.mnxText.SuspendLayout();
             this.mnxTab.SuspendLayout();
@@ -346,13 +350,34 @@
             // mnuFind
             // 
             this.mnuFind.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.mnuFind.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuFindFind,
+            this.mnuFindFindNext,
+            this.toolStripMenuItem5,
+            this.mnuFindGoto});
             this.mnuFind.Image = ((System.Drawing.Image)(resources.GetObject("mnuFind.Image")));
             this.mnuFind.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuFind.Name = "mnuFind";
-            this.mnuFind.Size = new System.Drawing.Size(23, 24);
+            this.mnuFind.Size = new System.Drawing.Size(32, 24);
             this.mnuFind.Text = "Find (Ctrl+F)";
             this.mnuFind.ToolTipText = "Find (Ctrl+F)";
-            this.mnuFind.Click += new System.EventHandler(this.mnuFind_Click);
+            this.mnuFind.ButtonClick += new System.EventHandler(this.mnuFind_ButtonClick);
+            // 
+            // mnuFindFind
+            // 
+            this.mnuFindFind.Name = "mnuFindFind";
+            this.mnuFindFind.ShortcutKeyDisplayString = "Ctrl+F";
+            this.mnuFindFind.Size = new System.Drawing.Size(163, 24);
+            this.mnuFindFind.Text = "Find";
+            this.mnuFindFind.Click += new System.EventHandler(this.mnuFindFind_Click);
+            // 
+            // mnuFindGoto
+            // 
+            this.mnuFindGoto.Name = "mnuFindGoto";
+            this.mnuFindGoto.ShortcutKeyDisplayString = "Ctrl+G";
+            this.mnuFindGoto.Size = new System.Drawing.Size(163, 24);
+            this.mnuFindGoto.Text = "Goto";
+            this.mnuFindGoto.Click += new System.EventHandler(this.mnuFindGoto_Click);
             // 
             // mnuAlwaysOnTop
             // 
@@ -420,7 +445,7 @@
             this.mnuOptions.Image = ((System.Drawing.Image)(resources.GetObject("mnuOptions.Image")));
             this.mnuOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuOptions.Name = "mnuOptions";
-            this.mnuOptions.Size = new System.Drawing.Size(23, 24);
+            this.mnuOptions.Size = new System.Drawing.Size(23, 20);
             this.mnuOptions.Text = "Options (Ctrl+O)";
             this.mnuOptions.ToolTipText = "Options";
             this.mnuOptions.Click += new System.EventHandler(this.mnuOptions_Click);
@@ -476,7 +501,7 @@
             this.mnxTextSelection,
             this.mnxTextLines});
             this.mnxText.Name = "mnxTextBox";
-            this.mnxText.Size = new System.Drawing.Size(310, 440);
+            this.mnxText.Size = new System.Drawing.Size(310, 418);
             this.mnxText.Opening += new System.ComponentModel.CancelEventHandler(this.mnxText_Opening);
             // 
             // mnxTextUndo
@@ -714,6 +739,18 @@
             this.mnxTextLinesSortDesc.Text = "Sort &descending";
             this.mnxTextLinesSortDesc.Click += new System.EventHandler(this.mnxTextLinesSortDesc_Click);
             // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(182, 6);
+            // 
+            // mnxTextLinesTrim
+            // 
+            this.mnxTextLinesTrim.Name = "mnxTextLinesTrim";
+            this.mnxTextLinesTrim.Size = new System.Drawing.Size(185, 24);
+            this.mnxTextLinesTrim.Text = "&Trim";
+            this.mnxTextLinesTrim.Click += new System.EventHandler(this.mnxTextLinesTrim_Click);
+            // 
             // mnxTab
             // 
             this.mnxTab.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -910,17 +947,18 @@
             this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
             this.tabFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabFiles_MouseDown);
             // 
-            // toolStripMenuItem3
+            // mnuFindFindNext
             // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(182, 6);
+            this.mnuFindFindNext.Name = "mnuFindFindNext";
+            this.mnuFindFindNext.ShortcutKeyDisplayString = "F3";
+            this.mnuFindFindNext.Size = new System.Drawing.Size(163, 24);
+            this.mnuFindFindNext.Text = "Find next";
+            this.mnuFindFindNext.Click += new System.EventHandler(this.mnuFindFindNext_Click);
             // 
-            // mnxTextLinesTrim
+            // toolStripMenuItem5
             // 
-            this.mnxTextLinesTrim.Name = "mnxTextLinesTrim";
-            this.mnxTextLinesTrim.Size = new System.Drawing.Size(185, 24);
-            this.mnxTextLinesTrim.Text = "&Trim";
-            this.mnxTextLinesTrim.Click += new System.EventHandler(this.mnxTextLinesTrim_Click);
+            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(160, 6);
             // 
             // MainForm
             // 
@@ -975,7 +1013,6 @@
         internal System.Windows.Forms.ToolStripButton mnuUndo;
         internal System.Windows.Forms.ToolStripButton mnuRedo;
         internal System.Windows.Forms.ToolStripSeparator ToolStripSeparator3;
-        internal System.Windows.Forms.ToolStripButton mnuFind;
         internal System.Windows.Forms.ToolStripButton mnuAlwaysOnTop;
         internal System.Windows.Forms.ToolStripButton mnuOptions;
         internal System.Windows.Forms.ToolStripSeparator ToolStripSeparator2;
@@ -1043,5 +1080,10 @@
         private System.Windows.Forms.ToolStripMenuItem mnxTabChangePassword;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem mnxTextLinesTrim;
+        internal System.Windows.Forms.ToolStripSplitButton mnuFind;
+        private System.Windows.Forms.ToolStripMenuItem mnuFindFind;
+        private System.Windows.Forms.ToolStripMenuItem mnuFindGoto;
+        private System.Windows.Forms.ToolStripMenuItem mnuFindFindNext;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
     }
 }
