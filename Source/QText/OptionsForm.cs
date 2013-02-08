@@ -286,6 +286,10 @@ namespace QText {
         }
 
 
+        private void btnExit_Click(object sender, EventArgs e) {
+            Application.Exit();
+        }
+
         private void btnOk_Click(object sender, EventArgs e) {
             //Appearance
             Settings.DetectUrls = chkDisplayURLs.Checked;

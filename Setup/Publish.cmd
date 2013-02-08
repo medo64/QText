@@ -10,7 +10,7 @@ SET        SETUP_TOOL="%PROGRAMFILES(x86)%\Inno Setup 5\iscc.exe"
 
 SET         SIGN_TOOL="%PROGRAMFILES(X86)%\Windows Kits\8.0\bin\x86\signtool.exe"
 SET         SIGN_HASH="EB41D6069805B20D87219E0757E07836FB763958"
-SET SIGN_TIMESTAMPURL="http://www.startssl.com/timestamp/"
+SET SIGN_TIMESTAMPURL="http://timestamp.comodoca.com/rfc3161"
 
 
 ECHO --- BUILD SOLUTION

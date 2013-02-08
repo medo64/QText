@@ -67,6 +67,7 @@
             this.lblCarbonCopyFolder = new System.Windows.Forms.Label();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.btnExit = new System.Windows.Forms.Button();
             this.tab.SuspendLayout();
             this.tab_pagAppearance.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudTabWidth)).BeginInit();
@@ -91,7 +92,7 @@
             this.tab.Name = "tab";
             this.tab.SelectedIndex = 0;
             this.tab.Size = new System.Drawing.Size(510, 405);
-            this.tab.TabIndex = 3;
+            this.tab.TabIndex = 1;
             // 
             // tab_pagAppearance
             // 
@@ -588,7 +589,7 @@
             this.btnOk.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(98, 29);
-            this.btnOk.TabIndex = 4;
+            this.btnOk.TabIndex = 3;
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
@@ -601,9 +602,21 @@
             this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(98, 29);
-            this.btnCancel.TabIndex = 5;
+            this.btnCancel.TabIndex = 0;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
+            // 
+            // btnExit
+            // 
+            this.btnExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnExit.Location = new System.Drawing.Point(12, 426);
+            this.btnExit.Name = "btnExit";
+            this.btnExit.Size = new System.Drawing.Size(98, 29);
+            this.btnExit.TabIndex = 2;
+            this.btnExit.TabStop = false;
+            this.btnExit.Text = "Exit";
+            this.btnExit.UseVisualStyleBackColor = true;
+            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
             // OptionsForm
             // 
@@ -612,6 +625,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(534, 467);
+            this.Controls.Add(this.btnExit);
             this.Controls.Add(this.tab);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.btnCancel);
@@ -688,5 +702,6 @@
         internal System.Windows.Forms.Button btnOk;
         internal System.Windows.Forms.Button btnCancel;
         internal System.Windows.Forms.CheckBox chbMultilineTabs;
+        private System.Windows.Forms.Button btnExit;
     }
 }
