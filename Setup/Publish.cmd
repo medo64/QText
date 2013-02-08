@@ -8,7 +8,7 @@ SET           FILES_OTHER="..\Binaries\ReadMe.txt"
 SET      COMPILE_TOOL="%PROGRAMFILES(X86)%\Microsoft Visual Studio 11.0\Common7\IDE\devenv.exe"
 SET        SETUP_TOOL="%PROGRAMFILES(x86)%\Inno Setup 5\iscc.exe"
 
-SET         SIGN_TOOL="%PROGRAMFILES%\Microsoft SDKs\Windows\v7.0\Bin\signtool.exe"
+SET         SIGN_TOOL="%PROGRAMFILES(X86)%\Windows Kits\8.0\bin\x86\signtool.exe"
 SET         SIGN_HASH="EB41D6069805B20D87219E0757E07836FB763958"
 SET SIGN_TIMESTAMPURL="http://www.startssl.com/timestamp/"
 
