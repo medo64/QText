@@ -686,12 +686,18 @@ namespace QText {
             mnuFindFind_Click(null, null);
         }
 
+        private void mnuFind_DropDownOpening(object sender, EventArgs e) {
+            mnuFindFindNext.Enabled = !string.IsNullOrEmpty(SearchStatus.Text);
+        }
+
         private void mnuFindFind_Click(object sender, EventArgs e) {
             FindFirst();
         }
 
         private void mnuFindFindNext_Click(object sender, EventArgs e) {
-            Search.FindNext(this, this.tabFiles, this.tabFiles.SelectedTab);
+            if (!string.IsNullOrEmpty(SearchStatus.Text)) {
+                Search.FindNext(this, this.tabFiles, this.tabFiles.SelectedTab);
+            }
         }
 
         private void mnuFindGoto_Click(object sender, EventArgs e) {

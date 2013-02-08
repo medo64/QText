@@ -48,6 +48,8 @@
             this.ToolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFind = new System.Windows.Forms.ToolStripSplitButton();
             this.mnuFindFind = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFindFindNext = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFindGoto = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuAlwaysOnTop = new System.Windows.Forms.ToolStripButton();
             this.mnuApp = new System.Windows.Forms.ToolStripDropDownButton();
@@ -116,8 +118,6 @@
             this.mnxTabOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.tmrCheckFileUpdate = new System.Windows.Forms.Timer(this.components);
             this.tabFiles = new QText.TabFiles();
-            this.mnuFindFindNext = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.mnu.SuspendLayout();
             this.mnxText.SuspendLayout();
             this.mnxTab.SuspendLayout();
@@ -362,14 +362,30 @@
             this.mnuFind.Text = "Find (Ctrl+F)";
             this.mnuFind.ToolTipText = "Find (Ctrl+F)";
             this.mnuFind.ButtonClick += new System.EventHandler(this.mnuFind_ButtonClick);
+            this.mnuFind.DropDownOpening += new System.EventHandler(this.mnuFind_DropDownOpening);
             // 
             // mnuFindFind
             // 
+            this.mnuFindFind.Image = ((System.Drawing.Image)(resources.GetObject("mnuFindFind.Image")));
             this.mnuFindFind.Name = "mnuFindFind";
             this.mnuFindFind.ShortcutKeyDisplayString = "Ctrl+F";
             this.mnuFindFind.Size = new System.Drawing.Size(163, 24);
             this.mnuFindFind.Text = "Find";
             this.mnuFindFind.Click += new System.EventHandler(this.mnuFindFind_Click);
+            // 
+            // mnuFindFindNext
+            // 
+            this.mnuFindFindNext.Image = ((System.Drawing.Image)(resources.GetObject("mnuFindFindNext.Image")));
+            this.mnuFindFindNext.Name = "mnuFindFindNext";
+            this.mnuFindFindNext.ShortcutKeyDisplayString = "F3";
+            this.mnuFindFindNext.Size = new System.Drawing.Size(163, 24);
+            this.mnuFindFindNext.Text = "Find next";
+            this.mnuFindFindNext.Click += new System.EventHandler(this.mnuFindFindNext_Click);
+            // 
+            // toolStripMenuItem5
+            // 
+            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(160, 6);
             // 
             // mnuFindGoto
             // 
@@ -946,19 +962,6 @@
             this.tabFiles.TabIndex = 0;
             this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
             this.tabFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabFiles_MouseDown);
-            // 
-            // mnuFindFindNext
-            // 
-            this.mnuFindFindNext.Name = "mnuFindFindNext";
-            this.mnuFindFindNext.ShortcutKeyDisplayString = "F3";
-            this.mnuFindFindNext.Size = new System.Drawing.Size(163, 24);
-            this.mnuFindFindNext.Text = "Find next";
-            this.mnuFindFindNext.Click += new System.EventHandler(this.mnuFindFindNext_Click);
-            // 
-            // toolStripMenuItem5
-            // 
-            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(160, 6);
             // 
             // MainForm
             // 
