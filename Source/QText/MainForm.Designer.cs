@@ -30,8 +30,6 @@
             this.mnuSaveNow = new System.Windows.Forms.ToolStripButton();
             this.mnuRename = new System.Windows.Forms.ToolStripButton();
             this.tls_0 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuPrintPreview = new System.Windows.Forms.ToolStripButton();
-            this.mnuPrint = new System.Windows.Forms.ToolStripButton();
             this.tls_1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuCut = new System.Windows.Forms.ToolStripButton();
             this.mnuCopy = new System.Windows.Forms.ToolStripButton();
@@ -118,6 +116,9 @@
             this.mnxTabOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.tmrCheckFileUpdate = new System.Windows.Forms.Timer(this.components);
             this.tabFiles = new QText.TabFiles();
+            this.mnuPrintDefault = new System.Windows.Forms.ToolStripSplitButton();
+            this.mnuPrint = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuPrintPreview = new System.Windows.Forms.ToolStripMenuItem();
             this.mnu.SuspendLayout();
             this.mnxText.SuspendLayout();
             this.mnxTab.SuspendLayout();
@@ -131,8 +132,7 @@
             this.mnuSaveNow,
             this.mnuRename,
             this.tls_0,
-            this.mnuPrintPreview,
-            this.mnuPrint,
+            this.mnuPrintDefault,
             this.tls_1,
             this.mnuCut,
             this.mnuCopy,
@@ -196,28 +196,6 @@
             // 
             this.tls_0.Name = "tls_0";
             this.tls_0.Size = new System.Drawing.Size(6, 27);
-            // 
-            // mnuPrintPreview
-            // 
-            this.mnuPrintPreview.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mnuPrintPreview.Image = ((System.Drawing.Image)(resources.GetObject("mnuPrintPreview.Image")));
-            this.mnuPrintPreview.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mnuPrintPreview.Name = "mnuPrintPreview";
-            this.mnuPrintPreview.Size = new System.Drawing.Size(23, 24);
-            this.mnuPrintPreview.Text = "Print preview";
-            this.mnuPrintPreview.ToolTipText = "Print preview";
-            this.mnuPrintPreview.Click += new System.EventHandler(this.mnuPrintPreview_Click);
-            // 
-            // mnuPrint
-            // 
-            this.mnuPrint.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mnuPrint.Image = ((System.Drawing.Image)(resources.GetObject("mnuPrint.Image")));
-            this.mnuPrint.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mnuPrint.Name = "mnuPrint";
-            this.mnuPrint.Size = new System.Drawing.Size(23, 24);
-            this.mnuPrint.Text = "Print (Ctrl+P)";
-            this.mnuPrint.ToolTipText = "Print (Ctrl+P)";
-            this.mnuPrint.Click += new System.EventHandler(this.mnuPrint_Click);
             // 
             // tls_1
             // 
@@ -461,7 +439,7 @@
             this.mnuOptions.Image = ((System.Drawing.Image)(resources.GetObject("mnuOptions.Image")));
             this.mnuOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuOptions.Name = "mnuOptions";
-            this.mnuOptions.Size = new System.Drawing.Size(23, 20);
+            this.mnuOptions.Size = new System.Drawing.Size(23, 24);
             this.mnuOptions.Text = "Options (Ctrl+O)";
             this.mnuOptions.ToolTipText = "Options";
             this.mnuOptions.Click += new System.EventHandler(this.mnuOptions_Click);
@@ -963,6 +941,37 @@
             this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
             this.tabFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabFiles_MouseDown);
             // 
+            // mnuPrintDefault
+            // 
+            this.mnuPrintDefault.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.mnuPrintDefault.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuPrint,
+            this.mnuPrintPreview});
+            this.mnuPrintDefault.Image = ((System.Drawing.Image)(resources.GetObject("mnuPrintDefault.Image")));
+            this.mnuPrintDefault.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuPrintDefault.Name = "mnuPrintDefault";
+            this.mnuPrintDefault.Size = new System.Drawing.Size(32, 24);
+            this.mnuPrintDefault.Text = "Print (Ctrl+P)";
+            this.mnuPrintDefault.ToolTipText = "Print (Ctrl+P)";
+            this.mnuPrintDefault.ButtonClick += new System.EventHandler(this.mnuPrint_Click);
+            // 
+            // mnuPrint
+            // 
+            this.mnuPrint.Image = ((System.Drawing.Image)(resources.GetObject("mnuPrint.Image")));
+            this.mnuPrint.Name = "mnuPrint";
+            this.mnuPrint.ShortcutKeyDisplayString = "Ctrl+P";
+            this.mnuPrint.Size = new System.Drawing.Size(163, 24);
+            this.mnuPrint.Text = "Print";
+            this.mnuPrint.Click += new System.EventHandler(this.mnuPrint_Click);
+            // 
+            // mnuPrintPreview
+            // 
+            this.mnuPrintPreview.Image = ((System.Drawing.Image)(resources.GetObject("mnuPrintPreview.Image")));
+            this.mnuPrintPreview.Name = "mnuPrintPreview";
+            this.mnuPrintPreview.Size = new System.Drawing.Size(163, 24);
+            this.mnuPrintPreview.Text = "Print Preview";
+            this.mnuPrintPreview.Click += new System.EventHandler(this.mnuPrintPreview_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1000,8 +1009,6 @@
         internal System.Windows.Forms.ToolStripButton mnuSaveNow;
         internal System.Windows.Forms.ToolStripButton mnuRename;
         internal System.Windows.Forms.ToolStripSeparator tls_0;
-        internal System.Windows.Forms.ToolStripButton mnuPrintPreview;
-        internal System.Windows.Forms.ToolStripButton mnuPrint;
         internal System.Windows.Forms.ToolStripSeparator tls_1;
         internal System.Windows.Forms.ToolStripButton mnuCut;
         internal System.Windows.Forms.ToolStripButton mnuCopy;
@@ -1088,5 +1095,8 @@
         private System.Windows.Forms.ToolStripMenuItem mnuFindGoto;
         private System.Windows.Forms.ToolStripMenuItem mnuFindFindNext;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
+        internal System.Windows.Forms.ToolStripSplitButton mnuPrintDefault;
+        private System.Windows.Forms.ToolStripMenuItem mnuPrint;
+        private System.Windows.Forms.ToolStripMenuItem mnuPrintPreview;
     }
 }
