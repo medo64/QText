@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Printing;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
@@ -9,7 +11,21 @@ namespace QText {
     internal class RichTextBoxEx : RichTextBox {
 
         public RichTextBoxEx() {
+            InitializeComponent();
             this.ShortcutsEnabled = false;
+        }
+
+        private void InitializeComponent() {
+            this.prdText = new System.Drawing.Printing.PrintDocument();
+            this.SuspendLayout();
+            // 
+            // prdText
+            // 
+            this.prdText.DocumentName = "";
+            this.prdText.BeginPrint += new System.Drawing.Printing.PrintEventHandler(this.prdText_BeginPrint);
+            this.prdText.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.prdText_PrintPage);
+            this.prdText.QueryPageSettings += new System.Drawing.Printing.QueryPageSettingsEventHandler(this.prdText_QueryPageSettings);
+            this.ResumeLayout(false);
         }
 
 
@@ -270,8 +286,8 @@ namespace QText {
                         case NativeMethods.VK_F4: base.WndProc(ref m); break;
                         case NativeMethods.VK_BACK: base.WndProc(ref m); break;
                     }
-                    Debug.WriteLine("WndProc:WParam: " + m.WParam.ToInt64().ToString()); 
-                    return;                    
+                    Debug.WriteLine("WndProc:WParam: " + m.WParam.ToInt64().ToString());
+                    return;
             }
             base.WndProc(ref m);
         }
@@ -288,6 +304,7 @@ namespace QText {
 
 
         private int _beginUpdateCount;
+        private System.Drawing.Printing.PrintDocument prdText;
         private IntPtr _originalEventMask;
         public void BeginUpdate() {
             this._beginUpdateCount += 1;
@@ -332,31 +349,134 @@ namespace QText {
         }
 
 
+        #region Printing
+
+        internal PrintDocument PrintDocument { get { return prdText; } }
+
+        private void prdText_QueryPageSettings(object sender, QueryPageSettingsEventArgs e) {
+            e.PageSettings.Margins = new Margins(40, 40, 50, 40);
+        }
+
+        private int currentPrintLocation;
+        private int currentPrintPage;
+
+        private void prdText_BeginPrint(object sender, PrintEventArgs e) {
+            currentPrintPage = 0;
+            currentPrintLocation = 0;
+        }
+
+        private readonly StringFormat sfTopLeft = new StringFormat() { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Far };
+        private readonly StringFormat sfTopRight = new StringFormat() { Alignment = StringAlignment.Far, LineAlignment = StringAlignment.Far };
+        private readonly int topPull = 5;
+
+        private void prdText_PrintPage(object sender, PrintPageEventArgs e) {
+            currentPrintPage += 1;
+            using (var font = new Font("Arial", 8))
+            using (var brush = new SolidBrush(Color.FromArgb(63, 63, 63)))
+            using (var pen = new Pen(brush, 1)) {
+                e.Graphics.DrawLine(pen, e.MarginBounds.Left, e.MarginBounds.Top - topPull, e.MarginBounds.Right, e.MarginBounds.Top - topPull);
+                e.Graphics.DrawString(currentPrintPage.ToString(), font, brush, e.MarginBounds.Right, e.MarginBounds.Top - topPull, sfTopRight);
+                e.Graphics.DrawString(this.PrintDocument.DocumentName, font, brush, e.MarginBounds.Left, e.MarginBounds.Top - topPull, sfTopLeft);
+            }
+
+            currentPrintLocation = PrintRtf(currentPrintLocation, this.TextLength, e);
+            e.HasMorePages = (currentPrintLocation < this.TextLength);
+        }
+
+
+        private int PrintRtf(int charFrom, int charTo, PrintPageEventArgs e) {
+            IntPtr hdc = IntPtr.Zero;
+            IntPtr lParam = IntPtr.Zero;
+            try {
+                hdc = e.Graphics.GetHdc();
+                var fmtRange = new NativeMethods.FORMATRANGE(hdc, e.PageBounds, e.MarginBounds, charFrom, charTo);
+
+                lParam = Marshal.AllocCoTaskMem(Marshal.SizeOf(fmtRange));
+                Marshal.StructureToPtr(fmtRange, lParam, false);
+
+                var res = NativeMethods.SendMessage(this.Handle, NativeMethods.EM_FORMATRANGE, new IntPtr(1), lParam);
+                return res.ToInt32();
+            } finally {
+                if (lParam != IntPtr.Zero) { Marshal.FreeCoTaskMem(lParam); }
+                if (hdc != IntPtr.Zero) { e.Graphics.ReleaseHdc(hdc); }
+            }
+        }
+
+        #endregion
+
+
         private class NativeMethods {
 
             internal const int VK_BACK = 0x08;
             internal const int VK_F4 = 0x73;
             internal const int VK_MENU = 0x12;
-            
+
             internal const int EM_SETEVENTMASK = 1073;
-            
+
             internal const int WM_LBUTTONDBLCLK = 0x0203;
             internal const int WM_SETREDRAW = 11;
             internal const int WM_SYSKEYDOWN = 0x0104;
             internal const int WM_SYSKEYUP = 0x0105;
 
+            internal const int WM_USER = 0x0400;
+            internal const int EM_FORMATRANGE = WM_USER + 57;
+
+
+            [StructLayout(LayoutKind.Sequential)]
+            internal struct RECT {
+                public RECT(Rectangle rectangleInHundredsOfAnInch) {
+                    this.Left = (int)(rectangleInHundredsOfAnInch.Left * 14.4);
+                    this.Top = (int)(rectangleInHundredsOfAnInch.Top * 14.4);
+                    this.Right = (int)(rectangleInHundredsOfAnInch.Right * 14.4);
+                    this.Bottom = (int)(rectangleInHundredsOfAnInch.Bottom * 14.4);
+                }
+                public int Left;
+                public int Top;
+                public int Right;
+                public int Bottom;
+            }
+
+            [StructLayout(LayoutKind.Sequential)]
+            internal struct CHARRANGE {
+                internal CHARRANGE(int charFrom, int CharTo) {
+                    this.cpMin = charFrom;
+                    this.cpMax = CharTo;
+                }
+                public int cpMin;
+                public int cpMax;
+            }
+
+            [StructLayout(LayoutKind.Sequential)]
+            internal struct FORMATRANGE {
+                public FORMATRANGE(IntPtr hdc, Rectangle pageRectangle, Rectangle drawingRectangle, int charFrom, int charTo) {
+                    this.hdc = hdc;
+                    this.hdcTarget = hdc;
+                    this.rc = new RECT(drawingRectangle);
+                    this.rcPage = new RECT(pageRectangle);
+                    this.chrg = new CHARRANGE(charFrom, charTo);
+                }
+                public IntPtr hdc;             //Actual DC to draw on
+                public IntPtr hdcTarget;       //Target DC for determining text formatting
+                public RECT rc;                //Region of the DC to draw to (in twips)
+                public RECT rcPage;            //Region of the whole DC (page size) (in twips)
+                public CHARRANGE chrg;         //Range of text to draw (see earlier declaration)
+            }
+
 
             public static IntPtr SendMessage(IntPtr hWnd, uint Msg, int wParam, IntPtr lParam) {
-                return SendMessageW(hWnd, Msg, new IntPtr(wParam), ref lParam);
+                return SendMessage(hWnd, Msg, new IntPtr(wParam), ref lParam);
             }
 
             public static IntPtr SendMessage(IntPtr hWnd, uint Msg, int wParam, int lParam) {
                 var x = new IntPtr(lParam);
-                return SendMessageW(hWnd, Msg, new IntPtr(wParam), ref x);
+                return SendMessage(hWnd, Msg, new IntPtr(wParam), ref x);
             }
 
-            [System.Runtime.InteropServices.DllImportAttribute("user32.dll", EntryPoint = "SendMessageW")]
-            public static extern IntPtr SendMessageW([System.Runtime.InteropServices.InAttribute()] System.IntPtr hWnd, uint Msg, IntPtr wParam, ref IntPtr lParam);
+            [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+            public static extern IntPtr SendMessage([InAttribute()] IntPtr hWnd, uint Msg, IntPtr wParam, ref IntPtr lParam);
+
+            [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+            internal static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
 
         }
 

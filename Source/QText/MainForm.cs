@@ -511,39 +511,21 @@ namespace QText {
         }
 
 
-        private void mnuPrintPreview_Click(object sender, EventArgs e) {
+        private void mnuPrint_Click(object sender, EventArgs e) {
+            SaveAllChanged();
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
-                try {
-                    using (var ol = new Medo.Drawing.Printing.FullText(tabFiles.SelectedTab.Title, 10.0f, 10.0f, 20.0f, 10.0f)) {
-                        ol.BeginPrint += Document_BeginPrint;
-                        ol.StartPrintPage += Document_PrintPage;
-                        ol.Font = Settings.DisplayFont;
-                        ol.Text = tabFiles.SelectedTab.TextBox.Text;
-                        using (var f = new Medo.Windows.Forms.PrintPreviewDialog(ol.Document)) {
-                            f.ShowDialog(this);
-                        }
-                    }
-                } catch (Exception ex) {
-                    Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Operation failed.\n\n{0}", ex.Message));
-                }
+                Print(tabFiles.SelectedTab);
                 tmrQuickSave.Enabled = true;
             }
         }
 
-        private void mnuPrint_Click(object sender, EventArgs e) {
+        private void mnuPrintPreview_Click(object sender, EventArgs e) {
+            SaveAllChanged();
             if (tabFiles.SelectedTab != null) {
-                try {
-                    using (var ol = new Medo.Drawing.Printing.FullText(tabFiles.SelectedTab.Title, 10.0f, 10.0f, 20.0f, 10.0f)) {
-                        ol.BeginPrint += Document_BeginPrint;
-                        ol.StartPrintPage += Document_PrintPage;
-                        ol.Font = Settings.DisplayFont;
-                        ol.Text = tabFiles.SelectedTab.TextBox.Text;
-                        ol.Print();
-                    }
-                } catch (Exception ex) {
-                    Medo.MessageBox.ShowWarning(this, string.Format("Operation failed.\n\n{0}", ex.Message));
-                }
+                tmrQuickSave.Enabled = false;
+                Print(tabFiles.SelectedTab, true);
+                tmrQuickSave.Enabled = true;
             }
         }
 
@@ -1361,40 +1343,27 @@ namespace QText {
 
         #endregion
 
+
         #region Printing
 
-        private int _PageNumber;
-
-        private void Document_BeginPrint(object sender, System.Drawing.Printing.PrintEventArgs e) {
-            this._PageNumber = 1;
-        }
-
-        private void Document_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e) {
-            try {
-                using (System.Drawing.Font font = new System.Drawing.Font("Tahoma", 10)) {
-                    e.Graphics.DrawString(((Medo.Drawing.Printing.FullText)sender).Document.DocumentName, font, System.Drawing.Brushes.Black, 0, -10 / 25.4f * 100);
-
-                    //used now only for height measurements
-                    string textC = global::Medo.Reflection.EntryAssembly.Title;
-                    System.Drawing.SizeF sizeC = e.Graphics.MeasureString(textC, font);
-                    if (Settings.PrintApplicationName) {
-                        e.Graphics.DrawString(textC, font, System.Drawing.Brushes.Black, (e.MarginBounds.Width - sizeC.Width) / 2, -10 / 25.4f * 100);
-                    }
-
-                    string textR = this._PageNumber.ToString();
-                    System.Drawing.SizeF sizeR = e.Graphics.MeasureString(textR, font);
-                    e.Graphics.DrawString(textR, font, System.Drawing.Brushes.Black, e.MarginBounds.Right - sizeR.Width, -10 / 25.4f * 100);
-
-                    e.Graphics.DrawLine(System.Drawing.Pens.Black, 0.0f, Convert.ToSingle(-10 / 25.4 * 100 + sizeC.Height), e.MarginBounds.Right, Convert.ToSingle(-10 / 25.4 * 100 + sizeC.Height));
+        private void Print(TabFile document, bool preview = false) {
+            var printDocument = document.TextBox.PrintDocument;
+            printDocument.DocumentName = document.Title;
+            if (preview) {
+                using (var frm = new Medo.Windows.Forms.PrintPreviewDialog(printDocument)) {
+                    frm.ShowDialog(this);
                 }
-
-                this._PageNumber += 1;
-            } catch (ArgumentException) {
-                Medo.MessageBox.ShowWarning(this, "Print preview cannot be shown.\n\nIs there a printer connected and up?");
+            } else {
+                using (var frm = new PrintDialog() { Document = printDocument, UseEXDialog = true }) {
+                    if (frm.ShowDialog(this) == DialogResult.OK) {
+                        printDocument.Print();
+                    }
+                }
             }
         }
 
         #endregion
+
 
         #region Timers
 
