@@ -24,7 +24,6 @@ namespace QText {
             this.prdText.DocumentName = "";
             this.prdText.BeginPrint += new System.Drawing.Printing.PrintEventHandler(this.prdText_BeginPrint);
             this.prdText.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.prdText_PrintPage);
-            this.prdText.QueryPageSettings += new System.Drawing.Printing.QueryPageSettingsEventHandler(this.prdText_QueryPageSettings);
             this.ResumeLayout(false);
         }
 
@@ -352,10 +351,6 @@ namespace QText {
         #region Printing
 
         internal PrintDocument PrintDocument { get { return prdText; } }
-
-        private void prdText_QueryPageSettings(object sender, QueryPageSettingsEventArgs e) {
-            e.PageSettings.Margins = new Margins(40, 40, 50, 40);
-        }
 
         private int currentPrintLocation;
         private int currentPrintPage;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.Globalization;
 using System.IO;
 using System.Security.Cryptography;
@@ -526,6 +527,23 @@ namespace QText {
                 tmrQuickSave.Enabled = false;
                 Print(tabFiles.SelectedTab, true);
                 tmrQuickSave.Enabled = true;
+            }
+        }
+
+        private void mnuPrintSetup_Click(object sender, EventArgs e) {
+            var pageSettings = new PageSettings();
+            try { pageSettings.PaperSize.PaperName = Settings.PrintPaperName; } catch (ArgumentException) { }
+            try { pageSettings.PaperSource.SourceName = Settings.PrintPaperSource; } catch (ArgumentException) { }
+            pageSettings.Landscape = Settings.PrintIsPaperLandscape;
+            pageSettings.Margins = Settings.PrintMargins;
+
+            using (var frm = new PageSetupDialog() { PageSettings = pageSettings }) {
+                if (frm.ShowDialog(this) == DialogResult.OK) {
+                    Settings.PrintPaperName = pageSettings.PaperSize.PaperName;
+                    Settings.PrintPaperSource = pageSettings.PaperSource.SourceName;
+                    Settings.PrintIsPaperLandscape = pageSettings.Landscape;
+                    Settings.PrintMargins = pageSettings.Margins;
+                }
             }
         }
 
@@ -1349,6 +1367,12 @@ namespace QText {
         private void Print(TabFile document, bool preview = false) {
             var printDocument = document.TextBox.PrintDocument;
             printDocument.DocumentName = document.Title;
+
+            try { printDocument.DefaultPageSettings.PaperSize.PaperName = Settings.PrintPaperName; } catch (ArgumentException) { }
+            try { printDocument.DefaultPageSettings.PaperSource.SourceName = Settings.PrintPaperSource; } catch (ArgumentException) { }
+            printDocument.DefaultPageSettings.Landscape = Settings.PrintIsPaperLandscape;
+            printDocument.DefaultPageSettings.Margins = Settings.PrintMargins;
+
             if (preview) {
                 using (var frm = new Medo.Windows.Forms.PrintPreviewDialog(printDocument)) {
                     frm.ShowDialog(this);

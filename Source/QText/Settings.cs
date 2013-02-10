@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.IO;
 using System.Windows.Forms;
 
@@ -186,10 +187,38 @@ namespace QText {
             set { Medo.Configuration.Settings.Write("LogUnhandledErrorsToTemp", value); }
         }
 
-        public static bool PrintApplicationName {
-            get { return Medo.Configuration.Settings.Read("PrintApplicationName", false); }
-            set { Medo.Configuration.Settings.Write("PrintApplicationName", value); }
+
+        public static string PrintPaperName {
+            get { return Medo.Configuration.Settings.Read("PrintPaperName", ""); }
+            set { Medo.Configuration.Settings.Write("PrintPaperName", value); }
         }
+
+        public static string PrintPaperSource {
+            get { return Medo.Configuration.Settings.Read("PrintPaperSource", ""); }
+            set { Medo.Configuration.Settings.Write("PrintPaperSource", value); }
+        }
+
+        public static bool PrintIsPaperLandscape {
+            get { return Medo.Configuration.Settings.Read("PrintIsPaperLandscape", false); }
+            set { Medo.Configuration.Settings.Write("PrintIsPaperLandscape", value); }
+        }
+
+        public static Margins PrintMargins {
+            get {
+                var left = Medo.Configuration.Settings.Read("PrintMarginLeft", 50);
+                var right = Medo.Configuration.Settings.Read("PrintMarginRight", 50);
+                var top = Medo.Configuration.Settings.Read("PrintMarginTop", 50);
+                var bottom = Medo.Configuration.Settings.Read("PrintMarginBottom", 50);
+                return new Margins(left, right, top, bottom);
+            }
+            set {
+                Medo.Configuration.Settings.Write("PrintMarginLeft", value.Left);
+                Medo.Configuration.Settings.Write("PrintMarginRight", value.Right);
+                Medo.Configuration.Settings.Write("PrintMarginTop", value.Top);
+                Medo.Configuration.Settings.Write("PrintMarginBottom", value.Bottom);
+            }
+        }
+
 
         public static int QuickSaveInterval {
             get {

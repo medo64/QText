@@ -119,6 +119,8 @@
             this.mnxTabOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.tmrCheckFileUpdate = new System.Windows.Forms.Timer(this.components);
             this.tabFiles = new QText.TabFiles();
+            this.mnuPrintSetup = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripSeparator();
             this.mnu.SuspendLayout();
             this.mnxText.SuspendLayout();
             this.mnxTab.SuspendLayout();
@@ -202,7 +204,9 @@
             this.mnuPrintDefault.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.mnuPrintDefault.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuPrint,
-            this.mnuPrintPreview});
+            this.mnuPrintPreview,
+            this.toolStripMenuItem6,
+            this.mnuPrintSetup});
             this.mnuPrintDefault.Image = ((System.Drawing.Image)(resources.GetObject("mnuPrintDefault.Image")));
             this.mnuPrintDefault.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuPrintDefault.Name = "mnuPrintDefault";
@@ -972,6 +976,19 @@
             this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
             this.tabFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabFiles_MouseDown);
             // 
+            // mnuPrintSetup
+            // 
+            this.mnuPrintSetup.Image = ((System.Drawing.Image)(resources.GetObject("mnuPrintSetup.Image")));
+            this.mnuPrintSetup.Name = "mnuPrintSetup";
+            this.mnuPrintSetup.Size = new System.Drawing.Size(163, 24);
+            this.mnuPrintSetup.Text = "Page setup";
+            this.mnuPrintSetup.Click += new System.EventHandler(this.mnuPrintSetup_Click);
+            // 
+            // toolStripMenuItem6
+            // 
+            this.toolStripMenuItem6.Name = "toolStripMenuItem6";
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(160, 6);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1098,5 +1115,7 @@
         internal System.Windows.Forms.ToolStripSplitButton mnuPrintDefault;
         private System.Windows.Forms.ToolStripMenuItem mnuPrint;
         private System.Windows.Forms.ToolStripMenuItem mnuPrintPreview;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem6;
+        private System.Windows.Forms.ToolStripMenuItem mnuPrintSetup;
     }
 }
