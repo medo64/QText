@@ -91,7 +91,7 @@
             this.tab.Location = new System.Drawing.Point(12, 12);
             this.tab.Name = "tab";
             this.tab.SelectedIndex = 0;
-            this.tab.Size = new System.Drawing.Size(510, 405);
+            this.tab.Size = new System.Drawing.Size(498, 251);
             this.tab.TabIndex = 1;
             // 
             // tab_pagAppearance
@@ -109,7 +109,7 @@
             this.tab_pagAppearance.Controls.Add(this.txtFont);
             this.tab_pagAppearance.Location = new System.Drawing.Point(4, 25);
             this.tab_pagAppearance.Name = "tab_pagAppearance";
-            this.tab_pagAppearance.Size = new System.Drawing.Size(502, 376);
+            this.tab_pagAppearance.Size = new System.Drawing.Size(490, 222);
             this.tab_pagAppearance.TabIndex = 4;
             this.tab_pagAppearance.Text = "Appearance";
             this.tab_pagAppearance.UseVisualStyleBackColor = true;
@@ -165,8 +165,8 @@
             // btnFont
             // 
             this.btnFont.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFont.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.btnFont.Location = new System.Drawing.Point(472, 91);
+            this.btnFont.Font = new System.Drawing.Font("Microsoft Sans Serif", 4.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.btnFont.Location = new System.Drawing.Point(460, 91);
             this.btnFont.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
             this.btnFont.Name = "btnFont";
             this.btnFont.Size = new System.Drawing.Size(22, 22);
@@ -236,7 +236,7 @@
             this.txtFont.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.txtFont.Name = "txtFont";
             this.txtFont.ReadOnly = true;
-            this.txtFont.Size = new System.Drawing.Size(349, 22);
+            this.txtFont.Size = new System.Drawing.Size(337, 22);
             this.txtFont.TabIndex = 6;
             // 
             // tab_pagDisplay
@@ -249,7 +249,7 @@
             this.tab_pagDisplay.Controls.Add(this.chkShowInTaskbar);
             this.tab_pagDisplay.Location = new System.Drawing.Point(4, 25);
             this.tab_pagDisplay.Name = "tab_pagDisplay";
-            this.tab_pagDisplay.Size = new System.Drawing.Size(502, 376);
+            this.tab_pagDisplay.Size = new System.Drawing.Size(490, 222);
             this.tab_pagDisplay.TabIndex = 1;
             this.tab_pagDisplay.Text = "Display";
             this.tab_pagDisplay.UseVisualStyleBackColor = true;
@@ -330,7 +330,7 @@
             this.tab_pagFiles.Location = new System.Drawing.Point(4, 25);
             this.tab_pagFiles.Name = "tab_pagFiles";
             this.tab_pagFiles.Padding = new System.Windows.Forms.Padding(4);
-            this.tab_pagFiles.Size = new System.Drawing.Size(502, 376);
+            this.tab_pagFiles.Size = new System.Drawing.Size(490, 222);
             this.tab_pagFiles.TabIndex = 0;
             this.tab_pagFiles.Text = "Files";
             this.tab_pagFiles.UseVisualStyleBackColor = true;
@@ -367,7 +367,7 @@
             // btnOpenLocationFolder
             // 
             this.btnOpenLocationFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnOpenLocationFolder.Location = new System.Drawing.Point(3, 344);
+            this.btnOpenLocationFolder.Location = new System.Drawing.Point(3, 190);
             this.btnOpenLocationFolder.Name = "btnOpenLocationFolder";
             this.btnOpenLocationFolder.Size = new System.Drawing.Size(196, 29);
             this.btnOpenLocationFolder.TabIndex = 10;
@@ -417,7 +417,7 @@
             // 
             this.btnChangeLocation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnChangeLocation.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnChangeLocation.Location = new System.Drawing.Point(303, 344);
+            this.btnChangeLocation.Location = new System.Drawing.Point(291, 190);
             this.btnChangeLocation.Name = "btnChangeLocation";
             this.btnChangeLocation.Size = new System.Drawing.Size(196, 29);
             this.btnChangeLocation.TabIndex = 11;
@@ -434,7 +434,7 @@
             this.tab_pagBehavior.Controls.Add(this.chkMinimizeToTray);
             this.tab_pagBehavior.Location = new System.Drawing.Point(4, 25);
             this.tab_pagBehavior.Name = "tab_pagBehavior";
-            this.tab_pagBehavior.Size = new System.Drawing.Size(502, 376);
+            this.tab_pagBehavior.Size = new System.Drawing.Size(490, 222);
             this.tab_pagBehavior.TabIndex = 2;
             this.tab_pagBehavior.Text = "Behavior";
             this.tab_pagBehavior.UseVisualStyleBackColor = true;
@@ -446,7 +446,7 @@
             this.txtHotkey.Location = new System.Drawing.Point(153, 3);
             this.txtHotkey.Name = "txtHotkey";
             this.txtHotkey.ReadOnly = true;
-            this.txtHotkey.Size = new System.Drawing.Size(346, 22);
+            this.txtHotkey.Size = new System.Drawing.Size(334, 22);
             this.txtHotkey.TabIndex = 7;
             this.txtHotkey.Enter += new System.EventHandler(this.txtHotkey_Enter);
             this.txtHotkey.Leave += new System.EventHandler(this.txtHotkey_Leave);
@@ -502,7 +502,7 @@
             this.tab_pagCarbonCopy.Controls.Add(this.lblCarbonCopyFolder);
             this.tab_pagCarbonCopy.Location = new System.Drawing.Point(4, 25);
             this.tab_pagCarbonCopy.Name = "tab_pagCarbonCopy";
-            this.tab_pagCarbonCopy.Size = new System.Drawing.Size(502, 376);
+            this.tab_pagCarbonCopy.Size = new System.Drawing.Size(490, 222);
             this.tab_pagCarbonCopy.TabIndex = 3;
             this.tab_pagCarbonCopy.Text = "Carbon copy";
             this.tab_pagCarbonCopy.UseVisualStyleBackColor = true;
@@ -510,7 +510,7 @@
             // btnCarbonCopyOpenFolder
             // 
             this.btnCarbonCopyOpenFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnCarbonCopyOpenFolder.Location = new System.Drawing.Point(3, 344);
+            this.btnCarbonCopyOpenFolder.Location = new System.Drawing.Point(3, 190);
             this.btnCarbonCopyOpenFolder.Name = "btnCarbonCopyOpenFolder";
             this.btnCarbonCopyOpenFolder.Size = new System.Drawing.Size(196, 29);
             this.btnCarbonCopyOpenFolder.TabIndex = 6;
@@ -520,8 +520,9 @@
             // 
             // btnCarbonCopyFolderSelect
             // 
-            this.btnCarbonCopyFolderSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.btnCarbonCopyFolderSelect.Location = new System.Drawing.Point(477, 32);
+            this.btnCarbonCopyFolderSelect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCarbonCopyFolderSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 5F);
+            this.btnCarbonCopyFolderSelect.Location = new System.Drawing.Point(465, 32);
             this.btnCarbonCopyFolderSelect.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
             this.btnCarbonCopyFolderSelect.Name = "btnCarbonCopyFolderSelect";
             this.btnCarbonCopyFolderSelect.Size = new System.Drawing.Size(22, 22);
@@ -568,7 +569,7 @@
             this.txtCarbonCopyFolder.Location = new System.Drawing.Point(153, 32);
             this.txtCarbonCopyFolder.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.txtCarbonCopyFolder.Name = "txtCarbonCopyFolder";
-            this.txtCarbonCopyFolder.Size = new System.Drawing.Size(324, 22);
+            this.txtCarbonCopyFolder.Size = new System.Drawing.Size(312, 22);
             this.txtCarbonCopyFolder.TabIndex = 2;
             this.txtCarbonCopyFolder.TextChanged += new System.EventHandler(this.txtCarbonCopyFolder_TextChanged);
             // 
@@ -585,7 +586,7 @@
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOk.Location = new System.Drawing.Point(320, 426);
+            this.btnOk.Location = new System.Drawing.Point(308, 272);
             this.btnOk.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(98, 29);
@@ -598,7 +599,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(424, 426);
+            this.btnCancel.Location = new System.Drawing.Point(412, 272);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(98, 29);
@@ -609,7 +610,7 @@
             // btnExit
             // 
             this.btnExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnExit.Location = new System.Drawing.Point(12, 426);
+            this.btnExit.Location = new System.Drawing.Point(12, 272);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(98, 29);
             this.btnExit.TabIndex = 2;
@@ -624,7 +625,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(534, 467);
+            this.ClientSize = new System.Drawing.Size(522, 313);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.tab);
             this.Controls.Add(this.btnOk);
