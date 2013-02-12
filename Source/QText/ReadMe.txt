@@ -48,6 +48,9 @@ SHORTCUT KEYS
     Alt+Up                  Select previous folder.
     Alt+Down                Select next folder.
 
+    Alt+Shift+D             Inserts current date into text.
+    Alt+Shift+T             Inserts current time into text.
+
 
 ENCRYPTION
 

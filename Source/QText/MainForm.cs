@@ -236,6 +236,18 @@ namespace QText {
                         }
                     } return true;
 
+                case Keys.Alt | Keys.Shift | Keys.D: {
+                        if ((tabFiles.SelectedTab != null) && (tabFiles.SelectedTab.IsOpened)) {
+                            tabFiles.SelectedTab.TextBox.SelectedText = DateTime.Now.ToShortDateString();
+                        }
+                    } return true;
+
+                case Keys.Alt | Keys.Shift | Keys.T: {
+                        if ((tabFiles.SelectedTab != null) && (tabFiles.SelectedTab.IsOpened)) {
+                            tabFiles.SelectedTab.TextBox.SelectedText = DateTime.Now.ToShortTimeString();
+                        }
+                    } return true;
+
             }
 
             return base.ProcessDialogKey(keyData);
