@@ -1365,24 +1365,28 @@ namespace QText {
         #region Printing
 
         private void Print(TabFile document, bool preview = false) {
-            var printDocument = document.TextBox.PrintDocument;
-            printDocument.DocumentName = document.Title;
+            try {
+                var printDocument = document.TextBox.PrintDocument;
+                printDocument.DocumentName = document.Title;
 
-            try { printDocument.DefaultPageSettings.PaperSize.PaperName = Settings.PrintPaperName; } catch (ArgumentException) { }
-            try { printDocument.DefaultPageSettings.PaperSource.SourceName = Settings.PrintPaperSource; } catch (ArgumentException) { }
-            printDocument.DefaultPageSettings.Landscape = Settings.PrintIsPaperLandscape;
-            printDocument.DefaultPageSettings.Margins = Settings.PrintMargins;
+                try { printDocument.DefaultPageSettings.PaperSize.PaperName = Settings.PrintPaperName; } catch (ArgumentException) { }
+                try { printDocument.DefaultPageSettings.PaperSource.SourceName = Settings.PrintPaperSource; } catch (ArgumentException) { }
+                printDocument.DefaultPageSettings.Landscape = Settings.PrintIsPaperLandscape;
+                printDocument.DefaultPageSettings.Margins = Settings.PrintMargins;
 
-            if (preview) {
-                using (var frm = new Medo.Windows.Forms.PrintPreviewDialog(printDocument)) {
-                    frm.ShowDialog(this);
-                }
-            } else {
-                using (var frm = new PrintDialog() { Document = printDocument, UseEXDialog = true }) {
-                    if (frm.ShowDialog(this) == DialogResult.OK) {
-                        printDocument.Print();
+                if (preview) {
+                    using (var frm = new Medo.Windows.Forms.PrintPreviewDialog(printDocument)) {
+                        frm.ShowDialog(this);
+                    }
+                } else {
+                    using (var frm = new PrintDialog() { Document = printDocument, UseEXDialog = true }) {
+                        if (frm.ShowDialog(this) == DialogResult.OK) {
+                            printDocument.Print();
+                        }
                     }
                 }
+            } catch (InvalidPrinterException ex) {
+                Medo.MessageBox.ShowError(this, string.Format("{0}\n\n{1}", (preview ? "Cannot show print preview." : "Cannot print."), ex.Message));
             }
         }
 
