@@ -32,61 +32,62 @@ namespace QText {
         protected override bool IsInputKey(Keys keyData) {
             Debug.WriteLine("RichTextBoxEx_IsInputKey: " + keyData.ToString());
             switch (keyData) {
-                case Keys.F1: return false;
-                case Keys.F2: return false;
-                case Keys.F3: return false;
-                case Keys.F4: return false;
-                case Keys.F5: return false;
-                case Keys.F6: return false;
-                case Keys.F7: return false;
-                case Keys.F8: return false;
-                case Keys.F9: return false;
-                case Keys.F10: return false;
-                case Keys.F11: return false;
-                case Keys.F12: return false;
-                case Keys.F13: return false;
-                case Keys.F14: return false;
-                case Keys.F15: return false;
-                case Keys.F16: return false;
-                case Keys.F17: return false;
-                case Keys.F18: return false;
-                case Keys.F19: return false;
-                case Keys.F20: return false;
-                case Keys.Control | Keys.B: return false;
-                case Keys.Control | Keys.C: return false;
-                case Keys.Control | Keys.D: return false;
-                case Keys.Control | Keys.E: return false;
-                case Keys.Control | Keys.F: return false;
-                case Keys.Control | Keys.G: return false;
-                case Keys.Control | Keys.H: return false;
-                case Keys.Control | Keys.I: return false;
-                case Keys.Control | Keys.J: return false;
-                case Keys.Control | Keys.K: return false;
-                case Keys.Control | Keys.L: return false;
-                case Keys.Control | Keys.M: return false;
-                case Keys.Control | Keys.N: return false;
-                case Keys.Control | Keys.O: return false;
-                case Keys.Control | Keys.P: return false;
-                case Keys.Control | Keys.Q: return false;
-                case Keys.Control | Keys.R: return false;
-                case Keys.Control | Keys.S: return false;
-                case Keys.Control | Keys.T: return false;
-                case Keys.Control | Keys.U: return false;
-                case Keys.Control | Keys.V: return false;
-                case Keys.Control | Keys.W: return false;
-                case Keys.Control | Keys.X: return false;
-                case Keys.Control | Keys.Y: return false;
-                case Keys.Control | Keys.Z: return false;
-                case Keys.Alt | Keys.D0: return false;
-                case Keys.Alt | Keys.D1: return false;
-                case Keys.Alt | Keys.D2: return false;
-                case Keys.Alt | Keys.D3: return false;
-                case Keys.Alt | Keys.D4: return false;
-                case Keys.Alt | Keys.D5: return false;
-                case Keys.Alt | Keys.D6: return false;
-                case Keys.Alt | Keys.D7: return false;
-                case Keys.Alt | Keys.D8: return false;
-                case Keys.Alt | Keys.D9: return false;
+                case Keys.F1:
+                case Keys.F2:
+                case Keys.F3:
+                case Keys.F4:
+                case Keys.F5:
+                case Keys.F6:
+                case Keys.F7:
+                case Keys.F8:
+                case Keys.F9:
+                case Keys.F10:
+                case Keys.F11:
+                case Keys.F12:
+                case Keys.F13:
+                case Keys.F14:
+                case Keys.F15:
+                case Keys.F16:
+                case Keys.F17:
+                case Keys.F18:
+                case Keys.F19:
+                case Keys.F20:
+                case Keys.Control | Keys.B:
+                case Keys.Control | Keys.C:
+                case Keys.Control | Keys.D:
+                case Keys.Control | Keys.E:
+                case Keys.Control | Keys.F:
+                case Keys.Control | Keys.G:
+                case Keys.Control | Keys.H:
+                case Keys.Control | Keys.I:
+                case Keys.Control | Keys.J:
+                case Keys.Control | Keys.K:
+                case Keys.Control | Keys.L:
+                case Keys.Control | Keys.M:
+                case Keys.Control | Keys.N:
+                case Keys.Control | Keys.O:
+                case Keys.Control | Keys.P:
+                case Keys.Control | Keys.Q:
+                case Keys.Control | Keys.R:
+                case Keys.Control | Keys.S:
+                case Keys.Control | Keys.T:
+                case Keys.Control | Keys.U:
+                case Keys.Control | Keys.V:
+                case Keys.Control | Keys.W:
+                case Keys.Control | Keys.X:
+                case Keys.Control | Keys.Y:
+                case Keys.Control | Keys.Z:
+                case Keys.Alt | Keys.D0:
+                case Keys.Alt | Keys.D1:
+                case Keys.Alt | Keys.D2:
+                case Keys.Alt | Keys.D3:
+                case Keys.Alt | Keys.D4:
+                case Keys.Alt | Keys.D5:
+                case Keys.Alt | Keys.D6:
+                case Keys.Alt | Keys.D7:
+                case Keys.Alt | Keys.D8:
+                case Keys.Alt | Keys.D9:
+                    return false;
             }
             return base.IsInputKey(keyData);
         }
@@ -294,7 +295,9 @@ namespace QText {
         protected override void OnLinkClicked(System.Windows.Forms.LinkClickedEventArgs e) {
             if (Settings.FollowURLs) {
                 try {
-                    System.Diagnostics.Process.Start(e.LinkText);
+                    if ((e != null) && (string.IsNullOrEmpty(e.LinkText) == false)) {
+                        System.Diagnostics.Process.Start(e.LinkText);
+                    }
                 } catch (Exception ex) {
                     Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot execute link \"{0}\".\n\n{1}", e.LinkText, ex.Message));
                 }
@@ -336,7 +339,7 @@ namespace QText {
         }
 
 
-        private UnicodeCategory GetLikeUnicodeCategory(char ch) {
+        private static UnicodeCategory GetLikeUnicodeCategory(char ch) {
             if (ch == '-') { return UnicodeCategory.LetterNumber; }
             if (char.IsWhiteSpace(ch)) {
                 return UnicodeCategory.SpaceSeparator;

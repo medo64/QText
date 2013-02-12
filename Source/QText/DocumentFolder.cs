@@ -110,8 +110,11 @@ namespace QText {
             try {
                 var orderFile = Path.Combine(GetDirectory(folder), ".qtext");
 
-                using (var fs = new FileStream(orderFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
+                FileStream fs = null;
+                try {
+                    fs = new FileStream(orderFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                     using (var sr = new StreamReader(fs)) {
+                        fs = null;
                         while (sr.EndOfStream == false) {
                             var line = sr.ReadLine();
                             if (line.Equals("/[")) { //start of block
@@ -131,6 +134,8 @@ namespace QText {
                             }
                         }
                     }
+                } finally {
+                    if (fs != null) { fs.Dispose(); }
                 }
             } catch (IOException) { }
             return orderedTitles;
@@ -144,10 +149,14 @@ namespace QText {
                     fi.Create();
                 }
                 fi.Attributes = FileAttributes.Hidden;
-                using (var fs = new FileStream(orderFile, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read)) {
+
+                FileStream fs = null;
+                try {
+                    fs = new FileStream(orderFile, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read);
                     try { fs.SetLength(0); } catch (IOException) { } //try to delete content
                     fs.Position = fs.Length;
                     using (var sw = new StreamWriter(fs)) {
+                        fs = null;
                         sw.WriteLine("/["); //always start block with /[
                         foreach (TabFile tab in tabFiles.TabPages) {
                             if (tab.Equals(tabFiles.SelectedTab)) { //selected file is written with //selected
@@ -158,6 +167,8 @@ namespace QText {
                         }
                         sw.WriteLine("]/"); //always end block with ]/
                     }
+                } finally {
+                    if (fs != null) { fs.Dispose(); }
                 }
             } catch (IOException) { }
         }
@@ -170,13 +181,19 @@ namespace QText {
                     fi.Create();
                 }
                 fi.Attributes = FileAttributes.Hidden;
-                using (var fs = new FileStream(orderFile, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read)) {
+
+                FileStream fs = null;
+                try {
+                    fs = new FileStream(orderFile, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read);
                     try { fs.SetLength(0); } catch (IOException) { } //try to delete content
                     fs.Position = fs.Length;
                     using (var sw = new StreamWriter(fs)) {
+                        fs = null;
                         sw.WriteLine("/["); //always start block with /[
                         sw.WriteLine("]/"); //always end block with ]/
                     }
+                } finally {
+                    if (fs != null) { fs.Dispose(); }
                 }
             } catch (IOException) { }
         }

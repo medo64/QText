@@ -1,4 +1,4 @@
-//Josip Medved <jmedved@jmedved.com> http://www.jmedved.com
+//Copyright (c) 2007 Josip Medved <jmedved@jmedved.com>
 
 //2007-12-29: New version.
 //2008-01-03: Added Resources.
@@ -9,6 +9,7 @@
 //2008-04-11: Cleaned code to match FxCop 1.36 beta 2 (SpecifyMarshalingForPInvokeStringArguments, NestedTypesShouldNotBeVisible).
 //2008-11-14: Reworked code to use SafeHandle.
 //2010-10-07: Added IsOtherInstanceRunning method.
+//2012-11-24: Suppressing bogus CA5122 warning (http://connect.microsoft.com/VisualStudio/feedback/details/729254/bogus-ca5122-warning-about-p-invoke-declarations-should-not-be-safe-critical).
 
 
 using System;
@@ -117,9 +118,9 @@ namespace Medo.Application {
                         sbComponents.AppendLine(System.Environment.UserName);
                         sbComponents.AppendLine(System.Reflection.Assembly.GetEntryAssembly().FullName);
                         sbComponents.AppendLine(System.Reflection.Assembly.GetEntryAssembly().CodeBase);
-                        
+
                         byte[] hash;
-                        using (var sha1 =System.Security.Cryptography.SHA1Managed.Create()){
+                        using (var sha1 = System.Security.Cryptography.SHA1Managed.Create()) {
                             hash = sha1.ComputeHash(System.Text.Encoding.Unicode.GetBytes(sbComponents.ToString()));
                         }
 
@@ -268,32 +269,40 @@ namespace Medo.Application {
             }
 
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")]
             [DllImport("kernel32.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool CloseHandle(System.IntPtr hObject);
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")]
             [DllImport("kernel32.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool ConnectNamedPipe(System.IntPtr hNamedPipe, System.IntPtr lpOverlapped);
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")]
             [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
             public static extern FileSafeHandle CreateFile(string lpFileName, uint dwDesiredAccess, uint dwShareMode, System.IntPtr lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, System.IntPtr hTemplateFile);
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")]
             [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
             public static extern System.IntPtr CreateNamedPipe(string lpName, uint dwOpenMode, uint dwPipeMode, uint nMaxInstances, uint nOutBufferSize, uint nInBufferSize, uint nDefaultTimeOut, System.IntPtr lpSecurityAttributes);
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")]
             [DllImport("kernel32.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool PeekNamedPipe(System.IntPtr hNamedPipe, byte[] lpBuffer, uint nBufferSize, ref uint lpBytesRead, ref uint lpTotalBytesAvail, ref uint lpBytesLeftThisMessage);
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")]
             [DllImport("kernel32.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool ReadFile(System.IntPtr hFile, byte[] lpBuffer, uint nNumberOfBytesToRead, ref uint lpNumberOfBytesRead, ref NativeOverlapped lpOverlapped);
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")]
             [DllImport("kernel32.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool WriteFile(FileSafeHandle hFile, byte[] lpBuffer, uint nNumberOfBytesToWrite, ref uint lpNumberOfBytesWritten, ref NativeOverlapped lpOverlapped);
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")]
             [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool WaitNamedPipe(string lpNamedPipeName, uint nTimeOut);

@@ -57,7 +57,7 @@ namespace QText {
             }
 
             //search current one again but only until selection
-            if (selectedTab.FindForward(SearchStatus.Text, SearchStatus.CaseSensitive, 0, currSearchStart)) {
+            if (selectedTab.FindForward(SearchStatus.Text, SearchStatus.CaseSensitive, 0)) {
                 return selectedTab;
             }
 
@@ -127,7 +127,7 @@ namespace QText {
             }
 
             //search current one again but only until selection
-            if (selectedTab.FindForward(SearchStatus.Text, SearchStatus.CaseSensitive, 0, currSearchStart)) {
+            if (selectedTab.FindForward(SearchStatus.Text, SearchStatus.CaseSensitive, 0)) {
                 return selectedTab;
             }
 

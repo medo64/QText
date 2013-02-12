@@ -51,7 +51,7 @@ namespace QText {
 
         protected override void OnKeyUp(KeyEventArgs e) {
             Debug.WriteLine("FolderEditForm_OnKeyUp: " + e.KeyData.ToString());
-            if (e.KeyData == Keys.Menu) {
+            if ((e != null) && (e.KeyData == Keys.Menu)) {
                 if (this.SuppressMenuKey) { this.SuppressMenuKey = false; return; }
                 ToggleMenu();
                 e.Handled = true;

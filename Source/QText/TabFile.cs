@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Medo.Security.Cryptography;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -7,7 +8,6 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
-using Medo.Security.Cryptography;
 
 namespace QText {
 
@@ -532,7 +532,7 @@ namespace QText {
             }
         }
 
-        public bool FindForward(string text, bool caseSensitive, int startingIndex, int endingIndex = int.MaxValue) {
+        public bool FindForward(string text, bool caseSensitive, int startingIndex) {
             StringComparison comparisionType = default(StringComparison);
             if (caseSensitive) {
                 comparisionType = StringComparison.CurrentCulture;
@@ -741,20 +741,6 @@ namespace QText {
         }
 
         #endregion
-
-
-        private static class NativeMethods {
-
-            internal const int EM_SETTABSTOPS = 0xcb;
-            public static IntPtr SendMessage(IntPtr hWnd, uint Msg, int wParam, int lParam) {
-                var x = new IntPtr(lParam);
-                return SendMessageW(hWnd, Msg, new IntPtr(wParam), ref x);
-            }
-
-            [DllImportAttribute("user32.dll", EntryPoint = "SendMessageW")]
-            public static extern IntPtr SendMessageW([InAttribute()] IntPtr hWnd, UInt32 Msg, IntPtr wParam, ref IntPtr lParam);
-
-        }
 
     }
 }

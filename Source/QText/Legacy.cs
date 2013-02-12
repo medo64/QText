@@ -1,18 +1,14 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Xml;
-using Microsoft.Win32;
 
 namespace QText.Legacy {
 
     internal static class OrderedFiles {
-
-        private static readonly Encoding Encoding = new UTF8Encoding(false);
-
 
         public static void Upgrade() {
             var orderedTitles = new List<string>();
@@ -71,23 +67,27 @@ namespace QText.Legacy {
 
             if (orderedTitles.Count > 0) {
                 //write to new format
+                FileStream fs = null;
                 try {
-                    using (var fs = new FileStream(Path.Combine(QText.Settings.FilesLocation, ".qtext"), FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read)) {
-                        try { fs.SetLength(0); } catch (IOException) { } //try to delete content
-                        fs.Position = fs.Length;
-                        using (var sw = new StreamWriter(fs)) {
-                            sw.WriteLine("/["); //always start block with /[
-                            foreach (var title in orderedTitles) {
-                                if (title == selectedTitle) { //selected file is written with //selected
-                                    sw.WriteLine(title + "//selected");
-                                } else {
-                                    sw.WriteLine(title);
-                                }
+                    fs = new FileStream(Path.Combine(QText.Settings.FilesLocation, ".qtext"), FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read);
+                    try { fs.SetLength(0); } catch (IOException) { } //try to delete content
+                    fs.Position = fs.Length;
+                    using (var sw = new StreamWriter(fs)) {
+                        fs = null;
+                        sw.WriteLine("/["); //always start block with /[
+                        foreach (var title in orderedTitles) {
+                            if (title == selectedTitle) { //selected file is written with //selected
+                                sw.WriteLine(title + "//selected");
+                            } else {
+                                sw.WriteLine(title);
                             }
-                            sw.WriteLine("]/"); //always end block with ]/
                         }
+                        sw.WriteLine("]/"); //always end block with ]/
                     }
-                } catch (IOException) { }
+                } catch (IOException) {
+                } finally {
+                    if (fs != null) { fs.Dispose(); }
+                }
             }
         }
 

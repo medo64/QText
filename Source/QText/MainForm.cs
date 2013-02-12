@@ -290,7 +290,7 @@ namespace QText {
             Debug.WriteLine("MainForm_OnKeyUp: " + e.KeyData.ToString());
             tmrQuickSave.Enabled = false;
 
-            if (e.KeyData == Keys.Menu) {
+            if ((e != null) && (e.KeyData == Keys.Menu)) {
                 if (this.SuppressMenuKey) { this.SuppressMenuKey = false; return; }
                 ToggleMenu();
                 e.Handled = true;

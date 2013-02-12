@@ -24,6 +24,7 @@ namespace QText {
         private readonly StringFormat StringFormat = new StringFormat() { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center };
 
         protected override void OnDrawItem(DrawItemEventArgs e) {
+            if (e == null) { return; }
             base.OnDrawItem(e);
 
             var tab = (TabFile)this.TabPages[e.Index];
@@ -206,14 +207,14 @@ namespace QText {
         private TabPage _dragTabPage = null;
 
         protected override void OnMouseDown(MouseEventArgs e) {
-            if ((e.Button == MouseButtons.Left) && (base.SelectedTab != null) && (!base.GetTabRect(base.SelectedIndex).IsEmpty)) {
+            if ((e != null) && (e.Button == MouseButtons.Left) && (base.SelectedTab != null) && (!base.GetTabRect(base.SelectedIndex).IsEmpty)) {
                 this._dragTabPage = base.SelectedTab;
             }
             base.OnMouseDown(e);
         }
 
         protected override void OnMouseMove(MouseEventArgs e) {
-            if ((e.Button == MouseButtons.Left) && (this._dragTabPage != null)) {
+            if ((e != null) && (e.Button == MouseButtons.Left) && (this._dragTabPage != null)) {
                 var currTabPage = GetTabPageFromXY(e.X, e.Y);
                 if ((currTabPage != null)) {
                     var currRect = base.GetTabRect(base.TabPages.IndexOf(currTabPage));
@@ -234,7 +235,7 @@ namespace QText {
         }
 
         protected override void OnMouseUp(MouseEventArgs e) {
-            if ((e.Button == MouseButtons.Left) && (this._dragTabPage != null)) {
+            if ((e != null) && (e.Button == MouseButtons.Left) && (this._dragTabPage != null)) {
                 TabPage currTabPage = GetTabPageFromXY(e.X, e.Y);
                 if ((currTabPage != null) && (!currTabPage.Equals(this._dragTabPage))) {
                     var currRect = base.GetTabRect(base.TabPages.IndexOf(currTabPage));

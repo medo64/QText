@@ -43,8 +43,8 @@ namespace QText {
         }
 
         public static bool DeleteTabFile(IWin32Window owner, TabFiles tabFiles, TabFile tabToDelete) {
-            if (tabFiles == null) { throw new ArgumentNullException("Tab parent cannot be null."); }
-            if (tabToDelete == null) { throw new ArgumentNullException("Tab cannot be null."); }
+            if (tabFiles == null) { throw new ArgumentNullException("tabFiles", "Tab parent cannot be null."); }
+            if (tabToDelete == null) { throw new ArgumentNullException("tabToDelete", "Tab cannot be null."); }
 
             bool askForConfirmation = false;
             if (tabToDelete.CurrentFile.IsEncrypted) {

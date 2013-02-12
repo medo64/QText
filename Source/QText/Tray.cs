@@ -1,8 +1,9 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace QText {
-    internal class Tray {
+    internal class Tray : IDisposable {
 
         private MenuItem mnxNotifyShow = new MenuItem("&Show");
         private MenuItem mnxNotifyShowOnPrimary = new MenuItem("&Show on primary screen");
@@ -121,6 +122,24 @@ namespace QText {
                 mnxNotifyShow_Click(sender, new System.EventArgs());
             }
         }
+
+
+        #region Disposing
+
+        public void Dispose() {
+            this.Dispose(true);
+        }
+
+        protected void Dispose(bool disposing) {
+            if (disposing) {
+                mnxNotifyShow.Dispose();
+                mnxNotifyShowOnPrimary.Dispose();
+                mnxNotifyExit.Dispose();
+                notMain.Dispose();
+            }
+        }
+
+        #endregion
 
     }
 }
