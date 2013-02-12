@@ -135,7 +135,10 @@ namespace QText {
             if (Settings.Installed) { Medo.Diagnostics.ErrorReport.SaveToTemp(e.Exception); }
 #if !DEBUG
             Medo.Diagnostics.ErrorReport.ShowDialog(null, e.Exception, new Uri("http://jmedved.com/feedback/"));
-            Medo.Services.Upgrade.ShowDialog(null, new Uri("http://jmedved.com/upgrade/"));
+
+            if (System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major > 0) {
+                Medo.Services.Upgrade.ShowDialog(null, new Uri("http://jmedved.com/upgrade/"));
+            }
 #else
             throw e.Exception;
 #endif
