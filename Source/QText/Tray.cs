@@ -48,6 +48,7 @@ namespace QText {
         public void ShowForm() {
             lock (Tray.SyncRoot) {
                 this.Form.Show();
+                if (this.Form.WindowState == FormWindowState.Minimized) { this.Form.WindowState = FormWindowState.Normal; }
                 this.Form.Activate();
             }
         }
