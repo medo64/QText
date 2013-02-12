@@ -22,7 +22,7 @@ namespace QText {
             fileOp.pTo = "\0";
             fileOp.fFlags = NativeMethods.FOF_NOCONFIRMATION | NativeMethods.FOF_ALLOWUNDO;
             fileOp.lpszProgressTitle = "\0";
-            if (NativeMethods.SHFileOperationW(ref fileOp) != 0) {
+            if (NativeMethods.SHFileOperation(ref fileOp) != 0) {
                 throw new Win32Exception();
             }
         }
@@ -39,7 +39,7 @@ namespace QText {
             fileOp.pTo = "\0";
             fileOp.fFlags = NativeMethods.FOF_NOCONFIRMATION | NativeMethods.FOF_ALLOWUNDO;
             fileOp.lpszProgressTitle = "\0";
-            if (NativeMethods.SHFileOperationW(ref fileOp) != 0) {
+            if (NativeMethods.SHFileOperation(ref fileOp) != 0) {
                 throw new Win32Exception();
             }
         }
@@ -77,8 +77,8 @@ namespace QText {
                 public string lpszProgressTitle;
             }
 
-            [DllImportAttribute("shell32.dll", EntryPoint = "SHFileOperationW", CallingConvention = CallingConvention.StdCall)]
-            internal static extern int SHFileOperationW(ref SHFILEOPSTRUCTW lpFileOp);
+            [DllImportAttribute("shell32.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
+            internal static extern int SHFileOperation(ref SHFILEOPSTRUCTW lpFileOp);
 
         }
 
