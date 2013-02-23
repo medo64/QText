@@ -26,9 +26,9 @@ SHORTCUT KEYS
     Ctrl+X                  Cut
     Ctrl+C                  Copy
     Ctrl+V                  Paste
-    Shift+Del               Cut without formatting
-    Ctrl+Ins                Copy without formatting
-    Shift+Ins               Paste without formatting
+    Ctrl+Shift+X            Cut as plain text
+    Ctrl+Shift+C            Copy as plain text
+    Ctrl+Shift+V            Paste as plain text
 
     Ctrl+Backspace          Delete word on left.
     Ctrl+Delete             Delete word on right.

@@ -360,16 +360,19 @@ namespace QText {
                     break;
 
 
+                case Keys.Control | Keys.Shift | Keys.X:
                 case Keys.Shift | Keys.Delete:
                     this.Cut(true);
                     e.IsInputKey = false;
                     break;
 
+                case Keys.Control | Keys.Shift | Keys.C:
                 case Keys.Control | Keys.Insert:
                     this.Copy(true);
                     e.IsInputKey = false;
                     break;
 
+                case Keys.Control | Keys.Shift  | Keys.V:
                 case Keys.Shift | Keys.Insert:
                     this.Paste(true);
                     e.IsInputKey = false;
@@ -409,8 +412,7 @@ namespace QText {
             try {
                 if (this.CanCopy) {
                     if ((this.CurrentFile.IsRich == false) || forceText) {
-                        Clipboard.Clear();
-                        Clipboard.SetText(this.TextBox.SelectedText.Replace("\n", "\r\n"), TextDataFormat.UnicodeText);
+                        CopyTextToClipboard(this.TextBox);
                         this.TextBox.SelectedText = "";
                     } else {
                         this.TextBox.Cut();
@@ -428,8 +430,7 @@ namespace QText {
             try {
                 if (this.CanCopy) {
                     if ((this.CurrentFile.IsRich == false) || forceText) {
-                        Clipboard.Clear();
-                        Clipboard.SetText(this.TextBox.SelectedText.Replace("\n", "\r\n"), TextDataFormat.UnicodeText);
+                        CopyTextToClipboard(this.TextBox);
                     } else {
                         this.TextBox.Copy();
                     }
@@ -440,7 +441,7 @@ namespace QText {
         public bool CanPaste {
             get {
                 try {
-                    return (this.TextBox != null) && Clipboard.ContainsText();
+                    return (this.TextBox != null) && Clipboard.ContainsText(TextDataFormat.UnicodeText);
                 } catch (ExternalException) {
                     return false;
                 }
@@ -449,11 +450,13 @@ namespace QText {
 
         public void Paste(bool forceText) {
             try {
-                if (CanPaste) {
+                if (this.CanPaste) {
                     if ((this.CurrentFile.IsRich == false) || forceText) {
-                        var text = Clipboard.GetText(TextDataFormat.UnicodeText);
-                        this.TextBox.SelectionFont = Settings.DisplayFont;
-                        this.TextBox.SelectedText = text;
+                        var text = GetTextFromClipboard();
+                        if (text != null) {
+                            this.TextBox.SelectionFont = Settings.DisplayFont;
+                            this.TextBox.SelectedText = text;
+                        }
                     } else {
                         this.TextBox.Paste();
                     }
@@ -738,6 +741,17 @@ namespace QText {
             using (var aesStream = new OpenSslAesStream(stream, this.Password, CryptoStreamMode.Write, 256, CipherMode.CBC)) {
                 SaveAsRich(aesStream);
             }
+        }
+
+
+        private static void CopyTextToClipboard(RichTextBoxEx textBox) {
+            var text = textBox.SelectedText.Replace("\n", "\r\n");
+            Clipboard.SetText(text, TextDataFormat.UnicodeText);
+        }
+
+        private static string GetTextFromClipboard() {
+            var text = Clipboard.GetText(TextDataFormat.UnicodeText);
+            return (text != string.Empty) ? text : null;
         }
 
         #endregion
