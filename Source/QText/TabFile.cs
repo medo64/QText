@@ -613,6 +613,10 @@ namespace QText {
 
         #region Zoom
 
+        public float ZoomFactor {
+            get { return this.TextBox.ZoomFactor; }
+        }
+
         public void ZoomIn() {
             this.TextBox.ZoomFactor = (float)Math.Round(Math.Min(5.0f, this.TextBox.ZoomFactor + 0.1f), 1);
             this.TextBox.Refresh();

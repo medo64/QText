@@ -73,6 +73,7 @@
             this.mnxTextCut = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextCopy = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextPaste = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTextBoxCutCopyPasteAsTextSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTextCutPlain = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextCopyPlain = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextPastePlain = new System.Windows.Forms.ToolStripMenuItem();
@@ -84,6 +85,7 @@
             this.mnxTextItalic = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextUnderline = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextStrikeout = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTextZoomReset = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextRtfSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTextSelection = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextSelectionUpper = new System.Windows.Forms.ToolStripMenuItem();
@@ -97,6 +99,8 @@
             this.mnxTextLinesSortDesc = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTextLinesTrim = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmrCheckFileUpdate = new System.Windows.Forms.Timer(this.components);
+            this.tabFiles = new QText.TabFiles();
             this.mnxTab = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnxTabNew = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTab0 = new System.Windows.Forms.ToolStripSeparator();
@@ -108,6 +112,7 @@
             this.mnxTabMoveToDummy = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabConvert = new System.Windows.Forms.ToolStripSeparator();
+            this.mnxTabZoomReset = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabConvertPlain = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabConvertRich = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTabEncrypt = new System.Windows.Forms.ToolStripMenuItem();
@@ -118,9 +123,6 @@
             this.mnxTabPrint = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem14 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTabOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmrCheckFileUpdate = new System.Windows.Forms.Timer(this.components);
-            this.tabFiles = new QText.TabFiles();
-            this.mnxTextBoxCutCopyPasteAsTextSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.mnu.SuspendLayout();
             this.mnxText.SuspendLayout();
             this.mnxTab.SuspendLayout();
@@ -533,6 +535,7 @@
             this.mnxTextPastePlain,
             this.ToolStripMenuItem16,
             this.mnxTextSelectAll,
+            this.mnxTextZoomReset,
             this.ToolStripMenuItem4,
             this.mnxTextFont,
             this.mnxTextBold,
@@ -543,7 +546,7 @@
             this.mnxTextSelection,
             this.mnxTextLines});
             this.mnxText.Name = "mnxTextBox";
-            this.mnxText.Size = new System.Drawing.Size(289, 440);
+            this.mnxText.Size = new System.Drawing.Size(289, 464);
             this.mnxText.Opening += new System.ComponentModel.CancelEventHandler(this.mnxText_Opening);
             // 
             // mnxTextUndo
@@ -600,6 +603,11 @@
             this.mnxTextPaste.Size = new System.Drawing.Size(288, 24);
             this.mnxTextPaste.Text = "&Paste";
             this.mnxTextPaste.Click += new System.EventHandler(this.mnuPaste_Click);
+            // 
+            // mnxTextBoxCutCopyPasteAsTextSeparator
+            // 
+            this.mnxTextBoxCutCopyPasteAsTextSeparator.Name = "mnxTextBoxCutCopyPasteAsTextSeparator";
+            this.mnxTextBoxCutCopyPasteAsTextSeparator.Size = new System.Drawing.Size(285, 6);
             // 
             // mnxTextCutPlain
             // 
@@ -691,6 +699,13 @@
             this.mnxTextStrikeout.Size = new System.Drawing.Size(288, 24);
             this.mnxTextStrikeout.Text = "S&trikeout";
             this.mnxTextStrikeout.Click += new System.EventHandler(this.mnuStrikeout_Click);
+            // 
+            // mnxTextZoomReset
+            // 
+            this.mnxTextZoomReset.Name = "mnxTextZoomReset";
+            this.mnxTextZoomReset.Size = new System.Drawing.Size(288, 24);
+            this.mnxTextZoomReset.Text = "Reset zoom";
+            this.mnxTextZoomReset.Click += new System.EventHandler(this.mnxTextZoomReset_Click);
             // 
             // mnxTextRtfSeparator
             // 
@@ -788,6 +803,25 @@
             this.mnxTextLinesTrim.Text = "&Trim";
             this.mnxTextLinesTrim.Click += new System.EventHandler(this.mnxTextLinesTrim_Click);
             // 
+            // tmrCheckFileUpdate
+            // 
+            this.tmrCheckFileUpdate.Tick += new System.EventHandler(this.tmrCheckFileUpdate_Tick);
+            // 
+            // tabFiles
+            // 
+            this.tabFiles.ContextMenuStrip = this.mnxTab;
+            this.tabFiles.Cursor = System.Windows.Forms.Cursors.Default;
+            this.tabFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabFiles.Location = new System.Drawing.Point(0, 27);
+            this.tabFiles.Margin = new System.Windows.Forms.Padding(0);
+            this.tabFiles.Name = "tabFiles";
+            this.tabFiles.SelectedIndex = 0;
+            this.tabFiles.Size = new System.Drawing.Size(582, 288);
+            this.tabFiles.TabContextMenuStrip = this.mnxText;
+            this.tabFiles.TabIndex = 0;
+            this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
+            this.tabFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabFiles_MouseDown);
+            // 
             // mnxTab
             // 
             this.mnxTab.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -800,6 +834,7 @@
             this.mnxTabMoveTo,
             this.mnxTabDelete,
             this.mnxTabConvert,
+            this.mnxTabZoomReset,
             this.mnxTabConvertPlain,
             this.mnxTabConvertRich,
             this.mnxTabEncrypt,
@@ -811,7 +846,7 @@
             this.ToolStripMenuItem14,
             this.mnxTabOpenContainingFolder});
             this.mnxTab.Name = "mnxTab";
-            this.mnxTab.Size = new System.Drawing.Size(233, 370);
+            this.mnxTab.Size = new System.Drawing.Size(233, 394);
             this.mnxTab.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.mnxTab_Closed);
             this.mnxTab.Opening += new System.ComponentModel.CancelEventHandler(this.mnxTab_Opening);
             // 
@@ -892,6 +927,13 @@
             this.mnxTabConvert.Name = "mnxTabConvert";
             this.mnxTabConvert.Size = new System.Drawing.Size(229, 6);
             // 
+            // mnxTabZoomReset
+            // 
+            this.mnxTabZoomReset.Name = "mnxTabZoomReset";
+            this.mnxTabZoomReset.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabZoomReset.Text = "Reset zoom";
+            this.mnxTabZoomReset.Click += new System.EventHandler(this.mnxTabZoomReset_Click);
+            // 
             // mnxTabConvertPlain
             // 
             this.mnxTabConvertPlain.Name = "mnxTabConvertPlain";
@@ -964,30 +1006,6 @@
             this.mnxTabOpenContainingFolder.Size = new System.Drawing.Size(232, 24);
             this.mnxTabOpenContainingFolder.Text = "Open containing folder";
             this.mnxTabOpenContainingFolder.Click += new System.EventHandler(this.mnxTabOpenContainingFolder_Click);
-            // 
-            // tmrCheckFileUpdate
-            // 
-            this.tmrCheckFileUpdate.Tick += new System.EventHandler(this.tmrCheckFileUpdate_Tick);
-            // 
-            // tabFiles
-            // 
-            this.tabFiles.ContextMenuStrip = this.mnxTab;
-            this.tabFiles.Cursor = System.Windows.Forms.Cursors.Default;
-            this.tabFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabFiles.Location = new System.Drawing.Point(0, 27);
-            this.tabFiles.Margin = new System.Windows.Forms.Padding(0);
-            this.tabFiles.Name = "tabFiles";
-            this.tabFiles.SelectedIndex = 0;
-            this.tabFiles.Size = new System.Drawing.Size(582, 288);
-            this.tabFiles.TabContextMenuStrip = this.mnxText;
-            this.tabFiles.TabIndex = 0;
-            this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
-            this.tabFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabFiles_MouseDown);
-            // 
-            // mnxTextBoxCutCopyPasteAsTextSeparator
-            // 
-            this.mnxTextBoxCutCopyPasteAsTextSeparator.Name = "mnxTextBoxCutCopyPasteAsTextSeparator";
-            this.mnxTextBoxCutCopyPasteAsTextSeparator.Size = new System.Drawing.Size(285, 6);
             // 
             // MainForm
             // 
@@ -1069,21 +1087,6 @@
         internal System.Windows.Forms.ToolStripMenuItem mnxTextSelectionLower;
         internal System.Windows.Forms.ToolStripMenuItem mnxTextSelectionTitle;
         internal System.Windows.Forms.ToolStripMenuItem mnxTextSelectionDrGrammar;
-        internal System.Windows.Forms.ContextMenuStrip mnxTab;
-        internal System.Windows.Forms.ToolStripMenuItem mnxTabNew;
-        internal System.Windows.Forms.ToolStripSeparator mnxTab0;
-        internal System.Windows.Forms.ToolStripMenuItem mnxTabReopen;
-        internal System.Windows.Forms.ToolStripMenuItem mnxTabSaveNow;
-        internal System.Windows.Forms.ToolStripSeparator mnxTab1;
-        internal System.Windows.Forms.ToolStripMenuItem mnxTabDelete;
-        internal System.Windows.Forms.ToolStripMenuItem mnxTabRename;
-        internal System.Windows.Forms.ToolStripSeparator mnxTab2;
-        internal System.Windows.Forms.ToolStripMenuItem mnxTabPrintPreview;
-        internal System.Windows.Forms.ToolStripMenuItem mnxTabPrint;
-        internal System.Windows.Forms.ToolStripMenuItem mnxTabConvertPlain;
-        internal System.Windows.Forms.ToolStripMenuItem mnxTabConvertRich;
-        internal System.Windows.Forms.ToolStripSeparator ToolStripMenuItem14;
-        internal System.Windows.Forms.ToolStripMenuItem mnxTabOpenContainingFolder;
         internal TabFiles tabFiles;
         private System.Windows.Forms.Timer tmrCheckFileUpdate;
         internal System.Windows.Forms.ToolStripDropDownButton mnuApp;
@@ -1093,17 +1096,11 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem mnuAppAbout;
         private System.Windows.Forms.ToolStripDropDownButton mnuFolder;
-        private System.Windows.Forms.ToolStripMenuItem mnxTabMoveTo;
-        private System.Windows.Forms.ToolStripMenuItem mnxTabMoveToDummy;
         private System.Windows.Forms.ToolStripMenuItem mnxTextLines;
         private System.Windows.Forms.ToolStripMenuItem mnxTextLinesSortAsc;
         private System.Windows.Forms.ToolStripMenuItem mnxTextLinesSortDesc;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem mnxTextSelectionSpelling;
-        private System.Windows.Forms.ToolStripSeparator mnxTabConvert;
-        private System.Windows.Forms.ToolStripMenuItem mnxTabEncrypt;
-        private System.Windows.Forms.ToolStripMenuItem mnxTabDecrypt;
-        private System.Windows.Forms.ToolStripMenuItem mnxTabChangePassword;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem mnxTextLinesTrim;
         internal System.Windows.Forms.ToolStripSplitButton mnuFind;
@@ -1117,5 +1114,28 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem6;
         private System.Windows.Forms.ToolStripMenuItem mnuPrintSetup;
         internal System.Windows.Forms.ToolStripSeparator mnxTextBoxCutCopyPasteAsTextSeparator;
+        private System.Windows.Forms.ToolStripMenuItem mnxTextZoomReset;
+        internal System.Windows.Forms.ContextMenuStrip mnxTab;
+        internal System.Windows.Forms.ToolStripMenuItem mnxTabNew;
+        internal System.Windows.Forms.ToolStripSeparator mnxTab0;
+        internal System.Windows.Forms.ToolStripMenuItem mnxTabReopen;
+        internal System.Windows.Forms.ToolStripMenuItem mnxTabSaveNow;
+        internal System.Windows.Forms.ToolStripSeparator mnxTab1;
+        internal System.Windows.Forms.ToolStripMenuItem mnxTabRename;
+        private System.Windows.Forms.ToolStripMenuItem mnxTabMoveTo;
+        private System.Windows.Forms.ToolStripMenuItem mnxTabMoveToDummy;
+        internal System.Windows.Forms.ToolStripMenuItem mnxTabDelete;
+        private System.Windows.Forms.ToolStripSeparator mnxTabConvert;
+        internal System.Windows.Forms.ToolStripMenuItem mnxTabConvertPlain;
+        internal System.Windows.Forms.ToolStripMenuItem mnxTabConvertRich;
+        private System.Windows.Forms.ToolStripMenuItem mnxTabZoomReset;
+        private System.Windows.Forms.ToolStripMenuItem mnxTabEncrypt;
+        private System.Windows.Forms.ToolStripMenuItem mnxTabChangePassword;
+        private System.Windows.Forms.ToolStripMenuItem mnxTabDecrypt;
+        internal System.Windows.Forms.ToolStripSeparator mnxTab2;
+        internal System.Windows.Forms.ToolStripMenuItem mnxTabPrintPreview;
+        internal System.Windows.Forms.ToolStripMenuItem mnxTabPrint;
+        internal System.Windows.Forms.ToolStripSeparator ToolStripMenuItem14;
+        internal System.Windows.Forms.ToolStripMenuItem mnxTabOpenContainingFolder;
     }
 }

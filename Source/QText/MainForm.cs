@@ -883,12 +883,14 @@ namespace QText {
             bool isTabPlain = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsRich == false);
             bool isTabEncryptable = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsEncrypted == false);
             bool isTabDecryptable = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsEncrypted);
+            bool isZoomResetable = isTabSelected && (tabFiles.SelectedTab.ZoomFactor != 1F);
 
             mnxTabReopen.Enabled = isTabSelected;
             mnxTabSaveNow.Enabled = isTabSelected;
             mnxTabDelete.Enabled = isTabSelected;
             mnxTabRename.Enabled = isTabSelected;
             mnxTabConvert.Visible = isTabRich || isTabPlain || isTabEncryptable || isTabDecryptable;
+            mnxTabZoomReset.Visible = isZoomResetable;
             mnxTabConvertPlain.Visible = isTabRich;
             mnxTabConvertRich.Visible = isTabPlain;
             mnxTabEncrypt.Visible = isTabEncryptable;
@@ -957,6 +959,12 @@ namespace QText {
         }
 
 
+        private void mnxTabZoomReset_Click(object sender, EventArgs e) {
+            if (tabFiles.SelectedTab != null) {
+                tabFiles.SelectedTab.ZoomReset();
+            }
+        }
+
         private void mnxTabConvertPlain_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 if (Medo.MessageBox.ShowQuestion(this, "Conversion will remove all formating (font, style, etc.). Do you want to continue?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
@@ -1020,6 +1028,7 @@ namespace QText {
             bool isTabPlainText = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsRich == false);
             bool isTextSelected = isTabSelected && (tabFiles.SelectedTab.TextBox.SelectedText.Length > 0);
             bool hasText = isTabSelected && (tabFiles.SelectedTab.TextBox.Text.Length > 0);
+            bool isZoomResetable = isTabSelected && (tabFiles.SelectedTab.TextBox.ZoomFactor != 1);
 
             mnxTextUndo.Enabled = isTabSelected && tabFiles.SelectedTab.CanUndo;
             mnxTextRedo.Enabled = isTabSelected && tabFiles.SelectedTab.CanRedo;
@@ -1037,6 +1046,7 @@ namespace QText {
             mnxTextPastePlain.Enabled = isTabSelected && tabFiles.SelectedTab.CanPaste;
 
             mnxTextSelectAll.Enabled = isTabSelected && (tabFiles.SelectedTab.Text.Length > 0);
+            mnxTextZoomReset.Visible = isZoomResetable;
 
             mnxTextFont.Visible = isTabRichText;
             mnxTextBold.Visible = isTabRichText;
@@ -1091,6 +1101,14 @@ namespace QText {
                 txt.SelectAll();
             }
         }
+
+
+        private void mnxTextZoomReset_Click(object sender, EventArgs e) {
+            if (tabFiles.SelectedTab != null) {
+                tabFiles.SelectedTab.ZoomReset();
+            }
+        }
+
 
         private void mnxTextSelectionLower_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
