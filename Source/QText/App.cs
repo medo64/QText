@@ -134,6 +134,12 @@ namespace QText {
         private static void UnhandledException(object sender, ThreadExceptionEventArgs e) {
             if (Settings.Installed) { Medo.Diagnostics.ErrorReport.SaveToTemp(e.Exception); }
 #if !DEBUG
+            foreach (Form form in Application.OpenForms) {
+                if (form.TopMost) {
+                    Medo.Diagnostics.ErrorReport.TopMost = true;
+                    break;
+                }
+            }
             Medo.Diagnostics.ErrorReport.ShowDialog(null, e.Exception, new Uri("http://jmedved.com/feedback/"));
 
             if (System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major > 0) {
