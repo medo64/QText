@@ -33,6 +33,10 @@ SHORTCUT KEYS
     Ctrl+Backspace          Delete word on left.
     Ctrl+Delete             Delete word on right.
 
+    Ctrl+Plus               Zoom in.
+    Ctrl+Minus              Zoom out.
+    Ctrl+0                  Reset zoom.
+
     Alt+1                   Selects 1st tab.
     Alt+2                   Selects 2nd tab.
     Alt+3                   Selects 3rd tab.

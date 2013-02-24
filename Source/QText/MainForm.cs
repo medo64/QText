@@ -883,7 +883,7 @@ namespace QText {
             bool isTabPlain = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsRich == false);
             bool isTabEncryptable = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsEncrypted == false);
             bool isTabDecryptable = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsEncrypted);
-            bool isZoomResetable = isTabSelected && (tabFiles.SelectedTab.ZoomFactor != 1F);
+            bool isZoomResetable = isTabSelected && tabFiles.SelectedTab.TextBox.HasZoom;
 
             mnxTabReopen.Enabled = isTabSelected;
             mnxTabSaveNow.Enabled = isTabSelected;
@@ -961,7 +961,7 @@ namespace QText {
 
         private void mnxTabZoomReset_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
-                tabFiles.SelectedTab.ZoomReset();
+                tabFiles.SelectedTab.TextBox.ZoomReset();
             }
         }
 
@@ -1046,7 +1046,6 @@ namespace QText {
             mnxTextPastePlain.Enabled = isTabSelected && tabFiles.SelectedTab.CanPaste;
 
             mnxTextSelectAll.Enabled = isTabSelected && (tabFiles.SelectedTab.Text.Length > 0);
-            mnxTextZoomReset.Visible = isZoomResetable;
 
             mnxTextFont.Visible = isTabRichText;
             mnxTextBold.Visible = isTabRichText;
@@ -1099,13 +1098,6 @@ namespace QText {
             if (tabFiles.SelectedTab != null) {
                 var txt = tabFiles.SelectedTab.TextBox;
                 txt.SelectAll();
-            }
-        }
-
-
-        private void mnxTextZoomReset_Click(object sender, EventArgs e) {
-            if (tabFiles.SelectedTab != null) {
-                tabFiles.SelectedTab.ZoomReset();
             }
         }
 

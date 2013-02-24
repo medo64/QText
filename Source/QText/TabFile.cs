@@ -611,32 +611,6 @@ namespace QText {
         }
 
 
-        #region Zoom
-
-        public float ZoomFactor {
-            get { return this.TextBox.ZoomFactor; }
-        }
-
-        public void ZoomIn() {
-            this.TextBox.ZoomFactor = (float)Math.Round(Math.Min(5.0f, this.TextBox.ZoomFactor + 0.1f), 1);
-            this.TextBox.Refresh();
-        }
-
-        public void ZoomOut() {
-            this.TextBox.ZoomFactor = (float)Math.Round(Math.Max(0.1f, this.TextBox.ZoomFactor - 0.1f), 1);
-            this.TextBox.Refresh();
-        }
-
-        public void ZoomReset() {
-            this.TextBox.ZoomFactor = 2.1f;
-            this.TextBox.Refresh();
-            this.TextBox.ZoomFactor = 1.0f;
-            this.TextBox.Refresh();
-        }
-
-        #endregion
-
-
         public override string ToString() {
             return this.Title;
         }

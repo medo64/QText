@@ -85,7 +85,6 @@
             this.mnxTextItalic = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextUnderline = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextStrikeout = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnxTextZoomReset = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextRtfSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTextSelection = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextSelectionUpper = new System.Windows.Forms.ToolStripMenuItem();
@@ -535,7 +534,6 @@
             this.mnxTextPastePlain,
             this.ToolStripMenuItem16,
             this.mnxTextSelectAll,
-            this.mnxTextZoomReset,
             this.ToolStripMenuItem4,
             this.mnxTextFont,
             this.mnxTextBold,
@@ -546,7 +544,7 @@
             this.mnxTextSelection,
             this.mnxTextLines});
             this.mnxText.Name = "mnxTextBox";
-            this.mnxText.Size = new System.Drawing.Size(289, 464);
+            this.mnxText.Size = new System.Drawing.Size(289, 418);
             this.mnxText.Opening += new System.ComponentModel.CancelEventHandler(this.mnxText_Opening);
             // 
             // mnxTextUndo
@@ -700,13 +698,6 @@
             this.mnxTextStrikeout.Text = "S&trikeout";
             this.mnxTextStrikeout.Click += new System.EventHandler(this.mnuStrikeout_Click);
             // 
-            // mnxTextZoomReset
-            // 
-            this.mnxTextZoomReset.Name = "mnxTextZoomReset";
-            this.mnxTextZoomReset.Size = new System.Drawing.Size(288, 24);
-            this.mnxTextZoomReset.Text = "Reset zoom";
-            this.mnxTextZoomReset.Click += new System.EventHandler(this.mnxTextZoomReset_Click);
-            // 
             // mnxTextRtfSeparator
             // 
             this.mnxTextRtfSeparator.Name = "mnxTextRtfSeparator";
@@ -846,7 +837,7 @@
             this.ToolStripMenuItem14,
             this.mnxTabOpenContainingFolder});
             this.mnxTab.Name = "mnxTab";
-            this.mnxTab.Size = new System.Drawing.Size(233, 394);
+            this.mnxTab.Size = new System.Drawing.Size(233, 416);
             this.mnxTab.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.mnxTab_Closed);
             this.mnxTab.Opening += new System.ComponentModel.CancelEventHandler(this.mnxTab_Opening);
             // 
@@ -930,6 +921,7 @@
             // mnxTabZoomReset
             // 
             this.mnxTabZoomReset.Name = "mnxTabZoomReset";
+            this.mnxTabZoomReset.ShortcutKeyDisplayString = "Ctrl+0";
             this.mnxTabZoomReset.Size = new System.Drawing.Size(232, 24);
             this.mnxTabZoomReset.Text = "Reset zoom";
             this.mnxTabZoomReset.Click += new System.EventHandler(this.mnxTabZoomReset_Click);
@@ -1114,7 +1106,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem6;
         private System.Windows.Forms.ToolStripMenuItem mnuPrintSetup;
         internal System.Windows.Forms.ToolStripSeparator mnxTextBoxCutCopyPasteAsTextSeparator;
-        private System.Windows.Forms.ToolStripMenuItem mnxTextZoomReset;
         internal System.Windows.Forms.ContextMenuStrip mnxTab;
         internal System.Windows.Forms.ToolStripMenuItem mnxTabNew;
         internal System.Windows.Forms.ToolStripSeparator mnxTab0;

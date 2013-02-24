@@ -212,6 +212,19 @@ namespace QText {
                         }
                     } return true;
 
+
+                case Keys.Control | Keys.Oemplus:
+                    this.ZoomIn();
+                    return true;
+
+                case Keys.Control | Keys.OemMinus:
+                    this.ZoomOut();
+                    return true;
+
+                case Keys.Control | Keys.D0:
+                    this.ZoomReset();
+                    return true;
+
             }
 
             return base.ProcessCmdKey(ref msg, keyData);
@@ -349,6 +362,28 @@ namespace QText {
                 return UnicodeCategory.LetterNumber;
             }
         }
+
+
+        #region Zooming
+
+        public Boolean HasZoom {
+            get { return (this.ZoomFactor != 0); }
+        }
+
+        public void ZoomIn() {
+            this.ZoomFactor = (float)Math.Round(Math.Min(5.0f, this.ZoomFactor + 0.1f), 1);
+        }
+
+        public void ZoomOut() {
+            this.ZoomFactor = (float)Math.Round(Math.Max(0.1f, this.ZoomFactor - 0.1f), 1);
+        }
+
+        public void ZoomReset() {
+            this.ZoomFactor = 2.1f;
+            this.ZoomFactor = 1.0f;
+        }
+
+        #endregion
 
 
         #region Printing
