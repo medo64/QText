@@ -43,6 +43,7 @@
             this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(220, 22);
             this.txtPassword.TabIndex = 1;
+            this.txtPassword.UseSystemPasswordChar = true;
             this.txtPassword.TextChanged += new System.EventHandler(this.txt_TextChanged);
             this.txtPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPassword_KeyDown);
             this.txtPassword.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.txt_PreviewKeyDown);
@@ -99,6 +100,7 @@
             this.txtVerify.PasswordChar = '*';
             this.txtVerify.Size = new System.Drawing.Size(220, 22);
             this.txtVerify.TabIndex = 3;
+            this.txtVerify.UseSystemPasswordChar = true;
             this.txtVerify.TextChanged += new System.EventHandler(this.txt_TextChanged);
             this.txtVerify.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtVerify_KeyDown);
             this.txtVerify.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.txt_PreviewKeyDown);

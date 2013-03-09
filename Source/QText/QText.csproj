@@ -176,7 +176,9 @@
     <Compile Include="Tray.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\App.manifest" />
+    <None Include="Properties\App.manifest">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\App.snk" />
   </ItemGroup>
   <ItemGroup>
