@@ -64,6 +64,9 @@ namespace QText {
             lsvSuggestions.EndUpdate();
             if (lsvSuggestions.Items.Count > 0) {
                 lsvSuggestions.Items[0].Selected = true;
+                btnGoto.Enabled = true;
+            } else {
+                btnGoto.Enabled = false;
             }
         }
 
