@@ -36,6 +36,8 @@ SHORTCUT KEYS
     Ctrl+Plus               Zoom in.
     Ctrl+Minus              Zoom out.
     Ctrl+0                  Reset zoom.
+    Ctrl+PgUp               Select tab on the left.
+    Ctrl+PgDn               Select tab on the right.
 
     Alt+1                   Selects 1st tab.
     Alt+2                   Selects 2nd tab.
@@ -51,6 +53,8 @@ SHORTCUT KEYS
     Alt+Right               Select tab on the right.
     Alt+Up                  Select previous folder.
     Alt+Down                Select next folder.
+    Alt+PageUp              Select previous folder.
+    Alt+PageDown            Select next folder.
 
     Alt+Shift+D             Inserts current date into text.
     Alt+Shift+T             Inserts current time into text.
