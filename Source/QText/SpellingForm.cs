@@ -16,10 +16,14 @@ namespace QText {
 
         private void txtInput_TextChanged(object sender, EventArgs e) {
             var sb = new StringBuilder();
+            bool noSpace = true;
             foreach (var ch in txtInput.Text.ToUpperInvariant()) {
-                if (sb.Length > 0) { sb.Append(" "); }
+                if (noSpace) { noSpace = false; } else { sb.Append(" "); }
                 if (char.IsLetterOrDigit(ch)) {
                     sb.Append(Transcribe(ch));
+                } else if (ch == ' ') {
+                    noSpace = true;
+                    sb.AppendLine();
                 } else {
                     sb.Append(ch);
                 }
