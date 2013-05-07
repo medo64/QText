@@ -81,7 +81,7 @@ namespace QText {
                 case '7': return "Seven";
                 case '8': return "Eight";
                 case '9': return "Nine";
-                default: return "?";
+                default: return "[?]";
             }
         }
 
