@@ -37,6 +37,8 @@
             this.chkDisplayURLs = new System.Windows.Forms.CheckBox();
             this.txtFont = new System.Windows.Forms.TextBox();
             this.tab_pagDisplay = new System.Windows.Forms.TabPage();
+            this.txtSelectionDelimiters = new System.Windows.Forms.TextBox();
+            this.lblSelectionDelimiters = new System.Windows.Forms.Label();
             this.chbMultilineTabs = new System.Windows.Forms.CheckBox();
             this.chbVerticalScrollbar = new System.Windows.Forms.CheckBox();
             this.chbHorizontalScrollbar = new System.Windows.Forms.CheckBox();
@@ -120,7 +122,7 @@
             this.lblColorExample.Location = new System.Drawing.Point(123, 119);
             this.lblColorExample.Name = "lblColorExample";
             this.lblColorExample.Size = new System.Drawing.Size(29, 29);
-            this.lblColorExample.TabIndex = 9;
+            this.lblColorExample.TabIndex = 8;
             this.lblColorExample.Text = "C";
             this.lblColorExample.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -129,7 +131,7 @@
             this.btnColorBackground.Location = new System.Drawing.Point(158, 119);
             this.btnColorBackground.Name = "btnColorBackground";
             this.btnColorBackground.Size = new System.Drawing.Size(98, 29);
-            this.btnColorBackground.TabIndex = 10;
+            this.btnColorBackground.TabIndex = 9;
             this.btnColorBackground.Text = "Background";
             this.btnColorBackground.UseVisualStyleBackColor = true;
             this.btnColorBackground.Click += new System.EventHandler(this.btnColorBackground_Click);
@@ -139,7 +141,7 @@
             this.btnColorForeground.Location = new System.Drawing.Point(262, 119);
             this.btnColorForeground.Name = "btnColorForeground";
             this.btnColorForeground.Size = new System.Drawing.Size(98, 29);
-            this.btnColorForeground.TabIndex = 11;
+            this.btnColorForeground.TabIndex = 10;
             this.btnColorForeground.Text = "Foreground";
             this.btnColorForeground.UseVisualStyleBackColor = true;
             this.btnColorForeground.Click += new System.EventHandler(this.btnColorForeground_Click);
@@ -150,7 +152,7 @@
             this.lblColor.Location = new System.Drawing.Point(3, 125);
             this.lblColor.Name = "lblColor";
             this.lblColor.Size = new System.Drawing.Size(52, 17);
-            this.lblColor.TabIndex = 8;
+            this.lblColor.TabIndex = 7;
             this.lblColor.Text = "Colors:";
             // 
             // lblFont
@@ -159,7 +161,7 @@
             this.lblFont.Location = new System.Drawing.Point(3, 94);
             this.lblFont.Name = "lblFont";
             this.lblFont.Size = new System.Drawing.Size(40, 17);
-            this.lblFont.TabIndex = 5;
+            this.lblFont.TabIndex = 4;
             this.lblFont.Text = "Font:";
             // 
             // btnFont
@@ -170,7 +172,7 @@
             this.btnFont.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
             this.btnFont.Name = "btnFont";
             this.btnFont.Size = new System.Drawing.Size(22, 22);
-            this.btnFont.TabIndex = 7;
+            this.btnFont.TabIndex = 6;
             this.btnFont.Text = "...";
             this.btnFont.UseVisualStyleBackColor = true;
             this.btnFont.Click += new System.EventHandler(this.btnFont_Click);
@@ -190,7 +192,7 @@
             0});
             this.nudTabWidth.Name = "nudTabWidth";
             this.nudTabWidth.Size = new System.Drawing.Size(53, 22);
-            this.nudTabWidth.TabIndex = 4;
+            this.nudTabWidth.TabIndex = 3;
             this.nudTabWidth.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.nudTabWidth.Value = new decimal(new int[] {
             1,
@@ -204,7 +206,7 @@
             this.lblTabWidth.Location = new System.Drawing.Point(3, 65);
             this.lblTabWidth.Name = "lblTabWidth";
             this.lblTabWidth.Size = new System.Drawing.Size(105, 17);
-            this.lblTabWidth.TabIndex = 3;
+            this.lblTabWidth.TabIndex = 2;
             this.lblTabWidth.Text = "Tab char width:";
             // 
             // chkFollowURLs
@@ -213,7 +215,7 @@
             this.chkFollowURLs.Location = new System.Drawing.Point(23, 30);
             this.chkFollowURLs.Name = "chkFollowURLs";
             this.chkFollowURLs.Size = new System.Drawing.Size(108, 21);
-            this.chkFollowURLs.TabIndex = 2;
+            this.chkFollowURLs.TabIndex = 1;
             this.chkFollowURLs.Text = "Follow URLs";
             this.chkFollowURLs.UseVisualStyleBackColor = true;
             // 
@@ -223,7 +225,7 @@
             this.chkDisplayURLs.Location = new System.Drawing.Point(3, 3);
             this.chkDisplayURLs.Name = "chkDisplayURLs";
             this.chkDisplayURLs.Size = new System.Drawing.Size(115, 21);
-            this.chkDisplayURLs.TabIndex = 1;
+            this.chkDisplayURLs.TabIndex = 0;
             this.chkDisplayURLs.Text = "Display URLs";
             this.chkDisplayURLs.UseVisualStyleBackColor = true;
             this.chkDisplayURLs.CheckedChanged += new System.EventHandler(this.chkDisplayURLs_CheckedChanged);
@@ -237,10 +239,12 @@
             this.txtFont.Name = "txtFont";
             this.txtFont.ReadOnly = true;
             this.txtFont.Size = new System.Drawing.Size(337, 22);
-            this.txtFont.TabIndex = 6;
+            this.txtFont.TabIndex = 5;
             // 
             // tab_pagDisplay
             // 
+            this.tab_pagDisplay.Controls.Add(this.txtSelectionDelimiters);
+            this.tab_pagDisplay.Controls.Add(this.lblSelectionDelimiters);
             this.tab_pagDisplay.Controls.Add(this.chbMultilineTabs);
             this.tab_pagDisplay.Controls.Add(this.chbVerticalScrollbar);
             this.tab_pagDisplay.Controls.Add(this.chbHorizontalScrollbar);
@@ -254,6 +258,25 @@
             this.tab_pagDisplay.Text = "Display";
             this.tab_pagDisplay.UseVisualStyleBackColor = true;
             // 
+            // txtSelectionDelimiters
+            // 
+            this.txtSelectionDelimiters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtSelectionDelimiters.Location = new System.Drawing.Point(187, 180);
+            this.txtSelectionDelimiters.Margin = new System.Windows.Forms.Padding(3, 12, 3, 3);
+            this.txtSelectionDelimiters.Name = "txtSelectionDelimiters";
+            this.txtSelectionDelimiters.Size = new System.Drawing.Size(300, 22);
+            this.txtSelectionDelimiters.TabIndex = 7;
+            // 
+            // lblSelectionDelimiters
+            // 
+            this.lblSelectionDelimiters.AutoSize = true;
+            this.lblSelectionDelimiters.Location = new System.Drawing.Point(3, 183);
+            this.lblSelectionDelimiters.Name = "lblSelectionDelimiters";
+            this.lblSelectionDelimiters.Size = new System.Drawing.Size(134, 17);
+            this.lblSelectionDelimiters.TabIndex = 6;
+            this.lblSelectionDelimiters.Text = "Selection delimiters:";
+            // 
             // chbMultilineTabs
             // 
             this.chbMultilineTabs.AutoSize = true;
@@ -261,7 +284,7 @@
             this.chbMultilineTabs.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
             this.chbMultilineTabs.Name = "chbMultilineTabs";
             this.chbMultilineTabs.Size = new System.Drawing.Size(161, 21);
-            this.chbMultilineTabs.TabIndex = 11;
+            this.chbMultilineTabs.TabIndex = 3;
             this.chbMultilineTabs.Text = "Multiline tab headers";
             this.chbMultilineTabs.UseVisualStyleBackColor = true;
             // 
@@ -271,7 +294,7 @@
             this.chbVerticalScrollbar.Location = new System.Drawing.Point(3, 144);
             this.chbVerticalScrollbar.Name = "chbVerticalScrollbar";
             this.chbVerticalScrollbar.Size = new System.Drawing.Size(135, 21);
-            this.chbVerticalScrollbar.TabIndex = 10;
+            this.chbVerticalScrollbar.TabIndex = 5;
             this.chbVerticalScrollbar.Text = "Vertical scrollbar";
             this.chbVerticalScrollbar.UseVisualStyleBackColor = true;
             // 
@@ -282,7 +305,7 @@
             this.chbHorizontalScrollbar.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
             this.chbHorizontalScrollbar.Name = "chbHorizontalScrollbar";
             this.chbHorizontalScrollbar.Size = new System.Drawing.Size(152, 21);
-            this.chbHorizontalScrollbar.TabIndex = 9;
+            this.chbHorizontalScrollbar.TabIndex = 4;
             this.chbHorizontalScrollbar.Text = "Horizontal scrollbar";
             this.chbHorizontalScrollbar.UseVisualStyleBackColor = true;
             // 
@@ -292,7 +315,7 @@
             this.chbShowMinimizeMaximizeButtons.Location = new System.Drawing.Point(3, 30);
             this.chbShowMinimizeMaximizeButtons.Name = "chbShowMinimizeMaximizeButtons";
             this.chbShowMinimizeMaximizeButtons.Size = new System.Drawing.Size(234, 21);
-            this.chbShowMinimizeMaximizeButtons.TabIndex = 7;
+            this.chbShowMinimizeMaximizeButtons.TabIndex = 1;
             this.chbShowMinimizeMaximizeButtons.Text = "Show minimize/maximize buttons";
             this.chbShowMinimizeMaximizeButtons.UseVisualStyleBackColor = true;
             this.chbShowMinimizeMaximizeButtons.CheckedChanged += new System.EventHandler(this.chbShowMinimizeMaximizeButtons_CheckedChanged);
@@ -303,7 +326,7 @@
             this.chkShowToolbar.Location = new System.Drawing.Point(3, 57);
             this.chkShowToolbar.Name = "chkShowToolbar";
             this.chkShowToolbar.Size = new System.Drawing.Size(112, 21);
-            this.chkShowToolbar.TabIndex = 4;
+            this.chkShowToolbar.TabIndex = 2;
             this.chkShowToolbar.Text = "Show toolbar";
             this.chkShowToolbar.UseVisualStyleBackColor = true;
             // 
@@ -313,7 +336,7 @@
             this.chkShowInTaskbar.Location = new System.Drawing.Point(3, 3);
             this.chkShowInTaskbar.Name = "chkShowInTaskbar";
             this.chkShowInTaskbar.Size = new System.Drawing.Size(130, 21);
-            this.chkShowInTaskbar.TabIndex = 1;
+            this.chkShowInTaskbar.TabIndex = 0;
             this.chkShowInTaskbar.Text = "Show in taskbar";
             this.chkShowInTaskbar.UseVisualStyleBackColor = true;
             this.chkShowInTaskbar.CheckedChanged += new System.EventHandler(this.chkShowInTaskbar_CheckedChanged);
@@ -356,7 +379,7 @@
             65536});
             this.nudQuickSaveIntervalInSeconds.Name = "nudQuickSaveIntervalInSeconds";
             this.nudQuickSaveIntervalInSeconds.Size = new System.Drawing.Size(50, 22);
-            this.nudQuickSaveIntervalInSeconds.TabIndex = 4;
+            this.nudQuickSaveIntervalInSeconds.TabIndex = 1;
             this.nudQuickSaveIntervalInSeconds.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.nudQuickSaveIntervalInSeconds.Value = new decimal(new int[] {
             3,
@@ -370,7 +393,7 @@
             this.btnOpenLocationFolder.Location = new System.Drawing.Point(3, 190);
             this.btnOpenLocationFolder.Name = "btnOpenLocationFolder";
             this.btnOpenLocationFolder.Size = new System.Drawing.Size(196, 29);
-            this.btnOpenLocationFolder.TabIndex = 10;
+            this.btnOpenLocationFolder.TabIndex = 5;
             this.btnOpenLocationFolder.Text = "Open folder";
             this.btnOpenLocationFolder.UseVisualStyleBackColor = true;
             this.btnOpenLocationFolder.Click += new System.EventHandler(this.btnOpenLocationFolder_Click);
@@ -399,7 +422,7 @@
             this.chkDeleteToRecycleBin.Location = new System.Drawing.Point(7, 63);
             this.chkDeleteToRecycleBin.Name = "chkDeleteToRecycleBin";
             this.chkDeleteToRecycleBin.Size = new System.Drawing.Size(159, 21);
-            this.chkDeleteToRecycleBin.TabIndex = 8;
+            this.chkDeleteToRecycleBin.TabIndex = 4;
             this.chkDeleteToRecycleBin.Text = "Delete to recycle bin";
             this.chkDeleteToRecycleBin.UseVisualStyleBackColor = true;
             // 
@@ -409,7 +432,7 @@
             this.chkPreloadFilesOnStartup.Location = new System.Drawing.Point(7, 33);
             this.chkPreloadFilesOnStartup.Name = "chkPreloadFilesOnStartup";
             this.chkPreloadFilesOnStartup.Size = new System.Drawing.Size(176, 21);
-            this.chkPreloadFilesOnStartup.TabIndex = 7;
+            this.chkPreloadFilesOnStartup.TabIndex = 3;
             this.chkPreloadFilesOnStartup.Text = "Preload files on startup";
             this.chkPreloadFilesOnStartup.UseVisualStyleBackColor = true;
             // 
@@ -420,7 +443,7 @@
             this.btnChangeLocation.Location = new System.Drawing.Point(291, 190);
             this.btnChangeLocation.Name = "btnChangeLocation";
             this.btnChangeLocation.Size = new System.Drawing.Size(196, 29);
-            this.btnChangeLocation.TabIndex = 11;
+            this.btnChangeLocation.TabIndex = 6;
             this.btnChangeLocation.Text = "Change location";
             this.btnChangeLocation.UseVisualStyleBackColor = true;
             this.btnChangeLocation.Click += new System.EventHandler(this.btnChangeLocation_Click);
@@ -447,7 +470,7 @@
             this.txtHotkey.Name = "txtHotkey";
             this.txtHotkey.ReadOnly = true;
             this.txtHotkey.Size = new System.Drawing.Size(334, 22);
-            this.txtHotkey.TabIndex = 7;
+            this.txtHotkey.TabIndex = 1;
             this.txtHotkey.Enter += new System.EventHandler(this.txtHotkey_Enter);
             this.txtHotkey.Leave += new System.EventHandler(this.txtHotkey_Leave);
             this.txtHotkey.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.txtHotkey_PreviewKeyDown);
@@ -458,7 +481,7 @@
             this.lblHotkey.Location = new System.Drawing.Point(3, 6);
             this.lblHotkey.Name = "lblHotkey";
             this.lblHotkey.Size = new System.Drawing.Size(56, 17);
-            this.lblHotkey.TabIndex = 6;
+            this.lblHotkey.TabIndex = 0;
             this.lblHotkey.Text = "Hotkey:";
             // 
             // chkRunAtStartup
@@ -467,7 +490,7 @@
             this.chkRunAtStartup.Location = new System.Drawing.Point(3, 95);
             this.chkRunAtStartup.Name = "chkRunAtStartup";
             this.chkRunAtStartup.Size = new System.Drawing.Size(184, 21);
-            this.chkRunAtStartup.TabIndex = 3;
+            this.chkRunAtStartup.TabIndex = 4;
             this.chkRunAtStartup.Text = "Run on Windows startup";
             this.chkRunAtStartup.UseVisualStyleBackColor = true;
             // 
@@ -477,7 +500,7 @@
             this.chkSingleClickTrayActivation.Location = new System.Drawing.Point(3, 65);
             this.chkSingleClickTrayActivation.Name = "chkSingleClickTrayActivation";
             this.chkSingleClickTrayActivation.Size = new System.Drawing.Size(223, 21);
-            this.chkSingleClickTrayActivation.TabIndex = 2;
+            this.chkSingleClickTrayActivation.TabIndex = 3;
             this.chkSingleClickTrayActivation.Text = "Tray activation with single click";
             this.chkSingleClickTrayActivation.UseVisualStyleBackColor = true;
             // 
@@ -487,7 +510,7 @@
             this.chkMinimizeToTray.Location = new System.Drawing.Point(3, 38);
             this.chkMinimizeToTray.Name = "chkMinimizeToTray";
             this.chkMinimizeToTray.Size = new System.Drawing.Size(128, 21);
-            this.chkMinimizeToTray.TabIndex = 1;
+            this.chkMinimizeToTray.TabIndex = 2;
             this.chkMinimizeToTray.Text = "Minimize to tray";
             this.chkMinimizeToTray.UseVisualStyleBackColor = true;
             // 
@@ -704,5 +727,7 @@
         internal System.Windows.Forms.Button btnCancel;
         internal System.Windows.Forms.CheckBox chbMultilineTabs;
         private System.Windows.Forms.Button btnExit;
+        internal System.Windows.Forms.TextBox txtSelectionDelimiters;
+        internal System.Windows.Forms.Label lblSelectionDelimiters;
     }
 }

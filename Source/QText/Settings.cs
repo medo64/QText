@@ -260,5 +260,10 @@ namespace QText {
             set { Medo.Configuration.Settings.Write("LastFolder", value); }
         }
 
+        public static string SelectionDelimiters {
+            get { return Medo.Configuration.Settings.Read("SelectionDelimiters", @""".,!?:;/\()[]{}"); }
+            set { Medo.Configuration.Settings.Write("SelectionDelimiters", value); }
+        }
+
     }
 }

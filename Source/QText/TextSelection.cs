@@ -73,16 +73,14 @@ namespace QText {
             }
             if (endIndex < textBox.TextLength - 1) { endIndex -= 1; }
 
-            return new TextSelection (startIndex ,endIndex - startIndex + 1);
+            return new TextSelection(startIndex, endIndex - startIndex + 1);
         }
 
 
         private static UnicodeCategory GetLikeUnicodeCategory(char ch) {
-            if (ch == '-') { return UnicodeCategory.LetterNumber; }
+            if (Settings.SelectionDelimiters.Contains(ch.ToString())) { return UnicodeCategory.OtherSymbol; }
             if (char.IsWhiteSpace(ch)) {
                 return UnicodeCategory.SpaceSeparator;
-            } else if (char.IsPunctuation(ch)) {
-                return UnicodeCategory.OtherSymbol;
             } else {
                 return UnicodeCategory.LetterNumber;
             }
