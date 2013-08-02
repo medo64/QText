@@ -261,7 +261,7 @@ namespace QText {
         }
 
         public static string SelectionDelimiters {
-            get { return Medo.Configuration.Settings.Read("SelectionDelimiters", @""".,!?:;/\()[]{}"); }
+            get { return Medo.Configuration.Settings.Read("SelectionDelimiters", @""".,:;!?/|\()[]{}<>"); }
             set { Medo.Configuration.Settings.Write("SelectionDelimiters", value); }
         }
 

@@ -37,7 +37,7 @@
             this.chkDisplayURLs = new System.Windows.Forms.CheckBox();
             this.txtFont = new System.Windows.Forms.TextBox();
             this.tab_pagDisplay = new System.Windows.Forms.TabPage();
-            this.txtSelectionDelimiters = new System.Windows.Forms.TextBox();
+            this.cmbSelectionDelimiters = new System.Windows.Forms.ComboBox();
             this.lblSelectionDelimiters = new System.Windows.Forms.Label();
             this.chbMultilineTabs = new System.Windows.Forms.CheckBox();
             this.chbVerticalScrollbar = new System.Windows.Forms.CheckBox();
@@ -243,7 +243,7 @@
             // 
             // tab_pagDisplay
             // 
-            this.tab_pagDisplay.Controls.Add(this.txtSelectionDelimiters);
+            this.tab_pagDisplay.Controls.Add(this.cmbSelectionDelimiters);
             this.tab_pagDisplay.Controls.Add(this.lblSelectionDelimiters);
             this.tab_pagDisplay.Controls.Add(this.chbMultilineTabs);
             this.tab_pagDisplay.Controls.Add(this.chbVerticalScrollbar);
@@ -258,15 +258,19 @@
             this.tab_pagDisplay.Text = "Display";
             this.tab_pagDisplay.UseVisualStyleBackColor = true;
             // 
-            // txtSelectionDelimiters
+            // cmbSelectionDelimiters
             // 
-            this.txtSelectionDelimiters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.cmbSelectionDelimiters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtSelectionDelimiters.Location = new System.Drawing.Point(187, 180);
-            this.txtSelectionDelimiters.Margin = new System.Windows.Forms.Padding(3, 12, 3, 3);
-            this.txtSelectionDelimiters.Name = "txtSelectionDelimiters";
-            this.txtSelectionDelimiters.Size = new System.Drawing.Size(300, 22);
-            this.txtSelectionDelimiters.TabIndex = 7;
+            this.cmbSelectionDelimiters.FormattingEnabled = true;
+            this.cmbSelectionDelimiters.Items.AddRange(new object[] {
+            "\"/()[]{}<>",
+            "\".,:;!?/|\\()[]{}<>"});
+            this.cmbSelectionDelimiters.Location = new System.Drawing.Point(167, 180);
+            this.cmbSelectionDelimiters.Margin = new System.Windows.Forms.Padding(3, 12, 3, 3);
+            this.cmbSelectionDelimiters.Name = "cmbSelectionDelimiters";
+            this.cmbSelectionDelimiters.Size = new System.Drawing.Size(320, 24);
+            this.cmbSelectionDelimiters.TabIndex = 7;
             // 
             // lblSelectionDelimiters
             // 
@@ -727,7 +731,7 @@
         internal System.Windows.Forms.Button btnCancel;
         internal System.Windows.Forms.CheckBox chbMultilineTabs;
         private System.Windows.Forms.Button btnExit;
-        internal System.Windows.Forms.TextBox txtSelectionDelimiters;
         internal System.Windows.Forms.Label lblSelectionDelimiters;
+        private System.Windows.Forms.ComboBox cmbSelectionDelimiters;
     }
 }

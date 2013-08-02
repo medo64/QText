@@ -12,7 +12,7 @@ namespace QText {
         public OptionsForm() {
             InitializeComponent();
             this.Font = SystemFonts.MessageBoxFont;
-            txtSelectionDelimiters.Font = new Font("Courier New", SystemFonts.MessageBoxFont.SizeInPoints);
+            cmbSelectionDelimiters.Font = new Font("Courier New", SystemFonts.MessageBoxFont.SizeInPoints);
         }
 
         private void OptionsForm_Load(object sender, EventArgs e) {
@@ -33,7 +33,7 @@ namespace QText {
             chbMultilineTabs.Checked = Settings.MultilineTabs;
             chbHorizontalScrollbar.Checked = (Settings.ScrollBars == ScrollBars.Horizontal) || (Settings.ScrollBars == ScrollBars.Both);
             chbVerticalScrollbar.Checked = (Settings.ScrollBars == ScrollBars.Vertical) || (Settings.ScrollBars == ScrollBars.Both);
-            txtSelectionDelimiters.Text = Settings.SelectionDelimiters;
+            cmbSelectionDelimiters.Text = Settings.SelectionDelimiters;
 
             //Files
             chkPreloadFilesOnStartup.Checked = Settings.FilesPreload;
@@ -315,7 +315,7 @@ namespace QText {
             } else {
                 Settings.ScrollBars = ScrollBars.None;
             }
-            Settings.SelectionDelimiters = txtSelectionDelimiters.Text;
+            Settings.SelectionDelimiters = cmbSelectionDelimiters.Text;
 
             //Files
             Settings.FilesPreload = chkPreloadFilesOnStartup.Checked;
