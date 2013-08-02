@@ -235,61 +235,11 @@ namespace QText {
         protected override void WndProc(ref Message m) {
             switch (m.Msg) {
                 case NativeMethods.WM_LBUTTONDBLCLK: {
-                        if (this.TextLength == 0) { return; } //cannot find word in empty text
-                        var startIndex = this.SelectionStart;
-                        if (startIndex >= this.TextLength) { startIndex -= 1; }
-                        if (this.Text[startIndex] == '\n') {
-                            var line1 = this.GetLineFromCharIndex(startIndex);
-                            var line2 = this.GetLineFromCharIndex(startIndex - 1);
-                            if (line1 == line2) {
-                                startIndex -= 1;
-                            } else {
-                                return; //cannot select word on empty row
-                            }
+                        var selection = TextSelection.FindWord(this, this.SelectionStart);
+                        if (selection.IsEmpty == false) {
+                            this.SelectionStart = selection.Start;
+                            this.SelectionLength = selection.Length;
                         }
-
-                        var leftCount = 0;
-                        while (startIndex - leftCount >= 0) { //find non whitespace
-                            if (char.IsWhiteSpace(this.Text[startIndex - leftCount]) == false) { break; }
-                            leftCount += 1;
-                        }
-                        if (startIndex - leftCount < 0) { leftCount = int.MinValue; }
-
-                        var rightCount = 0;
-                        while (startIndex + rightCount < this.TextLength - 1) { //find non whitespace
-                            if (char.IsWhiteSpace(this.Text[startIndex + rightCount]) == false) { break; }
-                            rightCount += 1;
-                        }
-                        if (startIndex + rightCount >= this.TextLength - 1) { rightCount = int.MinValue; }
-
-                        if ((rightCount == int.MinValue) && (leftCount == int.MinValue)) {
-                            return; //cannot select text if there is only whitespace
-                        } else if (leftCount == int.MinValue) {
-                            startIndex = startIndex + rightCount;
-                        } else if (rightCount == int.MinValue) {
-                            startIndex = startIndex - leftCount;
-                        } else {
-                            if (rightCount <= leftCount) {
-                                startIndex = startIndex + rightCount;
-                            } else {
-                                startIndex = startIndex - leftCount;
-                            }
-                        }
-
-                        var category = GetLikeUnicodeCategory(this.Text[startIndex]);
-                        while (startIndex >= 0) { //find start of word
-                            if (GetLikeUnicodeCategory(this.Text[startIndex]) != category) { break; }
-                            startIndex -= 1;
-                        }
-                        startIndex += 1;
-                        var endIndex = startIndex;
-                        while (endIndex < this.TextLength - 1) { //find end of word
-                            if (GetLikeUnicodeCategory(this.Text[endIndex]) != category) { break; }
-                            endIndex += 1;
-                        }
-                        if (endIndex < this.TextLength - 1) { endIndex -= 1; }
-                        this.SelectionStart = startIndex;
-                        this.SelectionLength = endIndex - startIndex + 1;
                     } return;
 
                 case NativeMethods.WM_SYSKEYDOWN:
@@ -349,18 +299,6 @@ namespace QText {
             if (endIndex < 0) { endIndex = this.Text.Length; }
             this.SelectionStart = startIndex;
             this.SelectionLength = endIndex - startIndex + 1;
-        }
-
-
-        private static UnicodeCategory GetLikeUnicodeCategory(char ch) {
-            if (ch == '-') { return UnicodeCategory.LetterNumber; }
-            if (char.IsWhiteSpace(ch)) {
-                return UnicodeCategory.SpaceSeparator;
-            } else if (char.IsPunctuation(ch)) {
-                return UnicodeCategory.OtherSymbol;
-            } else {
-                return UnicodeCategory.LetterNumber;
-            }
         }
 
 
