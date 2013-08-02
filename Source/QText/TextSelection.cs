@@ -12,72 +12,69 @@ namespace QText {
 
         public Int32 Start { get; private set; }
         public Int32 Length { get; private set; }
+        public Int32 End { get { return (this.Start >= 0) ? this.Start + this.Length : -1; } }
 
         public Boolean IsEmpty { get { return (this.Start < 0); } }
+        public Boolean IsNotEmpty { get { return !this.IsEmpty; } }
         private static readonly TextSelection Empty = new TextSelection(-1, 0);
 
 
-        public static TextSelection FindWord(RichTextBoxEx textBox, int start) {
+        public static TextSelection FindToLeft(RichTextBoxEx textBox, int startAt, bool ignoreWhitespace = true) {
             if (textBox.TextLength == 0) { return TextSelection.Empty; }
+            if ((startAt < 0) || (startAt > textBox.TextLength)) { return TextSelection.Empty; }
 
-            var startIndex = start;
-            if (startIndex >= textBox.TextLength) { startIndex -= 1; }
-            if (textBox.Text[startIndex] == '\n') {
-                var line1 = textBox.GetLineFromCharIndex(startIndex);
-                var line2 = textBox.GetLineFromCharIndex(startIndex - 1);
-                if (line1 == line2) {
-                    startIndex -= 1;
-                } else {
-                    return TextSelection.Empty;
+            var i = startAt - 1;
+
+            if (ignoreWhitespace) {
+                while ((i > 0) && (GetLikeUnicodeCategory(textBox.Text[i]) == UnicodeCategory.SpaceSeparator)) {
+                    i--;
+                }
+            }
+            if (i < 0) { return new TextSelection(0, 0); }
+
+            var category = GetLikeUnicodeCategory(textBox.Text[i]);
+            while (i >= 0) {
+                var currCategory = GetLikeUnicodeCategory(textBox.Text[i]);
+                if (currCategory != category) { i++; break; }
+                if (currCategory == UnicodeCategory.ParagraphSeparator) { break; }
+                i--;
+            }
+            if (i < 0) { return new TextSelection(0, 0); }
+
+            return new TextSelection(i, 0);
+        }
+
+        public static TextSelection FindToRight(RichTextBoxEx textBox, int startAt, bool ignoreWhitespace = true) {
+            if (textBox.TextLength == 0) { return TextSelection.Empty; }
+            if ((startAt < 0) || (startAt >= textBox.TextLength)) { return TextSelection.Empty; }
+
+            var i = startAt;
+            var category = GetLikeUnicodeCategory(textBox.Text[i]);
+            while (i < textBox.TextLength) {
+                var currCategory = GetLikeUnicodeCategory(textBox.Text[i]);
+                if (currCategory != category) { break; }
+                if (currCategory == UnicodeCategory.ParagraphSeparator) { i++; break; }
+                i++;
+            }
+            if (ignoreWhitespace) {
+                while ((i < textBox.TextLength) && (GetLikeUnicodeCategory(textBox.Text[i]) == UnicodeCategory.SpaceSeparator)) {
+                    i++;
                 }
             }
 
-            var leftCount = 0;
-            while (startIndex - leftCount >= 0) { //find non whitespace
-                if (char.IsWhiteSpace(textBox.Text[startIndex - leftCount]) == false) { break; }
-                leftCount += 1;
-            }
-            if (startIndex - leftCount < 0) { leftCount = int.MinValue; }
+            return new TextSelection(i, 0);
+        }
 
-            var rightCount = 0;
-            while (startIndex + rightCount < textBox.TextLength - 1) { //find non whitespace
-                if (char.IsWhiteSpace(textBox.Text[startIndex + rightCount]) == false) { break; }
-                rightCount += 1;
-            }
-            if (startIndex + rightCount >= textBox.TextLength - 1) { rightCount = int.MinValue; }
-
-            if ((rightCount == int.MinValue) && (leftCount == int.MinValue)) {
-                return TextSelection.Empty; //cannot select text if there is only whitespace
-            } else if (leftCount == int.MinValue) {
-                startIndex = startIndex + rightCount;
-            } else if (rightCount == int.MinValue) {
-                startIndex = startIndex - leftCount;
-            } else {
-                if (rightCount <= leftCount) {
-                    startIndex = startIndex + rightCount;
-                } else {
-                    startIndex = startIndex - leftCount;
-                }
-            }
-
-            var category = GetLikeUnicodeCategory(textBox.Text[startIndex]);
-            while (startIndex >= 0) { //find start of word
-                if (GetLikeUnicodeCategory(textBox.Text[startIndex]) != category) { break; }
-                startIndex -= 1;
-            }
-            startIndex += 1;
-            var endIndex = startIndex;
-            while (endIndex < textBox.TextLength - 1) { //find end of word
-                if (GetLikeUnicodeCategory(textBox.Text[endIndex]) != category) { break; }
-                endIndex += 1;
-            }
-            if (endIndex < textBox.TextLength - 1) { endIndex -= 1; }
-
-            return new TextSelection(startIndex, endIndex - startIndex + 1);
+        public static TextSelection FindWord(RichTextBoxEx textBox, int start) {
+            var left = FindToLeft(textBox, start + 1, false);
+            var right = FindToRight(textBox, start, false);
+            if (left.IsEmpty || right.IsEmpty) { return TextSelection.Empty; }
+            return new TextSelection(left.Start, right.Start - left.Start);
         }
 
 
         private static UnicodeCategory GetLikeUnicodeCategory(char ch) {
+            if (ch == '\n') { return UnicodeCategory.ParagraphSeparator; }
             if (Settings.SelectionDelimiters.Contains(ch.ToString())) { return UnicodeCategory.OtherSymbol; }
             if (char.IsWhiteSpace(ch)) {
                 return UnicodeCategory.SpaceSeparator;

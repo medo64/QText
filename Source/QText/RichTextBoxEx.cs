@@ -101,41 +101,69 @@ namespace QText {
                     return false;
 
                 case Keys.Control | Keys.Back: { //deletes word before cursor
-                        if (this.SelectionStart <= 0) { break; }
-                        var endIndex = this.SelectionStart + this.SelectionLength - 1;
-                        var startIndex = this.SelectionStart - 1;
-                        while (startIndex >= 0) { //find start of word (backward)
-                            if (char.IsWhiteSpace(this.Text[startIndex]) == false) { break; }
-                            startIndex -= 1;
+                        if (this.SelectionLength > 0) { //first delete selection
+                            this.SelectedText = "";
+                        } else {
+                            var selection = TextSelection.FindToLeft(this, this.SelectionStart);
+                            if (selection.IsNotEmpty) {
+                                this.Select(selection.Start, this.SelectionStart - selection.Start);
+                                this.SelectedText = "";
+                            }
                         }
-                        var category = char.GetUnicodeCategory(char.ToUpperInvariant(this.Text[startIndex]));
-                        while (startIndex >= 0) { //find end of word (backward)
-                            if (char.GetUnicodeCategory(char.ToUpperInvariant(this.Text[startIndex])) != category) { break; }
-                            startIndex -= 1;
-                        }
-                        startIndex += 1;
-                        this.SelectionStart = startIndex;
-                        this.SelectionLength = endIndex - startIndex + 1;
-                        this.SelectedText = "";
                     } return true;
 
-                case Keys.Control | Keys.Delete: { //delete word
-                        if (this.SelectionStart >= this.TextLength - 1) { break; }
-                        var startIndex = this.SelectionStart;
-                        var endIndex = this.SelectionStart;
-                        var category = char.GetUnicodeCategory(char.ToUpperInvariant(this.Text[endIndex]));
-                        while (endIndex < this.TextLength - 1) { //find end of word (forward)
-                            if (char.GetUnicodeCategory(char.ToUpperInvariant(this.Text[endIndex])) != category) { break; }
-                            endIndex += 1;
+                case Keys.Control | Keys.Delete: { //delete word from cursor
+                        if (this.SelectionLength > 0) { //first delete selection
+                            this.SelectedText = "";
+                        } else {
+                            var selection = TextSelection.FindToRight(this, this.SelectionStart);
+                            if (selection.IsNotEmpty) {
+                                this.Select(this.SelectionStart, selection.Start - this.SelectionStart);
+                                this.SelectedText = "";
+                            }
                         }
-                        while (endIndex < this.TextLength - 1) { //include any trailing whitespace
-                            if (char.IsWhiteSpace(this.Text[endIndex]) == false) { break; }
-                            endIndex += 1;
+                    } return true;
+
+                case Keys.Control | Keys.Left: {
+                        var selection = TextSelection.FindToLeft(this, this.SelectionStart);
+                        if (selection.IsNotEmpty) {
+                            this.Select(selection.Start, 0);
                         }
-                        endIndex -= 1;
-                        this.SelectionStart = startIndex;
-                        this.SelectionLength = endIndex - startIndex + 1;
-                        this.SelectedText = "";
+                    } return true;
+
+                case Keys.Control | Keys.Shift | Keys.Left: {
+                        if ((this.SelectionStart + this.SelectionLength) <= this.CaretPosition) {
+                            var selection = TextSelection.FindToLeft(this, this.SelectionStart);
+                            if (selection.IsNotEmpty) {
+                                this.Select(selection.Start, this.CaretPosition - selection.Start);
+                            }
+                        } else {
+                            var selection = TextSelection.FindToLeft(this, this.SelectionStart + this.SelectionLength);
+                            if (selection.IsNotEmpty) {
+                                this.Select(this.SelectionStart, selection.Start - this.SelectionStart);
+                            }
+                        }
+                    } return true;
+
+                case Keys.Control | Keys.Right: {
+                        var selection = TextSelection.FindToRight(this, this.SelectionStart + this.SelectionLength);
+                        if (selection.IsNotEmpty) {
+                            this.Select(selection.Start, 0);
+                        }
+                    } return true;
+
+                case Keys.Control | Keys.Shift | Keys.Right: {
+                        if (this.SelectionStart >= this.CaretPosition) {
+                            var selection = TextSelection.FindToRight(this, this.SelectionStart + this.SelectionLength);
+                            if (selection.IsNotEmpty) {
+                                this.Select(this.SelectionStart, selection.Start - this.SelectionStart);
+                            }
+                        } else {
+                            var selection = TextSelection.FindToRight(this, this.SelectionStart);
+                            if (selection.IsNotEmpty) {
+                                this.Select(selection.Start, this.SelectionStart + this.SelectionLength - selection.Start);
+                            }
+                        }
                     } return true;
 
                 case Keys.Control | Keys.A: {
@@ -253,6 +281,14 @@ namespace QText {
                     return;
             }
             base.WndProc(ref m);
+        }
+
+
+        private Int32 CaretPosition; //used for selection
+
+        protected override void OnSelectionChanged(EventArgs e) {
+            if (this.SelectionLength == 0) { this.CaretPosition = this.SelectionStart; }
+            base.OnSelectionChanged(e);
         }
 
         protected override void OnLinkClicked(System.Windows.Forms.LinkClickedEventArgs e) {
