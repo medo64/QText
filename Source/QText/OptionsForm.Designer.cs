@@ -70,6 +70,7 @@
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnExit = new System.Windows.Forms.Button();
+            this.btnAllowSave = new System.Windows.Forms.Button();
             this.tab.SuspendLayout();
             this.tab_pagAppearance.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudTabWidth)).BeginInit();
@@ -617,7 +618,7 @@
             this.btnOk.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(98, 29);
-            this.btnOk.TabIndex = 3;
+            this.btnOk.TabIndex = 4;
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
@@ -638,6 +639,7 @@
             // 
             this.btnExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnExit.Location = new System.Drawing.Point(12, 272);
+            this.btnExit.Margin = new System.Windows.Forms.Padding(3, 3, 15, 3);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(98, 29);
             this.btnExit.TabIndex = 2;
@@ -646,6 +648,18 @@
             this.btnExit.UseVisualStyleBackColor = true;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
+            // btnAllowSave
+            // 
+            this.btnAllowSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnAllowSave.Location = new System.Drawing.Point(128, 272);
+            this.btnAllowSave.Name = "btnAllowSave";
+            this.btnAllowSave.Size = new System.Drawing.Size(98, 29);
+            this.btnAllowSave.TabIndex = 3;
+            this.btnAllowSave.TabStop = false;
+            this.btnAllowSave.Text = "Allow save";
+            this.btnAllowSave.UseVisualStyleBackColor = true;
+            this.btnAllowSave.Click += new System.EventHandler(this.btnAllowSave_Click);
+            // 
             // OptionsForm
             // 
             this.AcceptButton = this.btnOk;
@@ -653,6 +667,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(522, 313);
+            this.Controls.Add(this.btnAllowSave);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.tab);
             this.Controls.Add(this.btnOk);
@@ -733,5 +748,6 @@
         private System.Windows.Forms.Button btnExit;
         internal System.Windows.Forms.Label lblSelectionDelimiters;
         private System.Windows.Forms.ComboBox cmbSelectionDelimiters;
+        private System.Windows.Forms.Button btnAllowSave;
     }
 }

@@ -34,14 +34,6 @@ namespace QText {
             tabFiles.Multiline = Settings.MultilineTabs;
 
             Medo.Windows.Forms.State.Load(this);
-
-            if (Settings.Installed == false) {
-                var text = "Program must be installed to use this function.";
-                mnuOptions.Enabled = false;
-                mnuOptions.ToolTipText = text;
-                mnuAppUpgrade.Enabled = false;
-                mnuAppUpgrade.ToolTipText = text;
-            }
         }
 
 

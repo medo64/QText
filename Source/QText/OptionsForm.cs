@@ -13,6 +13,8 @@ namespace QText {
             InitializeComponent();
             this.Font = SystemFonts.MessageBoxFont;
             cmbSelectionDelimiters.Font = new Font("Courier New", SystemFonts.MessageBoxFont.SizeInPoints);
+
+            SetWritableState(!Settings.NoRegistryWrites);
         }
 
         private void OptionsForm_Load(object sender, EventArgs e) {
@@ -335,8 +337,23 @@ namespace QText {
             Settings.CarbonCopyIgnoreErrors = chbCarbonCopyIgnoreCopyErrors.Checked;
         }
 
+        private void btnAllowSave_Click(object sender, EventArgs e) {
+            if (Medo.MessageBox.ShowQuestion(this, "Do you allow this program use of registry in order to save its settings?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+                btnAllowSave.Visible = false;
+                Settings.NoRegistryWrites = false;
+                SetWritableState(true);
+            }
+        }
+
 
         #region Helper
+
+        private void SetWritableState(bool newState) {
+            btnAllowSave.Visible = !newState;
+
+            btnOk.Enabled = newState;
+            foreach (Control control in tab.Controls) { control.Enabled = newState; }
+        }
 
         private static string GetKeyString(Keys keyData) {
             if ((keyData & Keys.LWin) == Keys.LWin) { return string.Empty; }
@@ -382,8 +399,6 @@ namespace QText {
                     return sb.ToString();
             }
         }
-
-
 
         private static string GetFontText(System.Drawing.Font font) {
             var sb = new System.Text.StringBuilder();

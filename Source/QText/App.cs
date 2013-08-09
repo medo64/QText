@@ -40,8 +40,9 @@ namespace QText {
 
                 Application.ApplicationExit += new System.EventHandler(ApplicationExit);
 
-                Medo.Configuration.Settings.NoRegistryWrites = !Settings.Installed;
-                Medo.Windows.Forms.State.NoRegistryWrites = !Settings.Installed;
+                Medo.Configuration.Settings.NoRegistryWrites = Settings.NoRegistryWrites;
+                Medo.Windows.Forms.State.NoRegistryWrites = Settings.NoRegistryWrites;
+                Medo.Diagnostics.ErrorReport.DisableAutomaticSaveToTemp = Settings.NoRegistryWrites;
 
                 App.Form = new MainForm();
 
@@ -132,7 +133,6 @@ namespace QText {
         }
 
         private static void UnhandledException(object sender, ThreadExceptionEventArgs e) {
-            if (Settings.Installed) { Medo.Diagnostics.ErrorReport.SaveToTemp(e.Exception); }
 #if !DEBUG
             foreach (Form form in Application.OpenForms) {
                 if (form.TopMost) {

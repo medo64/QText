@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
+using System.Security;
 using System.Windows.Forms;
 
 namespace QText {
@@ -9,9 +11,39 @@ namespace QText {
 
         private static readonly Medo.Configuration.RunOnStartup StartupConfig = new Medo.Configuration.RunOnStartup(Medo.Configuration.RunOnStartup.Current.Title, Medo.Configuration.RunOnStartup.Current.ExecutablePath, "/hide");
 
+
         public static bool Installed {
             get { return Medo.Configuration.Settings.Read("Installed", false); }
         }
+
+        public static bool NoRegistryWrites {
+            get {
+                try {
+                    using (var key = Registry.CurrentUser.OpenSubKey(Medo.Configuration.Settings.SubkeyPath)) {
+                        return (key == null);
+                    }
+                } catch (SecurityException) {
+                    return true;
+                }
+            }
+            set {
+                try {
+                    if (value) { //remove subkey
+                        try {
+                            Registry.CurrentUser.DeleteSubKeyTree(Medo.Configuration.Settings.SubkeyPath);
+                        } catch (ArgumentException) { }
+                    } else {
+                        Registry.CurrentUser.CreateSubKey(Medo.Configuration.Settings.SubkeyPath);
+                    }
+                    Medo.Configuration.Settings.NoRegistryWrites = value;
+                    Medo.Windows.Forms.State.NoRegistryWrites = value;
+                    Medo.Diagnostics.ErrorReport.DisableAutomaticSaveToTemp = value;
+                } catch (IOException) {
+                } catch (SecurityException) {
+                } catch (UnauthorizedAccessException) { }
+            }
+        }
+
 
         public static Keys ActivationHotkey {
             get { return (Keys)Medo.Configuration.Settings.Read("ActivationHotkey", Convert.ToInt32(Keys.Control | Keys.Shift | Keys.Q)); }
@@ -148,11 +180,13 @@ namespace QText {
 
         public static string FilesLocation {
             get {
-                if (Installed) {
-                    return Medo.Configuration.Settings.Read("DataPath", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Medo.Reflection.EntryAssembly.Company + "\\" + Medo.Reflection.EntryAssembly.Name));
+                string defaultPath;
+                if (Settings.Installed) {
+                    defaultPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Medo.Reflection.EntryAssembly.Company + "\\" + Medo.Reflection.EntryAssembly.Name);
                 } else {
-                    return Path.Combine(Application.StartupPath, "Data");
+                    defaultPath = Path.Combine(Application.StartupPath, "Data");
                 }
+                return Medo.Configuration.Settings.Read("DataPath", defaultPath);
             }
             set { Medo.Configuration.Settings.Write("DataPath", value); }
         }
