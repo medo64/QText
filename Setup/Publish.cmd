@@ -59,6 +59,22 @@ ECHO.
 ECHO.
 
 
+ECHO --- RENAME LATEST
+ECHO.
+
+SET _OLDSETUPEXE=%_SETUPEXE%
+SET _SETUPEXE=%_SETUPEXE:000=-LATEST%
+IF NOT %_OLDSETUPEXE%==%_SETUPEXE% (
+    ECHO Renaming %_OLDSETUPEXE% to %_SETUPEXE%
+    MOVE .\Temp\%_OLDSETUPEXE% .\Temp\%_SETUPEXE%
+) ELSE (
+    ECHO No rename needed.
+)
+
+ECHO.
+ECHO.
+
+
 CERTUTIL -silent -verifystore -user My %SIGN_HASH% > NUL
 IF %ERRORLEVEL%==0 (
     ECHO --- SIGN SETUP
