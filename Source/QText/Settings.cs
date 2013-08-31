@@ -299,5 +299,10 @@ namespace QText {
             set { Medo.Configuration.Settings.Write("SelectionDelimiters", value); }
         }
 
+        public static bool PlainLineEndsWithLf {
+            get { return Medo.Configuration.Settings.Read("PlainLineEndsWithLf", false); }
+            set { Medo.Configuration.Settings.Write("PlainLineEndsWithLf", value); }
+        }
+
     }
 }

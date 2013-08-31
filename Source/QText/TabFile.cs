@@ -372,7 +372,7 @@ namespace QText {
                     e.IsInputKey = false;
                     break;
 
-                case Keys.Control | Keys.Shift  | Keys.V:
+                case Keys.Control | Keys.Shift | Keys.V:
                 case Keys.Shift | Keys.Insert:
                     this.Paste(true);
                     e.IsInputKey = false;
@@ -657,7 +657,7 @@ namespace QText {
         }
 
         private void SaveAsPlain(Stream stream) {
-            var text = string.Join(Environment.NewLine, this.TextBox.Lines);
+            var text = string.Join(Settings.PlainLineEndsWithLf ? "\n" : Environment.NewLine, this.TextBox.Lines);
             var bytes = Utf8EncodingWithoutBom.GetBytes(text);
             stream.Write(bytes, 0, bytes.Length);
         }

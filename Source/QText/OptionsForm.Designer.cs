@@ -71,6 +71,7 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnExit = new System.Windows.Forms.Button();
             this.btnAllowSave = new System.Windows.Forms.Button();
+            this.chbSavePlainWithLF = new System.Windows.Forms.CheckBox();
             this.tab.SuspendLayout();
             this.tab_pagAppearance.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudTabWidth)).BeginInit();
@@ -348,6 +349,7 @@
             // 
             // tab_pagFiles
             // 
+            this.tab_pagFiles.Controls.Add(this.chbSavePlainWithLF);
             this.tab_pagFiles.Controls.Add(this.nudQuickSaveIntervalInSeconds);
             this.tab_pagFiles.Controls.Add(this.btnOpenLocationFolder);
             this.tab_pagFiles.Controls.Add(this.lblQuickSaveIntervalSeconds);
@@ -398,7 +400,7 @@
             this.btnOpenLocationFolder.Location = new System.Drawing.Point(3, 190);
             this.btnOpenLocationFolder.Name = "btnOpenLocationFolder";
             this.btnOpenLocationFolder.Size = new System.Drawing.Size(196, 29);
-            this.btnOpenLocationFolder.TabIndex = 5;
+            this.btnOpenLocationFolder.TabIndex = 6;
             this.btnOpenLocationFolder.Text = "Open folder";
             this.btnOpenLocationFolder.UseVisualStyleBackColor = true;
             this.btnOpenLocationFolder.Click += new System.EventHandler(this.btnOpenLocationFolder_Click);
@@ -424,10 +426,10 @@
             // chkDeleteToRecycleBin
             // 
             this.chkDeleteToRecycleBin.AutoSize = true;
-            this.chkDeleteToRecycleBin.Location = new System.Drawing.Point(7, 63);
+            this.chkDeleteToRecycleBin.Location = new System.Drawing.Point(7, 87);
             this.chkDeleteToRecycleBin.Name = "chkDeleteToRecycleBin";
             this.chkDeleteToRecycleBin.Size = new System.Drawing.Size(159, 21);
-            this.chkDeleteToRecycleBin.TabIndex = 4;
+            this.chkDeleteToRecycleBin.TabIndex = 5;
             this.chkDeleteToRecycleBin.Text = "Delete to recycle bin";
             this.chkDeleteToRecycleBin.UseVisualStyleBackColor = true;
             // 
@@ -448,7 +450,7 @@
             this.btnChangeLocation.Location = new System.Drawing.Point(291, 190);
             this.btnChangeLocation.Name = "btnChangeLocation";
             this.btnChangeLocation.Size = new System.Drawing.Size(196, 29);
-            this.btnChangeLocation.TabIndex = 6;
+            this.btnChangeLocation.TabIndex = 7;
             this.btnChangeLocation.Text = "Change location";
             this.btnChangeLocation.UseVisualStyleBackColor = true;
             this.btnChangeLocation.Click += new System.EventHandler(this.btnChangeLocation_Click);
@@ -660,6 +662,16 @@
             this.btnAllowSave.UseVisualStyleBackColor = true;
             this.btnAllowSave.Click += new System.EventHandler(this.btnAllowSave_Click);
             // 
+            // chbSavePlainWithLF
+            // 
+            this.chbSavePlainWithLF.AutoSize = true;
+            this.chbSavePlainWithLF.Location = new System.Drawing.Point(7, 60);
+            this.chbSavePlainWithLF.Name = "chbSavePlainWithLF";
+            this.chbSavePlainWithLF.Size = new System.Drawing.Size(243, 21);
+            this.chbSavePlainWithLF.TabIndex = 4;
+            this.chbSavePlainWithLF.Text = "Save plain text with LF line ending";
+            this.chbSavePlainWithLF.UseVisualStyleBackColor = true;
+            // 
             // OptionsForm
             // 
             this.AcceptButton = this.btnOk;
@@ -749,5 +761,6 @@
         internal System.Windows.Forms.Label lblSelectionDelimiters;
         private System.Windows.Forms.ComboBox cmbSelectionDelimiters;
         private System.Windows.Forms.Button btnAllowSave;
+        internal System.Windows.Forms.CheckBox chbSavePlainWithLF;
     }
 }
