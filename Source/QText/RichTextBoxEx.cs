@@ -104,7 +104,7 @@ namespace QText {
                         if (this.SelectionLength > 0) { //first delete selection
                             this.SelectedText = "";
                         } else {
-                            var selection = TextSelection.FindToLeft(this, this.SelectionStart);
+                            var selection = TextSelection.FindWordStart(this, this.SelectionStart);
                             if (selection.IsNotEmpty) {
                                 this.Select(selection.Start, this.SelectionStart - selection.Start);
                                 this.SelectedText = "";
@@ -116,7 +116,7 @@ namespace QText {
                         if (this.SelectionLength > 0) { //first delete selection
                             this.SelectedText = "";
                         } else {
-                            var selection = TextSelection.FindToRight(this, this.SelectionStart);
+                            var selection = TextSelection.FindWordEnd(this, this.SelectionStart);
                             if (selection.IsNotEmpty) {
                                 this.Select(this.SelectionStart, selection.Start - this.SelectionStart);
                                 this.SelectedText = "";
@@ -125,44 +125,40 @@ namespace QText {
                     } return true;
 
                 case Keys.Control | Keys.Left: {
-                        var selection = TextSelection.FindToLeft(this, this.SelectionStart);
+                        var selection = TextSelection.FindWordStart(this, this.SelectionStart);
                         if (selection.IsNotEmpty) {
                             this.Select(selection.Start, 0);
                         }
                     } return true;
 
                 case Keys.Control | Keys.Shift | Keys.Left: {
+                        TextSelection selection;
                         if ((this.SelectionStart + this.SelectionLength) <= this.CaretPosition) {
-                            var selection = TextSelection.FindToLeft(this, this.SelectionStart);
-                            if (selection.IsNotEmpty) {
-                                this.Select(selection.Start, this.CaretPosition - selection.Start);
-                            }
+                            selection = TextSelection.FindWordStart(this, this.SelectionStart);
                         } else {
-                            var selection = TextSelection.FindToLeft(this, this.SelectionStart + this.SelectionLength);
-                            if (selection.IsNotEmpty) {
-                                this.Select(this.SelectionStart, selection.Start - this.SelectionStart);
-                            }
+                            selection = TextSelection.FindWordStart(this, this.SelectionStart + this.SelectionLength);
+                        }
+                        if (selection.IsNotEmpty) {
+                            NativeMethods.SendMessage(this.Handle, NativeMethods.EM_SETSEL, new IntPtr(this.CaretPosition), new IntPtr(selection.Start));
                         }
                     } return true;
 
                 case Keys.Control | Keys.Right: {
-                        var selection = TextSelection.FindToRight(this, this.SelectionStart + this.SelectionLength);
+                        var selection = TextSelection.FindWordEnd(this, this.SelectionStart + this.SelectionLength);
                         if (selection.IsNotEmpty) {
                             this.Select(selection.Start, 0);
                         }
                     } return true;
 
                 case Keys.Control | Keys.Shift | Keys.Right: {
+                        TextSelection selection;
                         if (this.SelectionStart >= this.CaretPosition) {
-                            var selection = TextSelection.FindToRight(this, this.SelectionStart + this.SelectionLength);
-                            if (selection.IsNotEmpty) {
-                                this.Select(this.SelectionStart, selection.Start - this.SelectionStart);
-                            }
+                            selection = TextSelection.FindWordEnd(this, this.SelectionStart + this.SelectionLength);
                         } else {
-                            var selection = TextSelection.FindToRight(this, this.SelectionStart);
-                            if (selection.IsNotEmpty) {
-                                this.Select(selection.Start, this.SelectionStart + this.SelectionLength - selection.Start);
-                            }
+                            selection = TextSelection.FindWordEnd(this, this.SelectionStart);
+                        }
+                        if (selection.IsNotEmpty) {
+                            NativeMethods.SendMessage(this.Handle, NativeMethods.EM_SETSEL, new IntPtr(this.CaretPosition), new IntPtr(selection.End));
                         }
                     } return true;
 
@@ -419,6 +415,8 @@ namespace QText {
             internal const int VK_MENU = 0x12;
 
             internal const int EM_SETEVENTMASK = 1073;
+
+            internal const int EM_SETSEL = 0x00B1;
 
             internal const int WM_LBUTTONDBLCLK = 0x0203;
             internal const int WM_SETREDRAW = 11;

@@ -19,7 +19,7 @@ namespace QText {
         private static readonly TextSelection Empty = new TextSelection(-1, 0);
 
 
-        public static TextSelection FindToLeft(RichTextBoxEx textBox, int startAt, bool ignoreWhitespace = true) {
+        public static TextSelection FindWordStart(RichTextBoxEx textBox, int startAt, bool ignoreWhitespace = true) {
             if (textBox.TextLength == 0) { return TextSelection.Empty; }
             if ((startAt < 0) || (startAt > textBox.TextLength)) { return TextSelection.Empty; }
 
@@ -44,7 +44,7 @@ namespace QText {
             return new TextSelection(i, 0);
         }
 
-        public static TextSelection FindToRight(RichTextBoxEx textBox, int startAt, bool ignoreWhitespace = true) {
+        public static TextSelection FindWordEnd(RichTextBoxEx textBox, int startAt, bool ignoreWhitespace = true) {
             if (textBox.TextLength == 0) { return TextSelection.Empty; }
             if ((startAt < 0) || (startAt >= textBox.TextLength)) { return TextSelection.Empty; }
 
@@ -66,8 +66,8 @@ namespace QText {
         }
 
         public static TextSelection FindWord(RichTextBoxEx textBox, int start) {
-            var left = FindToLeft(textBox, start + 1, false);
-            var right = FindToRight(textBox, start, false);
+            var left = FindWordStart(textBox, start + 1, false);
+            var right = FindWordEnd(textBox, start, false);
             if (left.IsEmpty || right.IsEmpty) { return TextSelection.Empty; }
             return new TextSelection(left.Start, right.Start - left.Start);
         }
