@@ -5,9 +5,6 @@ using System.Windows.Forms;
 namespace QText {
     internal class Tray : IDisposable {
 
-        private MenuItem mnxNotifyShow = new MenuItem("&Show");
-        private MenuItem mnxNotifyShowOnPrimary = new MenuItem("&Show on primary screen");
-        private MenuItem mnxNotifyExit = new MenuItem("E&xit");
         private NotifyIcon notMain = new NotifyIcon();
         public Form Form { get; private set; }
 
@@ -20,21 +17,45 @@ namespace QText {
             this.Form.CreateControl();
             this.Form.Handle.GetType();
 
-            mnxNotifyShow.DefaultItem = true;
-            mnxNotifyShow.Click += mnxNotifyShow_Click;
-            mnxNotifyShowOnPrimary.Click += mnxNotifyShowOnPrimary_Click;
-            mnxNotifyExit.Click += mnxNotifyExit_Click;
-
-            notMain.ContextMenu = new ContextMenu(new MenuItem[] {
-			    mnxNotifyShow,
-			    mnxNotifyShowOnPrimary,
-			    new MenuItem("-"),
-			    mnxNotifyExit
-		    });
             notMain.Icon = Medo.Resources.ManifestResources.GetIcon("QText.Properties.App.ico", 16, 16);
             notMain.Text = Medo.Reflection.EntryAssembly.Title;
-            notMain.MouseClick += notMain_MouseClick;
-            notMain.MouseDoubleClick += notMain_MouseDoubleClick;
+
+            notMain.MouseClick += delegate(object sender, MouseEventArgs e) {
+                if ((e.Button == MouseButtons.Left) && (Settings.TrayOneClickActivation)) {
+                    ShowForm();
+                }
+            };
+            notMain.MouseDoubleClick += delegate(object sender, MouseEventArgs e) {
+                if (e.Button == MouseButtons.Left) {
+                    ShowForm();
+                }
+            };
+
+            notMain.ContextMenu = new ContextMenu();
+            notMain.ContextMenu.Popup += delegate(object sender, EventArgs e) {
+                var showItem = new MenuItem("&Show") { DefaultItem = true };
+                if (App.Hotkey.IsRegistered) { showItem.Text += "\t" + Helper.GetKeyString(App.Hotkey.Key); }
+                showItem.Click += delegate(object sender2, EventArgs e2) {
+                    ShowForm();
+                };
+
+                var showOnPrimaryItem = new MenuItem("Show on primary screen");
+                showItem.Click += delegate(object sender2, EventArgs e2) {
+                    ShowForm(true);
+                };
+
+                var exitItem = new MenuItem("E&xit");
+                exitItem.Click += delegate(object sender2, EventArgs e2) {
+                    this.Hide();
+                    Application.Exit();
+                };
+
+                notMain.ContextMenu.MenuItems.Clear();
+                notMain.ContextMenu.MenuItems.Add(showItem);
+                notMain.ContextMenu.MenuItems.Add(showOnPrimaryItem);
+                notMain.ContextMenu.MenuItems.Add(new MenuItem("-"));
+                notMain.ContextMenu.MenuItems.Add(exitItem);
+            };
         }
 
 
@@ -46,83 +67,55 @@ namespace QText {
             notMain.Visible = false;
         }
 
-        public void ShowForm() {
+        public void ShowForm(bool showOnPrimary = false) {
             lock (Tray.SyncRoot) {
                 this.Form.Show();
                 if (this.Form.WindowState == FormWindowState.Minimized) { this.Form.WindowState = FormWindowState.Normal; }
-                this.Form.Activate();
-            }
-        }
 
-        private void mnxNotifyShow_Click(object sender, System.EventArgs e) {
-            ShowForm();
-        }
-
-        private void mnxNotifyShowOnPrimary_Click(object sender, System.EventArgs e) {
-            lock (Tray.SyncRoot) {
-                ShowForm();
-
-                Rectangle priBounds = Screen.PrimaryScreen.WorkingArea;
-                Rectangle currBounds = this.Form.Bounds;
-                Rectangle normalBounds = default(Rectangle);
-                if ((this.Form.WindowState == FormWindowState.Normal)) {
-                    normalBounds = this.Form.Bounds;
-                } else {
-                    normalBounds = this.Form.RestoreBounds;
-                }
-
-                if ((currBounds.Left >= priBounds.Left) && (currBounds.Right <= priBounds.Right) && (currBounds.Top >= priBounds.Top) && (currBounds.Bottom <= priBounds.Bottom)) {
-                } else {
-                    FormWindowState oldState = this.Form.WindowState;
-
-                    if (oldState != FormWindowState.Normal) {
-                        this.Form.WindowState = FormWindowState.Normal;
+                if (showOnPrimary) {
+                    Rectangle priBounds = Screen.PrimaryScreen.WorkingArea;
+                    Rectangle currBounds = this.Form.Bounds;
+                    Rectangle normalBounds = default(Rectangle);
+                    if ((this.Form.WindowState == FormWindowState.Normal)) {
+                        normalBounds = this.Form.Bounds;
+                    } else {
+                        normalBounds = this.Form.RestoreBounds;
                     }
 
-                    if ((normalBounds.Width > priBounds.Width)) {
-                        this.Form.Width = priBounds.Width;
-                    }
-                    if ((normalBounds.Left < priBounds.Left)) {
-                        this.Form.Left = priBounds.Left;
-                    }
-                    if ((normalBounds.Right > priBounds.Right)) {
-                        this.Form.Left = priBounds.Right - normalBounds.Width;
-                    }
+                    if (!((currBounds.Left >= priBounds.Left) && (currBounds.Right <= priBounds.Right) && (currBounds.Top >= priBounds.Top) && (currBounds.Bottom <= priBounds.Bottom))) {
+                        FormWindowState oldState = this.Form.WindowState;
 
-                    if ((normalBounds.Height > priBounds.Height)) {
-                        this.Form.Height = priBounds.Height;
-                    }
-                    if ((normalBounds.Top < priBounds.Top)) {
-                        this.Form.Top = priBounds.Top;
-                    }
-                    if ((normalBounds.Bottom > priBounds.Bottom)) {
-                        this.Form.Top = priBounds.Bottom - normalBounds.Height;
-                    }
+                        if (oldState != FormWindowState.Normal) {
+                            this.Form.WindowState = FormWindowState.Normal;
+                        }
 
-                    this.Form.WindowState = oldState;
+                        if ((normalBounds.Width > priBounds.Width)) {
+                            this.Form.Width = priBounds.Width;
+                        }
+                        if ((normalBounds.Left < priBounds.Left)) {
+                            this.Form.Left = priBounds.Left;
+                        }
+                        if ((normalBounds.Right > priBounds.Right)) {
+                            this.Form.Left = priBounds.Right - normalBounds.Width;
+                        }
+
+                        if ((normalBounds.Height > priBounds.Height)) {
+                            this.Form.Height = priBounds.Height;
+                        }
+                        if ((normalBounds.Top < priBounds.Top)) {
+                            this.Form.Top = priBounds.Top;
+                        }
+                        if ((normalBounds.Bottom > priBounds.Bottom)) {
+                            this.Form.Top = priBounds.Bottom - normalBounds.Height;
+                        }
+
+                        this.Form.WindowState = oldState;
+                    }
                 }
 
                 this.Form.Activate();
             }
         }
-
-        private void mnxNotifyExit_Click(object sender, System.EventArgs e) {
-            this.Hide();
-            Application.Exit();
-        }
-
-        private void notMain_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e) {
-            if ((e.Button == MouseButtons.Left) && (Settings.TrayOneClickActivation)) {
-                mnxNotifyShow_Click(sender, new System.EventArgs());
-            }
-        }
-
-        private void notMain_MouseDoubleClick(object sender, System.Windows.Forms.MouseEventArgs e) {
-            if ((e.Button == MouseButtons.Left) && (!Settings.TrayOneClickActivation)) {
-                mnxNotifyShow_Click(sender, new System.EventArgs());
-            }
-        }
-
 
         internal void ShowBalloonOnMinimize() {
             if (Settings.ShowBalloonOnNextMinimize) {
@@ -144,9 +137,6 @@ namespace QText {
 
         protected void Dispose(bool disposing) {
             if (disposing) {
-                mnxNotifyShow.Dispose();
-                mnxNotifyShowOnPrimary.Dispose();
-                mnxNotifyExit.Dispose();
                 notMain.Dispose();
             }
         }
