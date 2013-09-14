@@ -52,8 +52,9 @@ Name: "{userstartmenu}\QText";  Filename: "{app}\QText.exe"
 
 [Registry]
 Root: HKLM;  Subkey: "Software\Josip Medved\QText";                    ValueType: none;    ValueName: "Installed";                                           Flags: deletevalue uninsdeletevalue
-Root: HKCU;  Subkey: "Software\Josip Medved\QText";                    ValueType: dword;   ValueName: "Installed";  ValueData: "1";                          Flags: uninsdeletekey
+Root: HKCU;  Subkey: "Software\Josip Medved\QText";                    ValueType: none;    ValueName: "Installed";                                           Flags: deletevalue uninsdeletekey
 Root: HKCU;  Subkey: "Software\Josip Medved";                                                                                                                Flags: uninsdeletekeyifempty
+Root: HKCU;  Subkey: "Software\Josip Medved\QText";                                                                                                          Flags: uninsdeletekey
 Root: HKCU;  Subkey: "Software\Microsoft\Windows\CurrentVersion\Run";  ValueType: string;  ValueName: "QText";      ValueData: """{app}\QText.exe"" /hide";  Flags: uninsdeletevalue
 
 [Run]
