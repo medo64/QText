@@ -204,7 +204,7 @@ namespace QText {
                     } return true;
 
                 case Keys.Alt | Keys.PageUp:
-                case Keys.Alt | Keys.Up:  {
+                case Keys.Alt | Keys.Up: {
                         var currFolder = tabFiles.CurrentFolder;
                         var list = new List<string>(new string[] { "" });
                         list.AddRange(DocumentFolder.GetSubFolders());
@@ -312,6 +312,7 @@ namespace QText {
                 default:
                     e.Cancel = true;
                     this.Hide();
+                    App.Tray.ShowBalloonOnMinimize();
                     break;
             }
 #endif

@@ -124,6 +124,18 @@ namespace QText {
         }
 
 
+        internal void ShowBalloonOnMinimize() {
+            if (Settings.ShowBalloonOnNextMinimize) {
+                Settings.ShowBalloonOnNextMinimize = false;
+                var text = "Program continues to run in background.";
+                if (App.Hotkey.IsRegistered) {
+                    text += "\n\nPress " + Helper.GetKeyString(App.Hotkey.Key) + " to show window again.";
+                }
+                notMain.ShowBalloonTip(0, "QText", text, ToolTipIcon.Info);
+            }
+        }
+
+
         #region Disposing
 
         public void Dispose() {

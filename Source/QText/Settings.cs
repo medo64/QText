@@ -304,5 +304,10 @@ namespace QText {
             set { Medo.Configuration.Settings.Write("PlainLineEndsWithLf", value); }
         }
 
+        public static Boolean ShowBalloonOnNextMinimize {
+            get { return Medo.Configuration.Settings.Read("ShowBalloonOnNextMinimize", true) && !Settings.NoRegistryWrites; }
+            set { Medo.Configuration.Settings.Write("ShowBalloonOnNextMinimize", value); }
+        }
+
     }
 }
