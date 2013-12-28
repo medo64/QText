@@ -180,6 +180,9 @@ namespace QText {
             } else {
                 File.Delete(tab.CurrentFile.FullName);
             }
+            if (this.SelectedTab != null) {
+                this.SelectedTab.Open();
+            }
             DocumentFolder.WriteOrderedTitles(this);
         }
 
