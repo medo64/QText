@@ -138,9 +138,7 @@ namespace QText {
 
 
         public void Open() {
-            if (this.IsOpened == false) {
-                this.Reopen();
-            }
+            this.Reopen();
         }
 
         public void Close() {
@@ -213,6 +211,8 @@ namespace QText {
             if ((this.CurrentFile.IsEncrypted) && (this.Password == null)) { throw new CryptographicException("No password provided."); }
 
             var txt = (this.TextBox != null) ? this.TextBox : GetEmptyTextBox();
+            var oldSelStart = txt.SelectionStart;
+            var oldSelLength = txt.SelectionLength;
 
             this.IsOpened = false;
             if (this.CurrentFile.IsRich) {
@@ -228,8 +228,8 @@ namespace QText {
             if (this.TextBox == null) { AddTextBox(txt); }
 
             UpdateTabWidth();
-            this.TextBox.SelectionStart = 0;
-            this.TextBox.SelectionLength = 0;
+            this.TextBox.SelectionStart = oldSelStart;
+            this.TextBox.SelectionLength = oldSelLength;
             this.TextBox.ClearUndo();
             this.LastSaveTime = DateTime.Now;
             this.CurrentFile.Refresh();
