@@ -24,7 +24,6 @@ namespace QText {
             var mutexSecurity = new MutexSecurity();
             mutexSecurity.AddAccessRule(new MutexAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), MutexRights.FullControl, AccessControlType.Allow));
             using (var setupMutex = new Mutex(false, @"Global\JosipMedved_QText", out createdNew, mutexSecurity)) {
-
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo(Medo.Configuration.Settings.Read("CultureName", "en-US"));
@@ -37,6 +36,7 @@ namespace QText {
 
                 Medo.Application.UnhandledCatch.ThreadException += new System.EventHandler<ThreadExceptionEventArgs>(UnhandledException);
                 Medo.Application.UnhandledCatch.Attach();
+                Medo.Application.Restart.Register("/restart");
 
                 Application.ApplicationExit += new System.EventHandler(ApplicationExit);
 
@@ -145,6 +145,8 @@ namespace QText {
             if (System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major > 0) {
                 Medo.Services.Upgrade.ShowDialog(null, new Uri("http://jmedved.com/upgrade/"));
             }
+
+            if (Medo.Application.Restart.IsRegistered) { throw e.Exception; }
 #else
             throw e.Exception;
 #endif
