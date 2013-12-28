@@ -371,6 +371,7 @@ namespace QText {
 
         private void Form_Deactivate(object sender, EventArgs e) {
             this.tmrUpdateToolbar.Enabled = false;
+            tmrQuickSave_Tick(null, null);
         }
 
 
