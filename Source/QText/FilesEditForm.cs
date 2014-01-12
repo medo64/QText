@@ -12,6 +12,8 @@ namespace QText {
             this.Font = SystemFonts.MessageBoxFont;
 
             this.TabFiles = tabFiles;
+
+            Medo.Windows.Forms.State.SetupOnLoadAndClose(this);
         }
 
 
@@ -60,8 +62,6 @@ namespace QText {
 
 
         private void Form_Load(object sender, System.EventArgs e) {
-            lsv.Columns[0].Width = lsv.ClientRectangle.Width - SystemInformation.VerticalScrollBarWidth;
-
             foreach (var page in this.TabFiles.TabPages) {
                 var file = (TabFile)page;
                 lsv.Items.Add(new ListViewItem(file.Text) { Tag = file });
@@ -108,6 +108,10 @@ namespace QText {
                 this.TabFiles.SelectedTab = (TabFile)lsv.SelectedItems[0].Tag;
                 this.DialogResult = DialogResult.OK;
             }
+        }
+
+        private void lsv_Resize(object sender, EventArgs e) {
+            lsv.Columns[0].Width = lsv.ClientRectangle.Width - SystemInformation.VerticalScrollBarWidth;
         }
 
 

@@ -9,13 +9,13 @@ namespace QText {
             this.Font = SystemFonts.MessageBoxFont;
 
             this.HasText = hasText;
+            Medo.Windows.Forms.State.SetupOnLoadAndClose(this);
         }
 
         private readonly Boolean HasText;
 
 
         private void Form_Load(object sender, EventArgs e) {
-            lsvSuggestions_colTitle.Width = lsvSuggestions.ClientRectangle.Width - SystemInformation.VerticalScrollBarWidth;
             txtWhere_TextChanged(null, null);
         }
 
@@ -73,6 +73,10 @@ namespace QText {
 
         private void lsvSuggestions_SelectedIndexChanged(object sender, EventArgs e) {
             btnGoto.Enabled = (lsvSuggestions.SelectedItems.Count > 0);
+        }
+
+        private void lsvSuggestions_Resize(object sender, EventArgs e) {
+            lsvSuggestions_colTitle.Width = lsvSuggestions.ClientRectangle.Width - SystemInformation.VerticalScrollBarWidth;
         }
 
 

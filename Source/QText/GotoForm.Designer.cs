@@ -27,11 +27,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GotoForm));
             this.lsvSuggestions = new System.Windows.Forms.ListView();
             this.lsvSuggestions_colTitle = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.imlSuggestions = new System.Windows.Forms.ImageList(this.components);
             this.lblWhere = new System.Windows.Forms.Label();
             this.btnGoto = new System.Windows.Forms.Button();
             this.txtWhere = new System.Windows.Forms.TextBox();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.imlSuggestions = new System.Windows.Forms.ImageList(this.components);
             this.SuspendLayout();
             // 
             // lsvSuggestions
@@ -47,16 +47,24 @@
             this.lsvSuggestions.Location = new System.Drawing.Point(12, 40);
             this.lsvSuggestions.MultiSelect = false;
             this.lsvSuggestions.Name = "lsvSuggestions";
-            this.lsvSuggestions.Size = new System.Drawing.Size(278, 162);
+            this.lsvSuggestions.Size = new System.Drawing.Size(278, 160);
             this.lsvSuggestions.SmallImageList = this.imlSuggestions;
             this.lsvSuggestions.TabIndex = 2;
             this.lsvSuggestions.UseCompatibleStateImageBehavior = false;
             this.lsvSuggestions.View = System.Windows.Forms.View.Details;
             this.lsvSuggestions.SelectedIndexChanged += new System.EventHandler(this.lsvSuggestions_SelectedIndexChanged);
+            this.lsvSuggestions.Resize += new System.EventHandler(this.lsvSuggestions_Resize);
             // 
             // lsvSuggestions_colTitle
             // 
             this.lsvSuggestions_colTitle.Text = "Title";
+            // 
+            // imlSuggestions
+            // 
+            this.imlSuggestions.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlSuggestions.ImageStream")));
+            this.imlSuggestions.TransparentColor = System.Drawing.Color.Transparent;
+            this.imlSuggestions.Images.SetKeyName(0, "Folder (16x16).png");
+            this.imlSuggestions.Images.SetKeyName(1, "Document (16x16).png");
             // 
             // lblWhere
             // 
@@ -72,7 +80,7 @@
             this.btnGoto.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnGoto.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnGoto.Enabled = false;
-            this.btnGoto.Location = new System.Drawing.Point(134, 220);
+            this.btnGoto.Location = new System.Drawing.Point(134, 218);
             this.btnGoto.Margin = new System.Windows.Forms.Padding(3, 15, 3, 3);
             this.btnGoto.Name = "btnGoto";
             this.btnGoto.Size = new System.Drawing.Size(75, 23);
@@ -97,7 +105,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(215, 220);
+            this.btnCancel.Location = new System.Drawing.Point(215, 218);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 15, 3, 3);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
@@ -105,28 +113,21 @@
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
-            // imlSuggestions
-            // 
-            this.imlSuggestions.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlSuggestions.ImageStream")));
-            this.imlSuggestions.TransparentColor = System.Drawing.Color.Transparent;
-            this.imlSuggestions.Images.SetKeyName(0, "Folder (16x16).png");
-            this.imlSuggestions.Images.SetKeyName(1, "Document (16x16).png");
-            // 
             // GotoForm
             // 
             this.AcceptButton = this.btnGoto;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(302, 255);
+            this.ClientSize = new System.Drawing.Size(302, 253);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.txtWhere);
             this.Controls.Add(this.btnGoto);
             this.Controls.Add(this.lblWhere);
             this.Controls.Add(this.lsvSuggestions);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(320, 240);
             this.Name = "GotoForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

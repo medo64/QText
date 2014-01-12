@@ -14,6 +14,8 @@ namespace QText {
             this.Font = SystemFonts.MessageBoxFont;
 
             this.CurrentFolder = currentFolder;
+
+            Medo.Windows.Forms.State.SetupOnLoadAndClose(this);
         }
 
 
@@ -66,8 +68,6 @@ namespace QText {
 
 
         private void Form_Load(object sender, System.EventArgs e) {
-            lsv.Columns[0].Width = lsv.ClientRectangle.Width - SystemInformation.VerticalScrollBarWidth;
-
             foreach (var folder in DocumentFolder.GetSubFolders()) {
                 lsv.Items.Add(folder);
             }
@@ -111,6 +111,10 @@ namespace QText {
                 this.CurrentFolder = lsv.SelectedItems[0].Text;
                 this.DialogResult = DialogResult.OK;
             }
+        }
+
+        private void lsv_Resize(object sender, EventArgs e) {
+            lsv.Columns[0].Width = lsv.ClientRectangle.Width - SystemInformation.VerticalScrollBarWidth;
         }
 
 

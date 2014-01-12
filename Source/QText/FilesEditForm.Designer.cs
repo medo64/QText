@@ -46,12 +46,13 @@
             this.lsv.Location = new System.Drawing.Point(0, 27);
             this.lsv.MultiSelect = false;
             this.lsv.Name = "lsv";
-            this.lsv.Size = new System.Drawing.Size(314, 315);
+            this.lsv.Size = new System.Drawing.Size(322, 326);
             this.lsv.TabIndex = 0;
             this.lsv.UseCompatibleStateImageBehavior = false;
             this.lsv.View = System.Windows.Forms.View.Details;
             this.lsv.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.lsv_AfterLabelEdit);
             this.lsv.ItemActivate += new System.EventHandler(this.lsv_ItemActivate);
+            this.lsv.Resize += new System.EventHandler(this.lsv_Resize);
             // 
             // mnu
             // 
@@ -64,7 +65,7 @@
             this.mnu.Location = new System.Drawing.Point(0, 0);
             this.mnu.Name = "mnu";
             this.mnu.Padding = new System.Windows.Forms.Padding(1, 0, 1, 0);
-            this.mnu.Size = new System.Drawing.Size(314, 27);
+            this.mnu.Size = new System.Drawing.Size(322, 27);
             this.mnu.TabIndex = 1;
             // 
             // mnuRename
@@ -105,13 +106,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(314, 342);
+            this.ClientSize = new System.Drawing.Size(322, 353);
             this.Controls.Add(this.lsv);
             this.Controls.Add(this.mnu);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(320, 360);
             this.Name = "FilesEditForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
