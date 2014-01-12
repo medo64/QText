@@ -14,6 +14,7 @@ namespace QText {
             this.Font = SystemFonts.MessageBoxFont;
 
             this.CurrentFolder = currentFolder;
+            mnu.Renderer = Helper.ToolstripRenderer;
 
             Medo.Windows.Forms.State.SetupOnLoadAndClose(this);
         }

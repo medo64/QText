@@ -29,7 +29,7 @@ namespace QText {
                 this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             }
             this.ShowInTaskbar = Settings.DisplayShowInTaskbar;
-            mnu.Renderer = new ToolStripBorderlessProfessionalRenderer();
+            mnu.Renderer = Helper.ToolstripRenderer;
 
             tabFiles.Multiline = Settings.MultilineTabs;
 

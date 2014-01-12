@@ -175,7 +175,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="TextSelection.cs" />
-    <Compile Include="ToolStripBorderlessProfessionalRenderer.cs" />
     <Compile Include="Tray.cs" />
   </ItemGroup>
   <ItemGroup>

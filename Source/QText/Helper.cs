@@ -187,6 +187,14 @@ namespace QText {
         }
 
 
+        public static readonly ToolStripProfessionalRenderer ToolstripRenderer = new ToolStripBorderlessProfessionalRenderer();
+        private class ToolStripBorderlessProfessionalRenderer : ToolStripProfessionalRenderer {
+            protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e) {
+                //base.OnRenderToolStripBorder(e);
+            }
+        }
+
+
         internal static class NativeMethods {
 
             public const uint MOVEFILE_COPY_ALLOWED = 0x02;
