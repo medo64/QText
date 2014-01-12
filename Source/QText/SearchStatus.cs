@@ -11,9 +11,15 @@
             }
         }
 
-        public static bool CaseSensitive { get; set; }
+        public static bool CaseSensitive {
+            get { return Settings.SearchCaseSensitive; }
+            set { Settings.SearchCaseSensitive = value; }
+        }
 
-        public static SearchScope Scope { get; set; }
+        public static SearchScope Scope {
+            get { return Settings.SearchScope; }
+            set { Settings.SearchScope = value; }
+        }
 
 
         internal static SearchScope GetScope(bool file, bool folder, bool folders) {

@@ -305,5 +305,23 @@ namespace QText {
             set { Medo.Configuration.Settings.Write("ShowBalloonOnNextMinimize", value); }
         }
 
+
+        public static SearchScope SearchScope {
+            get {
+                switch (Medo.Configuration.Settings.Read("SearchScope", (int)SearchScope.File)) {
+                    case 0: return SearchScope.File;
+                    case 1: return SearchScope.Folder;
+                    case 2: return SearchScope.Folders;
+                    default: return SearchScope.File;
+                }
+            }
+            set { Medo.Configuration.Settings.Write("SearchScope", (int)value); }
+        }
+
+        public static Boolean SearchCaseSensitive {
+            get { return Medo.Configuration.Settings.Read("SearchCaseSensitive", false); }
+            set { Medo.Configuration.Settings.Write("SearchCaseSensitive", value); }
+        }
+
     }
 }

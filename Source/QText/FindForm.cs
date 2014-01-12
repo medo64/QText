@@ -7,10 +7,11 @@ namespace QText {
     internal partial class FindForm : Form {
 
         private TabFiles _tabFiles;
+        private Medo.Configuration.History History = new Medo.Configuration.History();
 
         public FindForm(TabFiles tabFiles) {
             InitializeComponent();
-            this.Font = System.Drawing.SystemFonts.MessageBoxFont;
+            this.Font = SystemFonts.MessageBoxFont;
 
             this._tabFiles = tabFiles;
         }
@@ -20,8 +21,8 @@ namespace QText {
         protected override bool ProcessCmdKey(ref System.Windows.Forms.Message msg, System.Windows.Forms.Keys keyData) {
             switch (keyData) {
                 case Keys.Control | Keys.F:
-                    txtText.SelectAll();
-                    txtText.Select();
+                    cmbText.SelectAll();
+                    cmbText.Select();
 
                     return true;
                 case Keys.F3:
@@ -33,7 +34,7 @@ namespace QText {
             }
         }
 
-        private void FindForm_Load(object sender, EventArgs e) {
+        private void Form_Load(object sender, EventArgs e) {
             if (_tabFiles.SelectedTab != null) {
                 TabFile tf = _tabFiles.SelectedTab;
                 if (tf.TextBox.SelectedText.Length > 0) {
@@ -41,22 +42,25 @@ namespace QText {
                 }
             }
 
-            txtText.Text = SearchStatus.Text;
+            cmbText.Text = SearchStatus.Text;
             chbCaseSensitive.Checked = SearchStatus.CaseSensitive;
             switch (SearchStatus.Scope) {
                 case SearchScope.Folders: radioFolders.Checked = true; break;
                 case SearchScope.Folder: radioFolder.Checked = true; break;
                 default: radioFile.Checked = true; break;
             }
+
+            LoadTextHistory();
+            if (cmbText.Items.Count > 0) { cmbText.Text = cmbText.Items[0].ToString(); }
         }
 
 
-        private void txtText_TextChanged(object sender, EventArgs e) {
-            btnFind.Enabled = (txtText.Text.Length > 0);
+        private void cmbText_TextChanged(object sender, EventArgs e) {
+            btnFind.Enabled = (cmbText.Text.Length > 0);
         }
 
         private void btnFind_Click(object sender, EventArgs e) {
-            SearchStatus.Text = txtText.Text;
+            SearchStatus.Text = cmbText.Text;
             SearchStatus.CaseSensitive = chbCaseSensitive.Checked;
             SearchStatus.Scope = SearchStatus.GetScope(radioFile.Checked, radioFolder.Checked, radioFolders.Checked);
 
@@ -87,6 +91,9 @@ namespace QText {
             } finally {
                 Cursor.Current = Cursors.Default;
             }
+
+            this.History.Prepend(cmbText.Text);
+            LoadTextHistory();
         }
 
         private void btnClose_Click(object sender, EventArgs e) {
@@ -96,6 +103,14 @@ namespace QText {
 
         internal void FindNext() {
             btnFind_Click(null, null);
+        }
+
+
+        private void LoadTextHistory() {
+            cmbText.Items.Clear();
+            foreach (var item in this.History.Items) {
+                cmbText.Items.Add(item);
+            }
         }
 
     }

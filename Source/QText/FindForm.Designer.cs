@@ -27,12 +27,12 @@
             this.btnClose = new System.Windows.Forms.Button();
             this.lblFind = new System.Windows.Forms.Label();
             this.chbCaseSensitive = new System.Windows.Forms.CheckBox();
-            this.txtText = new System.Windows.Forms.TextBox();
             this.GroupBox1 = new System.Windows.Forms.GroupBox();
             this.groupScope = new System.Windows.Forms.GroupBox();
             this.radioFolders = new System.Windows.Forms.RadioButton();
             this.radioFolder = new System.Windows.Forms.RadioButton();
             this.radioFile = new System.Windows.Forms.RadioButton();
+            this.cmbText = new System.Windows.Forms.ComboBox();
             this.GroupBox1.SuspendLayout();
             this.groupScope.SuspendLayout();
             this.SuspendLayout();
@@ -42,7 +42,7 @@
             this.btnFind.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnFind.Enabled = false;
             this.btnFind.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnFind.Location = new System.Drawing.Point(140, 148);
+            this.btnFind.Location = new System.Drawing.Point(140, 150);
             this.btnFind.Margin = new System.Windows.Forms.Padding(3, 15, 3, 3);
             this.btnFind.Name = "btnFind";
             this.btnFind.Size = new System.Drawing.Size(98, 29);
@@ -56,7 +56,7 @@
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnClose.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnClose.Location = new System.Drawing.Point(244, 148);
+            this.btnClose.Location = new System.Drawing.Point(244, 150);
             this.btnClose.Margin = new System.Windows.Forms.Padding(3, 15, 3, 3);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(98, 29);
@@ -86,20 +86,10 @@
             this.chbCaseSensitive.Text = "Case sensitive";
             this.chbCaseSensitive.UseVisualStyleBackColor = true;
             // 
-            // txtText
-            // 
-            this.txtText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtText.Location = new System.Drawing.Point(82, 12);
-            this.txtText.Name = "txtText";
-            this.txtText.Size = new System.Drawing.Size(260, 22);
-            this.txtText.TabIndex = 1;
-            this.txtText.TextChanged += new System.EventHandler(this.txtText_TextChanged);
-            // 
             // GroupBox1
             // 
             this.GroupBox1.Controls.Add(this.chbCaseSensitive);
-            this.GroupBox1.Location = new System.Drawing.Point(12, 40);
+            this.GroupBox1.Location = new System.Drawing.Point(12, 42);
             this.GroupBox1.Name = "GroupBox1";
             this.GroupBox1.Size = new System.Drawing.Size(160, 53);
             this.GroupBox1.TabIndex = 2;
@@ -111,7 +101,7 @@
             this.groupScope.Controls.Add(this.radioFolders);
             this.groupScope.Controls.Add(this.radioFolder);
             this.groupScope.Controls.Add(this.radioFile);
-            this.groupScope.Location = new System.Drawing.Point(182, 40);
+            this.groupScope.Location = new System.Drawing.Point(182, 42);
             this.groupScope.Name = "groupScope";
             this.groupScope.Size = new System.Drawing.Size(160, 90);
             this.groupScope.TabIndex = 3;
@@ -154,18 +144,29 @@
             this.radioFile.Text = "Current file";
             this.radioFile.UseVisualStyleBackColor = true;
             // 
+            // cmbText
+            // 
+            this.cmbText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbText.FormattingEnabled = true;
+            this.cmbText.Location = new System.Drawing.Point(82, 12);
+            this.cmbText.Name = "cmbText";
+            this.cmbText.Size = new System.Drawing.Size(260, 24);
+            this.cmbText.TabIndex = 1;
+            this.cmbText.TextChanged += new System.EventHandler(this.cmbText_TextChanged);
+            // 
             // FindForm
             // 
             this.AcceptButton = this.btnFind;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
-            this.ClientSize = new System.Drawing.Size(354, 189);
+            this.ClientSize = new System.Drawing.Size(354, 191);
+            this.Controls.Add(this.cmbText);
             this.Controls.Add(this.groupScope);
             this.Controls.Add(this.btnFind);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.lblFind);
-            this.Controls.Add(this.txtText);
             this.Controls.Add(this.GroupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -175,7 +176,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Find";
-            this.Load += new System.EventHandler(this.FindForm_Load);
+            this.Load += new System.EventHandler(this.Form_Load);
             this.GroupBox1.ResumeLayout(false);
             this.GroupBox1.PerformLayout();
             this.groupScope.ResumeLayout(false);
@@ -191,11 +192,11 @@
         internal System.Windows.Forms.Button btnClose;
         internal System.Windows.Forms.Label lblFind;
         internal System.Windows.Forms.CheckBox chbCaseSensitive;
-        internal System.Windows.Forms.TextBox txtText;
         internal System.Windows.Forms.GroupBox GroupBox1;
         internal System.Windows.Forms.GroupBox groupScope;
         private System.Windows.Forms.RadioButton radioFolders;
         private System.Windows.Forms.RadioButton radioFolder;
         private System.Windows.Forms.RadioButton radioFile;
+        private System.Windows.Forms.ComboBox cmbText;
     }
 }
