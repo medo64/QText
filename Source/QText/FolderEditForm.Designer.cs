@@ -29,7 +29,7 @@
             this.mnu = new System.Windows.Forms.ToolStrip();
             this.mnuNew = new System.Windows.Forms.ToolStripButton();
             this.mnuRename = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnu0 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuDelete = new System.Windows.Forms.ToolStripButton();
             this.mnu.SuspendLayout();
             this.SuspendLayout();
@@ -61,7 +61,7 @@
             this.mnu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuNew,
             this.mnuRename,
-            this.toolStripSeparator1,
+            this.mnu0,
             this.mnuDelete});
             this.mnu.Location = new System.Drawing.Point(0, 0);
             this.mnu.Name = "mnu";
@@ -72,9 +72,7 @@
             // mnuNew
             // 
             this.mnuNew.Image = ((System.Drawing.Image)(resources.GetObject("mnuNew.Image")));
-            this.mnuNew.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuNew.Name = "mnuNew";
-            this.mnuNew.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.mnuNew.Size = new System.Drawing.Size(59, 24);
             this.mnuNew.Text = "New";
             this.mnuNew.ToolTipText = "New (Ctrl+N)";
@@ -83,22 +81,20 @@
             // mnuRename
             // 
             this.mnuRename.Image = ((System.Drawing.Image)(resources.GetObject("mnuRename.Image")));
-            this.mnuRename.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuRename.Name = "mnuRename";
             this.mnuRename.Size = new System.Drawing.Size(83, 24);
             this.mnuRename.Text = "Rename";
             this.mnuRename.ToolTipText = "Rename (F2)";
             this.mnuRename.Click += new System.EventHandler(this.mnuRename_Click);
             // 
-            // toolStripSeparator1
+            // mnu0
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
+            this.mnu0.Name = "mnu0";
+            this.mnu0.Size = new System.Drawing.Size(6, 27);
             // 
             // mnuDelete
             // 
             this.mnuDelete.Image = ((System.Drawing.Image)(resources.GetObject("mnuDelete.Image")));
-            this.mnuDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuDelete.Name = "mnuDelete";
             this.mnuDelete.Size = new System.Drawing.Size(73, 24);
             this.mnuDelete.Text = "Delete";
@@ -135,7 +131,7 @@
         private System.Windows.Forms.ToolStrip mnu;
         private System.Windows.Forms.ToolStripButton mnuNew;
         private System.Windows.Forms.ToolStripButton mnuRename;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator mnu0;
         private System.Windows.Forms.ToolStripButton mnuDelete;
         private System.Windows.Forms.ColumnHeader columnHeader1;
     }

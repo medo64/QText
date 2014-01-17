@@ -323,5 +323,10 @@ namespace QText {
             set { Medo.Configuration.Settings.Write("SearchCaseSensitive", value); }
         }
 
+        public static double ScaleFactor {
+            get { return Medo.Configuration.Settings.Read("ScaleFactor", 0.0); }
+            set { Medo.Configuration.Settings.Write("ScaleFactor", 0.0); }
+        }
+
     }
 }
