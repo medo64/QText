@@ -35,6 +35,7 @@ ShowLanguageDialog=no
 SolidCompression=yes
 ChangesAssociations=no
 DisableWelcomePage=yes
+LicenseFile=..\Setup\License.txt
 
 [Messages]
 SetupAppTitle=Setup {#AppName} {#AppVersionEx}
