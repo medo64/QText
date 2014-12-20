@@ -221,9 +221,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\App.ico" />
-    <Content Include="ReadMe.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Resources\Content\Strikeout.ico" />
     <Content Include="Resources\Content\Underline.ico" />
   </ItemGroup>

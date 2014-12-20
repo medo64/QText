@@ -1,5 +1,5 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QText", "QText\QText.csproj", "{04547092-4BDC-4B6D-B39A-6473271FAF79}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QText-Test", "QText-Test\QText-Test.csproj", "{55251BF6-2E25-4864-A1F7-4B1C0D73653E}"
