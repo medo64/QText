@@ -14,17 +14,7 @@ namespace QText {
 
             this.TabFiles = tabFiles;
             mnu.Renderer = Helper.ToolstripRenderer;
-
-            using (var g = this.CreateGraphics()) {
-                var scale = (Settings.ScaleFactor > 1) ? Settings.ScaleFactor : Math.Max(g.DpiX, g.DpiY) / 96.0;
-                var newScale = ((int)Math.Floor(scale * 100) / 50 * 50) / 100.0;
-                if (newScale > 1) {
-                    var newWidth = (int)(mnu.ImageScalingSize.Width * newScale);
-                    var newHeight = (int)(mnu.ImageScalingSize.Height * newScale);
-                    mnu.ImageScalingSize = new Size(newWidth, newHeight);
-                    mnu.AutoSize = false; //because sometime it is needed
-                }
-            }
+            Helper.ScaleToolstrip(mnu);
 
             Medo.Windows.Forms.State.SetupOnLoadAndClose(this);
         }

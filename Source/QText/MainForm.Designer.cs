@@ -1,4 +1,4 @@
-﻿namespace QText {
+namespace QText {
     partial class MainForm {
         /// <summary>
         /// Required designer variable.
@@ -56,12 +56,13 @@
             this.mnuFindGoto = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuAlwaysOnTop = new System.Windows.Forms.ToolStripButton();
             this.mnuApp = new System.Windows.Forms.ToolStripDropDownButton();
+            this.mnuAppOptions = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuApp0 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuAppFeedback = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuAppUpgrade = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuAppDonate = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuApp1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuAppAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuOptions = new System.Windows.Forms.ToolStripButton();
             this.ToolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFolder = new System.Windows.Forms.ToolStripDropDownButton();
             this.tmrUpdateToolbar = new System.Windows.Forms.Timer(this.components);
@@ -99,7 +100,6 @@
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTextLinesTrim = new System.Windows.Forms.ToolStripMenuItem();
             this.tmrCheckFileUpdate = new System.Windows.Forms.Timer(this.components);
-            this.tabFiles = new QText.TabFiles();
             this.mnxTab = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnxTabNew = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTab0 = new System.Windows.Forms.ToolStripSeparator();
@@ -122,6 +122,7 @@
             this.mnxTabPrint = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem14 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTabOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabFiles = new QText.TabFiles();
             this.mnu.SuspendLayout();
             this.mnxText.SuspendLayout();
             this.mnxTab.SuspendLayout();
@@ -130,6 +131,7 @@
             // mnu
             // 
             this.mnu.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.mnu.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.mnu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuNew,
             this.mnuSaveNow,
@@ -153,22 +155,20 @@
             this.mnuFind,
             this.mnuAlwaysOnTop,
             this.mnuApp,
-            this.mnuOptions,
             this.ToolStripSeparator2,
             this.mnuFolder});
             this.mnu.Location = new System.Drawing.Point(0, 0);
             this.mnu.Name = "mnu";
             this.mnu.Padding = new System.Windows.Forms.Padding(1, 0, 1, 0);
-            this.mnu.Size = new System.Drawing.Size(582, 27);
+            this.mnu.Size = new System.Drawing.Size(612, 27);
             this.mnu.TabIndex = 1;
             // 
             // mnuNew
             // 
             this.mnuNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mnuNew.Image = ((System.Drawing.Image)(resources.GetObject("mnuNew.Image")));
-            this.mnuNew.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuNew.Image = global::QText.Properties.Resources.mnuNew_16;
             this.mnuNew.Name = "mnuNew";
-            this.mnuNew.Size = new System.Drawing.Size(23, 24);
+            this.mnuNew.Size = new System.Drawing.Size(24, 24);
             this.mnuNew.Text = "New (Ctrl+N)";
             this.mnuNew.ToolTipText = "New tab (Ctrl+N)";
             this.mnuNew.Click += new System.EventHandler(this.mnuNew_Click);
@@ -176,10 +176,10 @@
             // mnuSaveNow
             // 
             this.mnuSaveNow.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mnuSaveNow.Image = ((System.Drawing.Image)(resources.GetObject("mnuSaveNow.Image")));
-            this.mnuSaveNow.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuSaveNow.Image = global::QText.Properties.Resources.mnuSave_16;
             this.mnuSaveNow.Name = "mnuSaveNow";
-            this.mnuSaveNow.Size = new System.Drawing.Size(23, 24);
+            this.mnuSaveNow.Size = new System.Drawing.Size(24, 24);
+            this.mnuSaveNow.Tag = "mnuSave";
             this.mnuSaveNow.Text = "Save now (Ctrl+S)";
             this.mnuSaveNow.ToolTipText = "Save now (Ctrl+S)";
             this.mnuSaveNow.Click += new System.EventHandler(this.mnuSaveNow_Click);
@@ -187,10 +187,9 @@
             // mnuRename
             // 
             this.mnuRename.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mnuRename.Image = ((System.Drawing.Image)(resources.GetObject("mnuRename.Image")));
-            this.mnuRename.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuRename.Image = global::QText.Properties.Resources.mnuRename_16;
             this.mnuRename.Name = "mnuRename";
-            this.mnuRename.Size = new System.Drawing.Size(23, 24);
+            this.mnuRename.Size = new System.Drawing.Size(24, 24);
             this.mnuRename.Text = "Rename (F2)";
             this.mnuRename.ToolTipText = "Rename tab (F2)";
             this.mnuRename.Click += new System.EventHandler(this.mnuRename_Click);
@@ -208,41 +207,41 @@
             this.mnuPrintPreview,
             this.toolStripMenuItem6,
             this.mnuPrintSetup});
-            this.mnuPrintDefault.Image = ((System.Drawing.Image)(resources.GetObject("mnuPrintDefault.Image")));
-            this.mnuPrintDefault.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuPrintDefault.Image = global::QText.Properties.Resources.mnuPrint_16;
             this.mnuPrintDefault.Name = "mnuPrintDefault";
-            this.mnuPrintDefault.Size = new System.Drawing.Size(32, 24);
+            this.mnuPrintDefault.Size = new System.Drawing.Size(39, 24);
+            this.mnuPrintDefault.Tag = "mnuPrint";
             this.mnuPrintDefault.Text = "Print (Ctrl+P)";
             this.mnuPrintDefault.ToolTipText = "Print (Ctrl+P)";
             this.mnuPrintDefault.ButtonClick += new System.EventHandler(this.mnuPrint_Click);
             // 
             // mnuPrint
             // 
-            this.mnuPrint.Image = ((System.Drawing.Image)(resources.GetObject("mnuPrint.Image")));
+            this.mnuPrint.Image = global::QText.Properties.Resources.mnuPrint_16;
             this.mnuPrint.Name = "mnuPrint";
             this.mnuPrint.ShortcutKeyDisplayString = "Ctrl+P";
-            this.mnuPrint.Size = new System.Drawing.Size(163, 24);
+            this.mnuPrint.Size = new System.Drawing.Size(167, 26);
             this.mnuPrint.Text = "Print";
             this.mnuPrint.Click += new System.EventHandler(this.mnuPrint_Click);
             // 
             // mnuPrintPreview
             // 
-            this.mnuPrintPreview.Image = ((System.Drawing.Image)(resources.GetObject("mnuPrintPreview.Image")));
+            this.mnuPrintPreview.Image = global::QText.Properties.Resources.mnuPrintPreview_16;
             this.mnuPrintPreview.Name = "mnuPrintPreview";
-            this.mnuPrintPreview.Size = new System.Drawing.Size(163, 24);
+            this.mnuPrintPreview.Size = new System.Drawing.Size(167, 26);
             this.mnuPrintPreview.Text = "Print Preview";
             this.mnuPrintPreview.Click += new System.EventHandler(this.mnuPrintPreview_Click);
             // 
             // toolStripMenuItem6
             // 
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(160, 6);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(164, 6);
             // 
             // mnuPrintSetup
             // 
-            this.mnuPrintSetup.Image = ((System.Drawing.Image)(resources.GetObject("mnuPrintSetup.Image")));
+            this.mnuPrintSetup.Image = global::QText.Properties.Resources.mnuPrintSetup_16;
             this.mnuPrintSetup.Name = "mnuPrintSetup";
-            this.mnuPrintSetup.Size = new System.Drawing.Size(163, 24);
+            this.mnuPrintSetup.Size = new System.Drawing.Size(167, 26);
             this.mnuPrintSetup.Text = "Page setup";
             this.mnuPrintSetup.Click += new System.EventHandler(this.mnuPrintSetup_Click);
             // 
@@ -254,10 +253,9 @@
             // mnuCut
             // 
             this.mnuCut.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mnuCut.Image = ((System.Drawing.Image)(resources.GetObject("mnuCut.Image")));
-            this.mnuCut.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuCut.Image = global::QText.Properties.Resources.mnuCut_16;
             this.mnuCut.Name = "mnuCut";
-            this.mnuCut.Size = new System.Drawing.Size(23, 24);
+            this.mnuCut.Size = new System.Drawing.Size(24, 24);
             this.mnuCut.Text = "Cut";
             this.mnuCut.ToolTipText = "Cut (Ctrl+X)";
             this.mnuCut.Click += new System.EventHandler(this.mnuCut_Click);
@@ -265,10 +263,9 @@
             // mnuCopy
             // 
             this.mnuCopy.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mnuCopy.Image = ((System.Drawing.Image)(resources.GetObject("mnuCopy.Image")));
-            this.mnuCopy.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuCopy.Image = global::QText.Properties.Resources.mnuCopy_16;
             this.mnuCopy.Name = "mnuCopy";
-            this.mnuCopy.Size = new System.Drawing.Size(23, 24);
+            this.mnuCopy.Size = new System.Drawing.Size(24, 24);
             this.mnuCopy.Text = "Copy";
             this.mnuCopy.ToolTipText = "Copy (Ctrl+C)";
             this.mnuCopy.Click += new System.EventHandler(this.mnuCopy_Click);
@@ -276,10 +273,9 @@
             // mnuPaste
             // 
             this.mnuPaste.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mnuPaste.Image = ((System.Drawing.Image)(resources.GetObject("mnuPaste.Image")));
-            this.mnuPaste.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuPaste.Image = global::QText.Properties.Resources.mnuPaste_16;
             this.mnuPaste.Name = "mnuPaste";
-            this.mnuPaste.Size = new System.Drawing.Size(23, 24);
+            this.mnuPaste.Size = new System.Drawing.Size(24, 24);
             this.mnuPaste.Text = "Paste";
             this.mnuPaste.ToolTipText = "Paste (Ctrl+V)";
             this.mnuPaste.Click += new System.EventHandler(this.mnuPaste_Click);
@@ -292,20 +288,18 @@
             // mnuFont
             // 
             this.mnuFont.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mnuFont.Image = ((System.Drawing.Image)(resources.GetObject("mnuFont.Image")));
-            this.mnuFont.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuFont.Image = global::QText.Properties.Resources.mnuFont_16;
             this.mnuFont.Name = "mnuFont";
-            this.mnuFont.Size = new System.Drawing.Size(23, 24);
+            this.mnuFont.Size = new System.Drawing.Size(24, 24);
             this.mnuFont.Text = "Font";
             this.mnuFont.Click += new System.EventHandler(this.mnuFont_Click);
             // 
             // mnuBold
             // 
             this.mnuBold.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mnuBold.Image = ((System.Drawing.Image)(resources.GetObject("mnuBold.Image")));
-            this.mnuBold.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuBold.Image = global::QText.Properties.Resources.mnuBold_16;
             this.mnuBold.Name = "mnuBold";
-            this.mnuBold.Size = new System.Drawing.Size(23, 24);
+            this.mnuBold.Size = new System.Drawing.Size(24, 24);
             this.mnuBold.Text = "Bold (Ctrl+B)";
             this.mnuBold.ToolTipText = "Bold (Ctrl+B)";
             this.mnuBold.Click += new System.EventHandler(this.mnuBold_Click);
@@ -313,10 +307,9 @@
             // mnuItalic
             // 
             this.mnuItalic.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mnuItalic.Image = ((System.Drawing.Image)(resources.GetObject("mnuItalic.Image")));
-            this.mnuItalic.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuItalic.Image = global::QText.Properties.Resources.mnuItalic_16;
             this.mnuItalic.Name = "mnuItalic";
-            this.mnuItalic.Size = new System.Drawing.Size(23, 24);
+            this.mnuItalic.Size = new System.Drawing.Size(24, 24);
             this.mnuItalic.Text = "Italic (Ctrl+I)";
             this.mnuItalic.ToolTipText = "Italic (Ctrl+I)";
             this.mnuItalic.Click += new System.EventHandler(this.mnuItalic_Click);
@@ -324,10 +317,9 @@
             // mnuUnderline
             // 
             this.mnuUnderline.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mnuUnderline.Image = ((System.Drawing.Image)(resources.GetObject("mnuUnderline.Image")));
-            this.mnuUnderline.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuUnderline.Image = global::QText.Properties.Resources.mnuUnderline_16;
             this.mnuUnderline.Name = "mnuUnderline";
-            this.mnuUnderline.Size = new System.Drawing.Size(23, 24);
+            this.mnuUnderline.Size = new System.Drawing.Size(24, 24);
             this.mnuUnderline.Text = "Underline (Ctrl+U)";
             this.mnuUnderline.ToolTipText = "Underline (Ctrl+U)";
             this.mnuUnderline.Click += new System.EventHandler(this.mnuUnderline_Click);
@@ -335,10 +327,9 @@
             // mnuStrikeout
             // 
             this.mnuStrikeout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mnuStrikeout.Image = ((System.Drawing.Image)(resources.GetObject("mnuStrikeout.Image")));
-            this.mnuStrikeout.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuStrikeout.Image = global::QText.Properties.Resources.mnuStrikeout_16;
             this.mnuStrikeout.Name = "mnuStrikeout";
-            this.mnuStrikeout.Size = new System.Drawing.Size(23, 24);
+            this.mnuStrikeout.Size = new System.Drawing.Size(24, 24);
             this.mnuStrikeout.Text = "Strikeout";
             this.mnuStrikeout.Click += new System.EventHandler(this.mnuStrikeout_Click);
             // 
@@ -350,10 +341,9 @@
             // mnuUndo
             // 
             this.mnuUndo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mnuUndo.Image = ((System.Drawing.Image)(resources.GetObject("mnuUndo.Image")));
-            this.mnuUndo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuUndo.Image = global::QText.Properties.Resources.mnuUndo_16;
             this.mnuUndo.Name = "mnuUndo";
-            this.mnuUndo.Size = new System.Drawing.Size(23, 24);
+            this.mnuUndo.Size = new System.Drawing.Size(24, 24);
             this.mnuUndo.Text = "Undo (Ctrl+Z)";
             this.mnuUndo.ToolTipText = "Undo (Ctrl+Z)";
             this.mnuUndo.Click += new System.EventHandler(this.mnuUndo_Click);
@@ -361,10 +351,9 @@
             // mnuRedo
             // 
             this.mnuRedo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mnuRedo.Image = ((System.Drawing.Image)(resources.GetObject("mnuRedo.Image")));
-            this.mnuRedo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuRedo.Image = global::QText.Properties.Resources.mnuRedo_16;
             this.mnuRedo.Name = "mnuRedo";
-            this.mnuRedo.Size = new System.Drawing.Size(23, 24);
+            this.mnuRedo.Size = new System.Drawing.Size(24, 24);
             this.mnuRedo.Text = "Redo (Ctrl+Y)";
             this.mnuRedo.ToolTipText = "Redo (Ctrl+Y)";
             this.mnuRedo.Click += new System.EventHandler(this.mnuRedo_Click);
@@ -382,10 +371,9 @@
             this.mnuFindFindNext,
             this.toolStripMenuItem5,
             this.mnuFindGoto});
-            this.mnuFind.Image = ((System.Drawing.Image)(resources.GetObject("mnuFind.Image")));
-            this.mnuFind.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuFind.Image = global::QText.Properties.Resources.mnuFind_16;
             this.mnuFind.Name = "mnuFind";
-            this.mnuFind.Size = new System.Drawing.Size(32, 24);
+            this.mnuFind.Size = new System.Drawing.Size(39, 24);
             this.mnuFind.Text = "Find (Ctrl+F)";
             this.mnuFind.ToolTipText = "Find (Ctrl+F)";
             this.mnuFind.ButtonClick += new System.EventHandler(this.mnuFind_ButtonClick);
@@ -393,42 +381,43 @@
             // 
             // mnuFindFind
             // 
-            this.mnuFindFind.Image = ((System.Drawing.Image)(resources.GetObject("mnuFindFind.Image")));
+            this.mnuFindFind.Image = global::QText.Properties.Resources.mnuFind_16;
             this.mnuFindFind.Name = "mnuFindFind";
             this.mnuFindFind.ShortcutKeyDisplayString = "Ctrl+F";
-            this.mnuFindFind.Size = new System.Drawing.Size(163, 24);
+            this.mnuFindFind.Size = new System.Drawing.Size(167, 26);
+            this.mnuFindFind.Tag = "mnuFind";
             this.mnuFindFind.Text = "Find";
             this.mnuFindFind.Click += new System.EventHandler(this.mnuFindFind_Click);
             // 
             // mnuFindFindNext
             // 
-            this.mnuFindFindNext.Image = ((System.Drawing.Image)(resources.GetObject("mnuFindFindNext.Image")));
+            this.mnuFindFindNext.Image = global::QText.Properties.Resources.mnuFindNext_16;
             this.mnuFindFindNext.Name = "mnuFindFindNext";
             this.mnuFindFindNext.ShortcutKeyDisplayString = "F3";
-            this.mnuFindFindNext.Size = new System.Drawing.Size(163, 24);
+            this.mnuFindFindNext.Size = new System.Drawing.Size(167, 26);
+            this.mnuFindFindNext.Tag = "mnuFindNext";
             this.mnuFindFindNext.Text = "Find next";
             this.mnuFindFindNext.Click += new System.EventHandler(this.mnuFindFindNext_Click);
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(160, 6);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(164, 6);
             // 
             // mnuFindGoto
             // 
             this.mnuFindGoto.Name = "mnuFindGoto";
             this.mnuFindGoto.ShortcutKeyDisplayString = "Ctrl+G";
-            this.mnuFindGoto.Size = new System.Drawing.Size(163, 24);
+            this.mnuFindGoto.Size = new System.Drawing.Size(167, 26);
             this.mnuFindGoto.Text = "Goto";
             this.mnuFindGoto.Click += new System.EventHandler(this.mnuFindGoto_Click);
             // 
             // mnuAlwaysOnTop
             // 
             this.mnuAlwaysOnTop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mnuAlwaysOnTop.Image = ((System.Drawing.Image)(resources.GetObject("mnuAlwaysOnTop.Image")));
-            this.mnuAlwaysOnTop.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuAlwaysOnTop.Image = global::QText.Properties.Resources.mnuAlwaysOnTop_16;
             this.mnuAlwaysOnTop.Name = "mnuAlwaysOnTop";
-            this.mnuAlwaysOnTop.Size = new System.Drawing.Size(23, 24);
+            this.mnuAlwaysOnTop.Size = new System.Drawing.Size(24, 24);
             this.mnuAlwaysOnTop.Text = "Always on top (Ctrl+T)";
             this.mnuAlwaysOnTop.ToolTipText = "Always on top (Ctrl+T)";
             this.mnuAlwaysOnTop.Click += new System.EventHandler(this.mnuAlwaysOnTop_Click);
@@ -438,15 +427,28 @@
             this.mnuApp.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.mnuApp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.mnuApp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuAppOptions,
+            this.mnuApp0,
             this.mnuAppFeedback,
             this.mnuAppUpgrade,
             this.mnuAppDonate,
-            this.toolStripMenuItem2,
+            this.mnuApp1,
             this.mnuAppAbout});
-            this.mnuApp.Image = ((System.Drawing.Image)(resources.GetObject("mnuApp.Image")));
-            this.mnuApp.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuApp.Image = global::QText.Properties.Resources.mnuApp_16;
             this.mnuApp.Name = "mnuApp";
-            this.mnuApp.Size = new System.Drawing.Size(29, 24);
+            this.mnuApp.Size = new System.Drawing.Size(34, 24);
+            // 
+            // mnuAppOptions
+            // 
+            this.mnuAppOptions.Name = "mnuAppOptions";
+            this.mnuAppOptions.Size = new System.Drawing.Size(200, 24);
+            this.mnuAppOptions.Text = "&Options";
+            this.mnuAppOptions.Click += new System.EventHandler(this.mnuAppOptions_Click);
+            // 
+            // mnuApp0
+            // 
+            this.mnuApp0.Name = "mnuApp0";
+            this.mnuApp0.Size = new System.Drawing.Size(197, 6);
             // 
             // mnuAppFeedback
             // 
@@ -469,10 +471,10 @@
             this.mnuAppDonate.Text = "&Donate";
             this.mnuAppDonate.Click += new System.EventHandler(this.mnuAppDonate_Click);
             // 
-            // toolStripMenuItem2
+            // mnuApp1
             // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(197, 6);
+            this.mnuApp1.Name = "mnuApp1";
+            this.mnuApp1.Size = new System.Drawing.Size(197, 6);
             // 
             // mnuAppAbout
             // 
@@ -480,18 +482,6 @@
             this.mnuAppAbout.Size = new System.Drawing.Size(200, 24);
             this.mnuAppAbout.Text = "&About";
             this.mnuAppAbout.Click += new System.EventHandler(this.mnuAppAbout_Click);
-            // 
-            // mnuOptions
-            // 
-            this.mnuOptions.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.mnuOptions.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mnuOptions.Image = ((System.Drawing.Image)(resources.GetObject("mnuOptions.Image")));
-            this.mnuOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mnuOptions.Name = "mnuOptions";
-            this.mnuOptions.Size = new System.Drawing.Size(23, 24);
-            this.mnuOptions.Text = "Options (Ctrl+O)";
-            this.mnuOptions.ToolTipText = "Options";
-            this.mnuOptions.Click += new System.EventHandler(this.mnuOptions_Click);
             // 
             // ToolStripSeparator2
             // 
@@ -502,11 +492,10 @@
             // mnuFolder
             // 
             this.mnuFolder.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.mnuFolder.Image = ((System.Drawing.Image)(resources.GetObject("mnuFolder.Image")));
-            this.mnuFolder.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuFolder.Image = global::QText.Properties.Resources.mnuFolder_16;
             this.mnuFolder.Name = "mnuFolder";
             this.mnuFolder.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.mnuFolder.Size = new System.Drawing.Size(87, 24);
+            this.mnuFolder.Size = new System.Drawing.Size(92, 24);
             this.mnuFolder.Text = "Default";
             this.mnuFolder.ToolTipText = "Select folder";
             this.mnuFolder.DropDownOpening += new System.EventHandler(this.mnuFolder_DropDownOpening);
@@ -521,6 +510,7 @@
             // 
             // mnxText
             // 
+            this.mnxText.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.mnxText.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnxTextUndo,
             this.mnxTextRedo,
@@ -544,164 +534,177 @@
             this.mnxTextSelection,
             this.mnxTextLines});
             this.mnxText.Name = "mnxTextBox";
-            this.mnxText.Size = new System.Drawing.Size(289, 418);
+            this.mnxText.Size = new System.Drawing.Size(292, 450);
             this.mnxText.Opening += new System.ComponentModel.CancelEventHandler(this.mnxText_Opening);
             // 
             // mnxTextUndo
             // 
-            this.mnxTextUndo.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextUndo.Image")));
+            this.mnxTextUndo.Image = global::QText.Properties.Resources.mnuUndo_16;
             this.mnxTextUndo.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextUndo.Name = "mnxTextUndo";
             this.mnxTextUndo.ShortcutKeyDisplayString = "Ctrl+Z";
-            this.mnxTextUndo.Size = new System.Drawing.Size(288, 24);
+            this.mnxTextUndo.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextUndo.Tag = "mnuUndo";
             this.mnxTextUndo.Text = "&Undo";
             this.mnxTextUndo.Click += new System.EventHandler(this.mnuUndo_Click);
             // 
             // mnxTextRedo
             // 
-            this.mnxTextRedo.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextRedo.Image")));
+            this.mnxTextRedo.Image = global::QText.Properties.Resources.mnuRedo_16;
             this.mnxTextRedo.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextRedo.Name = "mnxTextRedo";
             this.mnxTextRedo.ShortcutKeyDisplayString = "Ctrl+Y";
-            this.mnxTextRedo.Size = new System.Drawing.Size(288, 24);
+            this.mnxTextRedo.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextRedo.Tag = "mnuRedo";
             this.mnxTextRedo.Text = "&Redo";
             this.mnxTextRedo.Click += new System.EventHandler(this.mnuRedo_Click);
             // 
             // mnxTextBox0
             // 
             this.mnxTextBox0.Name = "mnxTextBox0";
-            this.mnxTextBox0.Size = new System.Drawing.Size(285, 6);
+            this.mnxTextBox0.Size = new System.Drawing.Size(288, 6);
             // 
             // mnxTextCut
             // 
-            this.mnxTextCut.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextCut.Image")));
+            this.mnxTextCut.Image = global::QText.Properties.Resources.mnuCut_16;
             this.mnxTextCut.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextCut.Name = "mnxTextCut";
             this.mnxTextCut.ShortcutKeyDisplayString = "Ctrl+X";
-            this.mnxTextCut.Size = new System.Drawing.Size(288, 24);
+            this.mnxTextCut.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextCut.Tag = "mnuCut";
             this.mnxTextCut.Text = "Cu&t";
             this.mnxTextCut.Click += new System.EventHandler(this.mnuCut_Click);
             // 
             // mnxTextCopy
             // 
-            this.mnxTextCopy.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextCopy.Image")));
+            this.mnxTextCopy.Image = global::QText.Properties.Resources.mnuCopy_16;
             this.mnxTextCopy.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextCopy.Name = "mnxTextCopy";
             this.mnxTextCopy.ShortcutKeyDisplayString = "Ctrl+C";
-            this.mnxTextCopy.Size = new System.Drawing.Size(288, 24);
+            this.mnxTextCopy.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextCopy.Tag = "mnuCopy";
             this.mnxTextCopy.Text = "&Copy";
             this.mnxTextCopy.Click += new System.EventHandler(this.mnuCopy_Click);
             // 
             // mnxTextPaste
             // 
-            this.mnxTextPaste.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextPaste.Image")));
+            this.mnxTextPaste.Image = global::QText.Properties.Resources.mnuPaste_16;
             this.mnxTextPaste.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextPaste.Name = "mnxTextPaste";
             this.mnxTextPaste.ShortcutKeyDisplayString = "Ctrl+V";
-            this.mnxTextPaste.Size = new System.Drawing.Size(288, 24);
+            this.mnxTextPaste.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextPaste.Tag = "mnuPaste";
             this.mnxTextPaste.Text = "&Paste";
             this.mnxTextPaste.Click += new System.EventHandler(this.mnuPaste_Click);
             // 
             // mnxTextBoxCutCopyPasteAsTextSeparator
             // 
             this.mnxTextBoxCutCopyPasteAsTextSeparator.Name = "mnxTextBoxCutCopyPasteAsTextSeparator";
-            this.mnxTextBoxCutCopyPasteAsTextSeparator.Size = new System.Drawing.Size(285, 6);
+            this.mnxTextBoxCutCopyPasteAsTextSeparator.Size = new System.Drawing.Size(288, 6);
             // 
             // mnxTextCutPlain
             // 
-            this.mnxTextCutPlain.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextCutPlain.Image")));
+            this.mnxTextCutPlain.Image = global::QText.Properties.Resources.mnuCut_16;
             this.mnxTextCutPlain.Name = "mnxTextCutPlain";
             this.mnxTextCutPlain.ShortcutKeyDisplayString = "Ctrl+Shift+X";
-            this.mnxTextCutPlain.Size = new System.Drawing.Size(288, 24);
+            this.mnxTextCutPlain.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextCutPlain.Tag = "mnuCut";
             this.mnxTextCutPlain.Text = "Cut as plain text";
             this.mnxTextCutPlain.Click += new System.EventHandler(this.mnxTextCutPlain_Click);
             // 
             // mnxTextCopyPlain
             // 
-            this.mnxTextCopyPlain.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextCopyPlain.Image")));
+            this.mnxTextCopyPlain.Image = global::QText.Properties.Resources.mnuCopy_16;
             this.mnxTextCopyPlain.Name = "mnxTextCopyPlain";
             this.mnxTextCopyPlain.ShortcutKeyDisplayString = "Ctrl+Shift+C";
-            this.mnxTextCopyPlain.Size = new System.Drawing.Size(288, 24);
+            this.mnxTextCopyPlain.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextCopyPlain.Tag = "mnuCopy";
             this.mnxTextCopyPlain.Text = "Copy as plain text";
             this.mnxTextCopyPlain.Click += new System.EventHandler(this.mnxTextCopyPlain_Click);
             // 
             // mnxTextPastePlain
             // 
-            this.mnxTextPastePlain.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextPastePlain.Image")));
+            this.mnxTextPastePlain.Image = global::QText.Properties.Resources.mnuPaste_16;
             this.mnxTextPastePlain.Name = "mnxTextPastePlain";
             this.mnxTextPastePlain.ShortcutKeyDisplayString = "Ctrl+Shift+V";
-            this.mnxTextPastePlain.Size = new System.Drawing.Size(288, 24);
+            this.mnxTextPastePlain.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextPastePlain.Tag = "mnuPaste";
             this.mnxTextPastePlain.Text = "Paste as plain text";
             this.mnxTextPastePlain.Click += new System.EventHandler(this.mnxTextPastePlain_Click);
             // 
             // ToolStripMenuItem16
             // 
             this.ToolStripMenuItem16.Name = "ToolStripMenuItem16";
-            this.ToolStripMenuItem16.Size = new System.Drawing.Size(285, 6);
+            this.ToolStripMenuItem16.Size = new System.Drawing.Size(288, 6);
             // 
             // mnxTextSelectAll
             // 
             this.mnxTextSelectAll.Name = "mnxTextSelectAll";
             this.mnxTextSelectAll.ShortcutKeyDisplayString = "Ctrl+A";
-            this.mnxTextSelectAll.Size = new System.Drawing.Size(288, 24);
+            this.mnxTextSelectAll.Size = new System.Drawing.Size(291, 26);
             this.mnxTextSelectAll.Text = "Select &all";
             this.mnxTextSelectAll.Click += new System.EventHandler(this.mnxTextSelectAll_Click);
             // 
             // ToolStripMenuItem4
             // 
             this.ToolStripMenuItem4.Name = "ToolStripMenuItem4";
-            this.ToolStripMenuItem4.Size = new System.Drawing.Size(285, 6);
+            this.ToolStripMenuItem4.Size = new System.Drawing.Size(288, 6);
             // 
             // mnxTextFont
             // 
-            this.mnxTextFont.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextFont.Image")));
+            this.mnxTextFont.Image = global::QText.Properties.Resources.mnuFont_16;
             this.mnxTextFont.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextFont.Name = "mnxTextFont";
-            this.mnxTextFont.Size = new System.Drawing.Size(288, 24);
-            this.mnxTextFont.Text = "&Font...";
+            this.mnxTextFont.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextFont.Tag = "mnuFont";
+            this.mnxTextFont.Text = "&Font";
             this.mnxTextFont.Click += new System.EventHandler(this.mnuFont_Click);
             // 
             // mnxTextBold
             // 
-            this.mnxTextBold.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextBold.Image")));
+            this.mnxTextBold.Image = global::QText.Properties.Resources.mnuBold_16;
             this.mnxTextBold.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextBold.Name = "mnxTextBold";
             this.mnxTextBold.ShortcutKeyDisplayString = "Ctrl+B";
-            this.mnxTextBold.Size = new System.Drawing.Size(288, 24);
+            this.mnxTextBold.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextBold.Tag = "mnuBold";
             this.mnxTextBold.Text = "&Bold";
             this.mnxTextBold.Click += new System.EventHandler(this.mnuBold_Click);
             // 
             // mnxTextItalic
             // 
-            this.mnxTextItalic.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextItalic.Image")));
+            this.mnxTextItalic.Image = global::QText.Properties.Resources.mnuItalic_16;
             this.mnxTextItalic.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextItalic.Name = "mnxTextItalic";
             this.mnxTextItalic.ShortcutKeyDisplayString = "Ctrl+I";
-            this.mnxTextItalic.Size = new System.Drawing.Size(288, 24);
+            this.mnxTextItalic.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextItalic.Tag = "mnuItalic";
             this.mnxTextItalic.Text = "&Italic";
             this.mnxTextItalic.Click += new System.EventHandler(this.mnuItalic_Click);
             // 
             // mnxTextUnderline
             // 
-            this.mnxTextUnderline.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextUnderline.Image")));
+            this.mnxTextUnderline.Image = global::QText.Properties.Resources.mnuUnderline_16;
             this.mnxTextUnderline.Name = "mnxTextUnderline";
             this.mnxTextUnderline.ShortcutKeyDisplayString = "Ctrl+U";
-            this.mnxTextUnderline.Size = new System.Drawing.Size(288, 24);
+            this.mnxTextUnderline.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextUnderline.Tag = "mnuUnderline";
             this.mnxTextUnderline.Text = "&Underline";
             this.mnxTextUnderline.Click += new System.EventHandler(this.mnuUnderline_Click);
             // 
             // mnxTextStrikeout
             // 
-            this.mnxTextStrikeout.Image = ((System.Drawing.Image)(resources.GetObject("mnxTextStrikeout.Image")));
+            this.mnxTextStrikeout.Image = global::QText.Properties.Resources.mnuStrikeout_16;
             this.mnxTextStrikeout.Name = "mnxTextStrikeout";
-            this.mnxTextStrikeout.Size = new System.Drawing.Size(288, 24);
+            this.mnxTextStrikeout.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextStrikeout.Tag = "mnuStrikeout";
             this.mnxTextStrikeout.Text = "S&trikeout";
             this.mnxTextStrikeout.Click += new System.EventHandler(this.mnuStrikeout_Click);
             // 
             // mnxTextRtfSeparator
             // 
             this.mnxTextRtfSeparator.Name = "mnxTextRtfSeparator";
-            this.mnxTextRtfSeparator.Size = new System.Drawing.Size(285, 6);
+            this.mnxTextRtfSeparator.Size = new System.Drawing.Size(288, 6);
             // 
             // mnxTextSelection
             // 
@@ -713,7 +716,7 @@
             this.toolStripMenuItem1,
             this.mnxTextSelectionSpelling});
             this.mnxTextSelection.Name = "mnxTextSelection";
-            this.mnxTextSelection.Size = new System.Drawing.Size(288, 24);
+            this.mnxTextSelection.Size = new System.Drawing.Size(291, 26);
             this.mnxTextSelection.Text = "&Selection";
             // 
             // mnxTextSelectionUpper
@@ -765,7 +768,7 @@
             this.toolStripMenuItem3,
             this.mnxTextLinesTrim});
             this.mnxTextLines.Name = "mnxTextLines";
-            this.mnxTextLines.Size = new System.Drawing.Size(288, 24);
+            this.mnxTextLines.Size = new System.Drawing.Size(291, 26);
             this.mnxTextLines.Text = "&Lines";
             // 
             // mnxTextLinesSortAsc
@@ -798,23 +801,9 @@
             // 
             this.tmrCheckFileUpdate.Tick += new System.EventHandler(this.tmrCheckFileUpdate_Tick);
             // 
-            // tabFiles
-            // 
-            this.tabFiles.ContextMenuStrip = this.mnxTab;
-            this.tabFiles.Cursor = System.Windows.Forms.Cursors.Default;
-            this.tabFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabFiles.Location = new System.Drawing.Point(0, 27);
-            this.tabFiles.Margin = new System.Windows.Forms.Padding(0);
-            this.tabFiles.Name = "tabFiles";
-            this.tabFiles.SelectedIndex = 0;
-            this.tabFiles.Size = new System.Drawing.Size(582, 288);
-            this.tabFiles.TabContextMenuStrip = this.mnxText;
-            this.tabFiles.TabIndex = 0;
-            this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
-            this.tabFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabFiles_MouseDown);
-            // 
             // mnxTab
             // 
+            this.mnxTab.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.mnxTab.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnxTabNew,
             this.mnxTab0,
@@ -837,54 +826,56 @@
             this.ToolStripMenuItem14,
             this.mnxTabOpenContainingFolder});
             this.mnxTab.Name = "mnxTab";
-            this.mnxTab.Size = new System.Drawing.Size(233, 416);
+            this.mnxTab.Size = new System.Drawing.Size(237, 424);
             this.mnxTab.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.mnxTab_Closed);
             this.mnxTab.Opening += new System.ComponentModel.CancelEventHandler(this.mnxTab_Opening);
             // 
             // mnxTabNew
             // 
-            this.mnxTabNew.Image = ((System.Drawing.Image)(resources.GetObject("mnxTabNew.Image")));
-            this.mnxTabNew.ImageTransparentColor = System.Drawing.Color.Fuchsia;
+            this.mnxTabNew.Image = global::QText.Properties.Resources.mnuNew_16;
             this.mnxTabNew.Name = "mnxTabNew";
             this.mnxTabNew.ShortcutKeyDisplayString = "Ctrl+N";
-            this.mnxTabNew.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabNew.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabNew.Tag = "mnuNew";
             this.mnxTabNew.Text = "&New";
             this.mnxTabNew.Click += new System.EventHandler(this.mnuNew_Click);
             // 
             // mnxTab0
             // 
             this.mnxTab0.Name = "mnxTab0";
-            this.mnxTab0.Size = new System.Drawing.Size(229, 6);
+            this.mnxTab0.Size = new System.Drawing.Size(233, 6);
             // 
             // mnxTabReopen
             // 
             this.mnxTabReopen.Name = "mnxTabReopen";
             this.mnxTabReopen.ShortcutKeyDisplayString = "Ctrl+R";
-            this.mnxTabReopen.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabReopen.Size = new System.Drawing.Size(236, 26);
             this.mnxTabReopen.Text = "Re&open";
             this.mnxTabReopen.Click += new System.EventHandler(this.mnxTabReopen_Click);
             // 
             // mnxTabSaveNow
             // 
-            this.mnxTabSaveNow.Image = ((System.Drawing.Image)(resources.GetObject("mnxTabSaveNow.Image")));
+            this.mnxTabSaveNow.Image = global::QText.Properties.Resources.mnuSave_16;
             this.mnxTabSaveNow.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTabSaveNow.Name = "mnxTabSaveNow";
             this.mnxTabSaveNow.ShortcutKeyDisplayString = "Ctrl+S";
-            this.mnxTabSaveNow.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabSaveNow.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabSaveNow.Tag = "mnuSave";
             this.mnxTabSaveNow.Text = "&Save";
             this.mnxTabSaveNow.Click += new System.EventHandler(this.mnuSaveNow_Click);
             // 
             // mnxTab1
             // 
             this.mnxTab1.Name = "mnxTab1";
-            this.mnxTab1.Size = new System.Drawing.Size(229, 6);
+            this.mnxTab1.Size = new System.Drawing.Size(233, 6);
             // 
             // mnxTabRename
             // 
-            this.mnxTabRename.Image = ((System.Drawing.Image)(resources.GetObject("mnxTabRename.Image")));
+            this.mnxTabRename.Image = global::QText.Properties.Resources.mnuRename_16;
             this.mnxTabRename.Name = "mnxTabRename";
             this.mnxTabRename.ShortcutKeyDisplayString = "F2";
-            this.mnxTabRename.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabRename.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabRename.Tag = "mnuRename";
             this.mnxTabRename.Text = "&Rename";
             this.mnxTabRename.Click += new System.EventHandler(this.mnuRename_Click);
             // 
@@ -894,7 +885,7 @@
             this.mnxTabMoveTo.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnxTabMoveToDummy});
             this.mnxTabMoveTo.Name = "mnxTabMoveTo";
-            this.mnxTabMoveTo.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabMoveTo.Size = new System.Drawing.Size(236, 26);
             this.mnxTabMoveTo.Text = "Move to";
             this.mnxTabMoveTo.DropDownOpening += new System.EventHandler(this.mnxTabMoveTo_DropDownOpening);
             // 
@@ -906,104 +897,126 @@
             // 
             // mnxTabDelete
             // 
-            this.mnxTabDelete.Image = ((System.Drawing.Image)(resources.GetObject("mnxTabDelete.Image")));
+            this.mnxTabDelete.Image = global::QText.Properties.Resources.mnuDelete_16;
             this.mnxTabDelete.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTabDelete.Name = "mnxTabDelete";
-            this.mnxTabDelete.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabDelete.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabDelete.Tag = "mnuDelete";
             this.mnxTabDelete.Text = "&Delete";
             this.mnxTabDelete.Click += new System.EventHandler(this.mnxTabDelete_Click);
             // 
             // mnxTabConvert
             // 
             this.mnxTabConvert.Name = "mnxTabConvert";
-            this.mnxTabConvert.Size = new System.Drawing.Size(229, 6);
+            this.mnxTabConvert.Size = new System.Drawing.Size(233, 6);
             // 
             // mnxTabZoomReset
             // 
             this.mnxTabZoomReset.Name = "mnxTabZoomReset";
             this.mnxTabZoomReset.ShortcutKeyDisplayString = "Ctrl+0";
-            this.mnxTabZoomReset.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabZoomReset.Size = new System.Drawing.Size(236, 26);
             this.mnxTabZoomReset.Text = "Reset zoom";
             this.mnxTabZoomReset.Click += new System.EventHandler(this.mnxTabZoomReset_Click);
             // 
             // mnxTabConvertPlain
             // 
             this.mnxTabConvertPlain.Name = "mnxTabConvertPlain";
-            this.mnxTabConvertPlain.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabConvertPlain.Size = new System.Drawing.Size(236, 26);
             this.mnxTabConvertPlain.Text = "Convert to plain text";
             this.mnxTabConvertPlain.Click += new System.EventHandler(this.mnxTabConvertPlain_Click);
             // 
             // mnxTabConvertRich
             // 
             this.mnxTabConvertRich.Name = "mnxTabConvertRich";
-            this.mnxTabConvertRich.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabConvertRich.Size = new System.Drawing.Size(236, 26);
             this.mnxTabConvertRich.Text = "Convert to rich text";
             this.mnxTabConvertRich.Click += new System.EventHandler(this.mnxTabConvertRich_Click);
             // 
             // mnxTabEncrypt
             // 
-            this.mnxTabEncrypt.Image = ((System.Drawing.Image)(resources.GetObject("mnxTabEncrypt.Image")));
+            this.mnxTabEncrypt.Image = global::QText.Properties.Resources.mnuEncrypt_16;
             this.mnxTabEncrypt.Name = "mnxTabEncrypt";
-            this.mnxTabEncrypt.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabEncrypt.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabEncrypt.Tag = "mnuEncrypt";
             this.mnxTabEncrypt.Text = "Encrypt";
             this.mnxTabEncrypt.Click += new System.EventHandler(this.mnxTabEncrypt_Click);
             // 
             // mnxTabChangePassword
             // 
-            this.mnxTabChangePassword.Image = ((System.Drawing.Image)(resources.GetObject("mnxTabChangePassword.Image")));
+            this.mnxTabChangePassword.Image = global::QText.Properties.Resources.mnuPassword_16;
             this.mnxTabChangePassword.Name = "mnxTabChangePassword";
-            this.mnxTabChangePassword.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabChangePassword.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabChangePassword.Tag = "mnuPassword";
             this.mnxTabChangePassword.Text = "Change password";
             this.mnxTabChangePassword.Click += new System.EventHandler(this.mnxTabChangePassword_Click);
             // 
             // mnxTabDecrypt
             // 
+            this.mnxTabDecrypt.Image = global::QText.Properties.Resources.mnuDecrypt_16;
             this.mnxTabDecrypt.Name = "mnxTabDecrypt";
-            this.mnxTabDecrypt.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabDecrypt.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabDecrypt.Tag = "mnuDecrypt";
             this.mnxTabDecrypt.Text = "Decrypt";
             this.mnxTabDecrypt.Click += new System.EventHandler(this.mnxTabDecrypt_Click);
             // 
             // mnxTab2
             // 
             this.mnxTab2.Name = "mnxTab2";
-            this.mnxTab2.Size = new System.Drawing.Size(229, 6);
+            this.mnxTab2.Size = new System.Drawing.Size(233, 6);
             // 
             // mnxTabPrintPreview
             // 
-            this.mnxTabPrintPreview.Image = ((System.Drawing.Image)(resources.GetObject("mnxTabPrintPreview.Image")));
+            this.mnxTabPrintPreview.Image = global::QText.Properties.Resources.mnuPrintPreview_16;
             this.mnxTabPrintPreview.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTabPrintPreview.Name = "mnxTabPrintPreview";
-            this.mnxTabPrintPreview.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabPrintPreview.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabPrintPreview.Tag = "mnuPrintPreview";
             this.mnxTabPrintPreview.Text = "Prin&t preview";
             this.mnxTabPrintPreview.Click += new System.EventHandler(this.mnuPrintPreview_Click);
             // 
             // mnxTabPrint
             // 
-            this.mnxTabPrint.Image = ((System.Drawing.Image)(resources.GetObject("mnxTabPrint.Image")));
+            this.mnxTabPrint.Image = global::QText.Properties.Resources.mnuPrint_16;
             this.mnxTabPrint.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTabPrint.Name = "mnxTabPrint";
             this.mnxTabPrint.ShortcutKeyDisplayString = "Ctrl+P";
-            this.mnxTabPrint.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabPrint.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabPrint.Tag = "mnuPrint";
             this.mnxTabPrint.Text = "&Print";
             this.mnxTabPrint.Click += new System.EventHandler(this.mnuPrint_Click);
             // 
             // ToolStripMenuItem14
             // 
             this.ToolStripMenuItem14.Name = "ToolStripMenuItem14";
-            this.ToolStripMenuItem14.Size = new System.Drawing.Size(229, 6);
+            this.ToolStripMenuItem14.Size = new System.Drawing.Size(233, 6);
             // 
             // mnxTabOpenContainingFolder
             // 
             this.mnxTabOpenContainingFolder.Name = "mnxTabOpenContainingFolder";
-            this.mnxTabOpenContainingFolder.Size = new System.Drawing.Size(232, 24);
+            this.mnxTabOpenContainingFolder.Size = new System.Drawing.Size(236, 26);
             this.mnxTabOpenContainingFolder.Text = "Open containing folder";
             this.mnxTabOpenContainingFolder.Click += new System.EventHandler(this.mnxTabOpenContainingFolder_Click);
+            // 
+            // tabFiles
+            // 
+            this.tabFiles.ContextMenuStrip = this.mnxTab;
+            this.tabFiles.Cursor = System.Windows.Forms.Cursors.Default;
+            this.tabFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabFiles.Location = new System.Drawing.Point(0, 27);
+            this.tabFiles.Margin = new System.Windows.Forms.Padding(0);
+            this.tabFiles.Name = "tabFiles";
+            this.tabFiles.SelectedIndex = 0;
+            this.tabFiles.Size = new System.Drawing.Size(612, 288);
+            this.tabFiles.TabContextMenuStrip = this.mnxText;
+            this.tabFiles.TabIndex = 0;
+            this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
+            this.tabFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabFiles_MouseDown);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(582, 315);
+            this.ClientSize = new System.Drawing.Size(612, 315);
             this.Controls.Add(this.tabFiles);
             this.Controls.Add(this.mnu);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1051,8 +1064,6 @@
         internal System.Windows.Forms.ToolStripButton mnuRedo;
         internal System.Windows.Forms.ToolStripSeparator ToolStripSeparator3;
         internal System.Windows.Forms.ToolStripButton mnuAlwaysOnTop;
-        internal System.Windows.Forms.ToolStripButton mnuOptions;
-        internal System.Windows.Forms.ToolStripSeparator ToolStripSeparator2;
         internal System.Windows.Forms.Timer tmrUpdateToolbar;
         internal System.Windows.Forms.Timer tmrQuickSave;
         internal System.Windows.Forms.ContextMenuStrip mnxText;
@@ -1085,7 +1096,7 @@
         private System.Windows.Forms.ToolStripMenuItem mnuAppFeedback;
         private System.Windows.Forms.ToolStripMenuItem mnuAppUpgrade;
         private System.Windows.Forms.ToolStripMenuItem mnuAppDonate;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripSeparator mnuApp1;
         private System.Windows.Forms.ToolStripMenuItem mnuAppAbout;
         private System.Windows.Forms.ToolStripDropDownButton mnuFolder;
         private System.Windows.Forms.ToolStripMenuItem mnxTextLines;
@@ -1128,5 +1139,8 @@
         internal System.Windows.Forms.ToolStripMenuItem mnxTabPrint;
         internal System.Windows.Forms.ToolStripSeparator ToolStripMenuItem14;
         internal System.Windows.Forms.ToolStripMenuItem mnxTabOpenContainingFolder;
+        private System.Windows.Forms.ToolStripMenuItem mnuAppOptions;
+        private System.Windows.Forms.ToolStripSeparator mnuApp0;
+        internal System.Windows.Forms.ToolStripSeparator ToolStripSeparator2;
     }
 }

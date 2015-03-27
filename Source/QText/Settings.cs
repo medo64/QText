@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using System;
 using System.Drawing;
 using System.Drawing.Printing;
@@ -323,9 +323,9 @@ namespace QText {
             set { Medo.Configuration.Settings.Write("SearchCaseSensitive", value); }
         }
 
-        public static double ScaleFactor {
-            get { return Medo.Configuration.Settings.Read("ScaleFactor", 0.0); }
-            set { Medo.Configuration.Settings.Write("ScaleFactor", 0.0); }
+        public static double ScaleBoost {
+            get { return Medo.Configuration.Settings.Read("ScaleBoost", 0.25); }
+            set { Medo.Configuration.Settings.Write("ScaleBoost", value); }
         }
 
     }

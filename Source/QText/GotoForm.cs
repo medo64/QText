@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -7,6 +7,8 @@ namespace QText {
         public GotoForm(bool hasText) {
             InitializeComponent();
             this.Font = SystemFonts.MessageBoxFont;
+
+            Helper.ScaleGotoImageList(this, imlSuggestions);
 
             this.HasText = hasText;
             Medo.Windows.Forms.State.SetupOnLoadAndClose(this);

@@ -1,4 +1,4 @@
-﻿namespace QText {
+namespace QText {
     partial class FilesEditForm {
         /// <summary>
         /// Required designer variable.
@@ -23,7 +23,6 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FilesEditForm));
             this.lsv = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.mnu = new System.Windows.Forms.ToolStrip();
@@ -57,6 +56,7 @@
             // mnu
             // 
             this.mnu.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.mnu.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.mnu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuRename,
             this.mnuDelete,
@@ -70,18 +70,18 @@
             // 
             // mnuRename
             // 
-            this.mnuRename.Image = ((System.Drawing.Image)(resources.GetObject("mnuRename.Image")));
+            this.mnuRename.Image = global::QText.Properties.Resources.mnuRename_16;
             this.mnuRename.Name = "mnuRename";
-            this.mnuRename.Size = new System.Drawing.Size(83, 24);
+            this.mnuRename.Size = new System.Drawing.Size(87, 24);
             this.mnuRename.Text = "Rename";
             this.mnuRename.ToolTipText = "Rename (F2)";
             this.mnuRename.Click += new System.EventHandler(this.mnuRename_Click);
             // 
             // mnuDelete
             // 
-            this.mnuDelete.Image = ((System.Drawing.Image)(resources.GetObject("mnuDelete.Image")));
+            this.mnuDelete.Image = global::QText.Properties.Resources.mnuDelete_16;
             this.mnuDelete.Name = "mnuDelete";
-            this.mnuDelete.Size = new System.Drawing.Size(73, 24);
+            this.mnuDelete.Size = new System.Drawing.Size(77, 24);
             this.mnuDelete.Text = "Delete";
             this.mnuDelete.ToolTipText = "Delete (Del)";
             this.mnuDelete.Click += new System.EventHandler(this.mnuDelete_Click);
@@ -93,9 +93,9 @@
             // 
             // mnuSort
             // 
-            this.mnuSort.Image = ((System.Drawing.Image)(resources.GetObject("mnuSort.Image")));
+            this.mnuSort.Image = global::QText.Properties.Resources.mnuSort_16;
             this.mnuSort.Name = "mnuSort";
-            this.mnuSort.Size = new System.Drawing.Size(56, 24);
+            this.mnuSort.Size = new System.Drawing.Size(60, 24);
             this.mnuSort.Text = "Sort";
             this.mnuSort.Click += new System.EventHandler(this.mnuSort_Click);
             // 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -6,6 +6,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Globalization;
 using System.Windows.Forms;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace QText {
 
@@ -206,6 +208,79 @@ namespace QText {
             public static extern bool MoveFileExW([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPWStr)] string lpExistingFileName, [InAttribute()] [MarshalAsAttribute(UnmanagedType.LPWStr)] string lpNewFileName, uint dwFlags);
 
         }
+
+
+        #region Toolstrip images
+
+        internal static void ScaleToolstrip(params ToolStrip[] toolstrips) {
+            var sizeAndSet = GetSizeAndSet(toolstrips);
+            var size = sizeAndSet.Key;
+            var set = sizeAndSet.Value;
+
+            var resources = QText.Properties.Resources.ResourceManager;
+            foreach (var toolstrip in toolstrips) {
+                toolstrip.ImageScalingSize = new Size(size, size);
+                foreach (ToolStripItem item in toolstrip.Items) {
+                    item.ImageScaling = ToolStripItemImageScaling.None;
+                    if (item.Image != null) { //update only those already having image
+                        Bitmap bitmap = null;
+                        if (!string.IsNullOrEmpty(item.Name)) {
+                            bitmap = resources.GetObject(item.Name + set) as Bitmap;
+                        }
+                        if ((bitmap == null) && !string.IsNullOrEmpty(item.Tag as string)) {
+                            bitmap = resources.GetObject(item.Tag + set) as Bitmap;
+                        }
+#if DEBUG
+                        item.Image = (bitmap != null) ? bitmap : new Bitmap(size, size, PixelFormat.Format8bppIndexed);
+#else
+                        if (bitmap != null) { item.Image = bitmap; }
+#endif
+                        item.ImageScaling = ToolStripItemImageScaling.SizeToFit;
+                    }
+
+                    var toolstripSplitButton = item as ToolStripSplitButton;
+                    if (toolstripSplitButton != null) { ScaleToolstrip(toolstripSplitButton.DropDown); }
+                }
+            }
+        }
+
+        internal static void ScaleGotoImageList(Form form, ImageList imageList) {
+            var sizeAndSet = GetSizeAndSet(form);
+            var size = sizeAndSet.Key;
+            var set = sizeAndSet.Value;
+
+            var resources = QText.Properties.Resources.ResourceManager;
+
+            imageList.Images.Clear();
+            imageList.ImageSize = new Size(size, size);
+            imageList.Images.Add(resources.GetObject("staFolder" + set) as Bitmap);
+            imageList.Images.Add(resources.GetObject("staFile" + set) as Bitmap);
+        }
+
+        private static KeyValuePair<int, string> GetSizeAndSet(params Control[] controls) {
+            using (var g = controls[0].CreateGraphics()) {
+                var scale = Math.Max(Math.Max(g.DpiX, g.DpiY), 96.0) / 96.0;
+                scale += Settings.ScaleBoost;
+
+                if (scale < 1.5) {
+                    return new KeyValuePair<int, string>(16, "_16");
+                } else if (scale < 2) {
+                    return new KeyValuePair<int, string>(24, "_24");
+                } else if (scale < 3) {
+                    return new KeyValuePair<int, string>(32, "_32");
+                } else {
+                    var base32 = 16 * scale / 32;
+                    var base48 = 16 * scale / 48;
+                    if ((base48 - (int)base48) < (base32 - (int)base32)) {
+                        return new KeyValuePair<int, string>(48 * (int)base48, "_48");
+                    } else {
+                        return new KeyValuePair<int, string>(32 * (int)base32, "_32");
+                    }
+                }
+            }
+        }
+
+        #endregion
 
     }
 }
