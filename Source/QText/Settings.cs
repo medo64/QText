@@ -324,7 +324,7 @@ namespace QText {
         }
 
         public static double ScaleBoost {
-            get { return Medo.Configuration.Settings.Read("ScaleBoost", 0.25); }
+            get { return Medo.Configuration.Settings.Read("ScaleBoost", 0.00); }
             set { Medo.Configuration.Settings.Write("ScaleBoost", value); }
         }
 
