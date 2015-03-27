@@ -40,7 +40,8 @@ ShowLanguageDialog=no
 SolidCompression=yes
 ChangesAssociations=no
 DisableWelcomePage=yes
-LicenseFile=..\Setup\License.txt
+LicenseFile=..\Setup\License.rtf
+
 
 [Messages]
 SetupAppTitle=Setup {#AppName} {#AppVersionEx}
@@ -69,6 +70,13 @@ Description: "View ReadMe.txt";         Filename: "{app}\ReadMe.txt";           
 Description: "Launch application now";  Filename: "{app}\QText.exe";   Parameters: "/setup";  Flags: postinstall nowait skipifsilent runasoriginaluser shellexec
 
 [Code]
+
+procedure InitializeWizard;
+begin
+  WizardForm.LicenseAcceptedRadio.Checked := True;
+end;
+
+
 function InitializeSetup(): Boolean;
 var
   productKeys       :TArrayOfString;
