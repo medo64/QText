@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -608,7 +608,7 @@ namespace QText {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
                 TabFile tf = tabFiles.SelectedTab;
-                if (tf.CurrentFile.IsRich) {
+                if (tf.CurrentFile.IsRichText) {
                     using (var f = new System.Windows.Forms.FontDialog()) {
                         f.AllowScriptChange = true;
                         f.AllowSimulations = true;
@@ -639,7 +639,7 @@ namespace QText {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
                 TabFile tf = tabFiles.SelectedTab;
-                if (tf.CurrentFile.IsRich) {
+                if (tf.CurrentFile.IsRichText) {
                     ToogleStyle(tf.TextBox, FontStyle.Bold);
                 }
                 tmrQuickSave.Enabled = true;
@@ -650,7 +650,7 @@ namespace QText {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
                 TabFile tf = tabFiles.SelectedTab;
-                if (tf.CurrentFile.IsRich) {
+                if (tf.CurrentFile.IsRichText) {
                     ToogleStyle(tf.TextBox, FontStyle.Italic);
                 }
                 tmrQuickSave.Enabled = true;
@@ -661,7 +661,7 @@ namespace QText {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
                 TabFile tf = tabFiles.SelectedTab;
-                if (tf.CurrentFile.IsRich) {
+                if (tf.CurrentFile.IsRichText) {
                     if (tf.TextBox.SelectionFont != null) {
                         ToogleStyle(tf.TextBox, FontStyle.Underline);
                     }
@@ -674,7 +674,7 @@ namespace QText {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
                 TabFile tf = tabFiles.SelectedTab;
-                if (tf.CurrentFile.IsRich) {
+                if (tf.CurrentFile.IsRichText) {
                     if (tf.TextBox.SelectionFont != null) {
                         ToogleStyle(tf.TextBox, FontStyle.Strikeout);
                     }
@@ -886,8 +886,8 @@ namespace QText {
 
         private void mnxTab_Opening(object sender, CancelEventArgs e) {
             bool isTabSelected = (tabFiles.SelectedTab != null);
-            bool isTabRich = isTabSelected && tabFiles.SelectedTab.CurrentFile.IsRich;
-            bool isTabPlain = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsRich == false);
+            bool isTabRich = isTabSelected && tabFiles.SelectedTab.CurrentFile.IsRichText;
+            bool isTabPlain = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsRichText == false);
             bool isTabEncryptable = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsEncrypted == false);
             bool isTabDecryptable = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsEncrypted);
             bool isZoomResetable = isTabSelected && tabFiles.SelectedTab.TextBox.HasZoom;
@@ -1015,7 +1015,7 @@ namespace QText {
 
         private void mnxTabOpenContainingFolder_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
-                string file = tabFiles.SelectedTab.CurrentFile.FullName;
+                string file = tabFiles.SelectedTab.CurrentFile.Path;
                 var exe = new ProcessStartInfo("explorer.exe", "/select,\"" + file + "\"");
                 Process.Start(exe);
             } else {
@@ -1031,8 +1031,8 @@ namespace QText {
 
         private void mnxText_Opening(object sender, CancelEventArgs e) {
             bool isTabSelected = (tabFiles.SelectedTab != null);
-            bool isTabRichText = isTabSelected && tabFiles.SelectedTab.CurrentFile.IsRich;
-            bool isTabPlainText = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsRich == false);
+            bool isTabRichText = isTabSelected && tabFiles.SelectedTab.CurrentFile.IsRichText;
+            bool isTabPlainText = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsRichText == false);
             bool isTextSelected = isTabSelected && (tabFiles.SelectedTab.TextBox.SelectedText.Length > 0);
             bool hasText = isTabSelected && (tabFiles.SelectedTab.TextBox.Text.Length > 0);
             bool isZoomResetable = isTabSelected && (tabFiles.SelectedTab.TextBox.ZoomFactor != 1);
@@ -1438,8 +1438,8 @@ namespace QText {
 
         private void tmrUpdateToolbar_Tick(object sender, EventArgs e) {
             bool isTabSelected = (tabFiles.SelectedTab != null);
-            bool isTabRichText = isTabSelected && tabFiles.SelectedTab.CurrentFile.IsRich;
-            bool isTabPlainText = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsRich == false);
+            bool isTabRichText = isTabSelected && tabFiles.SelectedTab.CurrentFile.IsRichText;
+            bool isTabPlainText = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsRichText == false);
 
             mnuSaveNow.Enabled = isTabSelected;
             mnuRename.Enabled = isTabSelected;
@@ -1480,7 +1480,7 @@ namespace QText {
             if (tabFiles.TabCount > 0) {
                 nextIndexToCheck = nextIndexToCheck % tabFiles.TabPages.Count;
                 var currTab = (TabFile)tabFiles.TabPages[nextIndexToCheck];
-                var fi = new QFileInfo(currTab.CurrentFile.FullName);
+                var fi = new QFileInfo(currTab.CurrentFile.Path);
                 if (fi.LastWriteTimeUtc != currTab.LastWriteTimeUtc) {
                     if (currTab.IsChanged) {
                         currTab.Save();

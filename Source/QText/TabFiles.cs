@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -176,9 +176,9 @@ namespace QText {
             this.SelectedTab = GetNextTab();
             this.TabPages.Remove(tab);
             if (Settings.FilesDeleteToRecycleBin) {
-                SHFile.Delete(tab.CurrentFile.FullName);
+                SHFile.Delete(tab.CurrentFile.Path);
             } else {
-                File.Delete(tab.CurrentFile.FullName);
+                File.Delete(tab.CurrentFile.Path);
             }
             if (this.SelectedTab != null) {
                 this.SelectedTab.Open();
@@ -198,7 +198,7 @@ namespace QText {
 
         public void MoveTabPreview(TabFile tab, string newFolder, out string oldPath, out string newPath) {
             string destFolder = string.IsNullOrEmpty(newFolder) ? Settings.FilesLocation : Path.Combine(Settings.FilesLocation, newFolder);
-            var oldFile = new QFileInfo(tab.CurrentFile.FullName);
+            var oldFile = new QFileInfo(tab.CurrentFile.Path);
             oldPath = oldFile.FullName;
             newPath = Path.Combine(destFolder, oldFile.Name);
         }

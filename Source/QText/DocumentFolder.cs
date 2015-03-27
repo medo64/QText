@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -77,7 +77,7 @@ namespace QText {
 
         public static IEnumerable<TabFile> GetTabs(IEnumerable<String> filePaths, ContextMenuStrip contextMenuStrip) {
             foreach (var file in filePaths) {
-                var tab = new TabFile(file);
+                var tab = new TabFile(new QFile(file));
                 tab.ContextMenuStrip = contextMenuStrip;
                 yield return tab;
             }

@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Windows.Forms;
 
 namespace QText {
@@ -100,7 +101,7 @@ namespace QText {
                 } else {
                     try {
                         var tab = (TabFile)lsv.Items[e.Item].Tag;
-                        if (QFileInfo.IsNameAlreadyTaken(tab.CurrentFile.DirectoryName, newName)) {
+                        if (QFileInfo.IsNameAlreadyTaken(Path.GetDirectoryName(tab.CurrentFile.Path), newName)) { //TODO: QFolder
                             e.CancelEdit = true;
                         } else {
                             tab.Rename(newName);

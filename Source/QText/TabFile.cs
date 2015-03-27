@@ -1,4 +1,4 @@
-﻿using Medo.Security.Cryptography;
+using Medo.Security.Cryptography;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,10 +13,10 @@ namespace QText {
 
     internal class TabFile : TabPage {
 
-        public TabFile(string fullFileName)
+        public TabFile(QFile file)
             : base() {
 
-            this.CurrentFile = new QFileInfo(fullFileName);
+            this.CurrentFile = file;
             this.LastSaveTime = System.DateTime.Now;
             this.Padding = new Padding(0, SystemInformation.Border3DSize.Height, 0, 0);
 
@@ -75,8 +75,8 @@ namespace QText {
 
         private static readonly UTF8Encoding Utf8EncodingWithoutBom = new UTF8Encoding(false);
 
-        public QFileInfo CurrentFile { get; private set; }
-        public string Title { get { return Helper.DecodeFileName(QFileInfo.GetFileNameWithoutExtension(this.CurrentFile.FullName)); } }
+        public QFile CurrentFile { get; private set; }
+        public string Title { get { return this.CurrentFile.Title; } }
         public DateTime LastWriteTimeUtc { get { return this.CurrentFile.LastWriteTimeUtc; } }
         public DateTime LastSaveTime { get; private set; }
 
@@ -132,7 +132,7 @@ namespace QText {
             } else {
                 File.WriteAllText(fullFileName, "");
             }
-            return new TabFile(fullFileName);
+            return new TabFile(new QFile(fullFileName));
         }
 
 
@@ -154,24 +154,20 @@ namespace QText {
 
         public void ConvertToPlainText() {
             if (this.IsOpened == false) { throw new InvalidOperationException("File is not loaded."); }
-            if (this.CurrentFile.IsRich == false) { throw new InvalidOperationException("File is already in plain text format."); }
+            if (this.CurrentFile.IsPlainText) { throw new InvalidOperationException("File is already in plain text format."); }
 
-            var newFile = this.CurrentFile.ChangeExtension(this.CurrentFile.IsEncrypted ? QFileInfo.Extensions.PlainEncrypted : QFileInfo.Extensions.Plain);
-            Helper.MovePath(this.CurrentFile.FullName, newFile.FullName);
-            this.CurrentFile = newFile;
+            this.CurrentFile.ChangeType(QType.PlainText);
             this.Save();
             this.Reopen();
         }
 
         public void ConvertToRichText() {
             if (this.IsOpened == false) { throw new InvalidOperationException("File is not loaded."); }
-            if (this.CurrentFile.IsRich) { throw new InvalidOperationException("File is already in rich text format."); }
+            if (this.CurrentFile.IsRichText) { throw new InvalidOperationException("File is already in rich text format."); }
 
             string text = this.TextBox.Text;
 
-            var newFile = this.CurrentFile.ChangeExtension(this.CurrentFile.IsEncrypted ? QFileInfo.Extensions.RichEncrypted : QFileInfo.Extensions.Rich);
-            Helper.MovePath(this.CurrentFile.FullName, newFile.FullName);
-            this.CurrentFile = newFile;
+            this.CurrentFile.ChangeType(QType.RichText);
             this.Save();
             this.Reopen();
         }
@@ -183,9 +179,7 @@ namespace QText {
 
             string text = this.TextBox.Text;
 
-            var newFile = this.CurrentFile.ChangeExtension(this.CurrentFile.IsRich ? QFileInfo.Extensions.RichEncrypted : QFileInfo.Extensions.PlainEncrypted);
-            Helper.MovePath(this.CurrentFile.FullName, newFile.FullName);
-            this.CurrentFile = newFile;
+            this.CurrentFile.Encrypt();
             this.Password = password;
             this.Save();
             this.Reopen();
@@ -198,9 +192,7 @@ namespace QText {
 
             string text = this.TextBox.Text;
 
-            var newFile = this.CurrentFile.ChangeExtension(this.CurrentFile.IsRich ? QFileInfo.Extensions.Rich : QFileInfo.Extensions.Plain);
-            Helper.MovePath(this.CurrentFile.FullName, newFile.FullName);
-            this.CurrentFile = newFile;
+            this.CurrentFile.Decrypt();
             this.Password = null;
             this.Save();
             this.Reopen();
@@ -215,7 +207,7 @@ namespace QText {
             var oldSelLength = txt.SelectionLength;
 
             this.IsOpened = false;
-            if (this.CurrentFile.IsRich) {
+            if (this.CurrentFile.IsRichText) {
                 try {
                     OpenAsRich(txt);
                 } catch (ArgumentException) {
@@ -232,7 +224,6 @@ namespace QText {
             this.TextBox.SelectionLength = oldSelLength;
             this.TextBox.ClearUndo();
             this.LastSaveTime = DateTime.Now;
-            this.CurrentFile.Refresh();
             this.IsChanged = false;
             this.IsOpened = true;
         }
@@ -260,14 +251,13 @@ namespace QText {
         public void Save() {
             if (this.IsOpened == false) { return; }
 
-            if (this.CurrentFile.IsRich) {
+            if (this.CurrentFile.IsRichText) {
                 SaveAsRich();
             } else {
                 SaveAsPlain();
             }
 
             this.LastSaveTime = DateTime.Now;
-            this.CurrentFile.Refresh();
             this.IsChanged = false;
             base.Text = this.Title;
 
@@ -275,7 +265,7 @@ namespace QText {
         }
 
         public void SaveCarbonCopy(IWin32Window owner) {
-            SaveCarbonCopy(owner, this.CurrentFile.FullName);
+            SaveCarbonCopy(owner, this.CurrentFile.Path);
         }
 
         public static void SaveCarbonCopy(IWin32Window owner, string fullFileName) {
@@ -307,17 +297,17 @@ namespace QText {
             newTitle = newTitle.Trim();
             if (newTitle == null) { throw new ArgumentException("Title cannot be empty.", "newTitle"); }
 
-            var oldInfo = new QFileInfo(this.CurrentFile.FullName);
-            var newInfo = oldInfo.ChangeName(Helper.EncodeFileName(newTitle));
+            //TODO: QFolder
+            //var oldInfo = new QFileInfo(this.CurrentFile.Path);
+            //var newInfo = oldInfo.ChangeName(Helper.EncodeFileName(newTitle));
 
-            if (string.Equals(this.Title, newTitle, StringComparison.OrdinalIgnoreCase) == false) {
-                if (QFileInfo.IsNameAlreadyTaken(newInfo.DirectoryName, newInfo.Name)) {
-                    throw new IOException("File already exists.");
-                }
-            }
+            //if (string.Equals(this.Title, newTitle, StringComparison.OrdinalIgnoreCase) == false) {
+            //    if (QFileInfo.IsNameAlreadyTaken(newInfo.DirectoryName, newInfo.Name)) {
+            //        throw new IOException("File already exists.");
+            //    }
+            //}
 
-            Helper.MovePath(oldInfo.FullName, newInfo.FullName);
-            this.CurrentFile = newInfo;
+            this.CurrentFile.ChangeTitle(newTitle);
             UpdateText();
         }
 
@@ -411,7 +401,7 @@ namespace QText {
         public void Cut(bool forceText) {
             try {
                 if (this.CanCopy) {
-                    if ((this.CurrentFile.IsRich == false) || forceText) {
+                    if (this.CurrentFile.IsPlainText || forceText) {
                         CopyTextToClipboard(this.TextBox);
                         this.TextBox.SelectedText = "";
                     } else {
@@ -429,7 +419,7 @@ namespace QText {
         public void Copy(bool forceText) {
             try {
                 if (this.CanCopy) {
-                    if ((this.CurrentFile.IsRich == false) || forceText) {
+                    if (this.CurrentFile.IsPlainText || forceText) {
                         CopyTextToClipboard(this.TextBox);
                     } else {
                         this.TextBox.Copy();
@@ -451,7 +441,7 @@ namespace QText {
         public void Paste(bool forceText) {
             try {
                 if (this.CanPaste) {
-                    if ((this.CurrentFile.IsRich == false) || forceText) {
+                    if (this.CurrentFile.IsPlainText || forceText) {
                         var text = GetTextFromClipboard();
                         if (text != null) {
                             this.TextBox.SelectionFont = Settings.DisplayFont;
@@ -619,7 +609,7 @@ namespace QText {
         #region Open/Save
 
         private void OpenAsPlain(RichTextBoxEx txt) {
-            using (var stream = new FileStream(this.CurrentFile.FullName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+            using (var stream = new FileStream(this.CurrentFile.Path, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                 if (this.CurrentFile.IsEncrypted) {
                     this.OpenAsPlainEncrypted(txt, stream);
                 } else {
@@ -647,7 +637,7 @@ namespace QText {
 
 
         private void SaveAsPlain() {
-            using (var stream = new FileStream(this.CurrentFile.FullName, FileMode.Create, FileAccess.Write, FileShare.Read)) {
+            using (var stream = new FileStream(this.CurrentFile.Path, FileMode.Create, FileAccess.Write, FileShare.Read)) {
                 if (this.CurrentFile.IsEncrypted) {
                     SaveAsPlainEncrypted(stream);
                 } else {
@@ -670,7 +660,7 @@ namespace QText {
 
 
         private void OpenAsRich(RichTextBoxEx txt) {
-            using (var stream = new FileStream(this.CurrentFile.FullName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+            using (var stream = new FileStream(this.CurrentFile.Path, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                 if (this.CurrentFile.IsEncrypted) {
                     this.OpenAsRichEncrypted(txt, stream);
                 } else {
@@ -702,7 +692,7 @@ namespace QText {
 
 
         private void SaveAsRich() {
-            using (var stream = new FileStream(this.CurrentFile.FullName, FileMode.Create, FileAccess.Write, FileShare.Read)) {
+            using (var stream = new FileStream(this.CurrentFile.Path, FileMode.Create, FileAccess.Write, FileShare.Read)) {
                 if (this.CurrentFile.IsEncrypted) {
                     SaveAsRichEncrypted(stream);
                 } else {

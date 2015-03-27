@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -107,7 +107,7 @@ namespace QText {
                             tabs.FolderOpen(folder);
                         }
                         foreach (TabFile tab in tabs.TabPages) {
-                            if (string.Equals(tab.CurrentFile.FullName, folderTab.CurrentFile.FullName, StringComparison.OrdinalIgnoreCase)) {
+                            if (string.Equals(tab.CurrentFile.Path, folderTab.CurrentFile.Path, StringComparison.OrdinalIgnoreCase)) {
                                 tab.Open();
                                 tab.TextBox.SelectionStart = folderTab.TextBox.SelectionStart;
                                 tab.TextBox.SelectionLength = folderTab.TextBox.SelectionLength;
