@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -17,7 +17,7 @@ namespace QText {
             this.Form.CreateControl();
             this.Form.Handle.GetType();
 
-            notMain.Icon = Medo.Resources.ManifestResources.GetIcon("QText.Properties.App.ico", 16, 16);
+            notMain.Icon = QText.Properties.Resources.TrayIcon;
             notMain.Text = Medo.Reflection.EntryAssembly.Title;
 
             notMain.MouseClick += delegate(object sender, MouseEventArgs e) {
