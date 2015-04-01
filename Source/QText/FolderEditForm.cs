@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Windows.Forms;
 
 namespace QText {
@@ -149,28 +147,18 @@ namespace QText {
             if (lsv.SelectedItems.Count == 1) {
                 var folder = (DocumentFolder)lsv.SelectedItems[0].Tag;
                 if (Medo.MessageBox.ShowQuestion(this, string.Format(CultureInfo.CurrentUICulture, "Do you really want to delete folder \"{0}\"?", folder), MessageBoxButtons.YesNo, MessageBoxDefaultButton.Button2) == DialogResult.Yes) {
-                    var directory = folder.Directory.FullName;
-                    var files = new List<string>();
-                    files.AddRange(Directory.GetFiles(directory, "*.txt"));
-                    files.AddRange(Directory.GetFiles(directory, "*.rtf"));
-                    if (files.Count > 0) {
-                        if (Medo.MessageBox.ShowQuestion(this, string.Format(CultureInfo.CurrentUICulture, "Folder \"{0}\" is not empty. Do you really want to delete it?", folder), MessageBoxButtons.YesNo, MessageBoxDefaultButton.Button2) != DialogResult.Yes) {
-                            return;
-                        }
+                    if (!folder.IsEmpty && Medo.MessageBox.ShowQuestion(this, string.Format(CultureInfo.CurrentUICulture, "Folder \"{0}\" is not empty. Do you really want to delete it?", folder), MessageBoxButtons.YesNo, MessageBoxDefaultButton.Button2) != DialogResult.Yes) {
+                        return;
                     }
 
                     try {
-                        if (Settings.FilesDeleteToRecycleBin) {
-                            SHFile.DeleteDirectory(directory);
-                        } else {
-                            Directory.Delete(directory, true);
-                        }
+                        folder.Delete();
                         lsv.Items.RemoveAt(lsv.SelectedItems[0].Index);
                         if (lsv.FocusedItem != null) { lsv.FocusedItem.Selected = true; }
                         if (this.CurrentFolder.Equals(folder)) {
                             this.CurrentFolder = Document.GetRootFolder();
                         }
-                    } catch (Exception ex) {
+                    } catch (ApplicationException ex) {
                         Medo.MessageBox.ShowError(this, string.Format(CultureInfo.CurrentUICulture, "Cannot delete folder.\n\n{0}", ex.Message));
                     }
                 }

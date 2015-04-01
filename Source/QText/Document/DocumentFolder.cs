@@ -59,6 +59,24 @@ namespace QText {
             }
         }
 
+        internal bool IsEmpty {
+            get {
+                return (this.Directory.GetFiles("*.txt").Length == 0) && (this.Directory.GetFiles("*.rtf").Length == 0);
+            }
+        }
+
+        internal void Delete() {
+            try {
+                if (Settings.FilesDeleteToRecycleBin) {
+                    SHFile.DeleteDirectory(this.Directory.FullName);
+                } else {
+                    this.Directory.Delete(true);
+                }
+            } catch (Exception ex) {
+                throw new ApplicationException(ex.Message, ex);
+            }
+        }
+
         #endregion
 
 
