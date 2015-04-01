@@ -104,7 +104,7 @@ namespace QText {
                 foreach (var folderTab in folderTabs) {
                     if (folderTab.FindForward(SearchStatus.Text, SearchStatus.CaseSensitive, 0)) {
                         if (string.Equals(folder.Name, tabs.CurrentFolder.Name, StringComparison.OrdinalIgnoreCase) == false) {
-                            tabs.FolderOpen(folder.Name);
+                            tabs.FolderOpen(folder);
                         }
                         foreach (TabFile tab in tabs.TabPages) {
                             if (string.Equals(tab.CurrentFile.Path, folderTab.CurrentFile.Path, StringComparison.OrdinalIgnoreCase)) {

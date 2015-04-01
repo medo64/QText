@@ -210,7 +210,7 @@ namespace QText {
                         var list = new List<DocumentFolder>(Document.GetFolders());
                         var index = list.FindIndex(delegate(DocumentFolder folder) { return folder.Equals(currFolder); });
                         if (index > 0) {
-                            tabFiles.FolderOpen(list[index - 1].Name);
+                            tabFiles.FolderOpen(list[index - 1]);
                             mnuFolder.Text = tabFiles.CurrentFolder.Title;
                             Settings.LastFolder = tabFiles.CurrentFolder.Name;
                         }
@@ -223,7 +223,7 @@ namespace QText {
                         var list = new List<DocumentFolder>(Document.GetFolders());
                         var index = list.FindIndex(delegate(DocumentFolder folder) { return folder.Equals(currFolder); });
                         if (index < list.Count - 1) {
-                            tabFiles.FolderOpen(list[index + 1].Name);
+                            tabFiles.FolderOpen(list[index + 1]);
                             mnuFolder.Text = tabFiles.CurrentFolder.Title;
                             Settings.LastFolder = tabFiles.CurrentFolder.Name;
                         }
@@ -732,7 +732,7 @@ namespace QText {
                         if (TryFolderSave()) {
                             var oldFolder = tabFiles.CurrentFolder;
                             var newFolder = destination.Folder;
-                            FolderChange(oldFolder.Name, newFolder);
+                            FolderChange(oldFolder.Name, newFolder.Name);
                             foreach (TabFile tab in this.tabFiles.TabPages) {
                                 if (string.Equals(tab.Title, destination.Document)) {
                                     tabFiles.SelectedTab = tab;
@@ -744,7 +744,7 @@ namespace QText {
                         if (TryFolderSave()) {
                             var oldFolder = tabFiles.CurrentFolder;
                             var newFolder = destination.Folder;
-                            FolderChange(oldFolder.Name, newFolder);
+                            FolderChange(oldFolder.Name, newFolder.Name);
                         }
                     }
                 }
@@ -785,9 +785,9 @@ namespace QText {
             tmrQuickSave.Enabled = false;
             tabFiles.Enabled = false;
             tabFiles.FolderSave();
-            using (var frm = new FolderEditForm(tabFiles.CurrentFolder.Name)) {
+            using (var frm = new FolderEditForm(tabFiles.CurrentFolder)) {
                 frm.ShowDialog(this);
-                if (!string.Equals(tabFiles.CurrentFolder.Name, frm.CurrentFolder, StringComparison.Ordinal)) {
+                if (!tabFiles.CurrentFolder.Equals(frm.CurrentFolder)) {
                     tabFiles.Enabled = true;
                     tabFiles.FolderOpen(frm.CurrentFolder, false);
                     mnuFolder.Text = tabFiles.CurrentFolder.Title;
@@ -1323,14 +1323,14 @@ namespace QText {
                 }
             }
 
-            var currentFolder = tabFiles.CurrentFolder ?? Document.GetRoot();
+            var currentFolder = tabFiles.CurrentFolder ?? Document.GetRootFolder();
 
-            tabFiles.FolderOpen(Settings.LastFolder);
+            tabFiles.FolderOpen(Document.GetFolder(Settings.LastFolder) ?? Document.GetRootFolder());
             try {
                 SetSelectedTab(tabFiles.SelectedTab);
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot load folder.\n\n{0}", ex.Message));
-                tabFiles.FolderOpen(currentFolder.Name);
+                tabFiles.FolderOpen(currentFolder);
             }
 
             mnuFolder.Text = tabFiles.CurrentFolder.Title;
@@ -1503,7 +1503,7 @@ namespace QText {
 
         private void FolderChange(string oldFolder, string newFolder) {
             if (string.Equals(oldFolder, newFolder, StringComparison.OrdinalIgnoreCase) == false) {
-                tabFiles.FolderOpen(newFolder);
+                tabFiles.FolderOpen(Document.GetFolder(newFolder));
                 mnuFolder.Text = tabFiles.CurrentFolder.Title;
                 Settings.LastFolder = tabFiles.CurrentFolder.Name;
             }

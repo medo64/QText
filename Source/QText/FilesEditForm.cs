@@ -147,7 +147,7 @@ namespace QText {
 
         private void mnuSort_Click(object sender, EventArgs e) {
             Document.CleanOrderedTitles(this.TabFiles.CurrentFolder.Name);
-            this.TabFiles.FolderOpen(this.TabFiles.CurrentFolder.Name, false);
+            this.TabFiles.FolderOpen(this.TabFiles.CurrentFolder, saveBeforeOpen: false);
         }
 
         #endregion

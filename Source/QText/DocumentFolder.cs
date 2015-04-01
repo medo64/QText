@@ -4,10 +4,14 @@ using System.IO;
 namespace QText {
     internal class DocumentFolder {
 
-        public DocumentFolder(DirectoryInfo directory, string name, string title) {
+        public DocumentFolder(DirectoryInfo directory, string name) {
             this.Directory = directory;
             this.Name = name;
-            this.Title = title;
+            if (string.IsNullOrEmpty(name)) {
+                this.Title = "(Default)";
+            } else {
+                this.Title = Helper.DecodeFileName(name);
+            }
         }
 
 
@@ -26,6 +30,36 @@ namespace QText {
         /// </summary>
         public string Title { get; private set; }
 
+        /// <summary>
+        /// Gets if given folder is root.
+        /// </summary>
+        public bool IsRoot { get { return string.IsNullOrEmpty(this.Name); } }
+
+
+        #region Operations
+
+        internal void Rename(string newTitle) {
+            if (string.IsNullOrEmpty(this.Name)) { throw new IOException("Cannot rename root folder."); }
+            if (string.IsNullOrEmpty(newTitle)) { throw new IOException("Folder name cannot be empty."); }
+            newTitle = newTitle.Trim();
+
+            try {
+                var newName = Helper.EncodeFileName(newTitle);
+
+                var oldPath = this.Directory.FullName;
+                var newPath = Path.Combine(this.Directory.Parent.FullName, newName);
+
+                Helper.MovePath(oldPath, newPath);
+
+                this.Directory = new DirectoryInfo(newPath);
+                this.Name = newName;
+                this.Title = newTitle;
+            } catch (Exception ex) {
+                throw new IOException(ex.Message);
+            }
+        }
+
+        #endregion
 
         #region Overrides
 

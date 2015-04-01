@@ -64,25 +64,15 @@ namespace QText {
         public ContextMenuStrip TabContextMenuStrip { get; set; }
 
 
-        public void FolderOpen(string folderName, bool saveBeforeOpen = true) {
-            if (folderName == null) { throw new ArgumentNullException("folder", "Folder cannot be null."); }
+        public void FolderOpen(DocumentFolder folder, bool saveBeforeOpen = true) {
+            if (folder == null) { throw new ArgumentNullException("folder", "Folder cannot be null."); }
             if ((this.CurrentFolder != null) && (saveBeforeOpen)) { FolderSave(); }
-
-            //check if it exists
-            string newFolderName = "";
-            foreach (var iFolder in Document.GetSubFolders()) {
-                if (string.Equals(iFolder.Name, folderName, StringComparison.OrdinalIgnoreCase)) {
-                    newFolderName = iFolder.Name;
-                    break;
-                }
-            }
-            folderName = newFolderName;
 
             var initialVisibility = this.Visible;
             this.Visible = false;
             this.SelectedTab = null;
             this.TabPages.Clear();
-            this.CurrentFolder = Document.GetFolder(folderName);
+            this.CurrentFolder = folder;
 
             foreach (var tab in Document.GetTabs(Document.GetFilePaths(this.CurrentFolder.Name), this.TabContextMenuStrip)) {
                 this.TabPages.Add(tab);

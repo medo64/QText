@@ -9,13 +9,13 @@ using System.Windows.Forms;
 namespace QText {
     internal partial class FolderEditForm : Form {
 
-        public FolderEditForm(string currentFolder) {
+        public FolderEditForm(DocumentFolder currentFolder) {
             InitializeComponent();
             this.Font = SystemFonts.MessageBoxFont;
-
-            this.CurrentFolder = currentFolder;
             mnu.Renderer = Helper.ToolstripRenderer;
             Helper.ScaleToolstrip(mnu);
+
+            this.CurrentFolder = currentFolder;
 
             Medo.Windows.Forms.State.SetupOnLoadAndClose(this);
         }
@@ -66,15 +66,16 @@ namespace QText {
         }
 
 
-        public string CurrentFolder { get; private set; }
+        public DocumentFolder CurrentFolder { get; private set; }
 
 
         private void Form_Load(object sender, System.EventArgs e) {
             foreach (var folder in Document.GetSubFolders()) {
-                lsv.Items.Add(folder.Name);
+                lsv.Items.Add(new ListViewItem(folder.Title) { Tag = folder });
             }
             foreach (ListViewItem item in lsv.Items) {
-                if (string.Equals(item.Text, this.CurrentFolder, StringComparison.Ordinal)) {
+                var folder = (DocumentFolder)item.Tag;
+                if (this.CurrentFolder.Equals(folder)) {
                     item.Focused = true;
                     item.Selected = true;
                     break;
@@ -85,16 +86,15 @@ namespace QText {
 
         private void lsv_AfterLabelEdit(object sender, LabelEditEventArgs e) {
             if (e.Label == null) { e.CancelEdit = true; return; }
-            var oldName = lsv.Items[e.Item].Text;
-            var newName = e.Label.Trim();
+            var oldFolder = (DocumentFolder)lsv.Items[e.Item].Tag;
+
+            var newTitle = e.Label.Trim();
             try {
-                if (string.Equals(oldName, newName, StringComparison.Ordinal)) {
+                if (string.Equals(oldFolder.Name, newTitle, StringComparison.Ordinal)) {
                     e.CancelEdit = true;
                 } else {
                     try {
-                        var oldPath = Path.Combine(Settings.FilesLocation, Helper.EncodeFileName(oldName));
-                        var newPath = Path.Combine(Settings.FilesLocation, Helper.EncodeFileName(newName));
-                        Helper.MovePath(oldPath, newPath);
+                        oldFolder.Rename(newTitle);
                     } catch (Exception) {
                         e.CancelEdit = true;
                         throw;
@@ -103,14 +103,11 @@ namespace QText {
             } catch (Exception ex) {
                 Medo.MessageBox.ShowError(this, string.Format(CultureInfo.CurrentUICulture, "Cannot rename folder.\n\n{0}", ex.Message));
             }
-            if ((e.CancelEdit == false) && string.Equals(oldName, this.CurrentFolder, StringComparison.Ordinal)) {
-                this.CurrentFolder = newName;
-            }
         }
 
         private void lsv_ItemActivate(object sender, System.EventArgs e) {
             if (lsv.SelectedItems.Count == 1) {
-                this.CurrentFolder = lsv.SelectedItems[0].Text;
+                this.CurrentFolder = (DocumentFolder)lsv.SelectedItems[0].Tag;
                 this.DialogResult = DialogResult.OK;
             }
         }
@@ -164,9 +161,9 @@ namespace QText {
 
         private void mnuDelete_Click(object sender, System.EventArgs e) {
             if (lsv.SelectedItems.Count == 1) {
-                var folder = lsv.SelectedItems[0].Text;
+                var folder = (DocumentFolder)lsv.SelectedItems[0].Tag;
                 if (Medo.MessageBox.ShowQuestion(this, string.Format(CultureInfo.CurrentUICulture, "Do you really want to delete folder \"{0}\"?", folder), MessageBoxButtons.YesNo, MessageBoxDefaultButton.Button2) == DialogResult.Yes) {
-                    var directory = Path.Combine(Settings.FilesLocation, folder);
+                    var directory = folder.Directory.FullName;
                     var files = new List<string>();
                     files.AddRange(Directory.GetFiles(directory, "*.txt"));
                     files.AddRange(Directory.GetFiles(directory, "*.rtf"));
@@ -184,8 +181,8 @@ namespace QText {
                         }
                         lsv.Items.RemoveAt(lsv.SelectedItems[0].Index);
                         if (lsv.FocusedItem != null) { lsv.FocusedItem.Selected = true; }
-                        if (string.Equals(folder, this.CurrentFolder, StringComparison.Ordinal)) {
-                            this.CurrentFolder = "";
+                        if (this.CurrentFolder.Equals(folder)) {
+                            this.CurrentFolder = Document.GetRootFolder();
                         }
                     } catch (Exception ex) {
                         Medo.MessageBox.ShowError(this, string.Format(CultureInfo.CurrentUICulture, "Cannot delete folder.\n\n{0}", ex.Message));

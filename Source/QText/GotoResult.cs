@@ -9,13 +9,13 @@ namespace QText {
         internal static IEnumerable<GotoResult> GetSuggestions(string suggestion, bool allowLineNumbers) {
             if (suggestion.Length == 0) {
 
-                yield return new GotoResult(null, "", null);
+                yield return new GotoResult(null, QText.Document.GetRootFolder(), null);
 
             } else {
 
                 if (allowLineNumbers) {
                     int lineNumber;
-                    if (int.TryParse(suggestion, System.Globalization.NumberStyles.Integer, CultureInfo.CurrentCulture, out lineNumber)) {
+                    if (int.TryParse(suggestion, NumberStyles.Integer, CultureInfo.CurrentCulture, out lineNumber)) {
                         if (lineNumber > 0) {
                             yield return new GotoResult(lineNumber, null, null);
                         }
@@ -24,19 +24,19 @@ namespace QText {
 
                 foreach (var folder in QText.Document.GetSubFolders()) {
                     if (folder.Name.IndexOf(suggestion, StringComparison.CurrentCultureIgnoreCase) >= 0) {
-                        yield return new GotoResult(null, folder.Name, null);
+                        yield return new GotoResult(null, folder, null);
                     }
                 }
 
                 foreach (var file in QText.Document.GetTitles("")) {
                     if (file.IndexOf(suggestion, StringComparison.CurrentCultureIgnoreCase) >= 0) {
-                        yield return new GotoResult(null, "", file);
+                        yield return new GotoResult(null, QText.Document.GetRootFolder(), file);
                     }
                 }
                 foreach (var folder in QText.Document.GetSubFolders()) {
                     foreach (var file in QText.Document.GetTitles(folder.Name)) {
                         if (file.IndexOf(suggestion, StringComparison.CurrentCultureIgnoreCase) >= 0) {
-                            yield return new GotoResult(null, folder.Name, file);
+                            yield return new GotoResult(null, folder, file);
                         }
                     }
                 }
@@ -44,7 +44,7 @@ namespace QText {
             }
         }
 
-        private GotoResult(int? lineNumber, string folder, string document) {
+        private GotoResult(int? lineNumber, DocumentFolder folder, string document) {
             this.LineNumber = lineNumber;
             this.Folder = folder;
             this.Document = document;
@@ -52,7 +52,7 @@ namespace QText {
 
 
         public Int32? LineNumber { get; private set; }
-        public String Folder { get; private set; }
+        public DocumentFolder Folder { get; private set; }
         public String Document { get; private set; }
 
 
@@ -87,9 +87,9 @@ namespace QText {
                 return "Line " + LineNumber.Value.ToString() + " in current document";
             } else {
                 if (string.IsNullOrEmpty(this.Document)) {
-                    return string.IsNullOrEmpty(this.Folder) ? "(Default)" : this.Folder;
+                    return this.Folder.Title;
                 } else {
-                    return string.IsNullOrEmpty(this.Folder) ? this.Document : this.Document + " (in " + this.Folder + ")";
+                    return this.Folder.IsRoot ? this.Document : this.Document + " (in " + this.Folder + ")";
                 }
             }
         }

@@ -8,20 +8,20 @@ namespace QText {
 
         #region Folders
 
-        public static DocumentFolder GetRoot() {
+        public static DocumentFolder GetRootFolder() {
             var path = new DirectoryInfo(Settings.FilesLocation);
-            return new DocumentFolder(path, string.Empty, "(Default)");
+            return new DocumentFolder(path, string.Empty);
         }
 
         public static IEnumerable<DocumentFolder> GetFolders() {
-            yield return Document.GetRoot();
+            yield return Document.GetRootFolder();
             foreach (var folder in Document.GetSubFolders()) {
                 yield return folder;
             }
         }
 
         public static IEnumerable<DocumentFolder> GetSubFolders() {
-            var root = Document.GetRoot().Directory;
+            var root = Document.GetRootFolder().Directory;
 
             var directories = new List<DirectoryInfo>();
             foreach (var directory in root.GetDirectories()) {
@@ -31,7 +31,7 @@ namespace QText {
                 return string.Compare(item1.Name, item2.Name);
             });
             foreach (var directory in directories) {
-                yield return new DocumentFolder(directory, directory.Name, directory.Name);
+                yield return new DocumentFolder(directory, directory.Name);
             }
         }
 
