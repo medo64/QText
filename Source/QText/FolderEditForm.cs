@@ -70,8 +70,8 @@ namespace QText {
 
 
         private void Form_Load(object sender, System.EventArgs e) {
-            foreach (var folder in DocumentFolder.GetSubFolders()) {
-                lsv.Items.Add(folder);
+            foreach (var folder in Document.GetSubFolders()) {
+                lsv.Items.Add(folder.Name);
             }
             foreach (ListViewItem item in lsv.Items) {
                 if (string.Equals(item.Text, this.CurrentFolder, StringComparison.Ordinal)) {

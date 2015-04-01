@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -161,8 +161,8 @@ namespace QText {
                     var mapping = new Dictionary<QFileInfo, QFileInfo>();
                     try {
                         FillMapping(mapping, oldPath, newPath, "");
-                        foreach (var folder in DocumentFolder.GetSubFolders()) {
-                            FillMapping(mapping, oldPath, newPath, folder);
+                        foreach (var folder in Document.GetSubFolders()) {
+                            FillMapping(mapping, oldPath, newPath, folder.Name);
                         }
                     } catch (Exception ex) {
                         Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot enumerate current folder. Move will be aborted.\n\n{0}", ex.Message));

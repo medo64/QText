@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -22,21 +22,21 @@ namespace QText {
                     }
                 }
 
-                foreach (var folder in DocumentFolder.GetSubFolders()) {
-                    if (folder.IndexOf(suggestion, StringComparison.CurrentCultureIgnoreCase) >= 0) {
-                        yield return new GotoResult(null, folder, null);
+                foreach (var folder in QText.Document.GetSubFolders()) {
+                    if (folder.Name.IndexOf(suggestion, StringComparison.CurrentCultureIgnoreCase) >= 0) {
+                        yield return new GotoResult(null, folder.Name, null);
                     }
                 }
 
-                foreach (var file in DocumentFolder.GetTitles("")) {
+                foreach (var file in QText.Document.GetTitles("")) {
                     if (file.IndexOf(suggestion, StringComparison.CurrentCultureIgnoreCase) >= 0) {
                         yield return new GotoResult(null, "", file);
                     }
                 }
-                foreach (var folder in DocumentFolder.GetSubFolders()) {
-                    foreach (var file in DocumentFolder.GetTitles(folder)) {
+                foreach (var folder in QText.Document.GetSubFolders()) {
+                    foreach (var file in QText.Document.GetTitles(folder.Name)) {
                         if (file.IndexOf(suggestion, StringComparison.CurrentCultureIgnoreCase) >= 0) {
-                            yield return new GotoResult(null, folder, file);
+                            yield return new GotoResult(null, folder.Name, file);
                         }
                     }
                 }

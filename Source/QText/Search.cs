@@ -90,9 +90,9 @@ namespace QText {
             }
 
             //search in other folders
-            var folders = new List<string>(DocumentFolder.GetFolders());
+            var folders = new List<DocumentFolder>(Document.GetFolders());
             for (int i = 0; i < folders.Count; i++) {
-                if (folders[0].Equals(tabs.CurrentFolder)) {
+                if (folders[0].Name.Equals(tabs.CurrentFolder)) {
                     folders.RemoveAt(0);
                     break;
                 }
@@ -100,11 +100,11 @@ namespace QText {
                 folders.RemoveAt(0);
             }
             foreach (var folder in folders) {
-                var folderTabs = DocumentFolder.GetTabs(DocumentFolder.GetFilePaths(folder), null);
+                var folderTabs = Document.GetTabs(Document.GetFilePaths(folder.Name), null);
                 foreach (var folderTab in folderTabs) {
                     if (folderTab.FindForward(SearchStatus.Text, SearchStatus.CaseSensitive, 0)) {
-                        if (string.Equals(folder, tabs.CurrentFolder, StringComparison.OrdinalIgnoreCase) == false) {
-                            tabs.FolderOpen(folder);
+                        if (string.Equals(folder.Name, tabs.CurrentFolder, StringComparison.OrdinalIgnoreCase) == false) {
+                            tabs.FolderOpen(folder.Name);
                         }
                         foreach (TabFile tab in tabs.TabPages) {
                             if (string.Equals(tab.CurrentFile.Path, folderTab.CurrentFile.Path, StringComparison.OrdinalIgnoreCase)) {

@@ -1,16 +1,35 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 
 namespace QText {
-    internal static class DocumentFolder {
+    internal static class Document {
 
-        public static IEnumerable<String> GetFolders() {
-            yield return "";
-            foreach (var folder in GetSubFolders()) {
+        public static DocumentFolder GetRoot() {
+            var path = new DirectoryInfo(Settings.FilesLocation);
+            return new DocumentFolder(path, string.Empty, "(Default)");
+        }
+
+        public static IEnumerable<DocumentFolder> GetFolders() {
+            yield return Document.GetRoot();
+            foreach (var folder in Document.GetSubFolders()) {
                 yield return folder;
+            }
+        }
+
+        public static IEnumerable<DocumentFolder> GetSubFolders() {
+            var root = Document.GetRoot().Directory;
+
+            var directories = new List<DirectoryInfo>();
+            foreach (var directory in root.GetDirectories()) {
+                directories.Add(directory);
+            }
+            directories.Sort(delegate(DirectoryInfo item1, DirectoryInfo item2) {
+                return string.Compare(item1.Name, item2.Name);
+            });
+            foreach (var directory in directories) {
+                yield return new DocumentFolder(directory, directory.Name, directory.Name);
             }
         }
 
@@ -80,17 +99,6 @@ namespace QText {
                 var tab = new TabFile(new QFile(file));
                 tab.ContextMenuStrip = contextMenuStrip;
                 yield return tab;
-            }
-        }
-
-        public static IEnumerable<String> GetSubFolders() {
-            var folders = new List<string>();
-            foreach (var directory in Directory.GetDirectories(Settings.FilesLocation)) {
-                folders.Add(Helper.DecodeFileName(new DirectoryInfo(directory).Name));
-            }
-            folders.Sort();
-            foreach (var folder in folders) {
-                yield return folder;
             }
         }
 

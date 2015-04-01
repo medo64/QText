@@ -207,11 +207,10 @@ namespace QText {
                 case Keys.Alt | Keys.PageUp:
                 case Keys.Alt | Keys.Up: {
                         var currFolder = tabFiles.CurrentFolder;
-                        var list = new List<string>(new string[] { "" });
-                        list.AddRange(DocumentFolder.GetSubFolders());
-                        var index = list.FindIndex(delegate(string folder) { return string.Equals(folder, currFolder, StringComparison.OrdinalIgnoreCase); });
+                        var list = new List<DocumentFolder>(Document.GetFolders());
+                        var index = list.FindIndex(delegate(DocumentFolder folder) { return string.Equals(folder.Name, currFolder, StringComparison.OrdinalIgnoreCase); });
                         if (index > 0) {
-                            tabFiles.FolderOpen(list[index - 1]);
+                            tabFiles.FolderOpen(list[index - 1].Name);
                             mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
                             Settings.LastFolder = tabFiles.CurrentFolder;
                         }
@@ -221,11 +220,10 @@ namespace QText {
                 case Keys.Alt | Keys.PageDown:
                 case Keys.Alt | Keys.Down: {
                         var currFolder = tabFiles.CurrentFolder;
-                        var list = new List<string>(new string[] { "" });
-                        list.AddRange(DocumentFolder.GetSubFolders());
-                        var index = list.FindIndex(delegate(string folder) { return string.Equals(folder, currFolder, StringComparison.OrdinalIgnoreCase); });
+                        var list = new List<DocumentFolder>(Document.GetFolders());
+                        var index = list.FindIndex(delegate(DocumentFolder folder) { return string.Equals(folder.Name, currFolder, StringComparison.OrdinalIgnoreCase); });
                         if (index < list.Count - 1) {
-                            tabFiles.FolderOpen(list[index + 1]);
+                            tabFiles.FolderOpen(list[index + 1].Name);
                             mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
                             Settings.LastFolder = tabFiles.CurrentFolder;
                         }
@@ -318,7 +316,7 @@ namespace QText {
             }
 #endif
 
-            DocumentFolder.WriteOrderedTitles(tabFiles);
+            Document.WriteOrderedTitles(tabFiles);
 
             var failedTitles = new List<string>();
             var failedExceptions = new List<Exception>();
@@ -510,7 +508,7 @@ namespace QText {
                     try {
                         if (frm.ShowDialog(this) == DialogResult.OK) {
                             tabFiles.SelectedTab.Rename(frm.NewTitle);
-                            DocumentFolder.WriteOrderedTitles(tabFiles);
+                            Document.WriteOrderedTitles(tabFiles);
                         }
                     } catch (Exception ex) {
                         Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot rename file.\n\n{0}", ex.Message));
@@ -764,12 +762,11 @@ namespace QText {
 
         private void mnuFolder_DropDownOpening(object sender, EventArgs e) {
             mnuFolder.DropDownItems.Clear();
-            mnuFolder.DropDownItems.Add(new ToolStripMenuItem("(Default)", null, mnuFolder_Click) { Tag = "" });
-            foreach (var folder in DocumentFolder.GetSubFolders()) {
-                mnuFolder.DropDownItems.Add(new ToolStripMenuItem(folder, null, mnuFolder_Click) { Tag = folder });
+            foreach (var folder in Document.GetFolders()) {
+                mnuFolder.DropDownItems.Add(new ToolStripMenuItem(folder.Title, null, mnuFolder_Click) { Tag = folder });
             }
             foreach (ToolStripMenuItem item in mnuFolder.DropDownItems) {
-                item.Enabled = !string.Equals(tabFiles.CurrentFolder, (string)item.Tag, StringComparison.OrdinalIgnoreCase);
+                item.Enabled = !string.Equals(tabFiles.CurrentFolder, ((DocumentFolder)item.Tag).Name, StringComparison.OrdinalIgnoreCase);
             }
             mnuFolder.DropDownItems.Add(new ToolStripSeparator());
             mnuFolder.DropDownItems.Add(new ToolStripMenuItem("Edit folders", null, mnuFolderEdit_Click));
@@ -779,8 +776,8 @@ namespace QText {
         private void mnuFolder_Click(object sender, EventArgs e) {
             if (TryFolderSave()) {
                 var oldFolder = tabFiles.CurrentFolder;
-                var newFolder = ((ToolStripMenuItem)sender).Tag as string;
-                FolderChange(oldFolder, newFolder);
+                var newFolder = (DocumentFolder)(((ToolStripMenuItem)sender).Tag);
+                FolderChange(oldFolder, newFolder.Name);
             }
         }
 
@@ -934,8 +931,8 @@ namespace QText {
         private void mnxTabMoveTo_DropDownOpening(object sender, EventArgs e) {
             mnxTabMoveTo.DropDownItems.Clear();
             mnxTabMoveTo.DropDownItems.Add(new ToolStripMenuItem("(Default)", null, mnxTabMoveTo_Click) { Tag = null });
-            foreach (var folder in DocumentFolder.GetSubFolders()) {
-                mnxTabMoveTo.DropDownItems.Add(new ToolStripMenuItem(folder, null, mnxTabMoveTo_Click) { Tag = folder });
+            foreach (var folder in Document.GetSubFolders()) {
+                mnxTabMoveTo.DropDownItems.Add(new ToolStripMenuItem(folder.Name, null, mnxTabMoveTo_Click) { Tag = folder });
             }
             foreach (ToolStripMenuItem item in mnxTabMoveTo.DropDownItems) {
                 item.Enabled = !string.Equals(tabFiles.CurrentFolder, (string)item.Tag, StringComparison.OrdinalIgnoreCase);
