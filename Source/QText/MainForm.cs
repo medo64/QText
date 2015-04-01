@@ -762,13 +762,15 @@ namespace QText {
 
         private void mnuFolder_DropDownOpening(object sender, EventArgs e) {
             mnuFolder.DropDownItems.Clear();
+
             foreach (var folder in Document.GetFolders()) {
-                mnuFolder.DropDownItems.Add(new ToolStripMenuItem(folder.Title, null, mnuFolder_Click) { Tag = folder });
+                var item = new ToolStripMenuItem(folder.Title, null, mnuFolder_Click) { Tag = folder };
+                item.Enabled = !folder.Equals(tabFiles.CurrentFolder);
+                mnuFolder.DropDownItems.Add(item);
             }
-            foreach (ToolStripMenuItem item in mnuFolder.DropDownItems) {
-                item.Enabled = !tabFiles.CurrentFolder.Equals((DocumentFolder)(item.Tag));
-            }
+
             mnuFolder.DropDownItems.Add(new ToolStripSeparator());
+
             mnuFolder.DropDownItems.Add(new ToolStripMenuItem("Edit folders", null, mnuFolderEdit_Click));
             mnuFolder.DropDownItems.Add(new ToolStripMenuItem("Edit files", null, mnuFilesEdit_Click));
         }
@@ -930,11 +932,11 @@ namespace QText {
 
         private void mnxTabMoveTo_DropDownOpening(object sender, EventArgs e) {
             mnxTabMoveTo.DropDownItems.Clear();
+
             foreach (var folder in Document.GetFolders()) {
-                mnxTabMoveTo.DropDownItems.Add(new ToolStripMenuItem(folder.Title, null, mnxTabMoveTo_Click) { Tag = folder });
-            }
-            foreach (ToolStripMenuItem item in mnxTabMoveTo.DropDownItems) {
-                item.Enabled = !tabFiles.CurrentFolder.Equals((DocumentFolder)item.Tag);
+                var item = new ToolStripMenuItem(folder.Title, null, mnxTabMoveTo_Click) { Tag = folder };
+                item.Enabled = !folder.Equals(tabFiles.CurrentFolder);
+                mnxTabMoveTo.DropDownItems.Add(item);
             }
         }
 
