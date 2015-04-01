@@ -11,37 +11,79 @@ namespace QText {
 
                 yield return new GotoResult(null, QText.Document.GetRootFolder(), null);
 
-            } else {
+            } else if (!Settings.GotoSortResults) {
 
-                if (allowLineNumbers) {
-                    int lineNumber;
-                    if (int.TryParse(suggestion, NumberStyles.Integer, CultureInfo.CurrentCulture, out lineNumber)) {
-                        if (lineNumber > 0) {
-                            yield return new GotoResult(lineNumber, null, null);
+                foreach (var result in GetSuggestionsRaw(suggestion, allowLineNumbers)) {
+                    yield return result;
+                }
+
+            } else { //sort
+
+                var list = new List<GotoResult>(GetSuggestionsRaw(suggestion, allowLineNumbers));
+
+                list.Sort(delegate(GotoResult item1, GotoResult item2) {
+                    int initialCompare;
+                    if (!Settings.GotoSortPreferFolders || (item1.IsFolder == item2.IsFolder)) {
+                        initialCompare = 0;
+                    } else if (item1.IsFolder && !item2.IsFolder) {
+                        initialCompare = -1;
+                    } else {
+                        initialCompare = +1;
+                    }
+
+                    if (initialCompare == 0) {
+                        var title1 = item1.ToString();
+                        var title2 = item2.ToString();
+                        var starts1 = title1.StartsWith(suggestion, StringComparison.CurrentCultureIgnoreCase);
+                        var starts2 = title2.StartsWith(suggestion, StringComparison.CurrentCultureIgnoreCase);
+                        if (!Settings.GotoSortPreferPrefix || (starts1 == starts2)) {
+                            return string.Compare(title1, title2, StringComparison.CurrentCultureIgnoreCase);
+                        } else if (starts1 && !starts2) {
+                            return -1;
+                        } else {
+                            return +1;
                         }
+                    } else {
+                        return initialCompare;
                     }
-                }
+                });
 
-                foreach (var folder in QText.Document.GetSubFolders()) {
-                    if (folder.Name.IndexOf(suggestion, StringComparison.CurrentCultureIgnoreCase) >= 0) {
-                        yield return new GotoResult(null, folder, null);
-                    }
-                }
-
-                foreach (var file in QText.Document.GetTitles("")) {
-                    if (file.IndexOf(suggestion, StringComparison.CurrentCultureIgnoreCase) >= 0) {
-                        yield return new GotoResult(null, QText.Document.GetRootFolder(), file);
-                    }
-                }
-                foreach (var folder in QText.Document.GetSubFolders()) {
-                    foreach (var file in QText.Document.GetTitles(folder.Name)) {
-                        if (file.IndexOf(suggestion, StringComparison.CurrentCultureIgnoreCase) >= 0) {
-                            yield return new GotoResult(null, folder, file);
-                        }
-                    }
+                foreach (var item in list) {
+                    yield return item;
                 }
 
             }
+        }
+
+        internal static IEnumerable<GotoResult> GetSuggestionsRaw(string suggestion, bool allowLineNumbers) {
+            if (allowLineNumbers) {
+                int lineNumber;
+                if (int.TryParse(suggestion, NumberStyles.Integer, CultureInfo.CurrentCulture, out lineNumber)) {
+                    if (lineNumber > 0) {
+                        yield return new GotoResult(lineNumber, null, null);
+                    }
+                }
+            }
+
+            foreach (var folder in QText.Document.GetSubFolders()) {
+                if (folder.Name.IndexOf(suggestion, StringComparison.CurrentCultureIgnoreCase) >= 0) {
+                    yield return new GotoResult(null, folder, null);
+                }
+            }
+
+            foreach (var file in QText.Document.GetTitles("")) {
+                if (file.IndexOf(suggestion, StringComparison.CurrentCultureIgnoreCase) >= 0) {
+                    yield return new GotoResult(null, QText.Document.GetRootFolder(), file);
+                }
+            }
+            foreach (var folder in QText.Document.GetSubFolders()) {
+                foreach (var file in QText.Document.GetTitles(folder.Name)) {
+                    if (file.IndexOf(suggestion, StringComparison.CurrentCultureIgnoreCase) >= 0) {
+                        yield return new GotoResult(null, folder, file);
+                    }
+                }
+            }
+
         }
 
         private GotoResult(int? lineNumber, DocumentFolder folder, string document) {

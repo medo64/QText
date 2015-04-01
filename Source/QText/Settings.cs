@@ -328,5 +328,20 @@ namespace QText {
             set { Medo.Configuration.Settings.Write("ScaleBoost", value); }
         }
 
+        public static bool GotoSortResults {
+            get { return Medo.Configuration.Settings.Read("GotoSortResults", true); }
+            set { Medo.Configuration.Settings.Write("GotoSortResults", value); }
+        }
+
+        public static bool GotoSortPreferFolders {
+            get { return Medo.Configuration.Settings.Read("GotoSortPreferFolders", true); }
+            set { Medo.Configuration.Settings.Write("GotoSortPreferFolders", value); }
+        }
+
+        public static bool GotoSortPreferPrefix {
+            get { return Medo.Configuration.Settings.Read("GotoSortPreferPrefix", true); }
+            set { Medo.Configuration.Settings.Write("GotoSortPreferPrefix", value); }
+        }
+
     }
 }

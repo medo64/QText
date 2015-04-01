@@ -94,8 +94,8 @@
     <Compile Include="ChangePasswordForm.Designer.cs">
       <DependentUpon>ChangePasswordForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Document.cs" />
-    <Compile Include="DocumentFolder.cs" />
+    <Compile Include="Document\Document.cs" />
+    <Compile Include="Document\DocumentFolder.cs" />
     <Compile Include="FilesEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
