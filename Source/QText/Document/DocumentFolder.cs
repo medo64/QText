@@ -55,11 +55,12 @@ namespace QText {
                 this.Name = newName;
                 this.Title = newTitle;
             } catch (Exception ex) {
-                throw new IOException(ex.Message);
+                throw new ApplicationException(ex.Message, ex);
             }
         }
 
         #endregion
+
 
         #region Overrides
 

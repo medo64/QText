@@ -89,19 +89,15 @@ namespace QText {
             var oldFolder = (DocumentFolder)lsv.Items[e.Item].Tag;
 
             var newTitle = e.Label.Trim();
-            try {
-                if (string.Equals(oldFolder.Name, newTitle, StringComparison.Ordinal)) {
+            if (string.Equals(oldFolder.Title, newTitle, StringComparison.Ordinal)) {
+                e.CancelEdit = true;
+            } else {
+                try {
+                    oldFolder.Rename(newTitle);
+                } catch (ApplicationException ex) {
                     e.CancelEdit = true;
-                } else {
-                    try {
-                        oldFolder.Rename(newTitle);
-                    } catch (Exception) {
-                        e.CancelEdit = true;
-                        throw;
-                    }
+                    Medo.MessageBox.ShowError(this, string.Format(CultureInfo.CurrentUICulture, "Cannot rename folder.\n\n{0}", ex.Message));
                 }
-            } catch (Exception ex) {
-                Medo.MessageBox.ShowError(this, string.Format(CultureInfo.CurrentUICulture, "Cannot rename folder.\n\n{0}", ex.Message));
             }
         }
 
