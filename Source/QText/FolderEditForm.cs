@@ -130,25 +130,15 @@ namespace QText {
         #region Menu
 
         private void mnuNew_Click(object sender, System.EventArgs e) {
-            var newFolder = "New folder";
-            if (Directory.Exists(Path.Combine(Settings.FilesLocation, newFolder))) {
-                int n = 1;
-                while (true) {
-                    newFolder = string.Format(CultureInfo.CurrentUICulture, "New folder ({0})", n);
-                    if (Directory.Exists(Path.Combine(Settings.FilesLocation, newFolder)) == false) {
-                        break;
-                    }
-                    n += 1;
-                }
-            }
             try {
-                Directory.CreateDirectory(Path.Combine(Settings.FilesLocation, newFolder));
-                var item = new ListViewItem(newFolder);
+                var newFolder = Document.NewFolder();
+
+                var item = new ListViewItem(newFolder.Title) { Tag = newFolder };
                 lsv.Items.Add(item);
                 item.Focused = true;
                 item.Selected = true;
                 item.BeginEdit();
-            } catch (Exception ex) {
+            } catch (ApplicationException ex) {
                 Medo.MessageBox.ShowError(this, string.Format(CultureInfo.CurrentUICulture, "Cannot create folder.\n\n{0}", ex.Message));
             }
         }

@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
 namespace QText {
     internal static class Document {
 
-        #region Folders
+        #region Enumerate
 
         public static DocumentFolder GetRootFolder() {
             var path = new DirectoryInfo(Settings.FilesLocation);
@@ -43,6 +44,33 @@ namespace QText {
                 }
             }
             return null;
+        }
+
+        #endregion
+
+
+        #region New folder
+
+        public static DocumentFolder NewFolder() {
+            try {
+                var newTitle = "New folder";
+                var newPath = Path.Combine(Settings.FilesLocation, Helper.EncodeFileName(newTitle));
+                if (Directory.Exists(newPath)) {
+                    int n = 1;
+                    while (true) {
+                        newTitle = string.Format(CultureInfo.CurrentUICulture, "New folder ({0})", n);
+                        newPath = Path.Combine(Settings.FilesLocation, Helper.EncodeFileName(newTitle));
+                        if (!Directory.Exists(newPath)) { break; } //this folder is available
+                        n += 1;
+                    }
+                }
+
+                Directory.CreateDirectory(newPath);
+
+                return new DocumentFolder(new DirectoryInfo(newPath), newTitle);
+            } catch (Exception ex) {
+                throw new ApplicationException(ex.Message, ex);
+            }
         }
 
         #endregion
