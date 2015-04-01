@@ -728,13 +728,13 @@ namespace QText {
                             tf.TextBox.SelectionStart = index;
                             tf.TextBox.SelectionLength = 0;
                         }
-                    } else if (destination.IsDocument) {
+                    } else if (destination.IsFile) {
                         if (TryFolderSave()) {
                             var oldFolder = tabFiles.CurrentFolder;
                             var newFolder = destination.Folder;
                             FolderChange(oldFolder.Name, newFolder.Name);
                             foreach (TabFile tab in this.tabFiles.TabPages) {
-                                if (string.Equals(tab.Title, destination.Document)) {
+                                if (string.Equals(tab.Title, destination.File)) {
                                     tabFiles.SelectedTab = tab;
                                     break;
                                 }
