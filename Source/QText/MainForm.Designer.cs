@@ -220,7 +220,7 @@ namespace QText {
             this.mnuPrint.Image = global::QText.Properties.Resources.mnuPrint_16;
             this.mnuPrint.Name = "mnuPrint";
             this.mnuPrint.ShortcutKeyDisplayString = "Ctrl+P";
-            this.mnuPrint.Size = new System.Drawing.Size(167, 26);
+            this.mnuPrint.Size = new System.Drawing.Size(169, 26);
             this.mnuPrint.Text = "Print";
             this.mnuPrint.Click += new System.EventHandler(this.mnuPrint_Click);
             // 
@@ -228,20 +228,20 @@ namespace QText {
             // 
             this.mnuPrintPreview.Image = global::QText.Properties.Resources.mnuPrintPreview_16;
             this.mnuPrintPreview.Name = "mnuPrintPreview";
-            this.mnuPrintPreview.Size = new System.Drawing.Size(167, 26);
+            this.mnuPrintPreview.Size = new System.Drawing.Size(169, 26);
             this.mnuPrintPreview.Text = "Print Preview";
             this.mnuPrintPreview.Click += new System.EventHandler(this.mnuPrintPreview_Click);
             // 
             // toolStripMenuItem6
             // 
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(164, 6);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(166, 6);
             // 
             // mnuPrintSetup
             // 
             this.mnuPrintSetup.Image = global::QText.Properties.Resources.mnuPrintSetup_16;
             this.mnuPrintSetup.Name = "mnuPrintSetup";
-            this.mnuPrintSetup.Size = new System.Drawing.Size(167, 26);
+            this.mnuPrintSetup.Size = new System.Drawing.Size(169, 26);
             this.mnuPrintSetup.Text = "Page setup";
             this.mnuPrintSetup.Click += new System.EventHandler(this.mnuPrintSetup_Click);
             // 
@@ -384,7 +384,7 @@ namespace QText {
             this.mnuFindFind.Image = global::QText.Properties.Resources.mnuFind_16;
             this.mnuFindFind.Name = "mnuFindFind";
             this.mnuFindFind.ShortcutKeyDisplayString = "Ctrl+F";
-            this.mnuFindFind.Size = new System.Drawing.Size(167, 26);
+            this.mnuFindFind.Size = new System.Drawing.Size(169, 26);
             this.mnuFindFind.Tag = "mnuFind";
             this.mnuFindFind.Text = "Find";
             this.mnuFindFind.Click += new System.EventHandler(this.mnuFindFind_Click);
@@ -394,7 +394,7 @@ namespace QText {
             this.mnuFindFindNext.Image = global::QText.Properties.Resources.mnuFindNext_16;
             this.mnuFindFindNext.Name = "mnuFindFindNext";
             this.mnuFindFindNext.ShortcutKeyDisplayString = "F3";
-            this.mnuFindFindNext.Size = new System.Drawing.Size(167, 26);
+            this.mnuFindFindNext.Size = new System.Drawing.Size(169, 26);
             this.mnuFindFindNext.Tag = "mnuFindNext";
             this.mnuFindFindNext.Text = "Find next";
             this.mnuFindFindNext.Click += new System.EventHandler(this.mnuFindFindNext_Click);
@@ -402,13 +402,13 @@ namespace QText {
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(164, 6);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(166, 6);
             // 
             // mnuFindGoto
             // 
             this.mnuFindGoto.Name = "mnuFindGoto";
             this.mnuFindGoto.ShortcutKeyDisplayString = "Ctrl+G";
-            this.mnuFindGoto.Size = new System.Drawing.Size(167, 26);
+            this.mnuFindGoto.Size = new System.Drawing.Size(169, 26);
             this.mnuFindGoto.Text = "Goto";
             this.mnuFindGoto.Click += new System.EventHandler(this.mnuFindGoto_Click);
             // 
@@ -441,45 +441,45 @@ namespace QText {
             // mnuAppOptions
             // 
             this.mnuAppOptions.Name = "mnuAppOptions";
-            this.mnuAppOptions.Size = new System.Drawing.Size(200, 24);
+            this.mnuAppOptions.Size = new System.Drawing.Size(206, 26);
             this.mnuAppOptions.Text = "&Options";
             this.mnuAppOptions.Click += new System.EventHandler(this.mnuAppOptions_Click);
             // 
             // mnuApp0
             // 
             this.mnuApp0.Name = "mnuApp0";
-            this.mnuApp0.Size = new System.Drawing.Size(197, 6);
+            this.mnuApp0.Size = new System.Drawing.Size(203, 6);
             // 
             // mnuAppFeedback
             // 
             this.mnuAppFeedback.Name = "mnuAppFeedback";
-            this.mnuAppFeedback.Size = new System.Drawing.Size(200, 24);
+            this.mnuAppFeedback.Size = new System.Drawing.Size(206, 26);
             this.mnuAppFeedback.Text = "Send &feedback";
             this.mnuAppFeedback.Click += new System.EventHandler(this.mnuAppFeedback_Click);
             // 
             // mnuAppUpgrade
             // 
             this.mnuAppUpgrade.Name = "mnuAppUpgrade";
-            this.mnuAppUpgrade.Size = new System.Drawing.Size(200, 24);
+            this.mnuAppUpgrade.Size = new System.Drawing.Size(206, 26);
             this.mnuAppUpgrade.Text = "Check for &upgrade";
             this.mnuAppUpgrade.Click += new System.EventHandler(this.mnuAppUpgrade_Click);
             // 
             // mnuAppDonate
             // 
             this.mnuAppDonate.Name = "mnuAppDonate";
-            this.mnuAppDonate.Size = new System.Drawing.Size(200, 24);
+            this.mnuAppDonate.Size = new System.Drawing.Size(206, 26);
             this.mnuAppDonate.Text = "&Donate";
             this.mnuAppDonate.Click += new System.EventHandler(this.mnuAppDonate_Click);
             // 
             // mnuApp1
             // 
             this.mnuApp1.Name = "mnuApp1";
-            this.mnuApp1.Size = new System.Drawing.Size(197, 6);
+            this.mnuApp1.Size = new System.Drawing.Size(203, 6);
             // 
             // mnuAppAbout
             // 
             this.mnuAppAbout.Name = "mnuAppAbout";
-            this.mnuAppAbout.Size = new System.Drawing.Size(200, 24);
+            this.mnuAppAbout.Size = new System.Drawing.Size(206, 26);
             this.mnuAppAbout.Text = "&About";
             this.mnuAppAbout.Click += new System.EventHandler(this.mnuAppAbout_Click);
             // 
@@ -534,7 +534,7 @@ namespace QText {
             this.mnxTextSelection,
             this.mnxTextLines});
             this.mnxText.Name = "mnxTextBox";
-            this.mnxText.Size = new System.Drawing.Size(292, 450);
+            this.mnxText.Size = new System.Drawing.Size(294, 450);
             this.mnxText.Opening += new System.ComponentModel.CancelEventHandler(this.mnxText_Opening);
             // 
             // mnxTextUndo
@@ -543,7 +543,7 @@ namespace QText {
             this.mnxTextUndo.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextUndo.Name = "mnxTextUndo";
             this.mnxTextUndo.ShortcutKeyDisplayString = "Ctrl+Z";
-            this.mnxTextUndo.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextUndo.Size = new System.Drawing.Size(293, 26);
             this.mnxTextUndo.Tag = "mnuUndo";
             this.mnxTextUndo.Text = "&Undo";
             this.mnxTextUndo.Click += new System.EventHandler(this.mnuUndo_Click);
@@ -554,7 +554,7 @@ namespace QText {
             this.mnxTextRedo.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextRedo.Name = "mnxTextRedo";
             this.mnxTextRedo.ShortcutKeyDisplayString = "Ctrl+Y";
-            this.mnxTextRedo.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextRedo.Size = new System.Drawing.Size(293, 26);
             this.mnxTextRedo.Tag = "mnuRedo";
             this.mnxTextRedo.Text = "&Redo";
             this.mnxTextRedo.Click += new System.EventHandler(this.mnuRedo_Click);
@@ -562,7 +562,7 @@ namespace QText {
             // mnxTextBox0
             // 
             this.mnxTextBox0.Name = "mnxTextBox0";
-            this.mnxTextBox0.Size = new System.Drawing.Size(288, 6);
+            this.mnxTextBox0.Size = new System.Drawing.Size(290, 6);
             // 
             // mnxTextCut
             // 
@@ -570,7 +570,7 @@ namespace QText {
             this.mnxTextCut.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextCut.Name = "mnxTextCut";
             this.mnxTextCut.ShortcutKeyDisplayString = "Ctrl+X";
-            this.mnxTextCut.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextCut.Size = new System.Drawing.Size(293, 26);
             this.mnxTextCut.Tag = "mnuCut";
             this.mnxTextCut.Text = "Cu&t";
             this.mnxTextCut.Click += new System.EventHandler(this.mnuCut_Click);
@@ -581,7 +581,7 @@ namespace QText {
             this.mnxTextCopy.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextCopy.Name = "mnxTextCopy";
             this.mnxTextCopy.ShortcutKeyDisplayString = "Ctrl+C";
-            this.mnxTextCopy.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextCopy.Size = new System.Drawing.Size(293, 26);
             this.mnxTextCopy.Tag = "mnuCopy";
             this.mnxTextCopy.Text = "&Copy";
             this.mnxTextCopy.Click += new System.EventHandler(this.mnuCopy_Click);
@@ -592,7 +592,7 @@ namespace QText {
             this.mnxTextPaste.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextPaste.Name = "mnxTextPaste";
             this.mnxTextPaste.ShortcutKeyDisplayString = "Ctrl+V";
-            this.mnxTextPaste.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextPaste.Size = new System.Drawing.Size(293, 26);
             this.mnxTextPaste.Tag = "mnuPaste";
             this.mnxTextPaste.Text = "&Paste";
             this.mnxTextPaste.Click += new System.EventHandler(this.mnuPaste_Click);
@@ -600,14 +600,14 @@ namespace QText {
             // mnxTextBoxCutCopyPasteAsTextSeparator
             // 
             this.mnxTextBoxCutCopyPasteAsTextSeparator.Name = "mnxTextBoxCutCopyPasteAsTextSeparator";
-            this.mnxTextBoxCutCopyPasteAsTextSeparator.Size = new System.Drawing.Size(288, 6);
+            this.mnxTextBoxCutCopyPasteAsTextSeparator.Size = new System.Drawing.Size(290, 6);
             // 
             // mnxTextCutPlain
             // 
             this.mnxTextCutPlain.Image = global::QText.Properties.Resources.mnuCut_16;
             this.mnxTextCutPlain.Name = "mnxTextCutPlain";
             this.mnxTextCutPlain.ShortcutKeyDisplayString = "Ctrl+Shift+X";
-            this.mnxTextCutPlain.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextCutPlain.Size = new System.Drawing.Size(293, 26);
             this.mnxTextCutPlain.Tag = "mnuCut";
             this.mnxTextCutPlain.Text = "Cut as plain text";
             this.mnxTextCutPlain.Click += new System.EventHandler(this.mnxTextCutPlain_Click);
@@ -617,7 +617,7 @@ namespace QText {
             this.mnxTextCopyPlain.Image = global::QText.Properties.Resources.mnuCopy_16;
             this.mnxTextCopyPlain.Name = "mnxTextCopyPlain";
             this.mnxTextCopyPlain.ShortcutKeyDisplayString = "Ctrl+Shift+C";
-            this.mnxTextCopyPlain.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextCopyPlain.Size = new System.Drawing.Size(293, 26);
             this.mnxTextCopyPlain.Tag = "mnuCopy";
             this.mnxTextCopyPlain.Text = "Copy as plain text";
             this.mnxTextCopyPlain.Click += new System.EventHandler(this.mnxTextCopyPlain_Click);
@@ -627,7 +627,7 @@ namespace QText {
             this.mnxTextPastePlain.Image = global::QText.Properties.Resources.mnuPaste_16;
             this.mnxTextPastePlain.Name = "mnxTextPastePlain";
             this.mnxTextPastePlain.ShortcutKeyDisplayString = "Ctrl+Shift+V";
-            this.mnxTextPastePlain.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextPastePlain.Size = new System.Drawing.Size(293, 26);
             this.mnxTextPastePlain.Tag = "mnuPaste";
             this.mnxTextPastePlain.Text = "Paste as plain text";
             this.mnxTextPastePlain.Click += new System.EventHandler(this.mnxTextPastePlain_Click);
@@ -635,27 +635,27 @@ namespace QText {
             // ToolStripMenuItem16
             // 
             this.ToolStripMenuItem16.Name = "ToolStripMenuItem16";
-            this.ToolStripMenuItem16.Size = new System.Drawing.Size(288, 6);
+            this.ToolStripMenuItem16.Size = new System.Drawing.Size(290, 6);
             // 
             // mnxTextSelectAll
             // 
             this.mnxTextSelectAll.Name = "mnxTextSelectAll";
             this.mnxTextSelectAll.ShortcutKeyDisplayString = "Ctrl+A";
-            this.mnxTextSelectAll.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextSelectAll.Size = new System.Drawing.Size(293, 26);
             this.mnxTextSelectAll.Text = "Select &all";
             this.mnxTextSelectAll.Click += new System.EventHandler(this.mnxTextSelectAll_Click);
             // 
             // ToolStripMenuItem4
             // 
             this.ToolStripMenuItem4.Name = "ToolStripMenuItem4";
-            this.ToolStripMenuItem4.Size = new System.Drawing.Size(288, 6);
+            this.ToolStripMenuItem4.Size = new System.Drawing.Size(290, 6);
             // 
             // mnxTextFont
             // 
             this.mnxTextFont.Image = global::QText.Properties.Resources.mnuFont_16;
             this.mnxTextFont.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextFont.Name = "mnxTextFont";
-            this.mnxTextFont.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextFont.Size = new System.Drawing.Size(293, 26);
             this.mnxTextFont.Tag = "mnuFont";
             this.mnxTextFont.Text = "&Font";
             this.mnxTextFont.Click += new System.EventHandler(this.mnuFont_Click);
@@ -666,7 +666,7 @@ namespace QText {
             this.mnxTextBold.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextBold.Name = "mnxTextBold";
             this.mnxTextBold.ShortcutKeyDisplayString = "Ctrl+B";
-            this.mnxTextBold.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextBold.Size = new System.Drawing.Size(293, 26);
             this.mnxTextBold.Tag = "mnuBold";
             this.mnxTextBold.Text = "&Bold";
             this.mnxTextBold.Click += new System.EventHandler(this.mnuBold_Click);
@@ -677,7 +677,7 @@ namespace QText {
             this.mnxTextItalic.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTextItalic.Name = "mnxTextItalic";
             this.mnxTextItalic.ShortcutKeyDisplayString = "Ctrl+I";
-            this.mnxTextItalic.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextItalic.Size = new System.Drawing.Size(293, 26);
             this.mnxTextItalic.Tag = "mnuItalic";
             this.mnxTextItalic.Text = "&Italic";
             this.mnxTextItalic.Click += new System.EventHandler(this.mnuItalic_Click);
@@ -687,7 +687,7 @@ namespace QText {
             this.mnxTextUnderline.Image = global::QText.Properties.Resources.mnuUnderline_16;
             this.mnxTextUnderline.Name = "mnxTextUnderline";
             this.mnxTextUnderline.ShortcutKeyDisplayString = "Ctrl+U";
-            this.mnxTextUnderline.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextUnderline.Size = new System.Drawing.Size(293, 26);
             this.mnxTextUnderline.Tag = "mnuUnderline";
             this.mnxTextUnderline.Text = "&Underline";
             this.mnxTextUnderline.Click += new System.EventHandler(this.mnuUnderline_Click);
@@ -696,7 +696,7 @@ namespace QText {
             // 
             this.mnxTextStrikeout.Image = global::QText.Properties.Resources.mnuStrikeout_16;
             this.mnxTextStrikeout.Name = "mnxTextStrikeout";
-            this.mnxTextStrikeout.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextStrikeout.Size = new System.Drawing.Size(293, 26);
             this.mnxTextStrikeout.Tag = "mnuStrikeout";
             this.mnxTextStrikeout.Text = "S&trikeout";
             this.mnxTextStrikeout.Click += new System.EventHandler(this.mnuStrikeout_Click);
@@ -704,7 +704,7 @@ namespace QText {
             // mnxTextRtfSeparator
             // 
             this.mnxTextRtfSeparator.Name = "mnxTextRtfSeparator";
-            this.mnxTextRtfSeparator.Size = new System.Drawing.Size(288, 6);
+            this.mnxTextRtfSeparator.Size = new System.Drawing.Size(290, 6);
             // 
             // mnxTextSelection
             // 
@@ -716,47 +716,47 @@ namespace QText {
             this.toolStripMenuItem1,
             this.mnxTextSelectionSpelling});
             this.mnxTextSelection.Name = "mnxTextSelection";
-            this.mnxTextSelection.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextSelection.Size = new System.Drawing.Size(293, 26);
             this.mnxTextSelection.Text = "&Selection";
             // 
             // mnxTextSelectionUpper
             // 
             this.mnxTextSelectionUpper.Name = "mnxTextSelectionUpper";
-            this.mnxTextSelectionUpper.Size = new System.Drawing.Size(344, 24);
+            this.mnxTextSelectionUpper.Size = new System.Drawing.Size(350, 26);
             this.mnxTextSelectionUpper.Text = "Convert to &upper case";
             this.mnxTextSelectionUpper.Click += new System.EventHandler(this.mnxTextSelectionUpper_Click);
             // 
             // mnxTextSelectionLower
             // 
             this.mnxTextSelectionLower.Name = "mnxTextSelectionLower";
-            this.mnxTextSelectionLower.Size = new System.Drawing.Size(344, 24);
+            this.mnxTextSelectionLower.Size = new System.Drawing.Size(350, 26);
             this.mnxTextSelectionLower.Text = "Convert to &lower case";
             this.mnxTextSelectionLower.Click += new System.EventHandler(this.mnxTextSelectionLower_Click);
             // 
             // mnxTextSelectionTitle
             // 
             this.mnxTextSelectionTitle.Name = "mnxTextSelectionTitle";
-            this.mnxTextSelectionTitle.Size = new System.Drawing.Size(344, 24);
+            this.mnxTextSelectionTitle.Size = new System.Drawing.Size(350, 26);
             this.mnxTextSelectionTitle.Text = "Convert to &title case";
             this.mnxTextSelectionTitle.Click += new System.EventHandler(this.mnxTextSelectionTitle_Click);
             // 
             // mnxTextSelectionDrGrammar
             // 
             this.mnxTextSelectionDrGrammar.Name = "mnxTextSelectionDrGrammar";
-            this.mnxTextSelectionDrGrammar.Size = new System.Drawing.Size(344, 24);
+            this.mnxTextSelectionDrGrammar.Size = new System.Drawing.Size(350, 26);
             this.mnxTextSelectionDrGrammar.Text = "Convert to title case (Dr. &Grammar rules)";
             this.mnxTextSelectionDrGrammar.Click += new System.EventHandler(this.mnxTextSelectionDrGrammar_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(341, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(347, 6);
             // 
             // mnxTextSelectionSpelling
             // 
             this.mnxTextSelectionSpelling.Name = "mnxTextSelectionSpelling";
             this.mnxTextSelectionSpelling.ShortcutKeyDisplayString = "Shift+F1";
-            this.mnxTextSelectionSpelling.Size = new System.Drawing.Size(344, 24);
+            this.mnxTextSelectionSpelling.Size = new System.Drawing.Size(350, 26);
             this.mnxTextSelectionSpelling.Text = "Spelling";
             this.mnxTextSelectionSpelling.Click += new System.EventHandler(this.mnxTextSelectionSpelling_Click);
             // 
@@ -768,32 +768,32 @@ namespace QText {
             this.toolStripMenuItem3,
             this.mnxTextLinesTrim});
             this.mnxTextLines.Name = "mnxTextLines";
-            this.mnxTextLines.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextLines.Size = new System.Drawing.Size(293, 26);
             this.mnxTextLines.Text = "&Lines";
             // 
             // mnxTextLinesSortAsc
             // 
             this.mnxTextLinesSortAsc.Name = "mnxTextLinesSortAsc";
-            this.mnxTextLinesSortAsc.Size = new System.Drawing.Size(185, 24);
+            this.mnxTextLinesSortAsc.Size = new System.Drawing.Size(191, 26);
             this.mnxTextLinesSortAsc.Text = "Sort &ascending";
             this.mnxTextLinesSortAsc.Click += new System.EventHandler(this.mnxTextLinesSortAsc_Click);
             // 
             // mnxTextLinesSortDesc
             // 
             this.mnxTextLinesSortDesc.Name = "mnxTextLinesSortDesc";
-            this.mnxTextLinesSortDesc.Size = new System.Drawing.Size(185, 24);
+            this.mnxTextLinesSortDesc.Size = new System.Drawing.Size(191, 26);
             this.mnxTextLinesSortDesc.Text = "Sort &descending";
             this.mnxTextLinesSortDesc.Click += new System.EventHandler(this.mnxTextLinesSortDesc_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(182, 6);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(188, 6);
             // 
             // mnxTextLinesTrim
             // 
             this.mnxTextLinesTrim.Name = "mnxTextLinesTrim";
-            this.mnxTextLinesTrim.Size = new System.Drawing.Size(185, 24);
+            this.mnxTextLinesTrim.Size = new System.Drawing.Size(191, 26);
             this.mnxTextLinesTrim.Text = "&Trim";
             this.mnxTextLinesTrim.Click += new System.EventHandler(this.mnxTextLinesTrim_Click);
             // 
@@ -826,7 +826,7 @@ namespace QText {
             this.ToolStripMenuItem14,
             this.mnxTabOpenContainingFolder});
             this.mnxTab.Name = "mnxTab";
-            this.mnxTab.Size = new System.Drawing.Size(237, 424);
+            this.mnxTab.Size = new System.Drawing.Size(239, 424);
             this.mnxTab.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.mnxTab_Closed);
             this.mnxTab.Opening += new System.ComponentModel.CancelEventHandler(this.mnxTab_Opening);
             // 
@@ -835,7 +835,7 @@ namespace QText {
             this.mnxTabNew.Image = global::QText.Properties.Resources.mnuNew_16;
             this.mnxTabNew.Name = "mnxTabNew";
             this.mnxTabNew.ShortcutKeyDisplayString = "Ctrl+N";
-            this.mnxTabNew.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabNew.Size = new System.Drawing.Size(238, 26);
             this.mnxTabNew.Tag = "mnuNew";
             this.mnxTabNew.Text = "&New";
             this.mnxTabNew.Click += new System.EventHandler(this.mnuNew_Click);
@@ -843,13 +843,13 @@ namespace QText {
             // mnxTab0
             // 
             this.mnxTab0.Name = "mnxTab0";
-            this.mnxTab0.Size = new System.Drawing.Size(233, 6);
+            this.mnxTab0.Size = new System.Drawing.Size(235, 6);
             // 
             // mnxTabReopen
             // 
             this.mnxTabReopen.Name = "mnxTabReopen";
             this.mnxTabReopen.ShortcutKeyDisplayString = "Ctrl+R";
-            this.mnxTabReopen.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabReopen.Size = new System.Drawing.Size(238, 26);
             this.mnxTabReopen.Text = "Re&open";
             this.mnxTabReopen.Click += new System.EventHandler(this.mnxTabReopen_Click);
             // 
@@ -859,7 +859,7 @@ namespace QText {
             this.mnxTabSaveNow.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTabSaveNow.Name = "mnxTabSaveNow";
             this.mnxTabSaveNow.ShortcutKeyDisplayString = "Ctrl+S";
-            this.mnxTabSaveNow.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabSaveNow.Size = new System.Drawing.Size(238, 26);
             this.mnxTabSaveNow.Tag = "mnuSave";
             this.mnxTabSaveNow.Text = "&Save";
             this.mnxTabSaveNow.Click += new System.EventHandler(this.mnuSaveNow_Click);
@@ -867,14 +867,14 @@ namespace QText {
             // mnxTab1
             // 
             this.mnxTab1.Name = "mnxTab1";
-            this.mnxTab1.Size = new System.Drawing.Size(233, 6);
+            this.mnxTab1.Size = new System.Drawing.Size(235, 6);
             // 
             // mnxTabRename
             // 
             this.mnxTabRename.Image = global::QText.Properties.Resources.mnuRename_16;
             this.mnxTabRename.Name = "mnxTabRename";
             this.mnxTabRename.ShortcutKeyDisplayString = "F2";
-            this.mnxTabRename.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabRename.Size = new System.Drawing.Size(238, 26);
             this.mnxTabRename.Tag = "mnuRename";
             this.mnxTabRename.Text = "&Rename";
             this.mnxTabRename.Click += new System.EventHandler(this.mnuRename_Click);
@@ -885,14 +885,14 @@ namespace QText {
             this.mnxTabMoveTo.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnxTabMoveToDummy});
             this.mnxTabMoveTo.Name = "mnxTabMoveTo";
-            this.mnxTabMoveTo.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabMoveTo.Size = new System.Drawing.Size(238, 26);
             this.mnxTabMoveTo.Text = "Move to";
             this.mnxTabMoveTo.DropDownOpening += new System.EventHandler(this.mnxTabMoveTo_DropDownOpening);
             // 
             // mnxTabMoveToDummy
             // 
             this.mnxTabMoveToDummy.Name = "mnxTabMoveToDummy";
-            this.mnxTabMoveToDummy.Size = new System.Drawing.Size(128, 24);
+            this.mnxTabMoveToDummy.Size = new System.Drawing.Size(134, 26);
             this.mnxTabMoveToDummy.Text = "dummy";
             // 
             // mnxTabDelete
@@ -900,7 +900,7 @@ namespace QText {
             this.mnxTabDelete.Image = global::QText.Properties.Resources.mnuDelete_16;
             this.mnxTabDelete.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTabDelete.Name = "mnxTabDelete";
-            this.mnxTabDelete.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabDelete.Size = new System.Drawing.Size(238, 26);
             this.mnxTabDelete.Tag = "mnuDelete";
             this.mnxTabDelete.Text = "&Delete";
             this.mnxTabDelete.Click += new System.EventHandler(this.mnxTabDelete_Click);
@@ -908,27 +908,27 @@ namespace QText {
             // mnxTabConvert
             // 
             this.mnxTabConvert.Name = "mnxTabConvert";
-            this.mnxTabConvert.Size = new System.Drawing.Size(233, 6);
+            this.mnxTabConvert.Size = new System.Drawing.Size(235, 6);
             // 
             // mnxTabZoomReset
             // 
             this.mnxTabZoomReset.Name = "mnxTabZoomReset";
             this.mnxTabZoomReset.ShortcutKeyDisplayString = "Ctrl+0";
-            this.mnxTabZoomReset.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabZoomReset.Size = new System.Drawing.Size(238, 26);
             this.mnxTabZoomReset.Text = "Reset zoom";
             this.mnxTabZoomReset.Click += new System.EventHandler(this.mnxTabZoomReset_Click);
             // 
             // mnxTabConvertPlain
             // 
             this.mnxTabConvertPlain.Name = "mnxTabConvertPlain";
-            this.mnxTabConvertPlain.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabConvertPlain.Size = new System.Drawing.Size(238, 26);
             this.mnxTabConvertPlain.Text = "Convert to plain text";
             this.mnxTabConvertPlain.Click += new System.EventHandler(this.mnxTabConvertPlain_Click);
             // 
             // mnxTabConvertRich
             // 
             this.mnxTabConvertRich.Name = "mnxTabConvertRich";
-            this.mnxTabConvertRich.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabConvertRich.Size = new System.Drawing.Size(238, 26);
             this.mnxTabConvertRich.Text = "Convert to rich text";
             this.mnxTabConvertRich.Click += new System.EventHandler(this.mnxTabConvertRich_Click);
             // 
@@ -936,7 +936,7 @@ namespace QText {
             // 
             this.mnxTabEncrypt.Image = global::QText.Properties.Resources.mnuEncrypt_16;
             this.mnxTabEncrypt.Name = "mnxTabEncrypt";
-            this.mnxTabEncrypt.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabEncrypt.Size = new System.Drawing.Size(238, 26);
             this.mnxTabEncrypt.Tag = "mnuEncrypt";
             this.mnxTabEncrypt.Text = "Encrypt";
             this.mnxTabEncrypt.Click += new System.EventHandler(this.mnxTabEncrypt_Click);
@@ -945,7 +945,7 @@ namespace QText {
             // 
             this.mnxTabChangePassword.Image = global::QText.Properties.Resources.mnuPassword_16;
             this.mnxTabChangePassword.Name = "mnxTabChangePassword";
-            this.mnxTabChangePassword.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabChangePassword.Size = new System.Drawing.Size(238, 26);
             this.mnxTabChangePassword.Tag = "mnuPassword";
             this.mnxTabChangePassword.Text = "Change password";
             this.mnxTabChangePassword.Click += new System.EventHandler(this.mnxTabChangePassword_Click);
@@ -954,7 +954,7 @@ namespace QText {
             // 
             this.mnxTabDecrypt.Image = global::QText.Properties.Resources.mnuDecrypt_16;
             this.mnxTabDecrypt.Name = "mnxTabDecrypt";
-            this.mnxTabDecrypt.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabDecrypt.Size = new System.Drawing.Size(238, 26);
             this.mnxTabDecrypt.Tag = "mnuDecrypt";
             this.mnxTabDecrypt.Text = "Decrypt";
             this.mnxTabDecrypt.Click += new System.EventHandler(this.mnxTabDecrypt_Click);
@@ -962,14 +962,14 @@ namespace QText {
             // mnxTab2
             // 
             this.mnxTab2.Name = "mnxTab2";
-            this.mnxTab2.Size = new System.Drawing.Size(233, 6);
+            this.mnxTab2.Size = new System.Drawing.Size(235, 6);
             // 
             // mnxTabPrintPreview
             // 
             this.mnxTabPrintPreview.Image = global::QText.Properties.Resources.mnuPrintPreview_16;
             this.mnxTabPrintPreview.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTabPrintPreview.Name = "mnxTabPrintPreview";
-            this.mnxTabPrintPreview.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabPrintPreview.Size = new System.Drawing.Size(238, 26);
             this.mnxTabPrintPreview.Tag = "mnuPrintPreview";
             this.mnxTabPrintPreview.Text = "Prin&t preview";
             this.mnxTabPrintPreview.Click += new System.EventHandler(this.mnuPrintPreview_Click);
@@ -980,7 +980,7 @@ namespace QText {
             this.mnxTabPrint.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.mnxTabPrint.Name = "mnxTabPrint";
             this.mnxTabPrint.ShortcutKeyDisplayString = "Ctrl+P";
-            this.mnxTabPrint.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabPrint.Size = new System.Drawing.Size(238, 26);
             this.mnxTabPrint.Tag = "mnuPrint";
             this.mnxTabPrint.Text = "&Print";
             this.mnxTabPrint.Click += new System.EventHandler(this.mnuPrint_Click);
@@ -988,12 +988,12 @@ namespace QText {
             // ToolStripMenuItem14
             // 
             this.ToolStripMenuItem14.Name = "ToolStripMenuItem14";
-            this.ToolStripMenuItem14.Size = new System.Drawing.Size(233, 6);
+            this.ToolStripMenuItem14.Size = new System.Drawing.Size(235, 6);
             // 
             // mnxTabOpenContainingFolder
             // 
             this.mnxTabOpenContainingFolder.Name = "mnxTabOpenContainingFolder";
-            this.mnxTabOpenContainingFolder.Size = new System.Drawing.Size(236, 26);
+            this.mnxTabOpenContainingFolder.Size = new System.Drawing.Size(238, 26);
             this.mnxTabOpenContainingFolder.Text = "Open containing folder";
             this.mnxTabOpenContainingFolder.Click += new System.EventHandler(this.mnxTabOpenContainingFolder_Click);
             // 
@@ -1006,7 +1006,7 @@ namespace QText {
             this.tabFiles.Margin = new System.Windows.Forms.Padding(0);
             this.tabFiles.Name = "tabFiles";
             this.tabFiles.SelectedIndex = 0;
-            this.tabFiles.Size = new System.Drawing.Size(612, 288);
+            this.tabFiles.Size = new System.Drawing.Size(612, 326);
             this.tabFiles.TabContextMenuStrip = this.mnxText;
             this.tabFiles.TabIndex = 0;
             this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
@@ -1016,12 +1016,12 @@ namespace QText {
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(612, 315);
+            this.ClientSize = new System.Drawing.Size(612, 353);
             this.Controls.Add(this.tabFiles);
             this.Controls.Add(this.mnu);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
-            this.MinimumSize = new System.Drawing.Size(320, 200);
+            this.MinimumSize = new System.Drawing.Size(400, 300);
             this.Name = "MainForm";
             this.Text = "QText";
             this.Activated += new System.EventHandler(this.Form_Activated);
