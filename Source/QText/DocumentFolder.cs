@@ -26,5 +26,23 @@ namespace QText {
         /// </summary>
         public string Title { get; private set; }
 
+
+        #region Overrides
+
+        public override bool Equals(object obj) {
+            var other = obj as DocumentFolder;
+            return (other != null) && (this.Directory.FullName.Equals(other.Directory.FullName, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public override int GetHashCode() {
+            return this.Directory.FullName.GetHashCode();
+        }
+
+        public override string ToString() {
+            return this.Title;
+        }
+
+        #endregion
+
     }
 }

@@ -208,11 +208,11 @@ namespace QText {
                 case Keys.Alt | Keys.Up: {
                         var currFolder = tabFiles.CurrentFolder;
                         var list = new List<DocumentFolder>(Document.GetFolders());
-                        var index = list.FindIndex(delegate(DocumentFolder folder) { return string.Equals(folder.Name, currFolder, StringComparison.OrdinalIgnoreCase); });
+                        var index = list.FindIndex(delegate(DocumentFolder folder) { return folder.Equals(currFolder); });
                         if (index > 0) {
                             tabFiles.FolderOpen(list[index - 1].Name);
-                            mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
-                            Settings.LastFolder = tabFiles.CurrentFolder;
+                            mnuFolder.Text = tabFiles.CurrentFolder.Title;
+                            Settings.LastFolder = tabFiles.CurrentFolder.Name;
                         }
                     } return true;
 
@@ -221,11 +221,11 @@ namespace QText {
                 case Keys.Alt | Keys.Down: {
                         var currFolder = tabFiles.CurrentFolder;
                         var list = new List<DocumentFolder>(Document.GetFolders());
-                        var index = list.FindIndex(delegate(DocumentFolder folder) { return string.Equals(folder.Name, currFolder, StringComparison.OrdinalIgnoreCase); });
+                        var index = list.FindIndex(delegate(DocumentFolder folder) { return folder.Equals(currFolder); });
                         if (index < list.Count - 1) {
                             tabFiles.FolderOpen(list[index + 1].Name);
-                            mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
-                            Settings.LastFolder = tabFiles.CurrentFolder;
+                            mnuFolder.Text = tabFiles.CurrentFolder.Title;
+                            Settings.LastFolder = tabFiles.CurrentFolder.Name;
                         }
                     } return true;
 
@@ -732,7 +732,7 @@ namespace QText {
                         if (TryFolderSave()) {
                             var oldFolder = tabFiles.CurrentFolder;
                             var newFolder = destination.Folder;
-                            FolderChange(oldFolder, newFolder);
+                            FolderChange(oldFolder.Name, newFolder);
                             foreach (TabFile tab in this.tabFiles.TabPages) {
                                 if (string.Equals(tab.Title, destination.Document)) {
                                     tabFiles.SelectedTab = tab;
@@ -744,7 +744,7 @@ namespace QText {
                         if (TryFolderSave()) {
                             var oldFolder = tabFiles.CurrentFolder;
                             var newFolder = destination.Folder;
-                            FolderChange(oldFolder, newFolder);
+                            FolderChange(oldFolder.Name, newFolder);
                         }
                     }
                 }
@@ -766,7 +766,7 @@ namespace QText {
                 mnuFolder.DropDownItems.Add(new ToolStripMenuItem(folder.Title, null, mnuFolder_Click) { Tag = folder });
             }
             foreach (ToolStripMenuItem item in mnuFolder.DropDownItems) {
-                item.Enabled = !string.Equals(tabFiles.CurrentFolder, ((DocumentFolder)item.Tag).Name, StringComparison.OrdinalIgnoreCase);
+                item.Enabled = !tabFiles.CurrentFolder.Equals((DocumentFolder)(item.Tag));
             }
             mnuFolder.DropDownItems.Add(new ToolStripSeparator());
             mnuFolder.DropDownItems.Add(new ToolStripMenuItem("Edit folders", null, mnuFolderEdit_Click));
@@ -777,7 +777,7 @@ namespace QText {
             if (TryFolderSave()) {
                 var oldFolder = tabFiles.CurrentFolder;
                 var newFolder = (DocumentFolder)(((ToolStripMenuItem)sender).Tag);
-                FolderChange(oldFolder, newFolder.Name);
+                FolderChange(oldFolder.Name, newFolder.Name);
             }
         }
 
@@ -785,13 +785,13 @@ namespace QText {
             tmrQuickSave.Enabled = false;
             tabFiles.Enabled = false;
             tabFiles.FolderSave();
-            using (var frm = new FolderEditForm(tabFiles.CurrentFolder)) {
+            using (var frm = new FolderEditForm(tabFiles.CurrentFolder.Name)) {
                 frm.ShowDialog(this);
-                if (string.Equals(tabFiles.CurrentFolder, frm.CurrentFolder, StringComparison.Ordinal) == false) {
+                if (!string.Equals(tabFiles.CurrentFolder.Name, frm.CurrentFolder, StringComparison.Ordinal)) {
                     tabFiles.Enabled = true;
                     tabFiles.FolderOpen(frm.CurrentFolder, false);
-                    mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
-                    Settings.LastFolder = tabFiles.CurrentFolder;
+                    mnuFolder.Text = tabFiles.CurrentFolder.Title;
+                    Settings.LastFolder = tabFiles.CurrentFolder.Name;
                 }
             }
             tabFiles.Enabled = true;
@@ -930,24 +930,23 @@ namespace QText {
 
         private void mnxTabMoveTo_DropDownOpening(object sender, EventArgs e) {
             mnxTabMoveTo.DropDownItems.Clear();
-            mnxTabMoveTo.DropDownItems.Add(new ToolStripMenuItem("(Default)", null, mnxTabMoveTo_Click) { Tag = null });
-            foreach (var folder in Document.GetSubFolders()) {
-                mnxTabMoveTo.DropDownItems.Add(new ToolStripMenuItem(folder.Name, null, mnxTabMoveTo_Click) { Tag = folder });
+            foreach (var folder in Document.GetFolders()) {
+                mnxTabMoveTo.DropDownItems.Add(new ToolStripMenuItem(folder.Title, null, mnxTabMoveTo_Click) { Tag = folder });
             }
             foreach (ToolStripMenuItem item in mnxTabMoveTo.DropDownItems) {
-                item.Enabled = !string.Equals(tabFiles.CurrentFolder, (string)item.Tag, StringComparison.OrdinalIgnoreCase);
+                item.Enabled = !tabFiles.CurrentFolder.Equals((DocumentFolder)item.Tag);
             }
         }
 
         private void mnxTabMoveTo_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
-                var folder = ((ToolStripMenuItem)sender).Tag as string;
+                var folder = (DocumentFolder)((ToolStripMenuItem)sender).Tag;
                 string oldPath, newPath;
-                tabFiles.MoveTabPreview(tabFiles.SelectedTab, folder, out oldPath, out newPath);
+                tabFiles.MoveTabPreview(tabFiles.SelectedTab, folder.Name, out oldPath, out newPath);
                 if (File.Exists(newPath)) {
                     Medo.MessageBox.ShowError(this, "File already exists at destination.");
                 } else {
-                    tabFiles.MoveTab(tabFiles.SelectedTab, folder);
+                    tabFiles.MoveTab(tabFiles.SelectedTab, folder.Name);
                 }
             }
         }
@@ -1324,18 +1323,17 @@ namespace QText {
                 }
             }
 
-            var currentFolder = tabFiles.CurrentFolder;
-            if (currentFolder == null) { currentFolder = ""; }
+            var currentFolder = tabFiles.CurrentFolder ?? Document.GetRoot();
 
             tabFiles.FolderOpen(Settings.LastFolder);
             try {
                 SetSelectedTab(tabFiles.SelectedTab);
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot load folder.\n\n{0}", ex.Message));
-                tabFiles.FolderOpen(currentFolder);
+                tabFiles.FolderOpen(currentFolder.Name);
             }
 
-            mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
+            mnuFolder.Text = tabFiles.CurrentFolder.Title;
         }
 
         private static void ToogleStyle(RichTextBoxEx richTextBox, FontStyle fontStyle) {
@@ -1506,8 +1504,8 @@ namespace QText {
         private void FolderChange(string oldFolder, string newFolder) {
             if (string.Equals(oldFolder, newFolder, StringComparison.OrdinalIgnoreCase) == false) {
                 tabFiles.FolderOpen(newFolder);
-                mnuFolder.Text = string.IsNullOrEmpty(tabFiles.CurrentFolder) ? "(Default)" : tabFiles.CurrentFolder;
-                Settings.LastFolder = tabFiles.CurrentFolder;
+                mnuFolder.Text = tabFiles.CurrentFolder.Title;
+                Settings.LastFolder = tabFiles.CurrentFolder.Name;
             }
         }
 

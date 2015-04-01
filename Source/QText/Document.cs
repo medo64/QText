@@ -6,6 +6,8 @@ using System.Windows.Forms;
 namespace QText {
     internal static class Document {
 
+        #region Folders
+
         public static DocumentFolder GetRoot() {
             var path = new DirectoryInfo(Settings.FilesLocation);
             return new DocumentFolder(path, string.Empty, "(Default)");
@@ -32,6 +34,19 @@ namespace QText {
                 yield return new DocumentFolder(directory, directory.Name, directory.Name);
             }
         }
+
+
+        public static DocumentFolder GetFolder(string name) {
+            foreach (var folder in Document.GetFolders()) {
+                if (folder.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) {
+                    return folder;
+                }
+            }
+            return null;
+        }
+
+        #endregion
+
 
         public static IEnumerable<String> GetTitles(String folder) {
             var files = new List<string>();
@@ -151,7 +166,7 @@ namespace QText {
 
         public static void WriteOrderedTitles(TabFiles tabFiles) {
             try {
-                var orderFile = Path.Combine(GetDirectory(tabFiles.CurrentFolder), ".qtext");
+                var orderFile = Path.Combine(GetDirectory(tabFiles.CurrentFolder.Name), ".qtext");
                 var fi = new QFileInfo(orderFile);
                 if (fi.Exists == false) {
                     fi.Create();

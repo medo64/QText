@@ -103,7 +103,7 @@ namespace QText {
                 var folderTabs = Document.GetTabs(Document.GetFilePaths(folder.Name), null);
                 foreach (var folderTab in folderTabs) {
                     if (folderTab.FindForward(SearchStatus.Text, SearchStatus.CaseSensitive, 0)) {
-                        if (string.Equals(folder.Name, tabs.CurrentFolder, StringComparison.OrdinalIgnoreCase) == false) {
+                        if (string.Equals(folder.Name, tabs.CurrentFolder.Name, StringComparison.OrdinalIgnoreCase) == false) {
                             tabs.FolderOpen(folder.Name);
                         }
                         foreach (TabFile tab in tabs.TabPages) {

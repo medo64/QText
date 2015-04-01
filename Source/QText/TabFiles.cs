@@ -56,40 +56,40 @@ namespace QText {
 
 
         internal string CurrentDirectory {
-            get { return Document.GetDirectory(CurrentFolder); }
+            get { return Document.GetDirectory(CurrentFolder.Name); }
         }
 
-        public string CurrentFolder { get; private set; }
+        public DocumentFolder CurrentFolder { get; private set; }
 
         public ContextMenuStrip TabContextMenuStrip { get; set; }
 
 
-        public void FolderOpen(string folder, bool saveBeforeOpen = true) {
-            if (folder == null) { throw new ArgumentNullException("folder", "Folder cannot be null."); }
+        public void FolderOpen(string folderName, bool saveBeforeOpen = true) {
+            if (folderName == null) { throw new ArgumentNullException("folder", "Folder cannot be null."); }
             if ((this.CurrentFolder != null) && (saveBeforeOpen)) { FolderSave(); }
 
             //check if it exists
-            string newFolder = "";
+            string newFolderName = "";
             foreach (var iFolder in Document.GetSubFolders()) {
-                if (string.Equals(iFolder.Name, folder, StringComparison.OrdinalIgnoreCase)) {
-                    newFolder = iFolder.Name;
+                if (string.Equals(iFolder.Name, folderName, StringComparison.OrdinalIgnoreCase)) {
+                    newFolderName = iFolder.Name;
                     break;
                 }
             }
-            folder = newFolder;
+            folderName = newFolderName;
 
             var initialVisibility = this.Visible;
             this.Visible = false;
             this.SelectedTab = null;
             this.TabPages.Clear();
-            this.CurrentFolder = folder;
+            this.CurrentFolder = Document.GetFolder(folderName);
 
-            foreach (var tab in Document.GetTabs(Document.GetFilePaths(this.CurrentFolder), this.TabContextMenuStrip)) {
+            foreach (var tab in Document.GetTabs(Document.GetFilePaths(this.CurrentFolder.Name), this.TabContextMenuStrip)) {
                 this.TabPages.Add(tab);
             }
 
             string selectedTitle;
-            Document.ReadOrderedTitles(this.CurrentFolder, out selectedTitle);
+            Document.ReadOrderedTitles(this.CurrentFolder.Name, out selectedTitle);
             TabFile selectedTab = (this.TabCount > 0) ? (TabFile)this.TabPages[0] : null;
             foreach (TabFile tab in this.TabPages) {
                 if (tab.Title.Equals(selectedTitle, StringComparison.OrdinalIgnoreCase)) {
