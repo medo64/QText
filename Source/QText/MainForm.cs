@@ -302,17 +302,10 @@ namespace QText {
 
         private void Form_FormClosing(object sender, FormClosingEventArgs e) {
 #if !DEBUG
-            switch (e.CloseReason) {
-                case CloseReason.ApplicationExitCall:
-                case CloseReason.TaskManagerClosing:
-                case CloseReason.WindowsShutDown:
-                    break;
-
-                default:
-                    e.Cancel = true;
-                    this.Hide();
-                    App.Tray.ShowBalloonOnMinimize();
-                    break;
+            if (e.CloseReason == CloseReason.UserClosing) {
+                e.Cancel = true;
+                this.Hide();
+                App.Tray.ShowBalloonOnMinimize();
             }
 #endif
 
