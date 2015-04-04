@@ -66,17 +66,12 @@ namespace QText {
             }
 
             foreach (var folder in Document.GetSubFolders()) {
-                if (folder.Name.IndexOf(suggestion, StringComparison.CurrentCultureIgnoreCase) >= 0) {
+                if (folder.Title.IndexOf(suggestion, StringComparison.CurrentCultureIgnoreCase) >= 0) {
                     yield return new GotoResult(null, folder, null);
                 }
             }
 
-            foreach (var file in Document.GetTitles("")) {
-                if (file.IndexOf(suggestion, StringComparison.CurrentCultureIgnoreCase) >= 0) {
-                    yield return new GotoResult(null, Document.GetRootFolder(), file);
-                }
-            }
-            foreach (var folder in Document.GetSubFolders()) {
+            foreach (var folder in Document.GetFolders()) {
                 foreach (var file in Document.GetTitles(folder.Name)) {
                     if (file.IndexOf(suggestion, StringComparison.CurrentCultureIgnoreCase) >= 0) {
                         yield return new GotoResult(null, folder, file);
