@@ -146,7 +146,7 @@ namespace QText {
         }
 
         private void mnuSort_Click(object sender, EventArgs e) {
-            Document.CleanOrderedTitles(this.TabFiles.CurrentFolder.Name);
+            Document.CleanOrderedTitles(this.TabFiles.CurrentFolder);
             this.TabFiles.FolderOpen(this.TabFiles.CurrentFolder, saveBeforeOpen: false);
         }
 

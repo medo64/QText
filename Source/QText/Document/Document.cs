@@ -76,10 +76,10 @@ namespace QText {
         #endregion
 
 
-        public static IEnumerable<String> GetTitles(String folder) {
+        public static IEnumerable<String> GetTitles(DocumentFolder folder) {
             var files = new List<string>();
             foreach (var extension in QFileInfo.GetExtensions()) {
-                files.AddRange(Directory.GetFiles(GetDirectory(folder), "*" + extension));
+                files.AddRange(Directory.GetFiles(folder.Directory.FullName, "*" + extension));
             }
 
             string selectedTitle = null;
@@ -107,10 +107,10 @@ namespace QText {
         }
 
 
-        public static IEnumerable<String> GetFilePaths(String folder) {
+        public static IEnumerable<String> GetFilePaths(DocumentFolder folder) {
             var files = new List<string>();
             foreach (var extension in QFileInfo.GetExtensions()) {
-                files.AddRange(Directory.GetFiles(GetDirectory(folder), "*" + extension));
+                files.AddRange(Directory.GetFiles(folder.Directory.FullName, "*" + extension));
             }
 
             string selectedTitle = null;
@@ -145,21 +145,16 @@ namespace QText {
             }
         }
 
-        public static String GetDirectory(String folder) {
-            if (string.IsNullOrEmpty(folder)) { return Settings.FilesLocation; }
-            return Path.Combine(Settings.FilesLocation, Helper.EncodeFileName(folder));
-        }
-
 
         #region Ordering
 
-        public static IList<String> ReadOrderedTitles(String folder, out String selectedTitle) {
+        public static IList<String> ReadOrderedTitles(DocumentFolder folder, out String selectedTitle) {
             selectedTitle = null;
             string currentSelectedTitle = null;
             IList<string> orderedTitles = null;
             IList<string> currentOrderedTitles = null;
             try {
-                var orderFile = Path.Combine(GetDirectory(folder), ".qtext");
+                var orderFile = Path.Combine(folder.Directory.FullName, ".qtext");
 
                 FileStream fs = null;
                 try {
@@ -194,7 +189,7 @@ namespace QText {
 
         public static void WriteOrderedTitles(TabFiles tabFiles) {
             try {
-                var orderFile = Path.Combine(GetDirectory(tabFiles.CurrentFolder.Name), ".qtext");
+                var orderFile = Path.Combine(tabFiles.CurrentFolder.Directory.FullName, ".qtext");
                 var fi = new QFileInfo(orderFile);
                 if (fi.Exists == false) {
                     fi.Create();
@@ -224,9 +219,9 @@ namespace QText {
             } catch (IOException) { }
         }
 
-        public static void CleanOrderedTitles(String folder) {
+        public static void CleanOrderedTitles(DocumentFolder folder) {
             try {
-                var orderFile = Path.Combine(GetDirectory(folder), ".qtext");
+                var orderFile = Path.Combine(folder.Directory.FullName, ".qtext");
                 var fi = new QFileInfo(orderFile);
                 if (fi.Exists == false) {
                     fi.Create();

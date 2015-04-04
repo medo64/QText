@@ -56,7 +56,7 @@ namespace QText {
 
 
         internal string CurrentDirectory {
-            get { return Document.GetDirectory(CurrentFolder.Name); }
+            get { return CurrentFolder.Directory.FullName; }
         }
 
         public DocumentFolder CurrentFolder { get; private set; }
@@ -74,12 +74,12 @@ namespace QText {
             this.TabPages.Clear();
             this.CurrentFolder = folder;
 
-            foreach (var tab in Document.GetTabs(Document.GetFilePaths(this.CurrentFolder.Name), this.TabContextMenuStrip)) {
+            foreach (var tab in Document.GetTabs(Document.GetFilePaths(this.CurrentFolder), this.TabContextMenuStrip)) {
                 this.TabPages.Add(tab);
             }
 
             string selectedTitle;
-            Document.ReadOrderedTitles(this.CurrentFolder.Name, out selectedTitle);
+            Document.ReadOrderedTitles(this.CurrentFolder, out selectedTitle);
             TabFile selectedTab = (this.TabCount > 0) ? (TabFile)this.TabPages[0] : null;
             foreach (TabFile tab in this.TabPages) {
                 if (tab.Title.Equals(selectedTitle, StringComparison.OrdinalIgnoreCase)) {

@@ -72,7 +72,7 @@ namespace QText {
             }
 
             foreach (var folder in Document.GetFolders()) {
-                foreach (var file in Document.GetTitles(folder.Name)) {
+                foreach (var file in Document.GetTitles(folder)) {
                     if (file.IndexOf(suggestion, StringComparison.CurrentCultureIgnoreCase) >= 0) {
                         yield return new GotoResult(null, folder, file);
                     }
