@@ -212,7 +212,7 @@ namespace QText {
                         if (index > 0) {
                             tabFiles.FolderOpen(list[index - 1]);
                             mnuFolder.Text = tabFiles.CurrentFolder.Title;
-                            Settings.LastFolder = tabFiles.CurrentFolder.Name;
+                            Settings.LastFolder = tabFiles.CurrentFolder;
                         }
                     } return true;
 
@@ -225,7 +225,7 @@ namespace QText {
                         if (index < list.Count - 1) {
                             tabFiles.FolderOpen(list[index + 1]);
                             mnuFolder.Text = tabFiles.CurrentFolder.Title;
-                            Settings.LastFolder = tabFiles.CurrentFolder.Name;
+                            Settings.LastFolder = tabFiles.CurrentFolder;
                         }
                     } return true;
 
@@ -725,7 +725,7 @@ namespace QText {
                         if (TryFolderSave()) {
                             var oldFolder = tabFiles.CurrentFolder;
                             var newFolder = destination.Folder;
-                            FolderChange(oldFolder.Name, newFolder.Name);
+                            FolderChange(oldFolder, newFolder);
                             foreach (TabFile tab in this.tabFiles.TabPages) {
                                 if (string.Equals(tab.Title, destination.File)) {
                                     tabFiles.SelectedTab = tab;
@@ -737,7 +737,7 @@ namespace QText {
                         if (TryFolderSave()) {
                             var oldFolder = tabFiles.CurrentFolder;
                             var newFolder = destination.Folder;
-                            FolderChange(oldFolder.Name, newFolder.Name);
+                            FolderChange(oldFolder, newFolder);
                         }
                     }
                 }
@@ -772,7 +772,7 @@ namespace QText {
             if (TryFolderSave()) {
                 var oldFolder = tabFiles.CurrentFolder;
                 var newFolder = (DocumentFolder)(((ToolStripMenuItem)sender).Tag);
-                FolderChange(oldFolder.Name, newFolder.Name);
+                FolderChange(oldFolder, newFolder);
             }
         }
 
@@ -786,7 +786,7 @@ namespace QText {
                     tabFiles.Enabled = true;
                     tabFiles.FolderOpen(frm.CurrentFolder, false);
                     mnuFolder.Text = tabFiles.CurrentFolder.Title;
-                    Settings.LastFolder = tabFiles.CurrentFolder.Name;
+                    Settings.LastFolder = tabFiles.CurrentFolder;
                 }
             }
             tabFiles.Enabled = true;
@@ -1320,7 +1320,7 @@ namespace QText {
 
             var currentFolder = tabFiles.CurrentFolder ?? Document.GetRootFolder();
 
-            tabFiles.FolderOpen(Document.GetFolder(Settings.LastFolder) ?? Document.GetRootFolder());
+            tabFiles.FolderOpen(Settings.LastFolder);
             try {
                 SetSelectedTab(tabFiles.SelectedTab);
             } catch (Exception ex) {
@@ -1496,11 +1496,11 @@ namespace QText {
             }
         }
 
-        private void FolderChange(string oldFolder, string newFolder) {
-            if (string.Equals(oldFolder, newFolder, StringComparison.OrdinalIgnoreCase) == false) {
-                tabFiles.FolderOpen(Document.GetFolder(newFolder));
+        private void FolderChange(DocumentFolder oldFolder, DocumentFolder newFolder) {
+            if (!newFolder.Equals(oldFolder)) {
+                tabFiles.FolderOpen(newFolder);
                 mnuFolder.Text = tabFiles.CurrentFolder.Title;
-                Settings.LastFolder = tabFiles.CurrentFolder.Name;
+                Settings.LastFolder = tabFiles.CurrentFolder;
             }
         }
 

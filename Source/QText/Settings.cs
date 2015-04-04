@@ -285,9 +285,12 @@ namespace QText {
             set { Medo.Configuration.Settings.Write("TrayOneClickActivation", value); }
         }
 
-        public static string LastFolder {
-            get { return Medo.Configuration.Settings.Read("LastFolder", ""); }
-            set { Medo.Configuration.Settings.Write("LastFolder", value); }
+        public static DocumentFolder LastFolder {
+            get { 
+                var lastFolderName = Medo.Configuration.Settings.Read("LastFolder", "");
+                return Document.GetFolder(lastFolderName) ?? Document.GetRootFolder();
+            }
+            set { Medo.Configuration.Settings.Write("LastFolder", value.Name); }
         }
 
         public static string SelectionDelimiters {
