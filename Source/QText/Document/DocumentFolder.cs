@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace QText {
     internal class DocumentFolder {
 
         public DocumentFolder(DirectoryInfo directory, string name) {
-            this.Directory = directory;
+            this.Info = directory;
             this.Name = name;
             if (string.IsNullOrEmpty(name)) {
                 this.Title = "(Default)";
@@ -18,7 +19,7 @@ namespace QText {
         /// <summary>
         /// Gets directory.
         /// </summary>
-        public DirectoryInfo Directory { get; private set; }
+        public DirectoryInfo Info { get; private set; }
 
         /// <summary>
         /// Gets name of folder - for internal use.
@@ -46,12 +47,12 @@ namespace QText {
             try {
                 var newName = Helper.EncodeFileName(newTitle);
 
-                var oldPath = this.Directory.FullName;
-                var newPath = Path.Combine(this.Directory.Parent.FullName, newName);
+                var oldPath = this.Info.FullName;
+                var newPath = Path.Combine(this.Info.Parent.FullName, newName);
 
                 Helper.MovePath(oldPath, newPath);
 
-                this.Directory = new DirectoryInfo(newPath);
+                this.Info = new DirectoryInfo(newPath);
                 this.Name = newName;
                 this.Title = newTitle;
             } catch (Exception ex) {
@@ -61,16 +62,16 @@ namespace QText {
 
         internal bool IsEmpty {
             get {
-                return (this.Directory.GetFiles("*.txt").Length == 0) && (this.Directory.GetFiles("*.rtf").Length == 0);
+                return (this.Info.GetFiles("*.txt").Length == 0) && (this.Info.GetFiles("*.rtf").Length == 0);
             }
         }
 
         internal void Delete() {
             try {
                 if (Settings.FilesDeleteToRecycleBin) {
-                    SHFile.DeleteDirectory(this.Directory.FullName);
+                    SHFile.DeleteDirectory(this.Info.FullName);
                 } else {
-                    this.Directory.Delete(true);
+                    this.Info.Delete(true);
                 }
             } catch (Exception ex) {
                 throw new ApplicationException(ex.Message, ex);
@@ -80,15 +81,108 @@ namespace QText {
         #endregion
 
 
+        #region Enumerate
+
+        public IEnumerable<DocumentFile> GetFiles() {
+            var files = new List<FileInfo>();
+            foreach (var extension in QFileInfo.GetExtensions()) {
+                files.AddRange(this.Info.GetFiles("*" + extension));
+            }
+
+            string selectedTitle = null;
+            var orderedTitles = ReadOrderedTitles(out selectedTitle);
+            files.Sort(delegate(FileInfo file1, FileInfo file2) {
+                var title1 = Helper.DecodeFileName(QFileInfo.GetFileNameWithoutExtension(file1.Name));
+                var title2 = Helper.DecodeFileName(QFileInfo.GetFileNameWithoutExtension(file2.Name));
+                if (orderedTitles != null) {
+                    var titleIndex1 = orderedTitles.IndexOf(title1);
+                    var titleIndex2 = orderedTitles.IndexOf(title2);
+                    if ((titleIndex1 != -1) && (titleIndex2 != -1)) { //both are ordered
+                        return (titleIndex1 < titleIndex2) ? -1 : 1;
+                    } else if (titleIndex1 != -1) { //first one is ordered
+                        return -1;
+                    } else if (titleIndex2 != -1) { //second one is ordered 
+                        return 1;
+                    }
+                }
+                return string.Compare(title1, title2); //just sort alphabetically
+            });
+
+            foreach (var file in files) {
+                yield return new DocumentFile(this, file);
+            }
+        }
+
+        public DocumentFile GetFileByName(string name) {
+            foreach (var file in this.GetFiles()) {
+                if (file.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) {
+                    return file;
+                }
+            }
+            return null;
+        }
+
+        public DocumentFile GetFileByTitle(string title) {
+            foreach (var file in this.GetFiles()) {
+                if (file.Title.Equals(title, StringComparison.OrdinalIgnoreCase)) {
+                    return file;
+                }
+            }
+            return null;
+        }
+
+
+        private IList<String> ReadOrderedTitles(out String selectedTitle) {
+            selectedTitle = null;
+            string currentSelectedTitle = null;
+            IList<string> orderedTitles = null;
+            IList<string> currentOrderedTitles = null;
+            try {
+                var orderFile = Path.Combine(this.Info.FullName, ".qtext");
+
+                FileStream fs = null;
+                try {
+                    fs = new FileStream(orderFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    using (var sr = new StreamReader(fs)) {
+                        fs = null;
+                        while (sr.EndOfStream == false) {
+                            var line = sr.ReadLine();
+                            if (line.Equals("/[")) { //start of block
+                                currentOrderedTitles = new List<string>();
+                                currentSelectedTitle = null;
+                            } else if (line.Equals("]/")) { //end of block
+                                orderedTitles = currentOrderedTitles;
+                                selectedTitle = currentSelectedTitle;
+                            } else {
+                                if (currentOrderedTitles != null) {
+                                    var parts = line.Split(new string[] { "//" }, StringSplitOptions.RemoveEmptyEntries);
+                                    var title = Helper.DecodeFileName(parts[0]);
+                                    var attrs = parts.Length > 1 ? parts[1] : null;
+                                    if ("selected".Equals(attrs)) { currentSelectedTitle = title; }
+                                    currentOrderedTitles.Add(title);
+                                }
+                            }
+                        }
+                    }
+                } finally {
+                    if (fs != null) { fs.Dispose(); }
+                }
+            } catch (IOException) { }
+            return orderedTitles;
+        }
+
+        #endregion
+
+
         #region Overrides
 
         public override bool Equals(object obj) {
             var other = obj as DocumentFolder;
-            return (other != null) && (this.Directory.FullName.Equals(other.Directory.FullName, StringComparison.OrdinalIgnoreCase));
+            return (other != null) && (this.Info.FullName.Equals(other.Info.FullName, StringComparison.OrdinalIgnoreCase));
         }
 
         public override int GetHashCode() {
-            return this.Directory.FullName.GetHashCode();
+            return this.Info.FullName.GetHashCode();
         }
 
         public override string ToString() {

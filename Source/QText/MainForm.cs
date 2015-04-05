@@ -469,7 +469,7 @@ namespace QText {
 
         private void mnuNew_Click(object sender, EventArgs e) {
             tmrQuickSave.Enabled = false;
-            using (FileNewForm frm = new FileNewForm(tabFiles.CurrentDirectory)) {
+            using (FileNewForm frm = new FileNewForm(tabFiles.CurrentFolder)) {
                 if (frm.ShowDialog(this) == DialogResult.OK) {
                     try {
                         tabFiles.AddTab(frm.Title, frm.IsRichText);
@@ -497,7 +497,7 @@ namespace QText {
         private void mnuRename_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
-                using (var frm = new FileRenameForm(tabFiles.CurrentDirectory, tabFiles.SelectedTab.Title)) {
+                using (var frm = new FileRenameForm(tabFiles.SelectedTab.CurrentFile)) {
                     try {
                         if (frm.ShowDialog(this) == DialogResult.OK) {
                             tabFiles.SelectedTab.Rename(frm.NewTitle);
@@ -727,7 +727,7 @@ namespace QText {
                             var newFolder = destination.Folder;
                             FolderChange(oldFolder, newFolder);
                             foreach (TabFile tab in this.tabFiles.TabPages) {
-                                if (string.Equals(tab.Title, destination.File)) {
+                                if (string.Equals(tab.Title, destination.File.Title)) {
                                     tabFiles.SelectedTab = tab;
                                     break;
                                 }
@@ -996,11 +996,10 @@ namespace QText {
 
         private void mnxTabOpenContainingFolder_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
-                string file = tabFiles.SelectedTab.CurrentFile.Path;
-                var exe = new ProcessStartInfo("explorer.exe", "/select,\"" + file + "\"");
+                var exe = new ProcessStartInfo("explorer.exe", "/select,\"" + tabFiles.SelectedTab.CurrentFile.Info.FullName + "\"");
                 Process.Start(exe);
             } else {
-                var exe = new ProcessStartInfo("explorer.exe", "\"" + tabFiles.CurrentDirectory + "\"");
+                var exe = new ProcessStartInfo("explorer.exe", "\"" + tabFiles.CurrentFolder.Info.FullName + "\"");
                 Process.Start(exe);
             }
         }
@@ -1460,7 +1459,7 @@ namespace QText {
             if (tabFiles.TabCount > 0) {
                 nextIndexToCheck = nextIndexToCheck % tabFiles.TabPages.Count;
                 var currTab = (TabFile)tabFiles.TabPages[nextIndexToCheck];
-                var fi = new QFileInfo(currTab.CurrentFile.Path);
+                var fi = new QFileInfo(currTab.CurrentFile.Info.FullName);
                 if (fi.LastWriteTimeUtc != currTab.LastWriteTimeUtc) {
                     if (currTab.IsChanged) {
                         currTab.Save();

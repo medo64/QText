@@ -1,17 +1,17 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Windows.Forms;
 
 namespace QText {
     internal partial class FileNewForm : Form {
 
-        public FileNewForm(string basePath) {
+        public FileNewForm(DocumentFolder folder) {
             InitializeComponent();
             this.Font = System.Drawing.SystemFonts.MessageBoxFont;
             erp.SetIconAlignment(txtTitle, ErrorIconAlignment.MiddleLeft);
             erp.SetIconPadding(txtTitle, 2);
 
-            this.BasePath = basePath;
+            this.Folder = folder;
 
             if (Settings.IsRichTextFileDefault) {
                 radRichText.Checked = true;
@@ -19,14 +19,14 @@ namespace QText {
         }
 
 
-        private readonly string BasePath;
+        private readonly DocumentFolder Folder;
         public string Title { get; private set; }
         public bool IsRichText { get; private set; }
 
 
         private void txtTitle_TextChanged(object sender, EventArgs e) {
             var newFileTitle = Helper.EncodeFileName(txtTitle.Text);
-            bool alreadyTaken = QFileInfo.IsNameAlreadyTaken(this.BasePath, newFileTitle);
+            bool alreadyTaken = (this.Folder.GetFileByTitle(newFileTitle) != null);
             if (alreadyTaken) { erp.SetError(txtTitle, "File with same name already exists."); } else { erp.SetError(txtTitle, null); }
             btnOK.Enabled = (txtTitle.Text.Length > 0) && (alreadyTaken == false);
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -59,15 +59,6 @@ namespace QText {
                 }
             }
             throw new InvalidOperationException("Unexpected data type for file \"" + path + "\"");
-        }
-
-        public static bool IsNameAlreadyTaken(string basePath, string fileNameWithoutExtension) {
-            bool alreadyTaken = false;
-            foreach (var extension in GetExtensions()) {
-                alreadyTaken |= File.Exists(Path.Combine(basePath, fileNameWithoutExtension + extension));
-                alreadyTaken |= Directory.Exists(Path.Combine(basePath, fileNameWithoutExtension + extension));
-            }
-            return alreadyTaken;
         }
 
         public static bool IsFileRich(string path) {

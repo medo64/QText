@@ -95,6 +95,7 @@
       <DependentUpon>ChangePasswordForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Document\Document.cs" />
+    <Compile Include="Document\DocumentFile.cs" />
     <Compile Include="Document\DocumentFolder.cs" />
     <Compile Include="FilesEditForm.cs">
       <SubType>Form</SubType>
@@ -147,11 +148,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="QFile.cs" />
     <Compile Include="QFileInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="QType.cs" />
+    <Compile Include="Document\DocumentKind.cs" />
     <Compile Include="Search.cs" />
     <Compile Include="SHFile.cs" />
     <Compile Include="FileNewForm.cs">

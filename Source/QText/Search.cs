@@ -100,14 +100,14 @@ namespace QText {
                 folders.RemoveAt(0);
             }
             foreach (var folder in folders) {
-                var folderTabs = Document.GetTabs(Document.GetFilePaths(folder), null);
+                var folderTabs = Document.GetTabs(folder.GetFiles(), null);
                 foreach (var folderTab in folderTabs) {
                     if (folderTab.FindForward(SearchStatus.Text, SearchStatus.CaseSensitive, 0)) {
                         if (string.Equals(folder.Name, tabs.CurrentFolder.Name, StringComparison.OrdinalIgnoreCase) == false) {
                             tabs.FolderOpen(folder);
                         }
                         foreach (TabFile tab in tabs.TabPages) {
-                            if (string.Equals(tab.CurrentFile.Path, folderTab.CurrentFile.Path, StringComparison.OrdinalIgnoreCase)) {
+                            if (string.Equals(tab.CurrentFile.Info.FullName, folderTab.CurrentFile.Info.FullName, StringComparison.OrdinalIgnoreCase)) {
                                 tab.Open();
                                 tab.TextBox.SelectionStart = folderTab.TextBox.SelectionStart;
                                 tab.TextBox.SelectionLength = folderTab.TextBox.SelectionLength;

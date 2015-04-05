@@ -84,25 +84,21 @@ namespace QText {
         private void lsv_AfterLabelEdit(object sender, LabelEditEventArgs e) {
             if (e.Label == null) { e.CancelEdit = true; return; }
             var oldName = lsv.Items[e.Item].Text;
-            var newName = e.Label.Trim();
-            try {
-                if (string.IsNullOrEmpty(newName) || string.Equals(oldName, newName, StringComparison.Ordinal)) {
-                    e.CancelEdit = true;
-                } else {
-                    try {
-                        var tab = (TabFile)lsv.Items[e.Item].Tag;
-                        if (QFileInfo.IsNameAlreadyTaken(Path.GetDirectoryName(tab.CurrentFile.Path), newName)) { //TODO: QFolder
-                            e.CancelEdit = true;
-                        } else {
-                            tab.Rename(newName);
-                        }
-                    } catch (Exception) {
+            var newTitle = e.Label.Trim();
+            if (string.IsNullOrEmpty(newTitle) || string.Equals(oldName, newTitle, StringComparison.Ordinal)) {
+                e.CancelEdit = true;
+            } else {
+                try {
+                    var tab = (TabFile)lsv.Items[e.Item].Tag;
+                    if (tab.CurrentFile.Folder.GetFileByTitle(newTitle) != null) {
                         e.CancelEdit = true;
-                        throw;
+                    } else {
+                        tab.Rename(newTitle);
                     }
+                } catch (ApplicationException ex) {
+                    e.CancelEdit = true;
+                    Medo.MessageBox.ShowError(this, string.Format(CultureInfo.CurrentUICulture, "Cannot rename file.\n\n{0}", ex.Message));
                 }
-            } catch (Exception ex) {
-                Medo.MessageBox.ShowError(this, string.Format(CultureInfo.CurrentUICulture, "Cannot rename folder.\n\n{0}", ex.Message));
             }
         }
 

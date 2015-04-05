@@ -13,7 +13,7 @@ namespace QText {
 
     internal class TabFile : TabPage {
 
-        public TabFile(QFile file)
+        public TabFile(DocumentFile file)
             : base() {
 
             this.CurrentFile = file;
@@ -75,7 +75,7 @@ namespace QText {
 
         private static readonly UTF8Encoding Utf8EncodingWithoutBom = new UTF8Encoding(false);
 
-        public QFile CurrentFile { get; private set; }
+        public DocumentFile CurrentFile { get; private set; }
         public string Title { get { return this.CurrentFile.Title; } }
         public DateTime LastWriteTimeUtc { get { return this.CurrentFile.LastWriteTimeUtc; } }
         public DateTime LastSaveTime { get; private set; }
@@ -114,7 +114,7 @@ namespace QText {
         }
 
 
-        public static TabFile Create(string fullFileName) {
+        public static TabFile Create(DocumentFolder folder, string fullFileName) {
             foreach (var extension in QFileInfo.GetExtensions()) {
                 var altFileName = QFileInfo.GetPathWithoutExtension(fullFileName) + extension;
                 if (File.Exists(altFileName)) {
@@ -132,7 +132,7 @@ namespace QText {
             } else {
                 File.WriteAllText(fullFileName, "");
             }
-            return new TabFile(new QFile(fullFileName));
+            return new TabFile(new DocumentFile(folder, new FileInfo(fullFileName)));
         }
 
 
@@ -156,7 +156,7 @@ namespace QText {
             if (this.IsOpened == false) { throw new InvalidOperationException("File is not loaded."); }
             if (this.CurrentFile.IsPlainText) { throw new InvalidOperationException("File is already in plain text format."); }
 
-            this.CurrentFile.ChangeType(QType.PlainText);
+            this.CurrentFile.ChangeKind(DocumentKind.PlainText);
             this.Save();
             this.Reopen();
         }
@@ -167,7 +167,7 @@ namespace QText {
 
             string text = this.TextBox.Text;
 
-            this.CurrentFile.ChangeType(QType.RichText);
+            this.CurrentFile.ChangeKind(DocumentKind.RichText);
             this.Save();
             this.Reopen();
         }
@@ -265,7 +265,7 @@ namespace QText {
         }
 
         public void SaveCarbonCopy(IWin32Window owner) {
-            SaveCarbonCopy(owner, this.CurrentFile.Path);
+            SaveCarbonCopy(owner, this.CurrentFile.Info.FullName);
         }
 
         public static void SaveCarbonCopy(IWin32Window owner, string fullFileName) {
@@ -294,20 +294,7 @@ namespace QText {
 
         public void Rename(string newTitle) {
             if (newTitle == null) { throw new ArgumentNullException("newTitle", "Title cannot be null."); }
-            newTitle = newTitle.Trim();
-            if (newTitle == null) { throw new ArgumentException("Title cannot be empty.", "newTitle"); }
-
-            //TODO: QFolder
-            //var oldInfo = new QFileInfo(this.CurrentFile.Path);
-            //var newInfo = oldInfo.ChangeName(Helper.EncodeFileName(newTitle));
-
-            //if (string.Equals(this.Title, newTitle, StringComparison.OrdinalIgnoreCase) == false) {
-            //    if (QFileInfo.IsNameAlreadyTaken(newInfo.DirectoryName, newInfo.Name)) {
-            //        throw new IOException("File already exists.");
-            //    }
-            //}
-
-            this.CurrentFile.ChangeTitle(newTitle);
+            this.CurrentFile.Rename(newTitle);
             UpdateText();
         }
 
@@ -609,7 +596,7 @@ namespace QText {
         #region Open/Save
 
         private void OpenAsPlain(RichTextBoxEx txt) {
-            using (var stream = new FileStream(this.CurrentFile.Path, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+            using (var stream = new FileStream(this.CurrentFile.Info.FullName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                 if (this.CurrentFile.IsEncrypted) {
                     this.OpenAsPlainEncrypted(txt, stream);
                 } else {
@@ -637,7 +624,7 @@ namespace QText {
 
 
         private void SaveAsPlain() {
-            using (var stream = new FileStream(this.CurrentFile.Path, FileMode.Create, FileAccess.Write, FileShare.Read)) {
+            using (var stream = new FileStream(this.CurrentFile.Info.FullName, FileMode.Create, FileAccess.Write, FileShare.Read)) {
                 if (this.CurrentFile.IsEncrypted) {
                     SaveAsPlainEncrypted(stream);
                 } else {
@@ -660,7 +647,7 @@ namespace QText {
 
 
         private void OpenAsRich(RichTextBoxEx txt) {
-            using (var stream = new FileStream(this.CurrentFile.Path, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+            using (var stream = new FileStream(this.CurrentFile.Info.FullName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                 if (this.CurrentFile.IsEncrypted) {
                     this.OpenAsRichEncrypted(txt, stream);
                 } else {
@@ -692,7 +679,7 @@ namespace QText {
 
 
         private void SaveAsRich() {
-            using (var stream = new FileStream(this.CurrentFile.Path, FileMode.Create, FileAccess.Write, FileShare.Read)) {
+            using (var stream = new FileStream(this.CurrentFile.Info.FullName, FileMode.Create, FileAccess.Write, FileShare.Read)) {
                 if (this.CurrentFile.IsEncrypted) {
                     SaveAsRichEncrypted(stream);
                 } else {

@@ -72,8 +72,8 @@ namespace QText {
             }
 
             foreach (var folder in Document.GetFolders()) {
-                foreach (var file in Document.GetTitles(folder)) {
-                    if (file.IndexOf(suggestion, StringComparison.CurrentCultureIgnoreCase) >= 0) {
+                foreach (var file in folder.GetFiles()) {
+                    if (file.Title.IndexOf(suggestion, StringComparison.CurrentCultureIgnoreCase) >= 0) {
                         yield return new GotoResult(null, folder, file);
                     }
                 }
@@ -81,7 +81,7 @@ namespace QText {
 
         }
 
-        private GotoResult(int? lineNumber, DocumentFolder folder, string file) {
+        private GotoResult(int? lineNumber, DocumentFolder folder, DocumentFile file) {
             this.LineNumber = lineNumber;
             this.Folder = folder;
             this.File = file;
@@ -90,7 +90,7 @@ namespace QText {
 
         public Int32? LineNumber { get; private set; }
         public DocumentFolder Folder { get; private set; }
-        public String File { get; private set; }
+        public DocumentFile File { get; private set; }
 
 
         public int ImageIndex {
@@ -98,7 +98,7 @@ namespace QText {
                 if (LineNumber.HasValue) {
                     return -1;
                 } else {
-                    if (string.IsNullOrEmpty(this.File)) {
+                    if (this.File == null) {
                         return 0;
                     } else {
                         return 1;
@@ -112,7 +112,7 @@ namespace QText {
         }
 
         public bool IsFile {
-            get { return !this.IsLineNumber && !string.IsNullOrEmpty(this.File); }
+            get { return !this.IsLineNumber && (this.File != null); }
         }
 
         public bool IsFolder {
@@ -123,10 +123,10 @@ namespace QText {
             if (LineNumber.HasValue) {
                 return "Line " + LineNumber.Value.ToString() + " in current file";
             } else {
-                if (string.IsNullOrEmpty(this.File)) {
+                if (this.File == null) {
                     return this.Folder.Title;
                 } else {
-                    return this.Folder.IsRoot ? this.File : this.File + " (in " + this.Folder + ")";
+                    return this.Folder.IsRoot ? this.File.Title : this.File.Title + " (in " + this.Folder.Title + ")";
                 }
             }
         }

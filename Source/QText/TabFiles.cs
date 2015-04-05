@@ -54,11 +54,6 @@ namespace QText {
             if (this.SelectedTab != null) { this.SelectedTab.Select(); }
         }
 
-
-        internal string CurrentDirectory {
-            get { return CurrentFolder.Directory.FullName; }
-        }
-
         public DocumentFolder CurrentFolder { get; private set; }
 
         public ContextMenuStrip TabContextMenuStrip { get; set; }
@@ -74,20 +69,21 @@ namespace QText {
             this.TabPages.Clear();
             this.CurrentFolder = folder;
 
-            foreach (var tab in Document.GetTabs(Document.GetFilePaths(this.CurrentFolder), this.TabContextMenuStrip)) {
+            foreach (var tab in Document.GetTabs(this.CurrentFolder.GetFiles(), this.TabContextMenuStrip)) {
                 this.TabPages.Add(tab);
             }
 
-            string selectedTitle;
-            Document.ReadOrderedTitles(this.CurrentFolder, out selectedTitle);
-            TabFile selectedTab = (this.TabCount > 0) ? (TabFile)this.TabPages[0] : null;
-            foreach (TabFile tab in this.TabPages) {
-                if (tab.Title.Equals(selectedTitle, StringComparison.OrdinalIgnoreCase)) {
-                    selectedTab = tab;
-                }
-            }
+            //TODO
+            //string selectedTitle;
+            //Document.ReadOrderedTitles(this.CurrentFolder, out selectedTitle);
+            //TabFile selectedTab = (this.TabCount > 0) ? (TabFile)this.TabPages[0] : null;
+            //foreach (TabFile tab in this.TabPages) {
+            //    if (tab.Title.Equals(selectedTitle, StringComparison.OrdinalIgnoreCase)) {
+            //        selectedTab = tab;
+            //    }
+            //}
 
-            SelectNextTab(selectedTab);
+            //SelectNextTab(selectedTab);
             if (this.SelectedTab != null) {
                 this.SelectedTab.Select();
                 this.OnSelectedIndexChanged(new EventArgs());
@@ -151,7 +147,7 @@ namespace QText {
         #region File operations
 
         public void AddTab(string title, bool isRichText) {
-            TabFile t = TabFile.Create(Path.Combine(this.CurrentDirectory, Helper.EncodeFileName(title) + (isRichText ? QFileInfo.Extensions.Rich : QFileInfo.Extensions.Plain)));
+            var t = TabFile.Create(this.CurrentFolder, Path.Combine(this.CurrentFolder.Info.FullName, Helper.EncodeFileName(title) + (isRichText ? QFileInfo.Extensions.Rich : QFileInfo.Extensions.Plain)));
             t.ContextMenuStrip = this.TabContextMenuStrip;
             if (this.SelectedTab != null) {
                 this.TabPages.Insert(this.TabPages.IndexOf(this.SelectedTab) + 1, t);
@@ -165,11 +161,7 @@ namespace QText {
         public void RemoveTab(TabFile tab) {
             this.SelectedTab = GetNextTab();
             this.TabPages.Remove(tab);
-            if (Settings.FilesDeleteToRecycleBin) {
-                SHFile.Delete(tab.CurrentFile.Path);
-            } else {
-                File.Delete(tab.CurrentFile.Path);
-            }
+            tab.CurrentFile.Delete();
             if (this.SelectedTab != null) {
                 this.SelectedTab.Open();
             }
@@ -188,7 +180,7 @@ namespace QText {
 
         public void MoveTabPreview(TabFile tab, string newFolder, out string oldPath, out string newPath) {
             string destFolder = string.IsNullOrEmpty(newFolder) ? Settings.FilesLocation : Path.Combine(Settings.FilesLocation, newFolder);
-            var oldFile = new QFileInfo(tab.CurrentFile.Path);
+            var oldFile = new QFileInfo(tab.CurrentFile.Info.FullName);
             oldPath = oldFile.FullName;
             newPath = Path.Combine(destFolder, oldFile.Name);
         }
