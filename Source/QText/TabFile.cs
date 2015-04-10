@@ -633,7 +633,7 @@ namespace QText {
 
 
         private static void CopyTextToClipboard(RichTextBoxEx textBox) {
-            var text = textBox.SelectedText.Replace("\n", "\r\n");
+            var text = textBox.SelectedText.Replace("\n", Environment.NewLine);
             Clipboard.SetText(text, TextDataFormat.UnicodeText);
         }
 
