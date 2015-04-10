@@ -320,7 +320,7 @@ namespace QText {
                     failedTitles.Add(file.Title);
                     failedExceptions.Add(ex);
                 }
-                if (file.CurrentFile.IsEncrypted) {
+                if (file.BaseFile.IsEncrypted) {
                     file.Close(); //forget passwords
                 }
             }
@@ -438,11 +438,11 @@ namespace QText {
                         using (var frm = new PasswordForm(tabFiles.SelectedTab.Title)) {
                             frm.TopMost = this.TopMost;
                             if (frm.ShowDialog(this) == DialogResult.OK) {
-                                tabFiles.SelectedTab.Password = frm.Password;
+                                tabFiles.SelectedTab.BaseFile.Password = frm.Password;
                                 tabFiles.SelectedTab.Open();
                                 SetSelectedTab(tabFiles.SelectedTab);
                             } else {
-                                tabFiles.SelectedTab.Password = null;
+                                tabFiles.SelectedTab.BaseFile.Password = null;
                                 tabFiles.SelectedTab = null;
                             }
                         }
@@ -452,7 +452,7 @@ namespace QText {
                     }
                 } catch (CryptographicException) {
                     Medo.MessageBox.ShowWarning(this, "File cannot be decrypted. Possible password mismatch.");
-                    tabFiles.SelectedTab.Password = null;
+                    tabFiles.SelectedTab.BaseFile.Password = null;
                     tabFiles.SelectedTab = null;
                 } catch (Exception ex) {
                     Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot open file.\n\n{0}", ex.Message));
@@ -499,7 +499,7 @@ namespace QText {
         private void mnuRename_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
-                using (var frm = new FileRenameForm(tabFiles.SelectedTab.CurrentFile)) {
+                using (var frm = new FileRenameForm(tabFiles.SelectedTab.BaseFile)) {
                     frm.TopMost = this.TopMost;
                     try {
                         if (frm.ShowDialog(this) == DialogResult.OK) {
@@ -592,7 +592,7 @@ namespace QText {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
                 TabFile tf = tabFiles.SelectedTab;
-                if (tf.CurrentFile.IsRichText) {
+                if (tf.BaseFile.IsRichText) {
                     using (var f = new System.Windows.Forms.FontDialog()) {
                         f.AllowScriptChange = true;
                         f.AllowSimulations = true;
@@ -623,7 +623,7 @@ namespace QText {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
                 TabFile tf = tabFiles.SelectedTab;
-                if (tf.CurrentFile.IsRichText) {
+                if (tf.BaseFile.IsRichText) {
                     ToogleStyle(tf.TextBox, FontStyle.Bold);
                 }
                 tmrQuickSave.Enabled = true;
@@ -634,7 +634,7 @@ namespace QText {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
                 TabFile tf = tabFiles.SelectedTab;
-                if (tf.CurrentFile.IsRichText) {
+                if (tf.BaseFile.IsRichText) {
                     ToogleStyle(tf.TextBox, FontStyle.Italic);
                 }
                 tmrQuickSave.Enabled = true;
@@ -645,7 +645,7 @@ namespace QText {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
                 TabFile tf = tabFiles.SelectedTab;
-                if (tf.CurrentFile.IsRichText) {
+                if (tf.BaseFile.IsRichText) {
                     if (tf.TextBox.SelectionFont != null) {
                         ToogleStyle(tf.TextBox, FontStyle.Underline);
                     }
@@ -658,7 +658,7 @@ namespace QText {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
                 TabFile tf = tabFiles.SelectedTab;
-                if (tf.CurrentFile.IsRichText) {
+                if (tf.BaseFile.IsRichText) {
                     if (tf.TextBox.SelectionFont != null) {
                         ToogleStyle(tf.TextBox, FontStyle.Strikeout);
                     }
@@ -875,10 +875,10 @@ namespace QText {
 
         private void mnxTab_Opening(object sender, CancelEventArgs e) {
             bool isTabSelected = (tabFiles.SelectedTab != null);
-            bool isTabRich = isTabSelected && tabFiles.SelectedTab.CurrentFile.IsRichText;
-            bool isTabPlain = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsRichText == false);
-            bool isTabEncryptable = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsEncrypted == false);
-            bool isTabDecryptable = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsEncrypted);
+            bool isTabRich = isTabSelected && tabFiles.SelectedTab.BaseFile.IsRichText;
+            bool isTabPlain = isTabSelected && (tabFiles.SelectedTab.BaseFile.IsRichText == false);
+            bool isTabEncryptable = isTabSelected && (tabFiles.SelectedTab.BaseFile.IsEncrypted == false);
+            bool isTabDecryptable = isTabSelected && (tabFiles.SelectedTab.BaseFile.IsEncrypted);
             bool isZoomResetable = isTabSelected && tabFiles.SelectedTab.TextBox.HasZoom;
 
             mnxTabReopen.Enabled = isTabSelected;
@@ -990,7 +990,7 @@ namespace QText {
                 using (var frm = new ChangePasswordForm(this.Text)) {
                     frm.TopMost = this.TopMost;
                     if (frm.ShowDialog(this) == DialogResult.OK) {
-                        tabFiles.SelectedTab.Password = frm.Password;
+                        tabFiles.SelectedTab.BaseFile.Password = frm.Password;
                         tabFiles.SelectedTab.Save(); ;
                     }
                 }
@@ -1005,7 +1005,7 @@ namespace QText {
 
         private void mnxTabOpenContainingFolder_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
-                var exe = new ProcessStartInfo("explorer.exe", "/select,\"" + tabFiles.SelectedTab.CurrentFile.Info.FullName + "\"");
+                var exe = new ProcessStartInfo("explorer.exe", "/select,\"" + tabFiles.SelectedTab.BaseFile.Info.FullName + "\"");
                 Process.Start(exe);
             } else {
                 var exe = new ProcessStartInfo("explorer.exe", "\"" + tabFiles.CurrentFolder.Info.FullName + "\"");
@@ -1020,8 +1020,8 @@ namespace QText {
 
         private void mnxText_Opening(object sender, CancelEventArgs e) {
             bool isTabSelected = (tabFiles.SelectedTab != null);
-            bool isTabRichText = isTabSelected && tabFiles.SelectedTab.CurrentFile.IsRichText;
-            bool isTabPlainText = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsRichText == false);
+            bool isTabRichText = isTabSelected && tabFiles.SelectedTab.BaseFile.IsRichText;
+            bool isTabPlainText = isTabSelected && (tabFiles.SelectedTab.BaseFile.IsRichText == false);
             bool isTextSelected = isTabSelected && (tabFiles.SelectedTab.TextBox.SelectedText.Length > 0);
             bool hasText = isTabSelected && (tabFiles.SelectedTab.TextBox.Text.Length > 0);
             bool isZoomResetable = isTabSelected && (tabFiles.SelectedTab.TextBox.ZoomFactor != 1);
@@ -1429,8 +1429,8 @@ namespace QText {
 
         private void tmrUpdateToolbar_Tick(object sender, EventArgs e) {
             bool isTabSelected = (tabFiles.SelectedTab != null);
-            bool isTabRichText = isTabSelected && tabFiles.SelectedTab.CurrentFile.IsRichText;
-            bool isTabPlainText = isTabSelected && (tabFiles.SelectedTab.CurrentFile.IsRichText == false);
+            bool isTabRichText = isTabSelected && tabFiles.SelectedTab.BaseFile.IsRichText;
+            bool isTabPlainText = isTabSelected && (tabFiles.SelectedTab.BaseFile.IsRichText == false);
 
             mnuSaveNow.Enabled = isTabSelected;
             mnuRename.Enabled = isTabSelected;
@@ -1471,7 +1471,7 @@ namespace QText {
             if (tabFiles.TabCount > 0) {
                 nextIndexToCheck = nextIndexToCheck % tabFiles.TabPages.Count;
                 var currTab = (TabFile)tabFiles.TabPages[nextIndexToCheck];
-                var fi = new QFileInfo(currTab.CurrentFile.Info.FullName);
+                var fi = new QFileInfo(currTab.BaseFile.Info.FullName);
                 if (fi.LastWriteTimeUtc != currTab.LastWriteTimeUtc) {
                     if (currTab.IsChanged) {
                         currTab.Save();

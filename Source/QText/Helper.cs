@@ -49,7 +49,7 @@ namespace QText {
             if (tabToDelete == null) { throw new ArgumentNullException("tabToDelete", "Tab cannot be null."); }
 
             bool askForConfirmation = false;
-            if (tabToDelete.CurrentFile.IsEncrypted) {
+            if (tabToDelete.BaseFile.IsEncrypted) {
                 askForConfirmation = true;
             } else {
                 tabToDelete.Open();

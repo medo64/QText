@@ -42,7 +42,7 @@ namespace QText {
                 x += SystemInformation.Border3DSize.Width;
                 y += SystemInformation.Border3DSize.Height;
             }
-            if (tab.CurrentFile.IsEncrypted) {
+            if (tab.BaseFile.IsEncrypted) {
                 e.Graphics.DrawString(tab.Text, this.Font, Brushes.DarkGreen, x, y, this.StringFormat);
             } else {
                 e.Graphics.DrawString(tab.Text, this.Font, SystemBrushes.ControlText, x, y, this.StringFormat);
@@ -98,13 +98,13 @@ namespace QText {
 
         public void SelectNextTab(TabFile preferredTab) {
             if (preferredTab == null) { return; }
-            if (preferredTab.CurrentFile.IsEncrypted) {
+            if (preferredTab.BaseFile.IsEncrypted) {
                 var currIndex = this.TabPages.IndexOf(preferredTab);
                 preferredTab = null; //remove it in case that no unencrypted tab is found
                 for (int i = 0; i < this.TabPages.Count; i++) {
                     var nextIndex = (currIndex + i) % this.TabPages.Count;
                     var nextTab = (TabFile)this.TabPages[nextIndex];
-                    if (nextTab.CurrentFile.IsEncrypted == false) {
+                    if (nextTab.BaseFile.IsEncrypted == false) {
                         preferredTab = nextTab;
                         break;
                     }
@@ -161,7 +161,7 @@ namespace QText {
         public void RemoveTab(TabFile tab) {
             this.SelectedTab = GetNextTab();
             this.TabPages.Remove(tab);
-            tab.CurrentFile.Delete();
+            tab.BaseFile.Delete();
             if (this.SelectedTab != null) {
                 this.SelectedTab.Open();
             }
@@ -180,7 +180,7 @@ namespace QText {
 
         public void MoveTabPreview(TabFile tab, string newFolder, out string oldPath, out string newPath) {
             string destFolder = string.IsNullOrEmpty(newFolder) ? Settings.FilesLocation : Path.Combine(Settings.FilesLocation, newFolder);
-            var oldFile = new QFileInfo(tab.CurrentFile.Info.FullName);
+            var oldFile = new QFileInfo(tab.BaseFile.Info.FullName);
             oldPath = oldFile.FullName;
             newPath = Path.Combine(destFolder, oldFile.Name);
         }

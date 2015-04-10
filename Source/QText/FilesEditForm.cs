@@ -90,7 +90,7 @@ namespace QText {
             } else {
                 try {
                     var tab = (TabFile)lsv.Items[e.Item].Tag;
-                    if (tab.CurrentFile.Folder.GetFileByTitle(newTitle) != null) {
+                    if (tab.BaseFile.Folder.GetFileByTitle(newTitle) != null) {
                         e.CancelEdit = true;
                     } else {
                         tab.Rename(newTitle);
