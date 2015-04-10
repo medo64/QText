@@ -97,7 +97,6 @@ namespace QText {
         #endregion
 
         public DateTime LastWriteTimeUtc { get { return this.Info.LastWriteTimeUtc; } }
-        public DateTime LastSaveTimeUtc { get; private set; }
 
 
         #region Rename/Delete
@@ -237,7 +236,6 @@ namespace QText {
                     stream.Position = 0;
                 }
             }
-            this.LastSaveTimeUtc = DateTime.UtcNow;
         }
 
         public void Write(MemoryStream stream) {
@@ -264,7 +262,6 @@ namespace QText {
                         fileStream.Write(buffer, 0, len);
                     }
                 }
-                this.LastSaveTimeUtc = DateTime.UtcNow;
             }
         }
 

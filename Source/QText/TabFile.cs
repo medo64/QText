@@ -282,10 +282,6 @@ namespace QText {
             UpdateText();
         }
 
-        public bool GetIsEligibleForSave(int timeout) {
-            return (this.IsChanged && (this.BaseFile.LastSaveTimeUtc.AddSeconds(timeout) <= DateTime.UtcNow));
-        }
-
 
         #region txt
 
