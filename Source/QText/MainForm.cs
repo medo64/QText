@@ -432,7 +432,7 @@ namespace QText {
                 }
 
                 try {
-                    if (tabFiles.SelectedTab.NeedsPassword) {
+                    if (tabFiles.SelectedTab.BaseFile.NeedsPassword) {
                         this.Focus();
                         if (this.Visible == false) { return; }
                         using (var frm = new PasswordForm(tabFiles.SelectedTab.Title)) {

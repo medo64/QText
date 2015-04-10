@@ -2,6 +2,7 @@ using Medo.Security.Cryptography;
 using System;
 using System.IO;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace QText {
     internal class DocumentFile {
@@ -27,7 +28,7 @@ namespace QText {
                 this.Type = DocumentKind.RichText;
                 this.IsEncrypted = true;
             } else {
-                throw new FormatException("Cannot recognize file type.");
+                throw new ApplicationException("Cannot recognize file type.");
             }
 
             this.Title = Helper.DecodeFileName(this.Name);
@@ -59,8 +60,41 @@ namespace QText {
         public bool IsPlainText { get { return this.Type == DocumentKind.PlainText; } }
         public bool IsRichText { get { return this.Type == DocumentKind.RichText; } }
 
+        #region Encryption
+
         public bool IsEncrypted { get; private set; }
-        public string Password { get; set; }
+
+        private byte[] PasswordBytes;
+
+        public string Password {
+            set {
+                if (value != null) {
+                    this.PasswordBytes = UTF8Encoding.UTF8.GetBytes(value);
+                    this.ProtectPassword();
+                } else {
+                    this.PasswordBytes = null;
+                }
+            }
+        }
+
+        public bool NeedsPassword { get { return (this.IsEncrypted && (this.PasswordBytes == null)); } }
+        public bool HasPassword { get { return (this.IsEncrypted && (this.PasswordBytes != null)); } }
+
+        public void ProtectPassword() {
+            if (this.PasswordBytes == null) { return; }
+
+            var bytes = this.PasswordBytes;
+            this.PasswordBytes = ProtectedData.Protect(bytes, null, DataProtectionScope.CurrentUser);
+            Array.Clear(bytes, 0, bytes.Length);
+        }
+
+        public void UnprotectPassword() {
+            if (this.PasswordBytes == null) { return; }
+
+            this.PasswordBytes = ProtectedData.Unprotect(this.PasswordBytes, null, DataProtectionScope.CurrentUser);
+        }
+
+        #endregion
 
         public DateTime LastWriteTimeUtc { get { return this.Info.LastWriteTimeUtc; } }
 
@@ -74,7 +108,7 @@ namespace QText {
             switch (this.Type) {
                 case DocumentKind.PlainText: newPath += this.IsEncrypted ? Extension.EncryptedPlainText : Extension.PlainText; break;
                 case DocumentKind.RichText: newPath += this.IsEncrypted ? Extension.EncryptedRichText : Extension.RichText; break;
-                default: throw new InvalidOperationException("Unknown type.");
+                default: throw new ApplicationException("Unknown file kind.");
             }
         }
 
@@ -119,7 +153,7 @@ namespace QText {
             switch (newType) {
                 case DocumentKind.PlainText: newPath += this.IsEncrypted ? Extension.EncryptedPlainText : Extension.PlainText; break;
                 case DocumentKind.RichText: newPath += this.IsEncrypted ? Extension.EncryptedRichText : Extension.RichText; break;
-                default: throw new InvalidOperationException("Unknown type.");
+                default: throw new ApplicationException("Unknown file kind.");
             }
             Helper.MovePath(oldPath, newPath);
 
@@ -136,7 +170,7 @@ namespace QText {
             switch (this.Type) {
                 case DocumentKind.PlainText: newPath += Extension.EncryptedPlainText; break;
                 case DocumentKind.RichText: newPath += Extension.EncryptedRichText; break;
-                default: throw new InvalidOperationException("Unknown type.");
+                default: throw new ApplicationException("Unknown file kind.");
             }
 
             using (var stream = new MemoryStream()) {
@@ -144,18 +178,20 @@ namespace QText {
                 Helper.MovePath(oldPath, newPath);
                 this.Info = new FileInfo(newPath);
                 this.IsEncrypted = true;
-                this.Write(stream, password);
+                this.Password = password;
+                this.Write(stream);
             }
         }
 
         public void Decrypt() {
             if (!this.IsEncrypted) { return; }
+
             var oldPath = this.Info.FullName;
             var newPath = Path.Combine(this.Info.Directory.FullName, this.Name);
             switch (this.Type) {
                 case DocumentKind.PlainText: newPath += Extension.PlainText; break;
                 case DocumentKind.RichText: newPath += Extension.RichText; break;
-                default: throw new InvalidOperationException("Unknown type.");
+                default: throw new ApplicationException("Unknown file kind.");
             }
 
             using (var stream = new MemoryStream()) {
@@ -163,6 +199,7 @@ namespace QText {
                 Helper.MovePath(oldPath, newPath);
                 this.Info = new FileInfo(newPath);
                 this.IsEncrypted = false;
+                this.Password = null;
                 this.Write(stream);
             }
         }
@@ -173,20 +210,24 @@ namespace QText {
         #region Read/write
 
 
-        public void Read(MemoryStream stream, string password = null) {
-            if (this.IsEncrypted && (password == null)) { password = this.Password; }
-            if (this.IsEncrypted && (password == null)) { throw new ApplicationException("Missing password."); }
+        public void Read(MemoryStream stream) {
+            if (this.IsEncrypted && !this.HasPassword) { throw new ApplicationException("Missing password."); }
 
             using (var fileStream = new FileStream(this.Info.FullName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                 var buffer = new byte[65536];
                 int len;
 
                 if (this.IsEncrypted) {
-                    using (var aesStream = new OpenSslAesStream(fileStream, password, CryptoStreamMode.Read, 256, CipherMode.CBC)) {
-                        while ((len = aesStream.Read(buffer, 0, buffer.Length)) > 0) {
-                            stream.Write(buffer, 0, len);
+                    this.UnprotectPassword();
+                    try {
+                        using (var aesStream = new OpenSslAesStream(fileStream, this.PasswordBytes, CryptoStreamMode.Read, 256, CipherMode.CBC)) {
+                            while ((len = aesStream.Read(buffer, 0, buffer.Length)) > 0) {
+                                stream.Write(buffer, 0, len);
+                            }
+                            stream.Position = 0;
                         }
-                        stream.Position = 0;
+                    } finally {
+                        this.ProtectPassword();
                     }
                 } else {
                     while ((len = fileStream.Read(buffer, 0, buffer.Length)) > 0) {
@@ -195,13 +236,10 @@ namespace QText {
                     stream.Position = 0;
                 }
             }
-
-            this.Password = this.IsEncrypted ? password : null;
         }
 
-        public void Write(MemoryStream stream, string password = null) {
-            if (this.IsEncrypted && (password == null)) { password = this.Password; }
-            if (this.IsEncrypted && (password == null)) { throw new ApplicationException("Missing password."); }
+        public void Write(MemoryStream stream) {
+            if (this.IsEncrypted && !this.HasPassword) { throw new ApplicationException("Missing password."); }
 
             stream.Position = 0;
             using (var fileStream = new FileStream(this.Info.FullName, FileMode.Create, FileAccess.Write, FileShare.None)) {
@@ -209,10 +247,15 @@ namespace QText {
                 int len;
 
                 if (this.IsEncrypted) {
-                    using (var aesStream = new OpenSslAesStream(fileStream, password, CryptoStreamMode.Write, 256, CipherMode.CBC)) {
-                        while ((len = stream.Read(buffer, 0, buffer.Length)) > 0) {
-                            aesStream.Write(buffer, 0, len);
+                    this.UnprotectPassword();
+                    try {
+                        using (var aesStream = new OpenSslAesStream(fileStream, this.PasswordBytes, CryptoStreamMode.Write, 256, CipherMode.CBC)) {
+                            while ((len = stream.Read(buffer, 0, buffer.Length)) > 0) {
+                                aesStream.Write(buffer, 0, len);
+                            }
                         }
+                    } finally {
+                        this.ProtectPassword();
                     }
                 } else {
                     while ((len = stream.Read(buffer, 0, buffer.Length)) > 0) {
@@ -220,8 +263,6 @@ namespace QText {
                     }
                 }
             }
-
-            this.Password = this.IsEncrypted ? password : null;
         }
 
         #endregion

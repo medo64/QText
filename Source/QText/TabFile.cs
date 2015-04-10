@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
 
@@ -80,11 +79,6 @@ namespace QText {
         public DateTime LastSaveTime { get; private set; }
 
         public bool IsOpened { get; private set; }
-        public bool NeedsPassword {
-            get {
-                return (this.BaseFile.IsEncrypted && (this.BaseFile.Password == null));
-            }
-        }
 
         private bool _isChanged;
         public bool IsChanged {
@@ -184,7 +178,7 @@ namespace QText {
         public void Decrypt() {
             if (this.IsOpened == false) { throw new InvalidOperationException("File is not loaded."); }
             if (this.BaseFile.IsEncrypted == false) { throw new InvalidOperationException("File is already decrypted."); }
-            if (this.BaseFile.Password == null) { throw new InvalidOperationException("No decryption password found."); }
+            if (!this.BaseFile.HasPassword) { throw new InvalidOperationException("No decryption password found."); }
 
             string text = this.TextBox.Text;
 
@@ -195,7 +189,7 @@ namespace QText {
 
 
         public void Reopen() {
-            if ((this.BaseFile.IsEncrypted) && (this.BaseFile.Password == null)) { throw new CryptographicException("No password provided."); }
+            if (this.BaseFile.IsEncrypted && !this.BaseFile.HasPassword) { throw new ApplicationException("No password provided."); }
 
             var txt = (this.TextBox != null) ? this.TextBox : GetEmptyTextBox();
             var oldSelStart = txt.SelectionStart;
@@ -490,7 +484,7 @@ namespace QText {
             }
 
             if (!(this.IsOpened)) {
-                if (this.NeedsPassword && (this.BaseFile.Password == null)) { return false; }
+                if (this.BaseFile.NeedsPassword && !this.BaseFile.HasPassword) { return false; }
                 this.Open();
             }
             int index = this.TextBox.Text.IndexOf(text, this.TextBox.SelectionStart + this.TextBox.SelectionLength, comparisionType);
@@ -516,7 +510,7 @@ namespace QText {
             }
 
             if (!(this.IsOpened)) {
-                if (this.NeedsPassword && (this.BaseFile.Password == null)) { return false; }
+                if (this.BaseFile.NeedsPassword && !this.BaseFile.HasPassword) { return false; }
                 this.Open();
             }
             int index = this.TextBox.Text.IndexOf(text, startingIndex, comparisionType);
@@ -592,7 +586,7 @@ namespace QText {
 
         private void OpenAsPlain(RichTextBoxEx txt) {
             using (var stream = new MemoryStream()) {
-                this.BaseFile.Read(stream, this.BaseFile.IsEncrypted ? this.BaseFile.Password : null);
+                this.BaseFile.Read(stream);
                 using (var sr = new StreamReader(stream, Utf8EncodingWithoutBom)) {
                     var text = sr.ReadToEnd();
                     var lines = text.Split(new string[] { "\r\n", "\n", "\r" }, StringSplitOptions.None);
@@ -607,14 +601,14 @@ namespace QText {
                 var text = string.Join(Settings.PlainLineEndsWithLf ? "\n" : Environment.NewLine, this.TextBox.Lines);
                 var bytes = Utf8EncodingWithoutBom.GetBytes(text);
                 stream.Write(bytes, 0, bytes.Length);
-                this.BaseFile.Write(stream, this.BaseFile.IsEncrypted ? this.BaseFile.Password : null);
+                this.BaseFile.Write(stream);
             }
         }
 
 
         private void OpenAsRich(RichTextBoxEx txt) {
             using (var stream = new MemoryStream()) {
-                this.BaseFile.Read(stream, this.BaseFile.IsEncrypted ? this.BaseFile.Password : null);
+                this.BaseFile.Read(stream);
                 txt.LoadFile(stream, RichTextBoxStreamType.RichText);
             }
         }
@@ -623,7 +617,7 @@ namespace QText {
         private void SaveAsRich() {
             using (var stream = new MemoryStream()) {
                 this.TextBox.SaveFile(stream, RichTextBoxStreamType.RichText);
-                this.BaseFile.Write(stream, this.BaseFile.IsEncrypted ? this.BaseFile.Password : null);
+                this.BaseFile.Write(stream);
             }
         }
 
