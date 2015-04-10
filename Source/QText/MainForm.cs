@@ -436,6 +436,7 @@ namespace QText {
                         this.Focus();
                         if (this.Visible == false) { return; }
                         using (var frm = new PasswordForm(tabFiles.SelectedTab.Title)) {
+                            frm.TopMost = this.TopMost;
                             if (frm.ShowDialog(this) == DialogResult.OK) {
                                 tabFiles.SelectedTab.Password = frm.Password;
                                 tabFiles.SelectedTab.Open();
@@ -470,6 +471,7 @@ namespace QText {
         private void mnuNew_Click(object sender, EventArgs e) {
             tmrQuickSave.Enabled = false;
             using (FileNewForm frm = new FileNewForm(tabFiles.CurrentFolder)) {
+                frm.TopMost = this.TopMost;
                 if (frm.ShowDialog(this) == DialogResult.OK) {
                     try {
                         tabFiles.AddTab(frm.Title, frm.IsRichText);
@@ -498,6 +500,7 @@ namespace QText {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
                 using (var frm = new FileRenameForm(tabFiles.SelectedTab.CurrentFile)) {
+                    frm.TopMost = this.TopMost;
                     try {
                         if (frm.ShowDialog(this) == DialogResult.OK) {
                             tabFiles.SelectedTab.Rename(frm.NewTitle);
@@ -708,6 +711,7 @@ namespace QText {
             }
 
             using (var frm = new GotoForm(hasText)) {
+                frm.TopMost = this.TopMost;
                 if (frm.ShowDialog(this) == DialogResult.OK) {
                     var destination = frm.SelectedItem;
                     if (destination.IsLineNumber) {
@@ -781,6 +785,7 @@ namespace QText {
             tabFiles.Enabled = false;
             tabFiles.FolderSave();
             using (var frm = new FolderEditForm(tabFiles.CurrentFolder)) {
+                frm.TopMost = this.TopMost;
                 frm.ShowDialog(this);
                 if (!tabFiles.CurrentFolder.Equals(frm.CurrentFolder)) {
                     tabFiles.Enabled = true;
@@ -799,6 +804,7 @@ namespace QText {
             tabFiles.Enabled = false;
             tabFiles.FolderSave();
             using (var frm = new FilesEditForm(tabFiles)) {
+                frm.TopMost = this.TopMost;
                 frm.ShowDialog(this);
             }
             tabFiles.FolderSave();
@@ -811,6 +817,7 @@ namespace QText {
         private void mnuAppOptions_Click(object sender, EventArgs e) {
             tmrQuickSave.Enabled = false;
             using (var frm = new OptionsForm()) {
+                frm.TopMost = this.TopMost;
                 SaveAllChanged();
                 this.tmrUpdateToolbar.Enabled = false;
                 RefreshAll(null, null);
@@ -970,6 +977,7 @@ namespace QText {
         private void mnxTabEncrypt_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 using (var frm = new ChangePasswordForm(this.Text)) {
+                    frm.TopMost = this.TopMost;
                     if (frm.ShowDialog(this) == DialogResult.OK) {
                         tabFiles.SelectedTab.Encrypt(frm.Password);
                     }
@@ -980,6 +988,7 @@ namespace QText {
         private void mnxTabChangePassword_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 using (var frm = new ChangePasswordForm(this.Text)) {
+                    frm.TopMost = this.TopMost;
                     if (frm.ShowDialog(this) == DialogResult.OK) {
                         tabFiles.SelectedTab.Password = frm.Password;
                         tabFiles.SelectedTab.Save(); ;
@@ -1171,10 +1180,12 @@ namespace QText {
         private void mnxTextSelectionSpelling_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 using (var frm = new SpellingForm(tabFiles.SelectedTab.TextBox.SelectedText.Replace('\n', ' '))) {
+                    frm.TopMost = this.TopMost;
                     frm.ShowDialog(this);
                 }
             } else {
                 using (var frm = new SpellingForm()) {
+                    frm.TopMost = this.TopMost;
                     frm.ShowDialog(this);
                 }
             }
@@ -1384,6 +1395,7 @@ namespace QText {
 
                 if (preview) {
                     using (var frm = new Medo.Windows.Forms.PrintPreviewDialog(printDocument)) {
+                        frm.TopMost = this.TopMost;
                         frm.ShowDialog(this);
                     }
                 } else {
@@ -1481,6 +1493,7 @@ namespace QText {
 
         private void FindFirst() {
             using (var frm = new FindForm(this.tabFiles)) {
+                frm.TopMost = this.TopMost;
                 frm.ShowDialog(this);
             }
         }
