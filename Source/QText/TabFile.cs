@@ -15,7 +15,6 @@ namespace QText {
             : base() {
 
             this.BaseFile = file;
-            this.LastSaveTime = System.DateTime.Now;
             this.Padding = new Padding(0, SystemInformation.Border3DSize.Height, 0, 0);
 
             base.Text = this.Title;
@@ -75,8 +74,6 @@ namespace QText {
 
         public DocumentFile BaseFile { get; private set; }
         public string Title { get { return this.BaseFile.Title; } }
-        public DateTime LastWriteTimeUtc { get { return this.BaseFile.LastWriteTimeUtc; } }
-        public DateTime LastSaveTime { get; private set; }
 
         public bool IsOpened { get; private set; }
 
@@ -212,7 +209,6 @@ namespace QText {
             this.TextBox.SelectionStart = oldSelStart;
             this.TextBox.SelectionLength = oldSelLength;
             this.TextBox.ClearUndo();
-            this.LastSaveTime = DateTime.Now;
             this.IsChanged = false;
             this.IsOpened = true;
         }
@@ -246,7 +242,6 @@ namespace QText {
                 SaveAsPlain();
             }
 
-            this.LastSaveTime = DateTime.Now;
             this.IsChanged = false;
             base.Text = this.Title;
 
@@ -288,7 +283,7 @@ namespace QText {
         }
 
         public bool GetIsEligibleForSave(int timeout) {
-            return (this.IsChanged) && (this.LastSaveTime.AddSeconds(timeout) <= DateTime.Now);
+            return (this.IsChanged && (this.BaseFile.LastSaveTimeUtc.AddSeconds(timeout) <= DateTime.UtcNow));
         }
 
 

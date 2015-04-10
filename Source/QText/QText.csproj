@@ -149,10 +149,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="QFileInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Document\DocumentKind.cs" />
+    <Compile Include="QFileInfo.cs" />
     <Compile Include="Search.cs" />
     <Compile Include="SHFile.cs" />
     <Compile Include="FileNewForm.cs">

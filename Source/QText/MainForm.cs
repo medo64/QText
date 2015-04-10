@@ -1472,7 +1472,7 @@ namespace QText {
                 nextIndexToCheck = nextIndexToCheck % tabFiles.TabPages.Count;
                 var currTab = (TabFile)tabFiles.TabPages[nextIndexToCheck];
                 var fi = new QFileInfo(currTab.BaseFile.Info.FullName);
-                if (fi.LastWriteTimeUtc != currTab.LastWriteTimeUtc) {
+                if (fi.LastWriteTimeUtc != currTab.BaseFile.LastWriteTimeUtc) {
                     if (currTab.IsChanged) {
                         currTab.Save();
                     } else {
