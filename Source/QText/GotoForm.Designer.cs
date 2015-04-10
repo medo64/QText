@@ -1,4 +1,4 @@
-﻿namespace QText {
+namespace QText {
     partial class GotoForm {
         /// <summary>
         /// Required designer variable.
@@ -52,6 +52,7 @@
             this.lsvSuggestions.TabIndex = 2;
             this.lsvSuggestions.UseCompatibleStateImageBehavior = false;
             this.lsvSuggestions.View = System.Windows.Forms.View.Details;
+            this.lsvSuggestions.ItemActivate += new System.EventHandler(this.lsvSuggestions_ItemActivate);
             this.lsvSuggestions.SelectedIndexChanged += new System.EventHandler(this.lsvSuggestions_SelectedIndexChanged);
             this.lsvSuggestions.Resize += new System.EventHandler(this.lsvSuggestions_Resize);
             // 

@@ -21,7 +21,6 @@ namespace QText {
             txtWhere_TextChanged(null, null);
         }
 
-
         private void txtWhere_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) {
             switch (e.KeyData) {
                 case Keys.Up:
@@ -70,8 +69,13 @@ namespace QText {
             } else {
                 btnGoto.Enabled = false;
             }
+            txtWhere.Select();
         }
 
+
+        private void lsvSuggestions_ItemActivate(object sender, EventArgs e) {
+            if (btnGoto.Enabled) { this.AcceptButton.PerformClick(); }
+        }
 
         private void lsvSuggestions_SelectedIndexChanged(object sender, EventArgs e) {
             btnGoto.Enabled = (lsvSuggestions.SelectedItems.Count > 0);
