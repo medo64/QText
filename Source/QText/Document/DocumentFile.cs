@@ -1,5 +1,7 @@
+using Medo.Security.Cryptography;
 using System;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace QText {
     internal class DocumentFile {
@@ -153,6 +155,57 @@ namespace QText {
 
             this.Info = new FileInfo(newPath);
             this.IsEncrypted = false;
+        }
+
+        #endregion
+
+
+        #region Read/write
+
+
+        public void Read(MemoryStream stream, string password = null) {
+            if (this.IsEncrypted && (password == null)) { throw new ApplicationException("Missing password."); }
+
+            using (var fileStream = new FileStream(this.Info.FullName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+                var buffer = new byte[65536];
+                int len;
+
+                if (this.IsEncrypted) {
+                    using (var aesStream = new OpenSslAesStream(fileStream, password, CryptoStreamMode.Read, 256, CipherMode.CBC)) {
+                        while ((len = aesStream.Read(buffer, 0, buffer.Length)) > 0) {
+                            stream.Write(buffer, 0, len);
+                        }
+                        stream.Position = 0;
+                    }
+                } else {
+                    while ((len = fileStream.Read(buffer, 0, buffer.Length)) > 0) {
+                        stream.Write(buffer, 0, len);
+                    }
+                    stream.Position = 0;
+                }
+            }
+        }
+
+        public void Write(MemoryStream stream, string password = null) {
+            stream.Position = 0;
+            if (this.IsEncrypted && (password == null)) { throw new ApplicationException("Missing password."); }
+
+            using (var fileStream = new FileStream(this.Info.FullName, FileMode.Create, FileAccess.Write, FileShare.None)) {
+                var buffer = new byte[65536];
+                int len;
+
+                if (this.IsEncrypted) {
+                    using (var aesStream = new OpenSslAesStream(fileStream, password, CryptoStreamMode.Write, 256, CipherMode.CBC)) {
+                        while ((len = stream.Read(buffer, 0, buffer.Length)) > 0) {
+                            aesStream.Write(buffer, 0, len);
+                        }
+                    }
+                } else {
+                    while ((len = stream.Read(buffer, 0, buffer.Length)) > 0) {
+                        fileStream.Write(buffer, 0, len);
+                    }
+                }
+            }
         }
 
         #endregion

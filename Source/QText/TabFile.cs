@@ -1,4 +1,3 @@
-using Medo.Security.Cryptography;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -596,105 +595,39 @@ namespace QText {
         #region Open/Save
 
         private void OpenAsPlain(RichTextBoxEx txt) {
-            using (var stream = new FileStream(this.CurrentFile.Info.FullName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-                if (this.CurrentFile.IsEncrypted) {
-                    this.OpenAsPlainEncrypted(txt, stream);
-                } else {
-                    this.OpenAsPlain(txt, stream);
+            using (var stream = new MemoryStream()) {
+                this.CurrentFile.Read(stream, this.CurrentFile.IsEncrypted ? this.Password : null);
+                using (var sr = new StreamReader(stream, Utf8EncodingWithoutBom)) {
+                    var text = sr.ReadToEnd();
+                    var lines = text.Split(new string[] { "\r\n", "\n", "\r" }, StringSplitOptions.None);
+                    txt.ResetText();
+                    txt.Text = string.Join("\n", lines);
                 }
             }
         }
-
-        private void OpenAsPlain(RichTextBoxEx txt, Stream stream) {
-            string text;
-            using (var sr = new StreamReader(stream, Utf8EncodingWithoutBom)) {
-                text = sr.ReadToEnd();
-                var lines = text.Split(new string[] { "\r\n", "\n", "\r" }, StringSplitOptions.None);
-                text = string.Join("\n", lines);
-            }
-            txt.ResetText();
-            txt.Text = text;
-        }
-
-        private void OpenAsPlainEncrypted(RichTextBoxEx txt, Stream stream) {
-            using (var aesStream = new OpenSslAesStream(stream, this.Password, CryptoStreamMode.Read, 256, CipherMode.CBC)) {
-                this.OpenAsPlain(txt, aesStream);
-            }
-        }
-
 
         private void SaveAsPlain() {
-            using (var stream = new FileStream(this.CurrentFile.Info.FullName, FileMode.Create, FileAccess.Write, FileShare.Read)) {
-                if (this.CurrentFile.IsEncrypted) {
-                    SaveAsPlainEncrypted(stream);
-                } else {
-                    SaveAsPlain(stream);
-                }
-            }
-        }
-
-        private void SaveAsPlain(Stream stream) {
-            var text = string.Join(Settings.PlainLineEndsWithLf ? "\n" : Environment.NewLine, this.TextBox.Lines);
-            var bytes = Utf8EncodingWithoutBom.GetBytes(text);
-            stream.Write(bytes, 0, bytes.Length);
-        }
-
-        private void SaveAsPlainEncrypted(Stream stream) {
-            using (var aesStream = new OpenSslAesStream(stream, this.Password, CryptoStreamMode.Write, 256, CipherMode.CBC)) {
-                SaveAsPlain(aesStream);
+            using (var stream = new MemoryStream()) {
+                var text = string.Join(Settings.PlainLineEndsWithLf ? "\n" : Environment.NewLine, this.TextBox.Lines);
+                var bytes = Utf8EncodingWithoutBom.GetBytes(text);
+                stream.Write(bytes, 0, bytes.Length);
+                this.CurrentFile.Write(stream, this.CurrentFile.IsEncrypted ? this.Password : null);
             }
         }
 
 
         private void OpenAsRich(RichTextBoxEx txt) {
-            using (var stream = new FileStream(this.CurrentFile.Info.FullName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-                if (this.CurrentFile.IsEncrypted) {
-                    this.OpenAsRichEncrypted(txt, stream);
-                } else {
-                    this.OpenAsRich(txt, stream);
-                }
-            }
-        }
-
-        private void OpenAsRich(RichTextBoxEx txt, Stream stream) {
-            txt.LoadFile(stream, RichTextBoxStreamType.RichText);
-        }
-
-        private void OpenAsRichEncrypted(RichTextBoxEx txt, Stream stream) {
-            using (var aesStream = new OpenSslAesStream(stream, this.Password, CryptoStreamMode.Read, 256, CipherMode.CBC)) {
-                var buffer = new byte[65536];
-                using (var memStream = new MemoryStream()) { //because RichTextBox seeks through stream
-                    while (true) {
-                        var len = aesStream.Read(buffer, 0, buffer.Length);
-                        if (len == 0) {
-                            memStream.Position = 0;
-                            break;
-                        }
-                        memStream.Write(buffer, 0, len);
-                    }
-                    this.OpenAsRich(txt, memStream);
-                }
+            using (var stream = new MemoryStream()) {
+                this.CurrentFile.Read(stream, this.CurrentFile.IsEncrypted ? this.Password : null);
+                txt.LoadFile(stream, RichTextBoxStreamType.RichText);
             }
         }
 
 
         private void SaveAsRich() {
-            using (var stream = new FileStream(this.CurrentFile.Info.FullName, FileMode.Create, FileAccess.Write, FileShare.Read)) {
-                if (this.CurrentFile.IsEncrypted) {
-                    SaveAsRichEncrypted(stream);
-                } else {
-                    SaveAsRich(stream);
-                }
-            }
-        }
-
-        private void SaveAsRich(Stream stream) {
-            this.TextBox.SaveFile(stream, RichTextBoxStreamType.RichText);
-        }
-
-        private void SaveAsRichEncrypted(Stream stream) {
-            using (var aesStream = new OpenSslAesStream(stream, this.Password, CryptoStreamMode.Write, 256, CipherMode.CBC)) {
-                SaveAsRich(aesStream);
+            using (var stream = new MemoryStream()) {
+                this.TextBox.SaveFile(stream, RichTextBoxStreamType.RichText);
+                this.CurrentFile.Write(stream, this.CurrentFile.IsEncrypted ? this.Password : null);
             }
         }
 
