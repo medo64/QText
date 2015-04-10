@@ -230,12 +230,12 @@ namespace QText {
                         if ((bitmap == null) && !string.IsNullOrEmpty(item.Tag as string)) {
                             bitmap = resources.GetObject(item.Tag + set) as Bitmap;
                         }
+                        item.ImageScaling = ToolStripItemImageScaling.None;
 #if DEBUG
-                        item.Image = (bitmap != null) ? bitmap : new Bitmap(size, size, PixelFormat.Format8bppIndexed);
+                        item.Image = (bitmap != null) ? new Bitmap(bitmap, size, size) : new Bitmap(size, size, PixelFormat.Format8bppIndexed);
 #else
-                        if (bitmap != null) { item.Image = bitmap; }
+                        if (bitmap != null) { item.Image = new Bitmap(bitmap, size, size); }
 #endif
-                        item.ImageScaling = ToolStripItemImageScaling.SizeToFit;
                     }
 
                     var toolstripSplitButton = item as ToolStripSplitButton;
