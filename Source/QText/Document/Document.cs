@@ -5,24 +5,28 @@ using System.IO;
 using System.Windows.Forms;
 
 namespace QText {
-    internal static class Document {
+    internal class Document {
+
+        public Document() { 
+        }
+
 
         #region Enumerate
 
-        public static DocumentFolder GetRootFolder() {
+        public DocumentFolder GetRootFolder() {
             var path = new DirectoryInfo(Settings.FilesLocation);
             return new DocumentFolder(path, string.Empty);
         }
 
-        public static IEnumerable<DocumentFolder> GetFolders() {
-            yield return Document.GetRootFolder();
-            foreach (var folder in Document.GetSubFolders()) {
+        public IEnumerable<DocumentFolder> GetFolders() {
+            yield return App.Document.GetRootFolder();
+            foreach (var folder in App.Document.GetSubFolders()) {
                 yield return folder;
             }
         }
 
-        public static IEnumerable<DocumentFolder> GetSubFolders() {
-            var root = Document.GetRootFolder().Info;
+        public IEnumerable<DocumentFolder> GetSubFolders() {
+            var root = App.Document.GetRootFolder().Info;
 
             var directories = new List<DirectoryInfo>();
             foreach (var directory in root.GetDirectories()) {
@@ -37,8 +41,8 @@ namespace QText {
         }
 
 
-        public static DocumentFolder GetFolder(string name) {
-            foreach (var folder in Document.GetFolders()) {
+        public DocumentFolder GetFolder(string name) {
+            foreach (var folder in App.Document.GetFolders()) {
                 if (folder.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) {
                     return folder;
                 }
@@ -51,7 +55,7 @@ namespace QText {
 
         #region New folder
 
-        public static DocumentFolder NewFolder() {
+        public DocumentFolder NewFolder() {
             try {
                 var newTitle = "New folder";
                 var newPath = Path.Combine(Settings.FilesLocation, Helper.EncodeFileName(newTitle));
@@ -76,7 +80,7 @@ namespace QText {
         #endregion
 
 
-        public static IEnumerable<DocumentFile> GetTitles(DocumentFolder folder) {
+        public IEnumerable<DocumentFile> GetTitles(DocumentFolder folder) {
             return folder.GetFiles();
         }
 
@@ -111,7 +115,7 @@ namespace QText {
         //    }
         //}
 
-        public static IEnumerable<TabFile> GetTabs(IEnumerable<DocumentFile> files, ContextMenuStrip contextMenuStrip) {
+        public IEnumerable<TabFile> GetTabs(IEnumerable<DocumentFile> files, ContextMenuStrip contextMenuStrip) {
             foreach (var file in files) {
                 var tab = new TabFile(file);
                 tab.ContextMenuStrip = contextMenuStrip;

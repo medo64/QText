@@ -207,7 +207,7 @@ namespace QText {
                 case Keys.Alt | Keys.PageUp:
                 case Keys.Alt | Keys.Up: {
                         var currFolder = tabFiles.CurrentFolder;
-                        var list = new List<DocumentFolder>(Document.GetFolders());
+                        var list = new List<DocumentFolder>(App.Document.GetFolders());
                         var index = list.FindIndex(delegate(DocumentFolder folder) { return folder.Equals(currFolder); });
                         if (index > 0) {
                             tabFiles.FolderOpen(list[index - 1]);
@@ -220,7 +220,7 @@ namespace QText {
                 case Keys.Alt | Keys.PageDown:
                 case Keys.Alt | Keys.Down: {
                         var currFolder = tabFiles.CurrentFolder;
-                        var list = new List<DocumentFolder>(Document.GetFolders());
+                        var list = new List<DocumentFolder>(App.Document.GetFolders());
                         var index = list.FindIndex(delegate(DocumentFolder folder) { return folder.Equals(currFolder); });
                         if (index < list.Count - 1) {
                             tabFiles.FolderOpen(list[index + 1]);
@@ -760,7 +760,7 @@ namespace QText {
         private void mnuFolder_DropDownOpening(object sender, EventArgs e) {
             mnuFolder.DropDownItems.Clear();
 
-            foreach (var folder in Document.GetFolders()) {
+            foreach (var folder in App.Document.GetFolders()) {
                 var item = new ToolStripMenuItem(folder.Title, null, mnuFolder_Click) { Tag = folder };
                 item.Enabled = !folder.Equals(tabFiles.CurrentFolder);
                 mnuFolder.DropDownItems.Add(item);
@@ -933,7 +933,7 @@ namespace QText {
         private void mnxTabMoveTo_DropDownOpening(object sender, EventArgs e) {
             mnxTabMoveTo.DropDownItems.Clear();
 
-            foreach (var folder in Document.GetFolders()) {
+            foreach (var folder in App.Document.GetFolders()) {
                 var item = new ToolStripMenuItem(folder.Title, null, mnxTabMoveTo_Click) { Tag = folder };
                 item.Enabled = !folder.Equals(tabFiles.CurrentFolder);
                 mnxTabMoveTo.DropDownItems.Add(item);
@@ -1328,7 +1328,7 @@ namespace QText {
                 }
             }
 
-            var currentFolder = tabFiles.CurrentFolder ?? Document.GetRootFolder();
+            var currentFolder = tabFiles.CurrentFolder ?? App.Document.GetRootFolder();
 
             tabFiles.FolderOpen(Settings.LastFolder);
             try {

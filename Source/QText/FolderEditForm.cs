@@ -68,7 +68,7 @@ namespace QText {
 
 
         private void Form_Load(object sender, System.EventArgs e) {
-            foreach (var folder in Document.GetSubFolders()) {
+            foreach (var folder in App.Document.GetSubFolders()) {
                 lsv.Items.Add(new ListViewItem(folder.Title) { Tag = folder });
             }
             foreach (ListViewItem item in lsv.Items) {
@@ -125,7 +125,7 @@ namespace QText {
 
         private void mnuNew_Click(object sender, System.EventArgs e) {
             try {
-                var newFolder = Document.NewFolder();
+                var newFolder = App.Document.NewFolder();
 
                 var item = new ListViewItem(newFolder.Title) { Tag = newFolder };
                 lsv.Items.Add(item);
@@ -156,7 +156,7 @@ namespace QText {
                         lsv.Items.RemoveAt(lsv.SelectedItems[0].Index);
                         if (lsv.FocusedItem != null) { lsv.FocusedItem.Selected = true; }
                         if (this.CurrentFolder.Equals(folder)) {
-                            this.CurrentFolder = Document.GetRootFolder();
+                            this.CurrentFolder = App.Document.GetRootFolder();
                         }
                     } catch (ApplicationException ex) {
                         Medo.MessageBox.ShowError(this, string.Format(CultureInfo.CurrentUICulture, "Cannot delete folder.\n\n{0}", ex.Message));

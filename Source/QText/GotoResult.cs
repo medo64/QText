@@ -9,7 +9,7 @@ namespace QText {
         internal static IEnumerable<GotoResult> GetSuggestions(string suggestion, bool allowLineNumbers) {
             if (suggestion.Length == 0) {
 
-                yield return new GotoResult(null, Document.GetRootFolder(), null);
+                yield return new GotoResult(null, App.Document.GetRootFolder(), null);
 
             } else if (!Settings.GotoSortResults) {
 
@@ -65,13 +65,13 @@ namespace QText {
                 }
             }
 
-            foreach (var folder in Document.GetSubFolders()) {
+            foreach (var folder in App.Document.GetSubFolders()) {
                 if (folder.Title.IndexOf(suggestion, StringComparison.CurrentCultureIgnoreCase) >= 0) {
                     yield return new GotoResult(null, folder, null);
                 }
             }
 
-            foreach (var folder in Document.GetFolders()) {
+            foreach (var folder in App.Document.GetFolders()) {
                 foreach (var file in folder.GetFiles()) {
                     if (file.Title.IndexOf(suggestion, StringComparison.CurrentCultureIgnoreCase) >= 0) {
                         yield return new GotoResult(null, folder, file);

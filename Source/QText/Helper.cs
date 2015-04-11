@@ -230,6 +230,7 @@ namespace QText {
                         if ((bitmap == null) && !string.IsNullOrEmpty(item.Tag as string)) {
                             bitmap = resources.GetObject(item.Tag + set) as Bitmap;
                         }
+
                         item.ImageScaling = ToolStripItemImageScaling.None;
 #if DEBUG
                         item.Image = (bitmap != null) ? new Bitmap(bitmap, size, size) : new Bitmap(size, size, PixelFormat.Format8bppIndexed);

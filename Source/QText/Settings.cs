@@ -288,7 +288,7 @@ namespace QText {
         public static DocumentFolder LastFolder {
             get { 
                 var lastFolderName = Medo.Configuration.Settings.Read("LastFolder", "");
-                return Document.GetFolder(lastFolderName) ?? Document.GetRootFolder();
+                return App.Document.GetFolder(lastFolderName) ?? App.Document.GetRootFolder();
             }
             set { Medo.Configuration.Settings.Write("LastFolder", value.Name); }
         }

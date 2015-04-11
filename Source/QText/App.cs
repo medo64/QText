@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -14,6 +14,7 @@ namespace QText {
 
         public static MainForm Form;
         public static Tray Tray;
+        public static Document Document;
 
         public static Medo.Windows.Forms.Hotkey Hotkey = new Medo.Windows.Forms.Hotkey();
 
@@ -44,6 +45,7 @@ namespace QText {
                 Medo.Windows.Forms.State.NoRegistryWrites = Settings.NoRegistryWrites;
                 Medo.Diagnostics.ErrorReport.DisableAutomaticSaveToTemp = Settings.NoRegistryWrites;
 
+                App.Document = new Document();
                 App.Form = new MainForm();
 
                 Medo.Application.SingleInstance.NewInstanceDetected += new EventHandler<Medo.Application.NewInstanceEventArgs>(SingleInstance_NewInstanceDetected);

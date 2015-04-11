@@ -161,7 +161,7 @@ namespace QText {
                     var mapping = new Dictionary<QFileInfo, QFileInfo>();
                     try {
                         FillMapping(mapping, oldPath, newPath, "");
-                        foreach (var folder in Document.GetSubFolders()) {
+                        foreach (var folder in App.Document.GetSubFolders()) {
                             FillMapping(mapping, oldPath, newPath, folder.Name);
                         }
                     } catch (Exception ex) {

@@ -69,7 +69,7 @@ namespace QText {
             this.TabPages.Clear();
             this.CurrentFolder = folder;
 
-            foreach (var tab in Document.GetTabs(this.CurrentFolder.GetFiles(), this.TabContextMenuStrip)) {
+            foreach (var tab in App.Document.GetTabs(this.CurrentFolder.GetFiles(), this.TabContextMenuStrip)) {
                 this.TabPages.Add(tab);
             }
 
