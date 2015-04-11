@@ -49,6 +49,7 @@ Shortcut Keys
   * `Alt+Right`               Select tab on the right.
   * `Alt+Up`                  Select previous folder.
   * `Alt+Down`                Select next folder.
+  * `Alt+Home`                Select default folder.
   * `Alt+PageUp`              Select previous folder.
   * `Alt+PageDown`            Select next folder.
   * `Alt+Shift+D`             Inserts current date into text.

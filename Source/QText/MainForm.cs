@@ -204,6 +204,14 @@ namespace QText {
                         }
                     } return true;
 
+                case Keys.Alt | Keys.Home: {
+                        if (!tabFiles.CurrentFolder.IsRoot) {
+                            tabFiles.FolderOpen(App.Document.GetRootFolder());
+                            mnuFolder.Text = tabFiles.CurrentFolder.Title;
+                            Settings.LastFolder = tabFiles.CurrentFolder;
+                        }
+                    } return true;
+
                 case Keys.Alt | Keys.PageUp:
                 case Keys.Alt | Keys.Up: {
                         var currFolder = tabFiles.CurrentFolder;
@@ -215,7 +223,6 @@ namespace QText {
                             Settings.LastFolder = tabFiles.CurrentFolder;
                         }
                     } return true;
-
 
                 case Keys.Alt | Keys.PageDown:
                 case Keys.Alt | Keys.Down: {
