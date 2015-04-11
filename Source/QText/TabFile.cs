@@ -188,29 +188,33 @@ namespace QText {
         public void Reopen() {
             if (this.BaseFile.IsEncrypted && !this.BaseFile.HasPassword) { throw new ApplicationException("No password provided."); }
 
-            var txt = (this.TextBox != null) ? this.TextBox : GetEmptyTextBox();
-            var oldSelStart = txt.SelectionStart;
-            var oldSelLength = txt.SelectionLength;
+            try {
+                var txt = (this.TextBox != null) ? this.TextBox : GetEmptyTextBox();
+                var oldSelStart = txt.SelectionStart;
+                var oldSelLength = txt.SelectionLength;
 
-            this.IsOpened = false;
-            if (this.BaseFile.IsRichText) {
-                try {
-                    OpenAsRich(txt);
-                } catch (ArgumentException) {
+                this.IsOpened = false;
+                if (this.BaseFile.IsRichText) {
+                    try {
+                        OpenAsRich(txt);
+                    } catch (ArgumentException) {
+                        OpenAsPlain(txt);
+                    }
+                } else {
                     OpenAsPlain(txt);
                 }
-            } else {
-                OpenAsPlain(txt);
+
+                if (this.TextBox == null) { AddTextBox(txt); }
+
+                UpdateTabWidth();
+                this.TextBox.SelectionStart = oldSelStart;
+                this.TextBox.SelectionLength = oldSelLength;
+                this.TextBox.ClearUndo();
+                this.IsChanged = false;
+                this.IsOpened = true;
+            } catch (Exception ex) {
+                throw new ApplicationException(ex.Message, ex);
             }
-
-            if (this.TextBox == null) { AddTextBox(txt); }
-
-            UpdateTabWidth();
-            this.TextBox.SelectionStart = oldSelStart;
-            this.TextBox.SelectionLength = oldSelLength;
-            this.TextBox.ClearUndo();
-            this.IsChanged = false;
-            this.IsOpened = true;
         }
 
         public void QuickSaveWithoutException() {

@@ -7,8 +7,40 @@ using System.Windows.Forms;
 namespace QText {
     internal class Document {
 
-        public Document() { 
+        public Document() {
+            this.Watcher = new FileSystemWatcher(Settings.FilesLocation) { IncludeSubdirectories = true };
+            this.Watcher.Changed += delegate(object sender, FileSystemEventArgs e) { this.OnChanged(e); };
+            this.Watcher.Created += delegate(object sender, FileSystemEventArgs e) { this.OnChanged(e); };
+            this.Watcher.Deleted += delegate(object sender, FileSystemEventArgs e) { this.OnChanged(e); };
+            this.Watcher.Renamed += delegate(object sender, RenamedEventArgs e) { this.OnChanged(new FileSystemEventArgs(WatcherChangeTypes.Renamed, Path.GetDirectoryName(e.FullPath), Path.GetFileName(e.FullPath))); };
         }
+
+
+        #region Watcher
+
+        private FileSystemWatcher Watcher;
+
+
+        public event EventHandler<FileSystemEventArgs> Changed;
+
+        /// <summary>
+        /// Raises Changed event.
+        /// </summary>
+        /// <param name="e">Event arguments.</param>
+        private void OnChanged(FileSystemEventArgs e) {
+            var eh = this.Changed;
+            if (eh != null) { eh.Invoke(this, e); }
+        }
+
+        internal void DisableWatcher() {
+            this.Watcher.EnableRaisingEvents = false;
+        }
+
+        internal void EnableWatcher() {
+            this.Watcher.EnableRaisingEvents = true;
+        }
+
+        #endregion
 
 
         #region Enumerate

@@ -298,6 +298,8 @@ namespace QText {
         private void Form_Load(object sender, EventArgs e) {
             RefreshAll(null, null);
             Form_Resize(null, null);
+
+            App.Document.Changed += Document_Changed;
         }
 
         private void Form_FormClosing(object sender, FormClosingEventArgs e) {
@@ -406,9 +408,12 @@ namespace QText {
         }
 
         private void Form_VisibleChanged(object sender, EventArgs e) {
-            tmrCheckFileUpdate.Enabled = this.Visible;
-            tmrQuickSave.Enabled = this.Visible;
-            tmrUpdateToolbar.Enabled = this.Visible;
+            var isVisible = this.Visible;
+
+            tmrQuickSave.Enabled = isVisible;
+            tmrUpdateToolbar.Enabled = isVisible;
+
+            if (isVisible) { App.Document.EnableWatcher(); } else { App.Document.DisableWatcher(); }
         }
 
 
@@ -1463,29 +1468,25 @@ namespace QText {
         }
 
 
-        int nextIndexToCheck = 0;
-
-        private void tmrCheckFileUpdate_Tick(object sender, EventArgs e) {
+        void Document_Changed(object sender, FileSystemEventArgs e) {
             if (tabFiles.Enabled == false) { return; }
-            tmrCheckFileUpdate.Enabled = false;
-            if (tabFiles.TabCount > 0) {
-                nextIndexToCheck = nextIndexToCheck % tabFiles.TabPages.Count;
-                var currTab = (TabFile)tabFiles.TabPages[nextIndexToCheck];
-                var fi = new QFileInfo(currTab.BaseFile.Info.FullName);
-                if (fi.LastWriteTimeUtc != currTab.BaseFile.LastWriteTimeUtc) {
-                    if (currTab.IsChanged) {
-                        currTab.Save();
-                    } else {
-                        try {
-                            currTab.Reopen();
-                        } catch (Exception) { }
+
+            this.Invoke((MethodInvoker)delegate() {
+                foreach (TabFile tab in tabFiles.TabPages) {
+                    if (e.FullPath.Equals(tab.BaseFile.Info.FullName)) {
+                        if (!tab.IsChanged) { //don't reopen tabs that were changed
+                            try {
+                                tab.Reopen();
+                            } catch (ApplicationException) {
+                                Thread.Sleep(100);
+                                try {
+                                    tab.Reopen();
+                                } catch (ApplicationException) { }
+                            }
+                        }
                     }
                 }
-                nextIndexToCheck += 1;
-            } else {
-                nextIndexToCheck = 0;
-            }
-            tmrCheckFileUpdate.Enabled = true;
+            });
         }
 
         #endregion

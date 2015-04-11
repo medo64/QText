@@ -241,27 +241,32 @@ namespace QText {
         public void Write(MemoryStream stream) {
             if (this.IsEncrypted && !this.HasPassword) { throw new ApplicationException("Missing password."); }
 
-            stream.Position = 0;
-            using (var fileStream = new FileStream(this.Info.FullName, FileMode.Create, FileAccess.Write, FileShare.None)) {
-                var buffer = new byte[65536];
-                int len;
+            App.Document.DisableWatcher();
+            try {
+                stream.Position = 0;
+                using (var fileStream = new FileStream(this.Info.FullName, FileMode.Create, FileAccess.Write, FileShare.None)) {
+                    var buffer = new byte[65536];
+                    int len;
 
-                if (this.IsEncrypted) {
-                    this.UnprotectPassword();
-                    try {
-                        using (var aesStream = new OpenSslAesStream(fileStream, this.PasswordBytes, CryptoStreamMode.Write, 256, CipherMode.CBC)) {
-                            while ((len = stream.Read(buffer, 0, buffer.Length)) > 0) {
-                                aesStream.Write(buffer, 0, len);
+                    if (this.IsEncrypted) {
+                        this.UnprotectPassword();
+                        try {
+                            using (var aesStream = new OpenSslAesStream(fileStream, this.PasswordBytes, CryptoStreamMode.Write, 256, CipherMode.CBC)) {
+                                while ((len = stream.Read(buffer, 0, buffer.Length)) > 0) {
+                                    aesStream.Write(buffer, 0, len);
+                                }
                             }
+                        } finally {
+                            this.ProtectPassword();
                         }
-                    } finally {
-                        this.ProtectPassword();
-                    }
-                } else {
-                    while ((len = stream.Read(buffer, 0, buffer.Length)) > 0) {
-                        fileStream.Write(buffer, 0, len);
+                    } else {
+                        while ((len = stream.Read(buffer, 0, buffer.Length)) > 0) {
+                            fileStream.Write(buffer, 0, len);
+                        }
                     }
                 }
+            } finally {
+                App.Document.EnableWatcher();
             }
         }
 

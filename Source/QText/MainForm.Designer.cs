@@ -99,7 +99,6 @@ namespace QText {
             this.mnxTextLinesSortDesc = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTextLinesTrim = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmrCheckFileUpdate = new System.Windows.Forms.Timer(this.components);
             this.mnxTab = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnxTabNew = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTab0 = new System.Windows.Forms.ToolStripSeparator();
@@ -797,10 +796,6 @@ namespace QText {
             this.mnxTextLinesTrim.Text = "&Trim";
             this.mnxTextLinesTrim.Click += new System.EventHandler(this.mnxTextLinesTrim_Click);
             // 
-            // tmrCheckFileUpdate
-            // 
-            this.tmrCheckFileUpdate.Tick += new System.EventHandler(this.tmrCheckFileUpdate_Tick);
-            // 
             // mnxTab
             // 
             this.mnxTab.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -1091,7 +1086,6 @@ namespace QText {
         internal System.Windows.Forms.ToolStripMenuItem mnxTextSelectionTitle;
         internal System.Windows.Forms.ToolStripMenuItem mnxTextSelectionDrGrammar;
         internal TabFiles tabFiles;
-        private System.Windows.Forms.Timer tmrCheckFileUpdate;
         internal System.Windows.Forms.ToolStripDropDownButton mnuApp;
         private System.Windows.Forms.ToolStripMenuItem mnuAppFeedback;
         private System.Windows.Forms.ToolStripMenuItem mnuAppUpgrade;
