@@ -521,6 +521,8 @@ namespace QText {
 
 
         private void mnuPrint_Click(object sender, EventArgs e) {
+            if (PrinterSettings.InstalledPrinters.Count == 0) { return; }
+
             SaveAllChanged();
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
@@ -530,6 +532,8 @@ namespace QText {
         }
 
         private void mnuPrintPreview_Click(object sender, EventArgs e) {
+            if (PrinterSettings.InstalledPrinters.Count == 0) { return; }
+
             SaveAllChanged();
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
@@ -539,6 +543,8 @@ namespace QText {
         }
 
         private void mnuPrintSetup_Click(object sender, EventArgs e) {
+            if (PrinterSettings.InstalledPrinters.Count == 0) { return; }
+
             var pageSettings = new PageSettings();
             try { pageSettings.PaperSize.PaperName = Settings.PrintPaperName; } catch (ArgumentException) { }
             try { pageSettings.PaperSource.SourceName = Settings.PrintPaperSource; } catch (ArgumentException) { }
@@ -1436,11 +1442,16 @@ namespace QText {
             bool isTabSelected = (tabFiles.SelectedTab != null);
             bool isTabRichText = isTabSelected && tabFiles.SelectedTab.BaseFile.IsRichText;
             bool isTabPlainText = isTabSelected && (tabFiles.SelectedTab.BaseFile.IsRichText == false);
+            bool hasPrinters = (PrinterSettings.InstalledPrinters.Count > 0);
 
             mnuSaveNow.Enabled = isTabSelected;
             mnuRename.Enabled = isTabSelected;
-            mnuPrintPreview.Enabled = isTabSelected;
-            mnuPrint.Enabled = isTabSelected;
+
+            mnuPrintDefault.Enabled = hasPrinters;
+            mnuPrintDefault.ToolTipText = hasPrinters ? "Print (Ctrl+P)" : "No printers installed";
+            mnuPrint.Enabled = isTabSelected && hasPrinters;
+            mnuPrintPreview.Enabled = isTabSelected && hasPrinters;
+            mnuPrintSetup.Enabled = isTabSelected && hasPrinters;
 
             mnuCut.Enabled = isTabSelected && tabFiles.SelectedTab.CanCopy;
             mnuCopy.Enabled = isTabSelected && tabFiles.SelectedTab.CanCopy;
