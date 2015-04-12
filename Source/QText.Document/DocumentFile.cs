@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace QText {
-    internal class DocumentFile {
+    public class DocumentFile {
 
         public DocumentFile(DocumentFolder folder, FileInfo file) {
             this.Folder = folder;
@@ -133,8 +133,8 @@ namespace QText {
             this.Title = newTitle;
         }
 
-        internal void Delete() {
-            if (Settings.FilesDeleteToRecycleBin) {
+        public void Delete() {
+            if (this.Folder.Document.DeleteToRecycleBin) {
                 SHFile.Delete(this.Info.FullName);
             } else {
                 this.Info.Delete();
@@ -241,7 +241,7 @@ namespace QText {
         public void Write(MemoryStream stream) {
             if (this.IsEncrypted && !this.HasPassword) { throw new ApplicationException("Missing password."); }
 
-            App.Document.DisableWatcher();
+            this.Folder.Document.DisableWatcher();
             try {
                 stream.Position = 0;
                 using (var fileStream = new FileStream(this.Info.FullName, FileMode.Create, FileAccess.Write, FileShare.None)) {
@@ -266,7 +266,7 @@ namespace QText {
                     }
                 }
             } finally {
-                App.Document.EnableWatcher();
+                this.Folder.Document.EnableWatcher();
             }
         }
 

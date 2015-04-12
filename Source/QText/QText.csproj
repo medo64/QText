@@ -76,7 +76,6 @@
     <Compile Include="%28Medo%29\History [001].cs" />
     <Compile Include="%28Medo%29\ManifestResources [002].cs" />
     <Compile Include="%28Medo%29\MessageBox [007].cs" />
-    <Compile Include="%28Medo%29\OpenSslAesStream [001].cs" />
     <Compile Include="%28Medo%29\PrintPreviewDialog [005].cs">
       <SubType>Form</SubType>
     </Compile>
@@ -95,9 +94,6 @@
     <Compile Include="ChangePasswordForm.Designer.cs">
       <DependentUpon>ChangePasswordForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Document\Document.cs" />
-    <Compile Include="Document\DocumentFile.cs" />
-    <Compile Include="Document\DocumentFolder.cs" />
     <Compile Include="FilesEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -149,10 +145,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Document\DocumentKind.cs" />
     <Compile Include="QFileInfo.cs" />
     <Compile Include="Search.cs" />
-    <Compile Include="SHFile.cs" />
     <Compile Include="FileNewForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -251,6 +245,13 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\QText.Document\QText.Document.csproj">
+      <Project>{caff612a-7419-46fe-abbe-bb1d9b26b9cf}</Project>
+      <Name>QText.Document</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

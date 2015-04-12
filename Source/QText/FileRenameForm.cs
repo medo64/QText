@@ -25,7 +25,7 @@ namespace QText {
         private void txtTitle_TextChanged(object sender, EventArgs e) {
             bool alreadyTaken = false;
             if (string.Equals(this.File.Title, txtTitle.Text, StringComparison.OrdinalIgnoreCase) == false) {
-                var newFileTitle = Helper.EncodeFileName(txtTitle.Text);
+                var newFileTitle = txtTitle.Text.Trim();
                 alreadyTaken = (this.File.Folder.GetFileByTitle(newFileTitle) != null);
                 if (alreadyTaken) { erp.SetError(txtTitle, "File with same name already exists."); } else { erp.SetError(txtTitle, null); }
             }

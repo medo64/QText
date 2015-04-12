@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -60,12 +60,11 @@
     <Compile Include="HelperTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\QText\QText.csproj">
-      <Project>{04547092-4BDC-4B6D-B39A-6473271FAF79}</Project>
-      <Name>QText</Name>
+    <ProjectReference Include="..\QText.Document\QText.Document.csproj">
+      <Project>{caff612a-7419-46fe-abbe-bb1d9b26b9cf}</Project>
+      <Name>QText.Document</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="Properties\App.snk" />
   </ItemGroup>

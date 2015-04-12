@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace QText {
-    internal class DocumentFolder {
+    public class DocumentFolder {
 
-        public DocumentFolder(DirectoryInfo directory, string name) {
+        public DocumentFolder(Document document, DirectoryInfo directory, string name) {
+            this.Document = document;
+
             this.Info = directory;
             this.Name = name;
             if (string.IsNullOrEmpty(name)) {
@@ -15,6 +17,8 @@ namespace QText {
             }
         }
 
+
+        internal Document Document;
 
         /// <summary>
         /// Gets directory.
@@ -39,7 +43,7 @@ namespace QText {
 
         #region Operations
 
-        internal void Rename(string newTitle) {
+        public void Rename(string newTitle) {
             if (string.IsNullOrEmpty(this.Name)) { throw new IOException("Cannot rename root folder."); }
             if (string.IsNullOrEmpty(newTitle)) { throw new IOException("Folder name cannot be empty."); }
             newTitle = newTitle.Trim();
@@ -60,15 +64,15 @@ namespace QText {
             }
         }
 
-        internal bool IsEmpty {
+        public bool IsEmpty { //TODO
             get {
                 return (this.Info.GetFiles("*.txt").Length == 0) && (this.Info.GetFiles("*.rtf").Length == 0);
             }
         }
 
-        internal void Delete() {
+        public void Delete() {
             try {
-                if (Settings.FilesDeleteToRecycleBin) {
+                if (this.Document.DeleteToRecycleBin ) {
                     SHFile.DeleteDirectory(this.Info.FullName);
                 } else {
                     this.Info.Delete(true);
@@ -85,15 +89,15 @@ namespace QText {
 
         public IEnumerable<DocumentFile> GetFiles() {
             var files = new List<FileInfo>();
-            foreach (var extension in QFileInfo.GetExtensions()) {
+            foreach (var extension in Helper.GetExtensions()) {
                 files.AddRange(this.Info.GetFiles("*" + extension));
             }
 
             string selectedTitle = null;
             var orderedTitles = ReadOrderedTitles(out selectedTitle);
             files.Sort(delegate(FileInfo file1, FileInfo file2) {
-                var title1 = Helper.DecodeFileName(QFileInfo.GetFileNameWithoutExtension(file1.Name));
-                var title2 = Helper.DecodeFileName(QFileInfo.GetFileNameWithoutExtension(file2.Name));
+                var title1 = Helper.DecodeFileName(Helper.GetFileNameWithoutExtension(file1.Name));
+                var title2 = Helper.DecodeFileName(Helper.GetFileNameWithoutExtension(file2.Name));
                 if (orderedTitles != null) {
                     var titleIndex1 = orderedTitles.IndexOf(title1);
                     var titleIndex2 = orderedTitles.IndexOf(title2);

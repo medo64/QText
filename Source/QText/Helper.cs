@@ -283,5 +283,15 @@ namespace QText {
 
         #endregion
 
+
+
+        public static IEnumerable<TabFile> GetTabs(IEnumerable<DocumentFile> files, ContextMenuStrip contextMenuStrip) {
+            foreach (var file in files) {
+                var tab = new TabFile(file);
+                tab.ContextMenuStrip = contextMenuStrip;
+                yield return tab;
+            }
+        }
+
     }
 }

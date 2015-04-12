@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Security.Principal;
@@ -14,7 +15,7 @@ namespace QText {
 
         public static MainForm Form;
         public static Tray Tray;
-        public static Document Document;
+        public static QText.Document Document;
 
         public static Medo.Windows.Forms.Hotkey Hotkey = new Medo.Windows.Forms.Hotkey();
 
@@ -45,7 +46,9 @@ namespace QText {
                 Medo.Windows.Forms.State.NoRegistryWrites = Settings.NoRegistryWrites;
                 Medo.Diagnostics.ErrorReport.DisableAutomaticSaveToTemp = Settings.NoRegistryWrites;
 
-                App.Document = new Document();
+                App.Document = new Document(new DirectoryInfo(Settings.FilesLocation)) {
+                    DeleteToRecycleBin = Settings.FilesDeleteToRecycleBin 
+                };
                 App.Form = new MainForm();
 
                 Medo.Application.SingleInstance.NewInstanceDetected += new EventHandler<Medo.Application.NewInstanceEventArgs>(SingleInstance_NewInstanceDetected);

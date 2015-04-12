@@ -318,7 +318,7 @@ namespace QText {
             }
 #endif
 
-            Document.WriteOrderedTitles(tabFiles);
+            //TODO: Document.WriteOrderedTitles(tabFiles);
 
             var failedTitles = new List<string>();
             var failedExceptions = new List<Exception>();
@@ -516,7 +516,7 @@ namespace QText {
                     try {
                         if (frm.ShowDialog(this) == DialogResult.OK) {
                             tabFiles.SelectedTab.Rename(frm.NewTitle);
-                            Document.WriteOrderedTitles(tabFiles);
+                            //TODO: Document.WriteOrderedTitles(tabFiles);
                         }
                     } catch (Exception ex) {
                         Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot rename file.\n\n{0}", ex.Message));

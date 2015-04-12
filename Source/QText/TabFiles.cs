@@ -69,7 +69,7 @@ namespace QText {
             this.TabPages.Clear();
             this.CurrentFolder = folder;
 
-            foreach (var tab in App.Document.GetTabs(this.CurrentFolder.GetFiles(), this.TabContextMenuStrip)) {
+            foreach (var tab in Helper.GetTabs(this.CurrentFolder.GetFiles(), this.TabContextMenuStrip)) {
                 this.TabPages.Add(tab);
             }
 
@@ -117,7 +117,6 @@ namespace QText {
             foreach (TabFile file in this.TabPages) {
                 if (file.IsChanged) { file.Save(); }
             }
-            Document.WriteOrderedTitles(this);
         }
 
         private TabPage GetTabPageFromXY(int x, int y) {
@@ -155,7 +154,6 @@ namespace QText {
                 this.TabPages.Add(t);
             }
             this.SelectedTab = t;
-            Document.WriteOrderedTitles(this);
         }
 
         public void RemoveTab(TabFile tab) {
@@ -165,7 +163,6 @@ namespace QText {
             if (this.SelectedTab != null) {
                 this.SelectedTab.Open();
             }
-            Document.WriteOrderedTitles(this);
         }
 
         public void MoveTab(TabFile tab, string newFolder) {
@@ -175,7 +172,7 @@ namespace QText {
             this.SelectedTab = GetNextTab();
             this.TabPages.Remove(tab);
             Helper.MovePath(oldPath, newPath);
-            Document.WriteOrderedTitles(this);
+            //TODO: Document.WriteOrderedTitles(this);
         }
 
         public void MoveTabPreview(TabFile tab, string newFolder, out string oldPath, out string newPath) {
@@ -235,7 +232,7 @@ namespace QText {
                         base.SelectedTab = this._dragTabPage;
                     }
                     base.Enabled = true;
-                    Document.WriteOrderedTitles(this);
+                    //TODO: Document.WriteOrderedTitles(this);
                 }
             }
             this._dragTabPage = null;

@@ -100,7 +100,7 @@ namespace QText {
                 folders.RemoveAt(0);
             }
             foreach (var folder in folders) {
-                var folderTabs = App.Document.GetTabs(folder.GetFiles(), null);
+                var folderTabs = Helper.GetTabs(folder.GetFiles(), null);
                 foreach (var folderTab in folderTabs) {
                     if (folderTab.FindForward(SearchStatus.Text, SearchStatus.CaseSensitive, 0)) {
                         if (string.Equals(folder.Name, tabs.CurrentFolder.Name, StringComparison.OrdinalIgnoreCase) == false) {
