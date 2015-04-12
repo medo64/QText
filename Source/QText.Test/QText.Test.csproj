@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>QTextTest</RootNamespace>
-    <AssemblyName>QTextTest</AssemblyName>
+    <AssemblyName>QText.Test</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -57,7 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="HelperTest.cs" />
+    <Compile Include="HelperTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\QText.Document\QText.Document.csproj">

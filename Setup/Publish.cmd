@@ -3,7 +3,7 @@ SETLOCAL enabledelayedexpansion
 
 SET        FILE_SETUP=".\QText.iss"
 SET     FILE_SOLUTION="..\Source\QText.sln"
-SET  FILES_EXECUTABLE="..\Binaries\QText.exe"
+SET  FILES_EXECUTABLE="..\Binaries\QText.exe" "..\Binaries\QText.Document.dll"
 SET       FILES_OTHER="..\Binaries\ReadMe.txt"
 
 SET    COMPILE_TOOL_1="%PROGRAMFILES(X86)%\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe"

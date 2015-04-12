@@ -1,10 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QText;
 
 namespace QTextTest {
 
     [TestClass()]
-    public class HelperTest {
+    public class HelperTests {
 
         public TestContext TestContext { get; set; }
 

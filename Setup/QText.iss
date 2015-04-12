@@ -52,8 +52,10 @@ BeveledLabel=jmedved.com
 Name: "{userappdata}\Josip Medved\QText";  Flags: uninsalwaysuninstall
 
 [Files]
-Source: "QText.exe";   DestDir: "{app}";                      Flags: ignoreversion;
-Source: "QText.pdb";   DestDir: "{app}";                      Flags: ignoreversion;
+Source: "QText.exe";            DestDir: "{app}";                      Flags: ignoreversion;
+Source: "QText.pdb";            DestDir: "{app}";                      Flags: ignoreversion;
+Source: "QText.Document.dll";   DestDir: "{app}";                      Flags: ignoreversion;
+Source: "QText.Document.pdb";   DestDir: "{app}";                      Flags: ignoreversion;
 Source: "ReadMe.txt";  DestDir: "{app}";  Attribs: readonly;  Flags: overwritereadonly uninsremovereadonly;
 
 [Icons]
