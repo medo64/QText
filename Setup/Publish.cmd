@@ -3,12 +3,14 @@ SETLOCAL enabledelayedexpansion
 
 SET        FILE_SETUP=".\QText.iss"
 SET     FILE_SOLUTION="..\Source\QText.sln"
+SET   FILE_EXECUTABLE="..\Binaries\QText.exe"
 SET  FILES_EXECUTABLE="..\Binaries\QText.exe" "..\Binaries\QText.Document.dll"
 SET       FILES_OTHER="..\Binaries\ReadMe.txt"
 
 SET    COMPILE_TOOL_1="%PROGRAMFILES(X86)%\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe"
 SET    COMPILE_TOOL_2="%PROGRAMFILES(X86)%\Microsoft Visual Studio 12.0\Common7\IDE\WDExpress.exe"
 SET        SETUP_TOOL="%PROGRAMFILES(x86)%\Inno Setup 5\iscc.exe"
+SET        MERGE_TOOL="%PROGRAMFILES(x86)%\Microsoft\ILMerge\ILMerge.exe"
 
 SET         SIGN_TOOL="%PROGRAMFILES(X86)%\Windows Kits\8.0\bin\x86\signtool.exe"
 SET         SIGN_HASH="C02FF227D5EE9F555C13D4C622697DF15C6FF871"
@@ -114,16 +116,44 @@ ECHO.
 ECHO.
 
 
-ECHO --- BUILD ZIP
-ECHO.
+IF EXIST %MERGE_TOOL% (
+    ECHO --- MERGE ASSEMBLIES
+    ECHO.
+    
+    %MERGE_TOOL% /keyfile:..\Source\QText\Properties\App.snk /out:..\Binaries\Merged.exe %FILES_EXECUTABLE%
+    IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
 
-SET _SETUPZIP=%_SETUPEXE:.exe=.zip%
-ECHO Zipping into %_SETUPZIP%
-"%PROGRAMFILES%\WinRAR\WinRAR.exe" a -afzip -ep -m5 ".\Temp\%_SETUPZIP%" %FILES_EXECUTABLE% %FILES_OTHER%
-IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
+    MOVE ..\Binaries\Merged.exe %FILE_EXECUTABLE% > NUL
+    IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
 
-ECHO.
-ECHO.
+    ECHO.
+
+    
+    CERTUTIL -silent -verifystore -user My %SIGN_HASH% > NUL
+    IF %ERRORLEVEL%==0 (
+        ECHO --- RESIGN SOLUTION
+        ECHO.
+        
+        IF [%SIGN_TIMESTAMPURL%]==[] (
+            %SIGN_TOOL% sign /s "My" /sha1 %SIGN_HASH% /v %FILE_EXECUTABLE%
+        ) ELSE (
+            %SIGN_TOOL% sign /s "My" /sha1 %SIGN_HASH% /tr %SIGN_TIMESTAMPURL% /v %FILE_EXECUTABLE%
+        )
+        IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
+        ECHO.
+        ECHO.
+    )
+    
+    ECHO --- BUILD ZIP
+    ECHO.
+
+    ECHO Zipping into %_SETUPEXE:.exe=.zip%
+    "%PROGRAMFILES%\WinRAR\WinRAR.exe" a -afzip -ep -m5 ".\Temp\%_SETUPEXE:.exe=.zip%" %FILE_EXECUTABLE% %FILES_OTHER%
+    IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
+
+    ECHO.
+    ECHO.
+)
 
 
 ECHO --- RELEASE
