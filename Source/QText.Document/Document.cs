@@ -203,11 +203,11 @@ namespace QText {
 
         public DocumentFolder CreateFolder() {
             try {
-                var newPath = Path.Combine(this.RootDirectory.FullName, Helper.EncodeFileName("New folder"));
+                var newPath = Path.Combine(this.RootDirectory.FullName, Helper.EncodeTitle("New folder"));
                 int n = 1;
                 while (Directory.Exists(newPath)) {
                     var newTitle = string.Format(CultureInfo.CurrentUICulture, "New folder ({0})", n);
-                    newPath = Path.Combine(this.RootDirectory.FullName, Helper.EncodeFileName(newTitle));
+                    newPath = Path.Combine(this.RootDirectory.FullName, Helper.EncodeTitle(newTitle));
                     n += 1;
                 }
 
@@ -228,7 +228,7 @@ namespace QText {
 
         public DocumentFolder CreateFolder(string title) {
             try {
-                var newPath = Path.Combine(this.RootDirectory.FullName, Helper.EncodeFileName(title));
+                var newPath = Path.Combine(this.RootDirectory.FullName, Helper.EncodeTitle(title));
 
                 Debug.WriteLine("Create: " + Path.GetFileName(newPath));
 

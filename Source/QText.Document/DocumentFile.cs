@@ -31,7 +31,7 @@ namespace QText {
                 throw new ApplicationException("Cannot recognize file type.");
             }
 
-            this.Title = Helper.DecodeFileName(this.Name);
+            this.Title = Helper.DecodeTitle(this.Name);
         }
 
 
@@ -103,7 +103,7 @@ namespace QText {
 
         private void GatherRenameData(ref string newTitle, out string newName, out string newPath) {
             newTitle = newTitle.Trim();
-            newName = Helper.EncodeFileName(newTitle);
+            newName = Helper.EncodeTitle(newTitle);
             newPath = Path.Combine(this.Info.Directory.FullName, newName);
             switch (this.Type) {
                 case DocumentKind.PlainText: newPath += this.IsEncrypted ? Extension.EncryptedPlainText : Extension.PlainText; break;

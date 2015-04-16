@@ -12,16 +12,18 @@ namespace QText {
 
         #region Encode/decode file name
 
-        public static string EncodeFileName(string fileName) {
-            if (fileName == null) { throw new ArgumentNullException("fileName"); }
-            var invalidChars = Path.GetInvalidFileNameChars();
+        private static readonly char[] InvalidTitleChars = new char[] { '\u0000', '\u0001', '\u0002', '\u0003', '\u0004', '\u0005', '\u0006', '\u0007', 
+                                                                        '\u0008', '\u0009', '\u000A', '\u000B', '\u000C', '\u000D', '\u000E', '\u000F',
+                                                                        '\u0010', '\u0011', '\u0012', '\u0013', '\u0014', '\u0015', '\u0016', '\u0017',
+                                                                        '\u0018', '\u0019', '\u001A', '\u001B', '\u001C', '\u001D', '\u001E', '\u001F',
+                                                                        '\u0022', '\u002a', '\u002f', '\u003a', '\u003c', '\u003e', '\u003f', '\u005c', '\u007c' }; // " * / : < > ? \ |
+
+        public static string EncodeTitle(string title) {
             var sb = new StringBuilder();
-            foreach (var ch in fileName) {
-                if (Array.IndexOf(invalidChars, ch) >= 0) {
-                    var value = (int)ch;
-                    if ((value < 0) || (value > 255)) { throw new InvalidOperationException("Expected single byte."); }
+            foreach (var ch in title) {
+                if (Array.IndexOf(InvalidTitleChars, ch) >= 0) {
                     sb.Append("~");
-                    sb.Append(value.ToString("x2"));
+                    sb.Append(((byte)ch).ToString("x2"));
                     sb.Append("~");
                 } else {
                     sb.Append(ch);
@@ -30,20 +32,18 @@ namespace QText {
             return sb.ToString();
         }
 
-        public static string DecodeFileName(string fileName) {
-            if (fileName == null) { throw new ArgumentNullException("fileName"); }
-            var invalidChars = Path.GetInvalidFileNameChars();
+        public static string DecodeTitle(string name) {
             var sb = new StringBuilder();
             StringBuilder sbDecode = null;
             var inEncoded = false;
-            foreach (var ch in fileName) {
+            foreach (var ch in name) {
                 if (inEncoded) {
                     if (ch == '~') { //end decode
                         if (sbDecode.Length == 2) { //could be
                             int value;
-                            if (int.TryParse(sbDecode.ToString(), System.Globalization.NumberStyles.HexNumber, CultureInfo.InvariantCulture, out value)) {
-                                var charValue = System.Convert.ToChar(value);
-                                if (Array.IndexOf(invalidChars, charValue) >= 0) {
+                            if (int.TryParse(sbDecode.ToString(), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out value)) {
+                                var charValue = Convert.ToChar(value);
+                                if (Array.IndexOf(InvalidTitleChars, charValue) >= 0) {
                                     sb.Append(charValue);
                                     inEncoded = false;
                                 } else { //not a char to be decoded

@@ -31,7 +31,7 @@ namespace QText {
         /// Gets title to display to user.
         /// </summary>
         public string Title {
-            get { return string.IsNullOrEmpty(this.Name) ? "(Default)" : Helper.DecodeFileName(this.Name); }
+            get { return string.IsNullOrEmpty(this.Name) ? "(Default)" : Helper.DecodeTitle(this.Name); }
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace QText {
 
             try {
                 using (var watcher = new Helper.FileSystemToggler(this.Document.Watcher)) {
-                    var newName = Helper.EncodeFileName(newTitle);
+                    var newName = Helper.EncodeTitle(newTitle);
 
                     var oldPath = this.Info.FullName;
                     var newPath = Path.Combine(this.Info.Parent.FullName, newName);
@@ -102,8 +102,8 @@ namespace QText {
             string selectedTitle = null;
             var orderedTitles = ReadOrderedTitles(out selectedTitle);
             files.Sort(delegate(FileInfo file1, FileInfo file2) {
-                var title1 = Helper.DecodeFileName(Helper.GetFileNameWithoutExtension(file1.Name));
-                var title2 = Helper.DecodeFileName(Helper.GetFileNameWithoutExtension(file2.Name));
+                var title1 = Helper.DecodeTitle(Helper.GetFileNameWithoutExtension(file1.Name));
+                var title2 = Helper.DecodeTitle(Helper.GetFileNameWithoutExtension(file2.Name));
                 if (orderedTitles != null) {
                     var titleIndex1 = orderedTitles.IndexOf(title1);
                     var titleIndex2 = orderedTitles.IndexOf(title2);
@@ -166,7 +166,7 @@ namespace QText {
                             } else {
                                 if (currentOrderedTitles != null) {
                                     var parts = line.Split(new string[] { "//" }, StringSplitOptions.RemoveEmptyEntries);
-                                    var title = Helper.DecodeFileName(parts[0]);
+                                    var title = Helper.DecodeTitle(parts[0]);
                                     var attrs = parts.Length > 1 ? parts[1] : null;
                                     if ("selected".Equals(attrs)) { currentSelectedTitle = title; }
                                     currentOrderedTitles.Add(title);

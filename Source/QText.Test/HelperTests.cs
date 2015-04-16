@@ -10,50 +10,65 @@ namespace QTextTest {
 
 
         [TestMethod()]
-        public void EncodeFileName_TestColon() {
-            var result = Helper.EncodeFileName("1:2");
+        public void EncodeTitle_Colon() {
+            var result = Helper.EncodeTitle("1:2");
             Assert.AreEqual("1~3a~2", result);
         }
 
+
         [TestMethod()]
-        public void EncodeFileName_TestAllPrintable() {
-            var result = Helper.EncodeFileName(@"A""<>|:*?\/Z");
+        public void EncodeTitle_AllPrintable() {
+            var result = Helper.EncodeTitle(@"A""<>|:*?\/Z");
             Assert.AreEqual("A~22~~3c~~3e~~7c~~3a~~2a~~3f~~5c~~2f~Z", result);
         }
 
         [TestMethod()]
-        public void DecodeFileName_TestAllPrintable() {
-            var result = Helper.DecodeFileName(@"A~22~~3c~~3e~~7c~~3a~~2a~~3f~~5c~~2f~Z");
+        public void DecodeTitle_AllPrintable() {
+            var result = Helper.DecodeTitle(@"A~22~~3c~~3e~~7c~~3a~~2a~~3f~~5c~~2f~Z");
             Assert.AreEqual(@"A""<>|:*?\/Z", result);
         }
 
+
         [TestMethod()]
-        public void DecodeFileName_TestAccidental1() {
-            var result = Helper.DecodeFileName("~");
+        public void EncodeTitle_Tab() {
+            var result = Helper.EncodeTitle("A\tZ");
+            Assert.AreEqual("A~09~Z", result);
+        }
+
+        [TestMethod()]
+        public void DecodeTitle_Tab() {
+            var result = Helper.DecodeTitle(@"A~09~Z");
+            Assert.AreEqual("A\tZ", result);
+        }
+
+
+        [TestMethod()]
+        public void DecodeTitle_Accidental1() {
+            var result = Helper.DecodeTitle("~");
             Assert.AreEqual("~", result);
         }
 
         [TestMethod()]
-        public void DecodeFileName_TestAccidental2() {
-            var result = Helper.DecodeFileName("~1");
+        public void DecodeTitle_Accidental2() {
+            var result = Helper.DecodeTitle("~1");
             Assert.AreEqual("~1", result);
         }
 
         [TestMethod()]
-        public void DecodeFileName_TestAccidental3() {
-            var result = Helper.DecodeFileName("~1~7c~~");
+        public void DecodeTitle_Accidental3() {
+            var result = Helper.DecodeTitle("~1~7c~~");
             Assert.AreEqual("~1|~", result);
         }
 
         [TestMethod()]
-        public void DecodeFileName_TestAccidental4() {
-            var result = Helper.DecodeFileName("A~7c1~~");
+        public void DecodeTitle_Accidental4() {
+            var result = Helper.DecodeTitle("A~7c1~~");
             Assert.AreEqual("A~7c1~~", result);
         }
 
         [TestMethod()]
-        public void DecodeFileName_TestAccidental5() {
-            var result = Helper.DecodeFileName("~77~");
+        public void DecodeTitle_Accidental5() {
+            var result = Helper.DecodeTitle("~77~");
             Assert.AreEqual("~77~", result);
         }
 

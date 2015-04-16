@@ -95,61 +95,6 @@ namespace QText {
             return sb.ToString();
         }
 
-        public static string DecodeFileName(string fileName) {
-            if (fileName == null) { throw new ArgumentNullException("fileName"); }
-            var invalidChars = Path.GetInvalidFileNameChars();
-            var sb = new StringBuilder();
-            StringBuilder sbDecode = null;
-            var inEncoded = false;
-            foreach (var ch in fileName) {
-                if (inEncoded) {
-                    if (ch == '~') { //end decode
-                        if (sbDecode.Length == 2) { //could be
-                            int value;
-                            if (int.TryParse(sbDecode.ToString(), System.Globalization.NumberStyles.HexNumber, CultureInfo.InvariantCulture, out value)) {
-                                var charValue = System.Convert.ToChar(value);
-                                if (Array.IndexOf(invalidChars, charValue) >= 0) {
-                                    sb.Append(charValue);
-                                    inEncoded = false;
-                                } else { //not a char to be decoded
-                                    sb.Append("~");
-                                    sb.Append(sbDecode);
-                                    sbDecode.Length = 0;
-                                }
-                            } else { //cannot decode
-                                sb.Append("~");
-                                sb.Append(sbDecode);
-                                sbDecode.Length = 0;
-                            }
-                        } else {
-                            sb.Append("~");
-                            sb.Append(sbDecode);
-                            sbDecode.Length = 0;
-                        }
-                    } else {
-                        sbDecode.Append(ch);
-                        if (sbDecode.Length > 2) {
-                            sb.Append("~");
-                            sb.Append(sbDecode);
-                            inEncoded = false;
-                        }
-                    }
-                } else {
-                    if (ch == '~') { //start decode
-                        if (sbDecode == null) { sbDecode = new StringBuilder(); } else { sbDecode.Length = 0; }
-                        inEncoded = true;
-                    } else {
-                        sb.Append(ch);
-                    }
-                }
-            }
-            if (inEncoded) {
-                sb.Append("~");
-                sb.Append(sbDecode);
-            }
-            return sb.ToString();
-        }
-
         #endregion
 
 
