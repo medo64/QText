@@ -18,7 +18,7 @@ namespace QTextTest {
                 test.CreateRawFile("C.txt");
                 test.CreateRawFile("Inner\\C.txt");
 
-                var doc = new Document(test.Directory);
+                var doc = new Document(test.Directory.FullName);
                 var folders = new List<DocumentFolder>(doc.GetFolders());
 
                 Assert.AreEqual(2, folders.Count);

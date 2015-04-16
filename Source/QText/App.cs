@@ -46,8 +46,8 @@ namespace QText {
                 Medo.Windows.Forms.State.NoRegistryWrites = Settings.NoRegistryWrites;
                 Medo.Diagnostics.ErrorReport.DisableAutomaticSaveToTemp = Settings.NoRegistryWrites;
 
-                App.Document = new Document(new DirectoryInfo(Settings.FilesLocation)) {
-                    DeleteToRecycleBin = Settings.FilesDeleteToRecycleBin 
+                App.Document = new Document(Settings.FilesLocation) {
+                    DeleteToRecycleBin = Settings.FilesDeleteToRecycleBin
                 };
                 App.Form = new MainForm();
 

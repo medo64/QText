@@ -206,7 +206,7 @@ namespace QText {
 
                 case Keys.Alt | Keys.Home: {
                         if (!tabFiles.CurrentFolder.IsRoot) {
-                            tabFiles.FolderOpen(App.Document.GetRootFolder());
+                            tabFiles.FolderOpen(App.Document.RootFolder);
                             mnuFolder.Text = tabFiles.CurrentFolder.Title;
                             Settings.LastFolder = tabFiles.CurrentFolder;
                         }
@@ -1346,7 +1346,7 @@ namespace QText {
                 }
             }
 
-            var currentFolder = tabFiles.CurrentFolder ?? App.Document.GetRootFolder();
+            var currentFolder = tabFiles.CurrentFolder ?? App.Document.RootFolder;
 
             tabFiles.FolderOpen(Settings.LastFolder);
             try {

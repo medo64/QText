@@ -9,7 +9,7 @@ namespace QText {
         internal static IEnumerable<GotoResult> GetSuggestions(string suggestion, bool allowLineNumbers) {
             if (suggestion.Length == 0) {
 
-                yield return new GotoResult(null, App.Document.GetRootFolder(), null);
+                yield return new GotoResult(null, App.Document.RootFolder, null);
 
             } else if (!Settings.GotoSortResults) {
 

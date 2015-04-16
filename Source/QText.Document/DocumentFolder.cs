@@ -5,35 +5,33 @@ using System.IO;
 namespace QText {
     public class DocumentFolder {
 
-        public DocumentFolder(Document document, DirectoryInfo directory, string name) {
+        public DocumentFolder(Document document, string name) {
             this.Document = document;
 
-            this.Info = directory;
             this.Name = name;
-            if (string.IsNullOrEmpty(name)) {
-                this.Title = "(Default)";
-            } else {
-                this.Title = Helper.DecodeFileName(name);
-            }
         }
 
 
-        internal Document Document;
+        internal readonly Document Document;
 
         /// <summary>
         /// Gets directory.
         /// </summary>
-        public DirectoryInfo Info { get; private set; }
+        public DirectoryInfo Info {
+            get { return new DirectoryInfo(string.IsNullOrEmpty(this.Name) ? this.Document.RootDirectory.FullName : Path.Combine(this.Document.RootDirectory.FullName, this.Name)); }
+        }
 
         /// <summary>
         /// Gets name of folder - for internal use.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; internal set; }
 
         /// <summary>
         /// Gets title to display to user.
         /// </summary>
-        public string Title { get; private set; }
+        public string Title {
+            get { return string.IsNullOrEmpty(this.Name) ? "(Default)" : Helper.DecodeFileName(this.Name); }
+        }
 
         /// <summary>
         /// Gets if given folder is root.
@@ -56,9 +54,7 @@ namespace QText {
 
                 Helper.MovePath(oldPath, newPath);
 
-                this.Info = new DirectoryInfo(newPath);
                 this.Name = newName;
-                this.Title = newTitle;
             } catch (Exception ex) {
                 throw new ApplicationException(ex.Message, ex);
             }
@@ -72,7 +68,7 @@ namespace QText {
 
         public void Delete() {
             try {
-                if (this.Document.DeleteToRecycleBin ) {
+                if (this.Document.DeleteToRecycleBin) {
                     SHFile.DeleteDirectory(this.Info.FullName);
                 } else {
                     this.Info.Delete(true);
