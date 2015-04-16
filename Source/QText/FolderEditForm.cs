@@ -125,7 +125,7 @@ namespace QText {
 
         private void mnuNew_Click(object sender, System.EventArgs e) {
             try {
-                var newFolder = App.Document.NewFolder();
+                var newFolder = App.Document.CreateFolder();
 
                 var item = new ListViewItem(newFolder.Title) { Tag = newFolder };
                 lsv.Items.Add(item);

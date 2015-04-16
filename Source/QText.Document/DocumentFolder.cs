@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 namespace QText {
@@ -42,19 +43,24 @@ namespace QText {
         #region Operations
 
         public void Rename(string newTitle) {
-            if (string.IsNullOrEmpty(this.Name)) { throw new IOException("Cannot rename root folder."); }
+            if (this.IsRoot) { throw new IOException("Cannot rename root folder."); }
             if (string.IsNullOrEmpty(newTitle)) { throw new IOException("Folder name cannot be empty."); }
             newTitle = newTitle.Trim();
 
+            Debug.WriteLine("Rename: " + this.Name + " -> " + newTitle);
+
             try {
-                var newName = Helper.EncodeFileName(newTitle);
+                using (var watcher = new Helper.FileSystemToggler(this.Document.Watcher)) {
+                    var newName = Helper.EncodeFileName(newTitle);
 
-                var oldPath = this.Info.FullName;
-                var newPath = Path.Combine(this.Info.Parent.FullName, newName);
+                    var oldPath = this.Info.FullName;
+                    var newPath = Path.Combine(this.Info.Parent.FullName, newName);
 
-                Helper.MovePath(oldPath, newPath);
+                    Helper.MovePath(oldPath, newPath);
 
-                this.Name = newName;
+                    this.Name = newName;
+                    this.Document.SortFolders();
+                }
             } catch (Exception ex) {
                 throw new ApplicationException(ex.Message, ex);
             }
@@ -67,11 +73,15 @@ namespace QText {
         }
 
         public void Delete() {
+            Debug.WriteLine("Delete: " + this.Name);
             try {
-                if (this.Document.DeleteToRecycleBin) {
-                    SHFile.DeleteDirectory(this.Info.FullName);
-                } else {
-                    this.Info.Delete(true);
+                using (var watcher = new Helper.FileSystemToggler(this.Document.Watcher)) {
+                    if (this.Document.DeleteToRecycleBin) {
+                        SHFile.DeleteDirectory(this.Info.FullName);
+                    } else {
+                        this.Info.Delete(true);
+                    }
+                    this.Document.ProcessFolderDelete(this.Info.FullName);
                 }
             } catch (Exception ex) {
                 throw new ApplicationException(ex.Message, ex);

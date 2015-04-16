@@ -139,5 +139,23 @@ namespace QText {
 
         #endregion
 
+
+        internal class FileSystemToggler : IDisposable {
+
+            public FileSystemToggler(FileSystemWatcher watcher) {
+                this.Watcher = watcher;
+                this.WasEnabled = watcher.EnableRaisingEvents;
+                this.Watcher.EnableRaisingEvents = false;
+            }
+
+            private readonly FileSystemWatcher Watcher;
+            private readonly bool WasEnabled;
+
+
+            void IDisposable.Dispose() {
+                this.Watcher.EnableRaisingEvents = this.WasEnabled;
+            }
+        }
+
     }
 }

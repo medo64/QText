@@ -241,8 +241,8 @@ namespace QText {
         public void Write(MemoryStream stream) {
             if (this.IsEncrypted && !this.HasPassword) { throw new ApplicationException("Missing password."); }
 
-            this.Folder.Document.DisableWatcher();
-            try {
+
+            using (var watcher = new Helper.FileSystemToggler(this.Folder.Document.Watcher)) {
                 stream.Position = 0;
                 using (var fileStream = new FileStream(this.Info.FullName, FileMode.Create, FileAccess.Write, FileShare.None)) {
                     var buffer = new byte[65536];
@@ -265,8 +265,6 @@ namespace QText {
                         }
                     }
                 }
-            } finally {
-                this.Folder.Document.EnableWatcher();
             }
         }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 
@@ -13,7 +14,7 @@ namespace QText {
             foreach (var directory in this.RootDirectory.GetDirectories()) {
                 this.Folders.Add(new DocumentFolder(this, directory.Name));
             }
-            this.SortFolder();
+            this.SortFolders();
 
             this.Watcher = new FileSystemWatcher(this.RootDirectory.FullName) { IncludeSubdirectories = true, InternalBufferSize = 32768 };
             this.Watcher.Changed += Watcher_Changed;
@@ -38,7 +39,7 @@ namespace QText {
 
         private readonly List<DocumentFolder> Folders = new List<DocumentFolder>();
 
-        private void SortFolder() {
+        internal void SortFolders() {
             this.Folders.Sort(delegate(DocumentFolder folder1, DocumentFolder folder2) {
                 if (string.IsNullOrEmpty(folder1.Name) == string.IsNullOrEmpty(folder2.Name)) {
                     return string.Compare(folder1.Title, folder2.Title, StringComparison.OrdinalIgnoreCase);
@@ -53,7 +54,7 @@ namespace QText {
 
         #region Watcher
 
-        private FileSystemWatcher Watcher;
+        internal readonly FileSystemWatcher Watcher;
 
 
         public void DisableWatcher() {
@@ -78,16 +79,18 @@ namespace QText {
 
 
         void Watcher_Changed(object sender, FileSystemEventArgs e) {
+            Debug.WriteLine("FileSystemWatcher.Changed: " + e.FullPath);
             if (File.Exists(e.FullPath)) { //file - ignore directory changes
                 this.OnChanged(e);
             }
         }
 
         void Watcher_Created(object sender, FileSystemEventArgs e) {
+            Debug.WriteLine("FileSystemWatcher.Created: " + e.FullPath);
             if (Directory.Exists(e.FullPath)) { //directory
                 var folder = new DocumentFolder(this, e.Name);
                 this.Folders.Add(folder);
-                this.SortFolder();
+                this.SortFolders();
                 this.OnFolderChanged(new DocumentFolderEventArgs(folder));
                 this.OnChanged(e);
             } else if (File.Exists(e.FullPath)) { //file
@@ -96,29 +99,30 @@ namespace QText {
         }
 
         void Watcher_Deleted(object sender, FileSystemEventArgs e) {
-            if (Directory.Exists(e.FullPath)) { //directory
-                for (int i = 0; i < this.Folders.Count; i++) {
-                    var folder = this.Folders[i];
-                    if (!folder.IsRoot && string.Equals(folder.Info.FullName, e.FullPath, StringComparison.OrdinalIgnoreCase)) {
-                        this.Folders.RemoveAt(i);
-                        folder.Name = e.Name;
-                        this.OnDocumentChanged(new EventArgs());
-                        this.OnChanged(new FileSystemEventArgs(WatcherChangeTypes.Renamed, Path.GetDirectoryName(e.FullPath), Path.GetFileName(e.FullPath)));
-                        break;
-                    }
+            Debug.WriteLine("FileSystemWatcher.Deleted: " + e.FullPath);
+            ProcessFolderDelete(e.FullPath);
+            this.OnChanged(e);
+        }
+
+        internal void ProcessFolderDelete(string fullPath) {
+            for (int i = 0; i < this.Folders.Count; i++) {
+                var folder = this.Folders[i];
+                if (!folder.IsRoot && string.Equals(folder.Info.FullName, fullPath, StringComparison.OrdinalIgnoreCase)) {
+                    this.Folders.RemoveAt(i);
+                    this.OnDocumentChanged(new EventArgs());
+                    break;
                 }
-            } else if (File.Exists(e.FullPath)) { //file
-                this.OnChanged(e);
             }
         }
 
         void Watcher_Renamed(object sender, RenamedEventArgs e) {
+            Debug.WriteLine("FileSystemWatcher.Renamed: " + e.OldFullPath + " -> " + e.FullPath);
             if (Directory.Exists(e.FullPath)) { //directory
                 for (int i = 0; i < this.Folders.Count; i++) {
                     var folder = this.Folders[i];
                     if (!folder.IsRoot && string.Equals(folder.Info.FullName, e.OldFullPath, StringComparison.OrdinalIgnoreCase)) {
                         folder.Name = e.Name;
-                        this.SortFolder();
+                        this.SortFolders();
                         this.OnChanged(new FileSystemEventArgs(WatcherChangeTypes.Renamed, Path.GetDirectoryName(e.FullPath), Path.GetFileName(e.FullPath)));
                         this.OnFolderChanged(new DocumentFolderEventArgs(folder));
                         break;
@@ -169,7 +173,7 @@ namespace QText {
                 return this.Folders[0];
             }
         }
-        
+
         public IEnumerable<DocumentFolder> GetFolders() {
             foreach (var folder in this.Folders) {
                 yield return folder;
@@ -197,7 +201,7 @@ namespace QText {
 
         #region New folder
 
-        public DocumentFolder NewFolder() {
+        public DocumentFolder CreateFolder() {
             try {
                 var newPath = Path.Combine(this.RootDirectory.FullName, Helper.EncodeFileName("New folder"));
                 int n = 1;
@@ -207,8 +211,35 @@ namespace QText {
                     n += 1;
                 }
 
-                Directory.CreateDirectory(newPath);
-                return new DocumentFolder(this, Helper.DecodeFileName(Path.GetFileName(newPath)));
+                Debug.WriteLine("Create: " + Path.GetFileName(newPath));
+
+                using (var watcher = new Helper.FileSystemToggler(this.Watcher)) {
+                    Directory.CreateDirectory(newPath);
+                }
+
+                var folder = new DocumentFolder(this, Path.GetFileName(newPath));
+                this.Folders.Add(folder);
+                this.SortFolders();
+                return folder;
+            } catch (Exception ex) {
+                throw new ApplicationException(ex.Message, ex);
+            }
+        }
+
+        public DocumentFolder CreateFolder(string title) {
+            try {
+                var newPath = Path.Combine(this.RootDirectory.FullName, Helper.EncodeFileName(title));
+
+                Debug.WriteLine("Create: " + Path.GetFileName(newPath));
+
+                using (var watcher = new Helper.FileSystemToggler(this.Watcher)) {
+                    Directory.CreateDirectory(newPath);
+                }
+
+                var folder = new DocumentFolder(this, Path.GetFileName(newPath));
+                this.Folders.Add(folder);
+                this.SortFolders();
+                return folder;
             } catch (Exception ex) {
                 throw new ApplicationException(ex.Message, ex);
             }
