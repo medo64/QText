@@ -7,31 +7,29 @@ using System.Text;
 namespace QText {
     public class DocumentFile {
 
-        public DocumentFile(DocumentFolder folder, FileInfo file) {
+        public DocumentFile(DocumentFolder folder, string fileName) {
             this.Folder = folder;
-            this.Info = file;
 
-            if (file.Name.EndsWith(Extension.PlainText, StringComparison.OrdinalIgnoreCase)) {
-                this.Name = file.Name.Substring(0, file.Name.LastIndexOf(Extension.PlainText, StringComparison.OrdinalIgnoreCase));
+            if (fileName.EndsWith(Extensions.PlainText, StringComparison.OrdinalIgnoreCase)) {
+                this.Extension = Extensions.PlainText;
                 this.Type = DocumentKind.PlainText;
                 this.IsEncrypted = false;
-            } else if (file.Name.EndsWith(Extension.RichText, StringComparison.OrdinalIgnoreCase)) {
-                this.Name = file.Name.Substring(0, file.Name.LastIndexOf(Extension.RichText, StringComparison.OrdinalIgnoreCase));
+            } else if (fileName.EndsWith(Extensions.RichText, StringComparison.OrdinalIgnoreCase)) {
+                this.Extension = Extensions.RichText;
                 this.Type = DocumentKind.RichText;
                 this.IsEncrypted = false;
-            } else if (file.Name.EndsWith(Extension.EncryptedPlainText, StringComparison.OrdinalIgnoreCase)) {
-                this.Name = file.Name.Substring(0, file.Name.LastIndexOf(Extension.EncryptedPlainText, StringComparison.OrdinalIgnoreCase));
+            } else if (fileName.EndsWith(Extensions.EncryptedPlainText, StringComparison.OrdinalIgnoreCase)) {
+                this.Extension = Extensions.EncryptedPlainText;
                 this.Type = DocumentKind.PlainText;
                 this.IsEncrypted = true;
-            } else if (file.Name.EndsWith(Extension.EncryptedRichText, StringComparison.OrdinalIgnoreCase)) {
-                this.Name = file.Name.Substring(0, file.Name.LastIndexOf(Extension.EncryptedRichText, StringComparison.OrdinalIgnoreCase));
+            } else if (fileName.EndsWith(Extensions.EncryptedRichText, StringComparison.OrdinalIgnoreCase)) {
+                this.Extension = Extensions.EncryptedRichText;
                 this.Type = DocumentKind.RichText;
                 this.IsEncrypted = true;
             } else {
                 throw new ApplicationException("Cannot recognize file type.");
             }
-
-            this.Title = Helper.DecodeTitle(this.Name);
+            this.Name = fileName.Substring(0, fileName.Length - this.Extension.Length);
         }
 
 
@@ -43,17 +41,26 @@ namespace QText {
         /// <summary>
         /// Gets raw file information.
         /// </summary>
-        public FileInfo Info { get; private set; }
+        public FileInfo Info {
+            get { return new FileInfo(Path.Combine(this.Folder.Info.FullName, this.Name + this.Extension)); }
+        }
 
         /// <summary>
-        /// Gets name of folder - for internal use.
+        /// Gets name of file - for internal use.
         /// </summary>
         public string Name { get; private set; }
 
         /// <summary>
+        /// Gets file extension.
+        /// </summary>
+        public string Extension { get; private set; }
+
+        /// <summary>
         /// Gets title to display to user.
         /// </summary>
-        public string Title { get; private set; }
+        public string Title {
+            get { return Helper.DecodeTitle(this.Name); }
+        }
 
 
         public DocumentKind Type { get; private set; }
@@ -106,8 +113,8 @@ namespace QText {
             newName = Helper.EncodeTitle(newTitle);
             newPath = Path.Combine(this.Info.Directory.FullName, newName);
             switch (this.Type) {
-                case DocumentKind.PlainText: newPath += this.IsEncrypted ? Extension.EncryptedPlainText : Extension.PlainText; break;
-                case DocumentKind.RichText: newPath += this.IsEncrypted ? Extension.EncryptedRichText : Extension.RichText; break;
+                case DocumentKind.PlainText: newPath += this.IsEncrypted ? Extensions.EncryptedPlainText : Extensions.PlainText; break;
+                case DocumentKind.RichText: newPath += this.IsEncrypted ? Extensions.EncryptedRichText : Extensions.RichText; break;
                 default: throw new ApplicationException("Unknown file kind.");
             }
         }
@@ -128,9 +135,7 @@ namespace QText {
                 throw new ApplicationException(ex.Message, ex);
             }
 
-            this.Info = new FileInfo(newPath);
             this.Name = newName;
-            this.Title = newTitle;
         }
 
         public void Delete() {
@@ -148,16 +153,15 @@ namespace QText {
 
         public void ChangeKind(DocumentKind newType) {
             if (newType == this.Type) { return; }
-            var oldPath = this.Info.FullName;
-            var newPath = Path.Combine(this.Info.Directory.FullName, this.Name);
+
             switch (newType) {
-                case DocumentKind.PlainText: newPath += this.IsEncrypted ? Extension.EncryptedPlainText : Extension.PlainText; break;
-                case DocumentKind.RichText: newPath += this.IsEncrypted ? Extension.EncryptedRichText : Extension.RichText; break;
+                case DocumentKind.PlainText:
+                    this.Extension = this.IsEncrypted ? Extensions.EncryptedPlainText : Extensions.PlainText; break;
+                case DocumentKind.RichText:
+                    this.Extension = this.IsEncrypted ? Extensions.EncryptedRichText : Extensions.RichText; break;
                 default: throw new ApplicationException("Unknown file kind.");
             }
-            Helper.MovePath(oldPath, newPath);
-
-            this.Info = new FileInfo(newPath);
+            Helper.MovePath(this.Info.FullName, Path.Combine(this.Info.DirectoryName, this.Name + this.Extension));
             this.Type = newType;
         }
 
@@ -168,15 +172,15 @@ namespace QText {
             var oldPath = this.Info.FullName;
             var newPath = Path.Combine(this.Info.Directory.FullName, this.Name);
             switch (this.Type) {
-                case DocumentKind.PlainText: newPath += Extension.EncryptedPlainText; break;
-                case DocumentKind.RichText: newPath += Extension.EncryptedRichText; break;
+                case DocumentKind.PlainText: newPath += Extensions.EncryptedPlainText; break;
+                case DocumentKind.RichText: newPath += Extensions.EncryptedRichText; break;
                 default: throw new ApplicationException("Unknown file kind.");
             }
 
             using (var stream = new MemoryStream()) {
                 this.Read(stream);
                 Helper.MovePath(oldPath, newPath);
-                this.Info = new FileInfo(newPath);
+                this.Extension = (this.Type == DocumentKind.RichText) ? Extensions.EncryptedRichText : Extensions.EncryptedPlainText;
                 this.IsEncrypted = true;
                 this.Password = password;
                 this.Write(stream);
@@ -189,15 +193,15 @@ namespace QText {
             var oldPath = this.Info.FullName;
             var newPath = Path.Combine(this.Info.Directory.FullName, this.Name);
             switch (this.Type) {
-                case DocumentKind.PlainText: newPath += Extension.PlainText; break;
-                case DocumentKind.RichText: newPath += Extension.RichText; break;
+                case DocumentKind.PlainText: newPath += Extensions.PlainText; break;
+                case DocumentKind.RichText: newPath += Extensions.RichText; break;
                 default: throw new ApplicationException("Unknown file kind.");
             }
 
             using (var stream = new MemoryStream()) {
                 this.Read(stream);
                 Helper.MovePath(oldPath, newPath);
-                this.Info = new FileInfo(newPath);
+                this.Extension = (this.Type == DocumentKind.RichText) ? Extensions.RichText : Extensions.PlainText;
                 this.IsEncrypted = false;
                 this.Password = null;
                 this.Write(stream);
@@ -273,7 +277,7 @@ namespace QText {
 
         #region Extensions
 
-        private static class Extension {
+        private static class Extensions {
             public static readonly string PlainText = ".txt";
             public static readonly string RichText = ".rtf";
             public static readonly string EncryptedPlainText = ".txt.aes256cbc";

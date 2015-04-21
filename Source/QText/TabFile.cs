@@ -121,7 +121,7 @@ namespace QText {
             } else {
                 File.WriteAllText(fullFileName, "");
             }
-            return new TabFile(new DocumentFile(folder, new FileInfo(fullFileName)));
+            return new TabFile(new DocumentFile(folder, new FileInfo(fullFileName).Name));
         }
 
 

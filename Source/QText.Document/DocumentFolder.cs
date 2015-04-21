@@ -119,7 +119,7 @@ namespace QText {
             });
 
             foreach (var file in files) {
-                yield return new DocumentFile(this, file);
+                yield return new DocumentFile(this, file.Name);
             }
         }
 
