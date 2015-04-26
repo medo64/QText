@@ -7,8 +7,8 @@
 #define AppSetupFile   AppBase + StringChange(AppVersion, '.', '')
 
 #define AppVersionEx   StringChange(AppVersion, '0.00', '')
-#if "" != HgNode
-#  define AppVersionEx AppVersionEx + " (" + HgNode + ")"
+#if "" != VersionHash
+#  define AppVersionEx AppVersionEx + " (" + VersionHash + ")"
 #endif
 
 
@@ -56,7 +56,8 @@ Source: "QText.exe";            DestDir: "{app}";                      Flags: ig
 Source: "QText.pdb";            DestDir: "{app}";                      Flags: ignoreversion;
 Source: "QText.Document.dll";   DestDir: "{app}";                      Flags: ignoreversion;
 Source: "QText.Document.pdb";   DestDir: "{app}";                      Flags: ignoreversion;
-Source: "ReadMe.txt";  DestDir: "{app}";  Attribs: readonly;  Flags: overwritereadonly uninsremovereadonly;
+Source: "ReadMe.txt";           DestDir: "{app}";  Attribs: readonly;  Flags: overwritereadonly uninsremovereadonly;
+Source: "License.txt";          DestDir: "{app}";  Attribs: readonly;  Flags: overwritereadonly uninsremovereadonly;
 
 [Icons]
 Name: "{userstartmenu}\QText";  Filename: "{app}\QText.exe"
@@ -69,8 +70,8 @@ Root: HKCU;  Subkey: "Software\Josip Medved\QText";                             
 Root: HKCU;  Subkey: "Software\Microsoft\Windows\CurrentVersion\Run";  ValueType: string;  ValueName: "QText";      ValueData: """{app}\QText.exe"" /hide";  Flags: uninsdeletevalue
 
 [Run]
-Description: "View ReadMe.txt";         Filename: "{app}\ReadMe.txt";                         Flags: postinstall runasoriginaluser shellexec nowait skipifsilent unchecked
 Description: "Launch application now";  Filename: "{app}\QText.exe";   Parameters: "/setup";  Flags: postinstall nowait skipifsilent runasoriginaluser shellexec
+Description: "View ReadMe.txt";         Filename: "{app}\ReadMe.txt";                         Flags: postinstall nowait skipifsilent runasoriginaluser shellexec unchecked
 
 [Code]
 
