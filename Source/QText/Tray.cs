@@ -17,7 +17,11 @@ namespace QText {
             this.Form.CreateControl();
             this.Form.Handle.GetType();
 
-            notMain.Icon = QText.Properties.Resources.TrayIcon;
+            if ((Environment.OSVersion.Platform == PlatformID.Win32NT) && (Environment.OSVersion.Version.Major >= 10)) {
+                notMain.Icon = QText.Properties.Resources.TrayIcon_White;
+            } else {
+                notMain.Icon = QText.Properties.Resources.TrayIcon;
+            }
             notMain.Text = Medo.Reflection.EntryAssembly.Title;
 
             notMain.MouseClick += delegate(object sender, MouseEventArgs e) {
