@@ -81,7 +81,7 @@ namespace QText {
                     if (this.Document.DeleteToRecycleBin) {
                         SHFile.DeleteDirectory(this.FullPath);
                     } else {
-                        Directory.Delete(this.FullPath);
+                        Directory.Delete(this.FullPath, true);
                     }
                     this.Document.ProcessFolderDelete(this.FullPath);
                 }
