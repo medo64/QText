@@ -177,7 +177,8 @@ namespace QText {
                     return true;
 
 
-                case Keys.Alt | Keys.Left: {
+                case Keys.Alt | Keys.Left:
+                    {
                         if (tabFiles.SelectedTab == null) {
                             if (tabFiles.TabPages.Count > 0) {
                                 tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[0];
@@ -188,10 +189,12 @@ namespace QText {
                                 tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[newIndex];
                             }
                         }
-                    } return true;
+                    }
+                    return true;
 
 
-                case Keys.Alt | Keys.Right: {
+                case Keys.Alt | Keys.Right:
+                    {
                         if (tabFiles.SelectedTab == null) {
                             if (tabFiles.TabPages.Count > 0) {
                                 tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[tabFiles.TabPages.Count - 1];
@@ -202,51 +205,62 @@ namespace QText {
                                 tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[newIndex];
                             }
                         }
-                    } return true;
+                    }
+                    return true;
 
-                case Keys.Alt | Keys.Home: {
+                case Keys.Alt | Keys.Home:
+                    {
                         if (!tabFiles.CurrentFolder.IsRoot) {
                             tabFiles.FolderOpen(App.Document.RootFolder);
                             mnuFolder.Text = tabFiles.CurrentFolder.Title;
                             Settings.LastFolder = tabFiles.CurrentFolder;
                         }
-                    } return true;
+                    }
+                    return true;
 
                 case Keys.Alt | Keys.PageUp:
-                case Keys.Alt | Keys.Up: {
+                case Keys.Alt | Keys.Up:
+                    {
                         var currFolder = tabFiles.CurrentFolder;
                         var list = new List<DocumentFolder>(App.Document.GetFolders());
-                        var index = list.FindIndex(delegate(DocumentFolder folder) { return folder.Equals(currFolder); });
+                        var index = list.FindIndex(delegate (DocumentFolder folder) { return folder.Equals(currFolder); });
                         if (index > 0) {
                             tabFiles.FolderOpen(list[index - 1]);
                             mnuFolder.Text = tabFiles.CurrentFolder.Title;
                             Settings.LastFolder = tabFiles.CurrentFolder;
                         }
-                    } return true;
+                    }
+                    return true;
 
                 case Keys.Alt | Keys.PageDown:
-                case Keys.Alt | Keys.Down: {
+                case Keys.Alt | Keys.Down:
+                    {
                         var currFolder = tabFiles.CurrentFolder;
                         var list = new List<DocumentFolder>(App.Document.GetFolders());
-                        var index = list.FindIndex(delegate(DocumentFolder folder) { return folder.Equals(currFolder); });
+                        var index = list.FindIndex(delegate (DocumentFolder folder) { return folder.Equals(currFolder); });
                         if (index < list.Count - 1) {
                             tabFiles.FolderOpen(list[index + 1]);
                             mnuFolder.Text = tabFiles.CurrentFolder.Title;
                             Settings.LastFolder = tabFiles.CurrentFolder;
                         }
-                    } return true;
+                    }
+                    return true;
 
-                case Keys.Alt | Keys.Shift | Keys.D: {
+                case Keys.Alt | Keys.Shift | Keys.D:
+                    {
                         if ((tabFiles.SelectedTab != null) && (tabFiles.SelectedTab.IsOpened)) {
                             tabFiles.SelectedTab.TextBox.SelectedText = DateTime.Now.ToShortDateString();
                         }
-                    } return true;
+                    }
+                    return true;
 
-                case Keys.Alt | Keys.Shift | Keys.T: {
+                case Keys.Alt | Keys.Shift | Keys.T:
+                    {
                         if ((tabFiles.SelectedTab != null) && (tabFiles.SelectedTab.IsOpened)) {
                             tabFiles.SelectedTab.TextBox.SelectedText = DateTime.Now.ToShortTimeString();
                         }
-                    } return true;
+                    }
+                    return true;
 
             }
 
@@ -259,9 +273,11 @@ namespace QText {
             Debug.WriteLine("MainForm_ProcessCmdKey: " + keyData.ToString());
             switch (keyData) {
 
-                case Keys.Shift | Keys.F1: {
+                case Keys.Shift | Keys.F1:
+                    {
                         mnxTextSelectionSpelling_Click(null, null);
-                    } return true;
+                    }
+                    return true;
 
 
                 case Keys.Control | Keys.Tab:
@@ -953,7 +969,7 @@ namespace QText {
 
             foreach (var folder in App.Document.GetFolders()) {
                 var item = new ToolStripMenuItem(folder.Title, null, mnxTabMoveTo_Click) { Tag = folder };
-                item.Enabled = !folder.Equals(tabFiles.CurrentFolder);
+                item.Enabled = !folder.Equals(tabFiles.CurrentFolder) && tabFiles.SelectedTab.BaseFile.CanMove(folder);
                 mnxTabMoveTo.DropDownItems.Add(item);
             }
         }
@@ -961,12 +977,11 @@ namespace QText {
         private void mnxTabMoveTo_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 var folder = (DocumentFolder)((ToolStripMenuItem)sender).Tag;
-                string oldPath, newPath;
-                tabFiles.MoveTabPreview(tabFiles.SelectedTab, folder.Name, out oldPath, out newPath);
-                if (File.Exists(newPath)) {
-                    Medo.MessageBox.ShowError(this, "File already exists at destination.");
-                } else {
-                    tabFiles.MoveTab(tabFiles.SelectedTab, folder.Name);
+                try {
+                    tabFiles.SelectedTab.BaseFile.Move(folder);
+                    tabFiles.RemoveTab(tabFiles.SelectedTab);
+                } catch (ApplicationException ex) {
+                    Medo.MessageBox.ShowError(this, "Error moving file!\n\n" + ex.Message);
                 }
             }
         }
@@ -1023,10 +1038,10 @@ namespace QText {
 
         private void mnxTabOpenContainingFolder_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
-                var exe = new ProcessStartInfo("explorer.exe", "/select,\"" + tabFiles.SelectedTab.BaseFile.Info.FullName + "\"");
+                var exe = new ProcessStartInfo("explorer.exe", "/select,\"" + tabFiles.SelectedTab.BaseFile.FullPath + "\"");
                 Process.Start(exe);
             } else {
-                var exe = new ProcessStartInfo("explorer.exe", "\"" + tabFiles.CurrentFolder.Info.FullName + "\"");
+                var exe = new ProcessStartInfo("explorer.exe", "\"" + tabFiles.CurrentFolder.FullPath + "\"");
                 Process.Start(exe);
             }
         }
@@ -1489,9 +1504,9 @@ namespace QText {
         void Document_Changed(object sender, FileSystemEventArgs e) {
             if (tabFiles.Enabled == false) { return; }
 
-            this.Invoke((MethodInvoker)delegate() {
+            this.Invoke((MethodInvoker)delegate () {
                 foreach (TabFile tab in tabFiles.TabPages) {
-                    if (e.FullPath.Equals(tab.BaseFile.Info.FullName)) {
+                    if (e.FullPath.Equals(tab.BaseFile.FullPath)) {
                         if (!tab.IsChanged) { //don't reopen tabs that were changed
                             try {
                                 tab.Reopen();

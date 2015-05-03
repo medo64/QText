@@ -146,7 +146,7 @@ namespace QText {
         #region File operations
 
         public void AddTab(string title, bool isRichText) {
-            var t = TabFile.Create(this.CurrentFolder, Path.Combine(this.CurrentFolder.Info.FullName, Helper.EncodeFileName(title) + (isRichText ? QFileInfo.Extensions.Rich : QFileInfo.Extensions.Plain)));
+            var t = TabFile.Create(this.CurrentFolder, Path.Combine(this.CurrentFolder.FullPath, Helper.EncodeFileName(title) + (isRichText ? QFileInfo.Extensions.Rich : QFileInfo.Extensions.Plain)));
             t.ContextMenuStrip = this.TabContextMenuStrip;
             if (this.SelectedTab != null) {
                 this.TabPages.Insert(this.TabPages.IndexOf(this.SelectedTab) + 1, t);
@@ -156,10 +156,14 @@ namespace QText {
             this.SelectedTab = t;
         }
 
+        public void DeleteTab(TabFile tab) {
+            RemoveTab(tab);
+            tab.BaseFile.Delete();
+        }
+
         public void RemoveTab(TabFile tab) {
             this.SelectedTab = GetNextTab();
             this.TabPages.Remove(tab);
-            tab.BaseFile.Delete();
             if (this.SelectedTab != null) {
                 this.SelectedTab.Open();
             }
@@ -177,7 +181,7 @@ namespace QText {
 
         public void MoveTabPreview(TabFile tab, string newFolder, out string oldPath, out string newPath) {
             string destFolder = string.IsNullOrEmpty(newFolder) ? Settings.FilesLocation : Path.Combine(Settings.FilesLocation, newFolder);
-            var oldFile = new QFileInfo(tab.BaseFile.Info.FullName);
+            var oldFile = new QFileInfo(tab.BaseFile.FullPath);
             oldPath = oldFile.FullName;
             newPath = Path.Combine(destFolder, oldFile.Name);
         }
@@ -232,7 +236,6 @@ namespace QText {
                         base.SelectedTab = this._dragTabPage;
                     }
                     base.Enabled = true;
-                    //TODO: Document.WriteOrderedTitles(this);
                 }
             }
             this._dragTabPage = null;

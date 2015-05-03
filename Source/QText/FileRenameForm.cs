@@ -16,8 +16,6 @@ namespace QText {
         }
 
 
-        private readonly string BasePath;
-
         public readonly DocumentFile File;
         public string NewTitle { get; private set; }
 

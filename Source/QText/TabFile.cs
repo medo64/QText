@@ -145,8 +145,8 @@ namespace QText {
             if (this.IsOpened == false) { throw new InvalidOperationException("File is not loaded."); }
             if (this.BaseFile.IsPlainText) { throw new InvalidOperationException("File is already in plain text format."); }
 
+            SaveAsPlain();
             this.BaseFile.ChangeKind(DocumentKind.PlainText);
-            this.Save();
             this.Reopen();
         }
 
@@ -157,7 +157,7 @@ namespace QText {
             string text = this.TextBox.Text;
 
             this.BaseFile.ChangeKind(DocumentKind.RichText);
-            this.Save();
+            this.SaveAsRich();
             this.Reopen();
         }
 
@@ -253,7 +253,7 @@ namespace QText {
         }
 
         public void SaveCarbonCopy(IWin32Window owner) {
-            SaveCarbonCopy(owner, this.BaseFile.Info.FullName);
+            SaveCarbonCopy(owner, this.BaseFile.FullPath);
         }
 
         public static void SaveCarbonCopy(IWin32Window owner, string fullFileName) {

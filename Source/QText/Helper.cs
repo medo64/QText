@@ -63,7 +63,7 @@ namespace QText {
             try {
                 tabFiles.Enabled = false;
                 try {
-                    tabFiles.RemoveTab(tabToDelete);
+                    tabFiles.DeleteTab(tabToDelete);
                     return true;
                 } catch (Exception ex) {
                     Medo.MessageBox.ShowWarning(owner, string.Format(CultureInfo.CurrentUICulture, "Cannot delete file.\n\n{0}", ex.Message));

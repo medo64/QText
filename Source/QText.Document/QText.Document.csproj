@@ -54,6 +54,7 @@
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="Document.cs" />
+    <Compile Include="FileExtensions.cs" />
     <Compile Include="DocumentFile.cs" />
     <Compile Include="DocumentFolder.cs" />
     <Compile Include="DocumentFolderEventArgs.cs" />

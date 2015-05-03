@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Text;
 
 namespace QText {
     public class Document {
@@ -15,6 +16,17 @@ namespace QText {
                 this.Folders.Add(new DocumentFolder(this, directory.Name));
             }
             this.SortFolders();
+
+            foreach (var folder in this.Folders) {
+                foreach (var extension in FileExtensions.All) {
+                    foreach (var fileName in Directory.GetFiles(folder.FullPath, "*" + extension, SearchOption.TopDirectoryOnly)) {
+                        this.Files.Add(new DocumentFile(folder, Path.GetFileName(fileName)));
+                    }
+                }
+            }
+            this.Files.Sort(delegate (DocumentFile file1, DocumentFile file2) {
+                return string.Compare(file1.Title, file2.Title, StringComparison.OrdinalIgnoreCase);
+            });
 
             this.Watcher = new FileSystemWatcher(this.RootDirectory.FullName) { IncludeSubdirectories = true, InternalBufferSize = 32768 };
             this.Watcher.Changed += Watcher_Changed;
@@ -40,13 +52,34 @@ namespace QText {
         private readonly List<DocumentFolder> Folders = new List<DocumentFolder>();
 
         internal void SortFolders() {
-            this.Folders.Sort(delegate(DocumentFolder folder1, DocumentFolder folder2) {
+            this.Folders.Sort(delegate (DocumentFolder folder1, DocumentFolder folder2) {
                 if (string.IsNullOrEmpty(folder1.Name) == string.IsNullOrEmpty(folder2.Name)) {
                     return string.Compare(folder1.Title, folder2.Title, StringComparison.OrdinalIgnoreCase);
                 } else {
                     return string.IsNullOrEmpty(folder1.Name) ? -1 : +1;
                 }
             });
+        }
+
+        #endregion
+
+
+        #region Files
+
+        private readonly List<DocumentFile> Files = new List<DocumentFile>();
+
+        internal IEnumerable<DocumentFile> GetFiles(DocumentFolder folder) {
+            foreach (var file in this.Files) {
+                if (file.Folder.Equals(folder)) {
+                    yield return file;
+                }
+            }
+        }
+
+        internal IEnumerable<DocumentFile> GetAllFiles() {
+            foreach (var file in this.Files) {
+                yield return file;
+            }
         }
 
         #endregion
@@ -105,14 +138,21 @@ namespace QText {
         }
 
         internal void ProcessFolderDelete(string fullPath) {
-            for (int i = 0; i < this.Folders.Count; i++) {
-                var folder = this.Folders[i];
-                if (!folder.IsRoot && string.Equals(folder.Info.FullName, fullPath, StringComparison.OrdinalIgnoreCase)) {
-                    this.Folders.RemoveAt(i);
-                    this.OnDocumentChanged(new EventArgs());
+            for (int i = 0; i < this.Files.Count; i++) {
+                var file = this.Files[i];
+                if (string.Equals(file.Folder.FullPath, fullPath, StringComparison.OrdinalIgnoreCase)) {
+                    this.Files.RemoveAt(i);
                     break;
                 }
             }
+            for (int i = 0; i < this.Folders.Count; i++) {
+                var folder = this.Folders[i];
+                if (!folder.IsRoot && string.Equals(folder.FullPath, fullPath, StringComparison.OrdinalIgnoreCase)) {
+                    this.Folders.RemoveAt(i);
+                    break;
+                }
+            }
+            this.OnDocumentChanged(new EventArgs());
         }
 
         void Watcher_Renamed(object sender, RenamedEventArgs e) {
@@ -120,7 +160,7 @@ namespace QText {
             if (Directory.Exists(e.FullPath)) { //directory
                 for (int i = 0; i < this.Folders.Count; i++) {
                     var folder = this.Folders[i];
-                    if (!folder.IsRoot && string.Equals(folder.Info.FullName, e.OldFullPath, StringComparison.OrdinalIgnoreCase)) {
+                    if (!folder.IsRoot && string.Equals(folder.FullPath, e.OldFullPath, StringComparison.OrdinalIgnoreCase)) {
                         folder.Name = e.Name;
                         this.SortFolders();
                         this.OnChanged(new FileSystemEventArgs(WatcherChangeTypes.Renamed, Path.GetDirectoryName(e.FullPath), Path.GetFileName(e.FullPath)));
@@ -199,7 +239,7 @@ namespace QText {
         #endregion
 
 
-        #region New folder
+        #region New
 
         public DocumentFolder CreateFolder() {
             try {
@@ -242,6 +282,25 @@ namespace QText {
                 return folder;
             } catch (Exception ex) {
                 throw new ApplicationException(ex.Message, ex);
+            }
+        }
+
+        #endregion
+
+
+        #region Write metadata
+
+        /// <summary>
+        /// Writes ordering information.
+        /// </summary>
+        internal void WriteOrder() {
+            try {
+                var sb = new StringBuilder();
+                foreach (var file in this.Files) {
+                    sb.AppendLine(file.Folder.Name + "|" + file.Name);
+                }
+                File.WriteAllText(Path.Combine(this.RootDirectory.FullName, ".qtext"), sb.ToString());
+            } catch (IOException) {
             }
         }
 
