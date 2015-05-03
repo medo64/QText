@@ -103,25 +103,23 @@ namespace QText {
         }
 
 
-        public static TabFile Create(DocumentFolder folder, string fullFileName) {
-            foreach (var extension in QFileInfo.GetExtensions()) {
-                var altFileName = QFileInfo.GetPathWithoutExtension(fullFileName) + extension;
-                if (File.Exists(altFileName)) {
-                    throw new IOException("File already exists.");
-                }
-            }
+        public static TabFile Create(DocumentFolder folder, string title, DocumentKind kind) {
+            var newFile = folder.NewFile(title, kind);
 
-            if (QFileInfo.IsFileRich(fullFileName)) {
+            if (kind == DocumentKind.RichText) {
                 using (RichTextBox dummy = new RichTextBox()) {
                     dummy.BackColor = Settings.DisplayBackgroundColor;
                     dummy.Font = Settings.DisplayFont;
                     dummy.ForeColor = Settings.DisplayForegroundColor;
-                    dummy.SaveFile(fullFileName, RichTextBoxStreamType.RichText);
+
+                    using (var stream = new MemoryStream()) {
+                        dummy.SaveFile(stream, RichTextBoxStreamType.RichText);
+                        newFile.Write(stream);
+                    }
                 }
-            } else {
-                File.WriteAllText(fullFileName, "");
             }
-            return new TabFile(new DocumentFile(folder, new FileInfo(fullFileName).Name));
+
+            return new TabFile(newFile);
         }
 
 

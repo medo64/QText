@@ -146,7 +146,7 @@ namespace QText {
         #region File operations
 
         public void AddTab(string title, bool isRichText) {
-            var t = TabFile.Create(this.CurrentFolder, Path.Combine(this.CurrentFolder.FullPath, Helper.EncodeFileName(title) + (isRichText ? QFileInfo.Extensions.Rich : QFileInfo.Extensions.Plain)));
+            var t = TabFile.Create(this.CurrentFolder, title, isRichText ? DocumentKind.RichText : DocumentKind.PlainText);
             t.ContextMenuStrip = this.TabContextMenuStrip;
             if (this.SelectedTab != null) {
                 this.TabPages.Insert(this.TabPages.IndexOf(this.SelectedTab) + 1, t);

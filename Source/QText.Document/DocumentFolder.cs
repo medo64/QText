@@ -120,6 +120,30 @@ namespace QText {
         #endregion
 
 
+        #region New
+
+        /// <summary>
+        /// Returns if new file can be created.
+        /// Only check for matching name is done.
+        /// </summary>
+        /// <param name="title">File title.</param>
+        public bool CanNewFile(string title) {
+            return this.Document.CanNewFile(this, title);
+        }
+
+        /// <summary>
+        /// Returns newly created file.
+        /// </summary>
+        /// <param name="title">File title.</param>
+        /// <param name="kind">File kind.</param>
+        /// <returns></returns>
+        public DocumentFile NewFile(string title, DocumentKind kind) {
+            return this.Document.NewFile(this, title, kind);
+        }
+
+        #endregion
+
+
         #region Overrides
 
         public override bool Equals(object obj) {

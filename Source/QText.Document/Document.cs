@@ -24,7 +24,7 @@ namespace QText {
                     }
                 }
             }
-            this.Files.Sort(delegate (DocumentFile file1, DocumentFile file2) {
+            this.Files.Sort(delegate(DocumentFile file1, DocumentFile file2) {
                 return string.Compare(file1.Title, file2.Title, StringComparison.OrdinalIgnoreCase);
             });
 
@@ -52,7 +52,7 @@ namespace QText {
         private readonly List<DocumentFolder> Folders = new List<DocumentFolder>();
 
         internal void SortFolders() {
-            this.Folders.Sort(delegate (DocumentFolder folder1, DocumentFolder folder2) {
+            this.Folders.Sort(delegate(DocumentFolder folder1, DocumentFolder folder2) {
                 if (string.IsNullOrEmpty(folder1.Name) == string.IsNullOrEmpty(folder2.Name)) {
                     return string.Compare(folder1.Title, folder2.Title, StringComparison.OrdinalIgnoreCase);
                 } else {
@@ -283,6 +283,27 @@ namespace QText {
             } catch (Exception ex) {
                 throw new ApplicationException(ex.Message, ex);
             }
+        }
+
+
+        internal bool CanNewFile(DocumentFolder folder, string title) {
+            foreach (var file in folder.GetFiles()) {
+                if (string.Equals(file.Title, title, StringComparison.OrdinalIgnoreCase)) { return false; }
+            }
+            return true;
+        }
+
+        internal DocumentFile NewFile(DocumentFolder folder, string title, DocumentKind kind) {
+            var name = Helper.EncodeTitle(title);
+            DocumentFile newFile;
+            switch (kind) {
+                case DocumentKind.PlainText: newFile = new DocumentFile(folder, name + FileExtensions.PlainText); break;
+                case DocumentKind.RichText: newFile = new DocumentFile(folder, name + FileExtensions.RichText); break;
+                default: throw new InvalidOperationException("Unrecognized file kind.");
+            }
+            File.WriteAllText(newFile.FullPath, "");
+            this.Files.Add(newFile);
+            return newFile;
         }
 
         #endregion
