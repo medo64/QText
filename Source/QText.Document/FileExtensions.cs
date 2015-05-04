@@ -13,6 +13,16 @@ namespace QText {
             }
         }
 
+        public static string GetFromKind(DocumentKind kind) {
+            switch (kind) {
+                case DocumentKind.PlainText: return FileExtensions.PlainText;
+                case DocumentKind.RichText: return FileExtensions.RichText;
+                case DocumentKind.EncryptedPlainText: return FileExtensions.EncryptedPlainText;
+                case DocumentKind.EncryptedRichText: return FileExtensions.EncryptedRichText;
+                default: throw new InvalidOperationException("Unknown kind.");
+            }
+        }
+
         public static readonly string PlainText = ".txt";
         public static readonly string RichText = ".rtf";
         public static readonly string EncryptedPlainText = ".txt.aes256cbc";

@@ -7,7 +7,7 @@ using System.Threading;
 namespace QTextTest {
 
     [TestClass()]
-    public class DocumentFolderTests {
+    public class FolderTests {
 
         public TestContext TestContext { get; set; }
 

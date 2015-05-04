@@ -20,7 +20,9 @@ namespace QText {
             foreach (var folder in this.Folders) {
                 foreach (var extension in FileExtensions.All) {
                     foreach (var fileName in Directory.GetFiles(folder.FullPath, "*" + extension, SearchOption.TopDirectoryOnly)) {
-                        this.Files.Add(new DocumentFile(folder, Path.GetFileName(fileName)));
+                        if (fileName.EndsWith(extension, StringComparison.OrdinalIgnoreCase)) { //need this check because *.txt matches A.txt2 too.
+                            this.Files.Add(new DocumentFile(folder, Path.GetFileName(fileName)));
+                        }
                     }
                 }
             }
@@ -99,50 +101,67 @@ namespace QText {
         }
 
 
-        public event EventHandler<FileSystemEventArgs> Changed;
-
-        /// <summary>
-        /// Raises Changed event.
-        /// </summary>
-        /// <param name="e">Event arguments.</param>
-        private void OnChanged(FileSystemEventArgs e) {
-            var eh = this.Changed;
-            if (eh != null) { eh.Invoke(this, e); }
-        }
-
-
         void Watcher_Changed(object sender, FileSystemEventArgs e) {
             Debug.WriteLine("FileSystemWatcher.Changed: " + e.FullPath);
             if (File.Exists(e.FullPath)) { //file - ignore directory changes
                 this.OnChanged(e);
             }
+            this.OnDocumentChanged(new EventArgs());
         }
 
         void Watcher_Created(object sender, FileSystemEventArgs e) {
             Debug.WriteLine("FileSystemWatcher.Created: " + e.FullPath);
             if (Directory.Exists(e.FullPath)) { //directory
+
                 var folder = new DocumentFolder(this, e.Name);
                 this.Folders.Add(folder);
                 this.SortFolders();
                 this.OnFolderChanged(new DocumentFolderEventArgs(folder));
-                this.OnChanged(e);
+
             } else if (File.Exists(e.FullPath)) { //file
-                this.OnChanged(e);
+
+                var directoryPath = Path.GetDirectoryName(e.FullPath);
+                foreach (var folder in this.Folders) {
+                    if (folder.FullPath.Equals(directoryPath, StringComparison.OrdinalIgnoreCase)) {
+                        var newExtension = Path.GetExtension(e.Name);
+                        var newName = Path.GetFileNameWithoutExtension(e.Name);
+
+                        DocumentFile newFile;
+                        if (newExtension.Equals(FileExtensions.PlainText, StringComparison.OrdinalIgnoreCase)) {
+                            newFile = new DocumentFile(folder, newName + newExtension);
+                        } else if (newExtension.Equals(FileExtensions.RichText, StringComparison.OrdinalIgnoreCase)) {
+                            newFile = new DocumentFile(folder, newName + newExtension);
+                        } else if (newExtension.Equals(FileExtensions.EncryptedPlainText, StringComparison.OrdinalIgnoreCase)) {
+                            newFile = new DocumentFile(folder, newName + newExtension);
+                        } else if (newExtension.Equals(FileExtensions.EncryptedRichText, StringComparison.OrdinalIgnoreCase)) {
+                            newFile = new DocumentFile(folder, newName + newExtension);
+                        } else {
+                            break; //ignore because it has unsupported extension
+                        }
+
+                        this.Files.Add(newFile);
+
+                        break;
+                    }
+                }
+
             }
+
+            this.OnChanged(e);
+            this.OnDocumentChanged(new EventArgs());
         }
 
         void Watcher_Deleted(object sender, FileSystemEventArgs e) {
             Debug.WriteLine("FileSystemWatcher.Deleted: " + e.FullPath);
-            ProcessFolderDelete(e.FullPath);
+            ProcessDelete(e.FullPath);
             this.OnChanged(e);
         }
 
-        internal void ProcessFolderDelete(string fullPath) {
-            for (int i = 0; i < this.Files.Count; i++) {
+        internal void ProcessDelete(string fullPath) {
+            for (int i = this.Files.Count - 1; i >= 0; i--) {
                 var file = this.Files[i];
-                if (string.Equals(file.Folder.FullPath, fullPath, StringComparison.OrdinalIgnoreCase)) {
+                if (string.Equals(file.FullPath, fullPath, StringComparison.OrdinalIgnoreCase) || string.Equals(file.Folder.FullPath, fullPath, StringComparison.OrdinalIgnoreCase)) {
                     this.Files.RemoveAt(i);
-                    break;
                 }
             }
             for (int i = 0; i < this.Folders.Count; i++) {
@@ -158,21 +177,81 @@ namespace QText {
         void Watcher_Renamed(object sender, RenamedEventArgs e) {
             Debug.WriteLine("FileSystemWatcher.Renamed: " + e.OldFullPath + " -> " + e.FullPath);
             if (Directory.Exists(e.FullPath)) { //directory
+
                 for (int i = 0; i < this.Folders.Count; i++) {
                     var folder = this.Folders[i];
                     if (!folder.IsRoot && string.Equals(folder.FullPath, e.OldFullPath, StringComparison.OrdinalIgnoreCase)) {
                         folder.Name = e.Name;
                         this.SortFolders();
-                        this.OnChanged(new FileSystemEventArgs(WatcherChangeTypes.Renamed, Path.GetDirectoryName(e.FullPath), Path.GetFileName(e.FullPath)));
+                        this.OnChanged(new FileSystemEventArgs(WatcherChangeTypes.Renamed, Path.GetDirectoryName(e.FullPath), null));
                         this.OnFolderChanged(new DocumentFolderEventArgs(folder));
                         break;
                     }
                 }
+
             } else if (File.Exists(e.FullPath)) { //file
-                this.OnChanged(new FileSystemEventArgs(WatcherChangeTypes.Renamed, Path.GetDirectoryName(e.FullPath), Path.GetFileName(e.FullPath)));
+
+                for (int i = 0; i < this.Files.Count; i++) {
+                    var file = this.Files[i];
+                    var oldName = file.Name;
+                    var oldKind = file.Style;
+                    var oldFolder = file.Folder;
+
+                    if (string.Equals(file.FullPath, e.OldFullPath, StringComparison.OrdinalIgnoreCase)) {
+                        var newExtension = Path.GetExtension(e.Name);
+                        var newName = Path.GetFileNameWithoutExtension(e.Name);
+
+                        if (!newExtension.Equals(file.Extension, StringComparison.OrdinalIgnoreCase)) { //extension has changed
+                            if (newExtension.Equals(FileExtensions.PlainText, StringComparison.OrdinalIgnoreCase)) {
+                                file.Kind = DocumentKind.PlainText;
+                            } else if (newExtension.Equals(FileExtensions.RichText, StringComparison.OrdinalIgnoreCase)) {
+                                file.Kind = DocumentKind.RichText;
+                            } else if (newExtension.Equals(FileExtensions.EncryptedPlainText, StringComparison.OrdinalIgnoreCase)) {
+                                file.Kind = DocumentKind.EncryptedPlainText;
+                            } else if (newExtension.Equals(FileExtensions.EncryptedRichText, StringComparison.OrdinalIgnoreCase)) {
+                                file.Kind = DocumentKind.EncryptedRichText;
+                            } else {
+                                this.Files.RemoveAt(i); //remove because it has unsupported extension
+                                break;
+                            }
+                        }
+
+                        if (!newName.Equals(file.Name, StringComparison.OrdinalIgnoreCase)) {
+                            file.Name = newName;
+                        }
+
+                        this.OnChanged(new FileSystemEventArgs(WatcherChangeTypes.Renamed, Path.GetDirectoryName(e.FullPath), Path.GetFileName(e.FullPath)));
+                        this.OnFolderChanged(new DocumentFolderEventArgs(file.Folder));
+
+                        return;
+                    }
+                }
+
+                var directoryPath = Path.GetDirectoryName(e.FullPath);
+                foreach (var folder in this.Folders) {
+                    if (string.Equals(folder.FullPath, directoryPath, StringComparison.OrdinalIgnoreCase)) {
+                        Watcher_Created(null, e);
+                        break;
+                    }
+                }
             }
         }
 
+
+
+        /// <summary>
+        /// External change has occurred.
+        /// </summary>
+        public event EventHandler<FileSystemEventArgs> Changed;
+
+        /// <summary>
+        /// Raises Changed event.
+        /// </summary>
+        /// <param name="e">Event arguments.</param>
+        private void OnChanged(FileSystemEventArgs e) {
+            var eh = this.Changed;
+            if (eh != null) { eh.Invoke(this, e); }
+        }
 
         /// <summary>
         /// Change affecting all entries has occurred, e.g. folder deletion.
@@ -180,7 +259,7 @@ namespace QText {
         public event EventHandler<EventArgs> DocumentChanged;
 
         /// <summary>
-        /// Raises FolderChanged event.
+        /// Raises DocumentChanged event.
         /// </summary>
         /// <param name="e">Event arguments.</param>
         private void OnDocumentChanged(EventArgs e) {
@@ -295,15 +374,31 @@ namespace QText {
 
         internal DocumentFile NewFile(DocumentFolder folder, string title, DocumentKind kind) {
             var name = Helper.EncodeTitle(title);
+
             DocumentFile newFile;
             switch (kind) {
                 case DocumentKind.PlainText: newFile = new DocumentFile(folder, name + FileExtensions.PlainText); break;
                 case DocumentKind.RichText: newFile = new DocumentFile(folder, name + FileExtensions.RichText); break;
                 default: throw new InvalidOperationException("Unrecognized file kind.");
             }
+
+            Debug.WriteLine("File.New: " + name);
             File.WriteAllText(newFile.FullPath, "");
             this.Files.Add(newFile);
+
             return newFile;
+        }
+
+        #endregion
+
+
+        #region Move
+
+        internal void MoveBefore(DocumentFile file, DocumentFile filePivot) {
+            var index = this.Files.IndexOf(file);
+            var indexPivot = (filePivot == null) ? this.Files.Count : this.Files.IndexOf(filePivot);
+            this.Files.RemoveAt(index);
+            this.Files.Insert((index < indexPivot) ? indexPivot - 1 : indexPivot, file);
         }
 
         #endregion

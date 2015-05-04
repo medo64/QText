@@ -46,15 +46,13 @@ namespace QText {
 
         public void Rename(string newTitle) {
             if (this.IsRoot) { throw new IOException("Cannot rename root folder."); }
-            if (string.IsNullOrEmpty(newTitle)) { throw new IOException("Folder name cannot be empty."); }
             newTitle = newTitle.Trim();
+            if (string.IsNullOrEmpty(newTitle)) { throw new IOException("Folder name cannot be empty."); }
+            var newName = Helper.EncodeTitle(newTitle);
 
-            Debug.WriteLine("Rename: " + this.Name + " -> " + newTitle);
-
+            Debug.WriteLine("Folder.Rename: " + this.Name + " -> " + newName);
             try {
                 using (var watcher = new Helper.FileSystemToggler(this.Document.Watcher)) {
-                    var newName = Helper.EncodeTitle(newTitle);
-
                     var oldPath = this.FullPath;
                     var newPath = Path.Combine(Directory.GetParent(this.FullPath).FullName, newName);
 
@@ -68,14 +66,17 @@ namespace QText {
             }
         }
 
-        public bool IsEmpty { //TODO
+        public bool IsEmpty {
             get {
-                return (Directory.GetFiles(this.FullPath, "*.txt").Length == 0) && (Directory.GetFiles(this.FullPath, "*.rtf").Length == 0);
+                foreach (var file in this.GetFiles()) {
+                    return false;
+                }
+                return true;
             }
         }
 
         public void Delete() {
-            Debug.WriteLine("Delete: " + this.Name);
+            Debug.WriteLine("Folder.Delete: " + this.Name);
             try {
                 using (var watcher = new Helper.FileSystemToggler(this.Document.Watcher)) {
                     if (this.Document.DeleteToRecycleBin) {
@@ -83,7 +84,7 @@ namespace QText {
                     } else {
                         Directory.Delete(this.FullPath, true);
                     }
-                    this.Document.ProcessFolderDelete(this.FullPath);
+                    this.Document.ProcessDelete(this.FullPath);
                 }
             } catch (Exception ex) {
                 throw new ApplicationException(ex.Message, ex);

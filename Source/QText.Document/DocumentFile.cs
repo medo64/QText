@@ -1,5 +1,6 @@
 using Medo.Security.Cryptography;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -12,18 +13,14 @@ namespace QText {
 
             if (fileName.EndsWith(FileExtensions.PlainText, StringComparison.OrdinalIgnoreCase)) {
                 this.Kind = DocumentKind.PlainText;
-                this.IsEncrypted = false;
             } else if (fileName.EndsWith(FileExtensions.RichText, StringComparison.OrdinalIgnoreCase)) {
                 this.Kind = DocumentKind.RichText;
-                this.IsEncrypted = false;
             } else if (fileName.EndsWith(FileExtensions.EncryptedPlainText, StringComparison.OrdinalIgnoreCase)) {
-                this.Kind = DocumentKind.PlainText;
-                this.IsEncrypted = true;
+                this.Kind = DocumentKind.EncryptedPlainText;
             } else if (fileName.EndsWith(FileExtensions.EncryptedRichText, StringComparison.OrdinalIgnoreCase)) {
-                this.Kind = DocumentKind.RichText;
-                this.IsEncrypted = true;
+                this.Kind = DocumentKind.EncryptedRichText;
             } else {
-                throw new ApplicationException("Cannot recognize file type.");
+                throw new ApplicationException("Cannot recognize file extension.");
             }
             this.Name = fileName.Substring(0, fileName.Length - this.Extension.Length);
         }
@@ -32,17 +29,36 @@ namespace QText {
         /// <summary>
         /// Gets folder containing this file.
         /// </summary>
-        public DocumentFolder Folder { get; private set; }
+        public DocumentFolder Folder { get; internal set; }
 
         /// <summary>
         /// Gets name of file - for internal use.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; internal set; }
 
         /// <summary>
-        /// Gets kind of a document.
+        /// Gets file's kind.
         /// </summary>
-        public DocumentKind Kind { get; private set; }
+        public DocumentKind Kind { get; internal set; }
+
+
+        /// <summary>
+        /// Gets kind of a document without special handling for encryption.
+        /// </summary>
+        public DocumentStyle Style {
+            get {
+                switch (this.Kind) {
+                    case DocumentKind.RichText:
+                    case DocumentKind.EncryptedRichText: return DocumentStyle.RichText;
+                    default: return DocumentStyle.PlainText;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets if document is encrypted
+        /// </summary>
+        public bool IsEncrypted { get { return (this.Kind == DocumentKind.EncryptedPlainText) || (this.Kind == DocumentKind.EncryptedRichText); } }
 
 
         /// <summary>
@@ -58,9 +74,11 @@ namespace QText {
         public string Extension {
             get {
                 switch (this.Kind) {
-                    case DocumentKind.PlainText: return this.IsEncrypted ? FileExtensions.EncryptedPlainText : FileExtensions.PlainText;
-                    case DocumentKind.RichText: return this.IsEncrypted ? FileExtensions.EncryptedRichText : FileExtensions.RichText;
-                    default: throw new InvalidOperationException("Cannot determine extension.");
+                    case DocumentKind.PlainText: return FileExtensions.PlainText;
+                    case DocumentKind.RichText: return FileExtensions.RichText;
+                    case DocumentKind.EncryptedPlainText: return FileExtensions.EncryptedPlainText;
+                    case DocumentKind.EncryptedRichText: return FileExtensions.EncryptedRichText;
+                    default: throw new InvalidOperationException("Cannot determine kind.");
                 }
             }
         }
@@ -73,12 +91,10 @@ namespace QText {
         }
 
 
-        public bool IsPlainText { get { return this.Kind == DocumentKind.PlainText; } }
-        public bool IsRichText { get { return this.Kind == DocumentKind.RichText; } }
+        public bool IsPlainText { get { return this.Style == DocumentStyle.PlainText; } }
+        public bool IsRichText { get { return this.Style == DocumentStyle.RichText; } }
 
         #region Encryption
-
-        public bool IsEncrypted { get; private set; }
 
         private byte[] PasswordBytes;
 
@@ -122,8 +138,10 @@ namespace QText {
             newName = Helper.EncodeTitle(newTitle);
             newPath = Path.Combine(this.Folder.FullPath, newName);
             switch (this.Kind) {
-                case DocumentKind.PlainText: newPath += this.IsEncrypted ? FileExtensions.EncryptedPlainText : FileExtensions.PlainText; break;
-                case DocumentKind.RichText: newPath += this.IsEncrypted ? FileExtensions.EncryptedRichText : FileExtensions.RichText; break;
+                case DocumentKind.PlainText: newPath += FileExtensions.PlainText; break;
+                case DocumentKind.RichText: newPath += FileExtensions.RichText; break;
+                case DocumentKind.EncryptedPlainText: newPath += FileExtensions.EncryptedPlainText; break;
+                case DocumentKind.EncryptedRichText: newPath += FileExtensions.EncryptedRichText; break;
                 default: throw new ApplicationException("Unknown file kind.");
             }
         }
@@ -138,8 +156,11 @@ namespace QText {
             string newName, newPath;
             GatherRenameData(ref newTitle, out newName, out newPath);
 
+            Debug.WriteLine("File.Rename: " + this.Name + " -> " + newName);
             try {
-                Helper.MovePath(this.FullPath, newPath);
+                using (var watcher = new Helper.FileSystemToggler(this.Folder.Document.Watcher)) {
+                    Helper.MovePath(this.FullPath, newPath);
+                }
             } catch (Exception ex) {
                 throw new ApplicationException(ex.Message, ex);
             }
@@ -158,8 +179,13 @@ namespace QText {
             try {
                 var oldPath = this.FullPath;
                 var newPath = Path.Combine(newFolder.FullPath, this.Name + this.Extension);
-                Helper.MovePath(oldPath, newPath);
-                this.Folder = newFolder;
+
+                Debug.WriteLine("File.Move: " + this.Folder.Name + " -> " + newFolder.Name);
+                using (var watcher = new Helper.FileSystemToggler(this.Folder.Document.Watcher)) {
+                    Helper.MovePath(oldPath, newPath);
+                    this.Folder = newFolder;
+                }
+                this.MoveBefore(null);
             } catch (Exception ex) {
                 throw new ApplicationException(ex.Message, ex);
             }
@@ -167,12 +193,16 @@ namespace QText {
 
 
         public void Delete() {
+            Debug.WriteLine("File.Delete: " + this.Name);
             try {
-                if (this.Folder.Document.DeleteToRecycleBin) {
-                    SHFile.Delete(this.FullPath);
-                } else {
-                    File.Delete(this.FullPath);
+                using (var watcher = new Helper.FileSystemToggler(this.Folder.Document.Watcher)) {
+                    if (this.Folder.Document.DeleteToRecycleBin) {
+                        SHFile.Delete(this.FullPath);
+                    } else {
+                        File.Delete(this.FullPath);
+                    }
                 }
+                this.Folder.Document.ProcessDelete(this.FullPath);
             } catch (Exception ex) {
                 throw new ApplicationException(ex.Message, ex);
             }
@@ -183,17 +213,20 @@ namespace QText {
 
         #region Kind
 
-        public void ChangeKind(DocumentKind newKind) {
-            if (newKind == this.Kind) { return; }
+        public void ChangeStyle(DocumentStyle newStyle) {
+            if (newStyle == this.Style) { return; }
 
-            string newExtension;
-            switch (newKind) {
-                case DocumentKind.PlainText: newExtension = this.IsEncrypted ? FileExtensions.EncryptedPlainText : FileExtensions.PlainText; break;
-                case DocumentKind.RichText: newExtension = this.IsEncrypted ? FileExtensions.EncryptedRichText : FileExtensions.RichText; break;
-                default: throw new ApplicationException("Unknown file kind.");
+            DocumentKind newKind;
+            switch (newStyle) {
+                case DocumentStyle.PlainText: newKind = this.IsEncrypted ? DocumentKind.EncryptedPlainText : DocumentKind.PlainText; break;
+                case DocumentStyle.RichText: newKind = this.IsEncrypted ? DocumentKind.EncryptedRichText : DocumentKind.RichText; break;
+                default: throw new ApplicationException("Unknown file style.");
             }
 
-            Helper.MovePath(this.FullPath, Path.Combine(this.Folder.FullPath, this.Name + newExtension));
+            Debug.WriteLine("File.ChangeStyle: " + this.Name + " (" + this.Style.ToString() + " -> " + newStyle.ToString() + ")");
+            using (var watcher = new Helper.FileSystemToggler(this.Folder.Document.Watcher)) {
+                Helper.MovePath(this.FullPath, Path.Combine(this.Folder.FullPath, this.Name + FileExtensions.GetFromKind(newKind)));
+            }
             this.Kind = newKind;
         }
 
@@ -201,27 +234,42 @@ namespace QText {
         public void Encrypt(string password) {
             if (this.IsEncrypted) { return; }
 
+            Debug.WriteLine("File.Encrypt: " + this.Name);
             var oldPath = this.FullPath;
             using (var stream = new MemoryStream()) {
                 this.Read(stream);
-                this.IsEncrypted = true;
+                this.Kind = (this.Style == DocumentStyle.RichText) ? DocumentKind.EncryptedRichText : DocumentKind.EncryptedPlainText;
                 this.Password = password;
-                this.Write(stream);
-                File.Delete(oldPath);
+                using (var watcher = new Helper.FileSystemToggler(this.Folder.Document.Watcher)) {
+                    this.Write(stream);
+                    File.Delete(oldPath);
+                }
             }
         }
 
         public void Decrypt() {
             if (!this.IsEncrypted) { return; }
 
+            Debug.WriteLine("File.Decrypt: " + this.Name);
             var oldPath = this.FullPath;
             using (var stream = new MemoryStream()) {
                 this.Read(stream);
-                this.IsEncrypted = false;
+                this.Kind = (this.Style == DocumentStyle.RichText) ? DocumentKind.RichText : DocumentKind.PlainText;
                 this.Password = null;
-                this.Write(stream);
-                File.Delete(oldPath);
+                using (var watcher = new Helper.FileSystemToggler(this.Folder.Document.Watcher)) {
+                    this.Write(stream);
+                    File.Delete(oldPath);
+                }
             }
+        }
+
+        #endregion
+
+
+        #region Move
+
+        public void MoveBefore(DocumentFile file) {
+            this.Folder.Document.MoveBefore(this, file);
         }
 
         #endregion

@@ -144,7 +144,7 @@ namespace QText {
             if (this.BaseFile.IsPlainText) { throw new InvalidOperationException("File is already in plain text format."); }
 
             SaveAsPlain();
-            this.BaseFile.ChangeKind(DocumentKind.PlainText);
+            this.BaseFile.ChangeStyle(DocumentStyle.PlainText);
             this.Reopen();
         }
 
@@ -154,7 +154,7 @@ namespace QText {
 
             string text = this.TextBox.Text;
 
-            this.BaseFile.ChangeKind(DocumentKind.RichText);
+            this.BaseFile.ChangeStyle(DocumentStyle.RichText);
             this.SaveAsRich();
             this.Reopen();
         }
