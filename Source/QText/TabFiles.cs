@@ -54,6 +54,12 @@ namespace QText {
             if (this.SelectedTab != null) { this.SelectedTab.Select(); }
         }
 
+        protected override void OnSelected(TabControlEventArgs e) {
+            var tabFile = e.TabPage as TabFile;
+            if (tabFile != null) { tabFile.BaseFile.Selected = true; }
+        }
+
+
         public DocumentFolder CurrentFolder { get; private set; }
 
         public ContextMenuStrip TabContextMenuStrip { get; set; }
@@ -73,17 +79,14 @@ namespace QText {
                 this.TabPages.Add(tab);
             }
 
-            //TODO
-            //string selectedTitle;
-            //Document.ReadOrderedTitles(this.CurrentFolder, out selectedTitle);
-            //TabFile selectedTab = (this.TabCount > 0) ? (TabFile)this.TabPages[0] : null;
-            //foreach (TabFile tab in this.TabPages) {
-            //    if (tab.Title.Equals(selectedTitle, StringComparison.OrdinalIgnoreCase)) {
-            //        selectedTab = tab;
-            //    }
-            //}
+            TabFile selectedTab = (this.TabCount > 0) ? (TabFile)this.TabPages[0] : null;
+            foreach (TabFile tab in this.TabPages) {
+                if (tab.BaseFile.Equals(App.Document.SelectedFile)) {
+                    selectedTab = tab;
+                }
+            }
 
-            //SelectNextTab(selectedTab);
+            SelectNextTab(selectedTab);
             if (this.SelectedTab != null) {
                 this.SelectedTab.Select();
                 this.OnSelectedIndexChanged(new EventArgs());
@@ -138,6 +141,7 @@ namespace QText {
                 }
             }
             set {
+                if (value != null) { value.BaseFile.Selected = true; }
                 base.SelectedTab = value;
             }
         }
@@ -230,10 +234,16 @@ namespace QText {
                         base.TabPages.Remove(this._dragTabPage);
                         base.TabPages.Insert(base.TabPages.IndexOf(currTabPage), this._dragTabPage);
                         base.SelectedTab = this._dragTabPage;
+                        var pivotTab = currTabPage as TabFile;
+                        var movedTab = this._dragTabPage as TabFile;
+                        movedTab.BaseFile.OrderBefore(pivotTab.BaseFile);
                     } else if ((base.TabPages.IndexOf(currTabPage) > base.TabPages.IndexOf(this._dragTabPage))) {
                         base.TabPages.Remove(this._dragTabPage);
                         base.TabPages.Insert(base.TabPages.IndexOf(currTabPage) + 1, this._dragTabPage);
                         base.SelectedTab = this._dragTabPage;
+                        var pivotTab = currTabPage as TabFile;
+                        var movedTab = this._dragTabPage as TabFile;
+                        movedTab.BaseFile.OrderAfter(pivotTab.BaseFile);
                     }
                     base.Enabled = true;
                 }

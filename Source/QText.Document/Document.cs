@@ -26,9 +26,41 @@ namespace QText {
                     }
                 }
             }
-            this.Files.Sort(delegate(DocumentFile file1, DocumentFile file2) {
-                return string.Compare(file1.Title, file2.Title, StringComparison.OrdinalIgnoreCase);
+
+            var orderFile = new FileInfo(Path.Combine(this.RootDirectory.FullName, ".qtext"));
+            string[] lines = new string[] { };
+            try {
+                if (orderFile.Exists) {
+                    lines = File.ReadAllLines(orderFile.FullName, Document.Encoding);
+                }
+            } catch (IOException) {
+            } catch (UnauthorizedAccessException) { }
+
+            DocumentFile selectedFile = null;
+            this.Files.Sort(delegate (DocumentFile file1, DocumentFile file2) {
+                var index1 = Array.IndexOf(lines, file1.Folder.Name + "|" + file1.Name + "|");
+                if (index1 < 0) {
+                    index1 = Array.IndexOf(lines, file1.Folder.Name + "|" + file1.Name + "|*");
+                    if (index1 >= 0) { selectedFile = file1; }
+                }
+
+                var index2 = Array.IndexOf(lines, file2.Folder.Name + "|" + file2.Name + "|");
+                if (index2 < 0) {
+                    index2 = Array.IndexOf(lines, file2.Folder.Name + "|" + file2.Name + "|*");
+                    if (index2 >= 0) { selectedFile = file2; }
+                }
+
+                if ((index1 < 0) && (index2 < 0)) {
+                    return string.Compare(file1.Title, file2.Title, StringComparison.OrdinalIgnoreCase);
+                } else if (index1 < 0) {
+                    return -1;
+                } else if (index2 < 0) {
+                    return +1;
+                } else {
+                    return (index1 < index2) ? -1 : +1;
+                }
             });
+            if (selectedFile != null) { selectedFile.Selected = true; }
 
             this.Watcher = new FileSystemWatcher(this.RootDirectory.FullName) { IncludeSubdirectories = true, InternalBufferSize = 32768 };
             this.Watcher.Changed += Watcher_Changed;
@@ -54,7 +86,7 @@ namespace QText {
         private readonly List<DocumentFolder> Folders = new List<DocumentFolder>();
 
         internal void SortFolders() {
-            this.Folders.Sort(delegate(DocumentFolder folder1, DocumentFolder folder2) {
+            this.Folders.Sort(delegate (DocumentFolder folder1, DocumentFolder folder2) {
                 if (string.IsNullOrEmpty(folder1.Name) == string.IsNullOrEmpty(folder2.Name)) {
                     return string.Compare(folder1.Title, folder2.Title, StringComparison.OrdinalIgnoreCase);
                 } else {
@@ -394,11 +426,24 @@ namespace QText {
 
         #region Move
 
-        internal void MoveBefore(DocumentFile file, DocumentFile filePivot) {
+        internal void OrderBefore(DocumentFile file, DocumentFile pivotFile) {
             var index = this.Files.IndexOf(file);
-            var indexPivot = (filePivot == null) ? this.Files.Count : this.Files.IndexOf(filePivot);
-            this.Files.RemoveAt(index);
-            this.Files.Insert((index < indexPivot) ? indexPivot - 1 : indexPivot, file);
+            var indexPivot = (pivotFile == null) ? this.Files.Count : this.Files.IndexOf(pivotFile);
+            if (index != indexPivot) {
+                this.Files.RemoveAt(index);
+                this.Files.Insert((index < indexPivot) ? indexPivot - 1 : indexPivot, file);
+                this.WriteOrder();
+            }
+        }
+
+        internal void OrderAfter(DocumentFile file, DocumentFile pivotFile) {
+            var index = this.Files.IndexOf(file);
+            var indexPivot = (pivotFile == null) ? -1 : this.Files.IndexOf(pivotFile);
+            if (index != indexPivot) {
+                this.Files.RemoveAt(index);
+                this.Files.Insert((index > indexPivot) ? indexPivot + 1 : indexPivot, file);
+                this.WriteOrder();
+            }
         }
 
         #endregion
@@ -406,17 +451,40 @@ namespace QText {
 
         #region Write metadata
 
+        private static readonly UTF8Encoding Encoding = new UTF8Encoding(false);
+        private string LastOrderText = null;
+
         /// <summary>
         /// Writes ordering information.
         /// </summary>
         internal void WriteOrder() {
-            try {
-                var sb = new StringBuilder();
+            var sb = new StringBuilder(65536);
+            foreach (var file in this.Files) {
+                sb.AppendLine(file.Folder.Name + "|" + file.Name + "|" + (file.Selected ? "*" : ""));
+            }
+            var orderText = sb.ToString();
+
+            if (this.LastOrderText != orderText) {
+                this.LastOrderText = orderText;
+                try {
+                    var orderFile = new FileInfo(Path.Combine(this.RootDirectory.FullName, ".qtext"));
+                    if (orderFile.Exists) { orderFile.Attributes = (FileAttributes)(orderFile.Attributes & (~FileAttributes.Hidden)); }
+                    File.WriteAllText(orderFile.FullName, orderText, Document.Encoding);
+                    if (orderFile.Exists) { orderFile.Attributes = (FileAttributes)(orderFile.Attributes | FileAttributes.Hidden); }
+                } catch (IOException) {
+                } catch (UnauthorizedAccessException) { }
+            }
+        }
+
+        /// <summary>
+        /// Gets last selected file.
+        /// </summary>
+        public DocumentFile SelectedFile {
+            get {
                 foreach (var file in this.Files) {
-                    sb.AppendLine(file.Folder.Name + "|" + file.Name);
+                    if (file.Selected) { return file; }
                 }
-                File.WriteAllText(Path.Combine(this.RootDirectory.FullName, ".qtext"), sb.ToString());
-            } catch (IOException) {
+                return (this.Files.Count > 0) ? this.Files[0] : null;
             }
         }
 

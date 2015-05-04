@@ -410,6 +410,7 @@ namespace QTextTest {
             }
         }
 
+
         [TestMethod()]
         public void DocumentFile_ExternalDelete() {
             using (var test = new TestDirectory()) {
@@ -442,6 +443,247 @@ namespace QTextTest {
                     Assert.AreEqual(1, files.Count);
                     Assert.AreEqual("B", files[0].Name);
                     Assert.AreEqual("B", files[0].Title);
+                }
+
+                doc.DisableWatcher();
+            }
+        }
+
+
+        [TestMethod()]
+        public void DocumentFile_OrderBefore_1() {
+            using (var test = new TestDirectory()) {
+                test.CreateRawFile("A.txt");
+                test.CreateRawFile("B.txt");
+                test.CreateRawFile("C.txt");
+
+                var doc = new Document(test.Directory.FullName);
+                doc.EnableWatcher();
+
+                doc.RootFolder.GetFileByTitle("A").OrderBefore(doc.RootFolder.GetFileByTitle("A"));
+
+                {
+                    var files = new List<DocumentFile>(doc.RootFolder.GetFiles());
+                    Assert.AreEqual(3, files.Count);
+                    Assert.AreEqual("A", files[0].Name);
+                    Assert.AreEqual("B", files[1].Name);
+                    Assert.AreEqual("C", files[2].Name);
+                }
+
+                doc.DisableWatcher();
+            }
+        }
+
+        [TestMethod()]
+        public void DocumentFile_OrderBefore_2() {
+            using (var test = new TestDirectory()) {
+                test.CreateRawFile("A.txt");
+                test.CreateRawFile("B.txt");
+                test.CreateRawFile("C.txt");
+
+                var doc = new Document(test.Directory.FullName);
+                doc.EnableWatcher();
+
+                doc.RootFolder.GetFileByTitle("A").OrderBefore(doc.RootFolder.GetFileByTitle("C"));
+
+                {
+                    var files = new List<DocumentFile>(doc.RootFolder.GetFiles());
+                    Assert.AreEqual(3, files.Count);
+                    Assert.AreEqual("B", files[0].Name);
+                    Assert.AreEqual("A", files[1].Name);
+                    Assert.AreEqual("C", files[2].Name);
+                }
+
+                doc.DisableWatcher();
+            }
+        }
+
+        [TestMethod()]
+        public void DocumentFile_OrderBefore_3() {
+            using (var test = new TestDirectory()) {
+                test.CreateRawFile("A.txt");
+                test.CreateRawFile("B.txt");
+                test.CreateRawFile("C.txt");
+
+                var doc = new Document(test.Directory.FullName);
+                doc.EnableWatcher();
+
+                doc.RootFolder.GetFileByTitle("A").OrderBefore(null);
+
+                {
+                    var files = new List<DocumentFile>(doc.RootFolder.GetFiles());
+                    Assert.AreEqual(3, files.Count);
+                    Assert.AreEqual("B", files[0].Name);
+                    Assert.AreEqual("C", files[1].Name);
+                    Assert.AreEqual("A", files[2].Name);
+                }
+
+                doc.DisableWatcher();
+            }
+        }
+
+        [TestMethod()]
+        public void DocumentFile_OrderBefore_4() {
+            using (var test = new TestDirectory()) {
+                test.CreateRawFile("A.txt");
+                test.CreateRawFile("B.txt");
+                test.CreateRawFile("C.txt");
+
+                var doc = new Document(test.Directory.FullName);
+                doc.EnableWatcher();
+
+                doc.RootFolder.GetFileByTitle("C").OrderBefore(doc.RootFolder.GetFileByTitle("A"));
+
+                {
+                    var files = new List<DocumentFile>(doc.RootFolder.GetFiles());
+                    Assert.AreEqual(3, files.Count);
+                    Assert.AreEqual("C", files[0].Name);
+                    Assert.AreEqual("A", files[1].Name);
+                    Assert.AreEqual("B", files[2].Name);
+                }
+
+                doc.DisableWatcher();
+            }
+        }
+
+        [TestMethod()]
+        public void DocumentFile_OrderBefore_5() {
+            using (var test = new TestDirectory()) {
+                test.CreateRawFile("A.txt");
+                test.CreateRawFile("B.txt");
+                test.CreateRawFile("C.txt");
+
+                var doc = new Document(test.Directory.FullName);
+                doc.EnableWatcher();
+
+                doc.RootFolder.GetFileByTitle("C").OrderBefore(doc.RootFolder.GetFileByTitle("B"));
+
+                {
+                    var files = new List<DocumentFile>(doc.RootFolder.GetFiles());
+                    Assert.AreEqual(3, files.Count);
+                    Assert.AreEqual("A", files[0].Name);
+                    Assert.AreEqual("C", files[1].Name);
+                    Assert.AreEqual("B", files[2].Name);
+                }
+
+                doc.DisableWatcher();
+            }
+        }
+
+        [TestMethod()]
+        public void DocumentFile_OrderAfter_1() {
+            using (var test = new TestDirectory()) {
+                test.CreateRawFile("A.txt");
+                test.CreateRawFile("B.txt");
+                test.CreateRawFile("C.txt");
+
+                var doc = new Document(test.Directory.FullName);
+                doc.EnableWatcher();
+
+                doc.RootFolder.GetFileByTitle("B").OrderAfter(doc.RootFolder.GetFileByTitle("B"));
+
+                {
+                    var files = new List<DocumentFile>(doc.RootFolder.GetFiles());
+                    Assert.AreEqual(3, files.Count);
+                    Assert.AreEqual("A", files[0].Name);
+                    Assert.AreEqual("B", files[1].Name);
+                    Assert.AreEqual("C", files[2].Name);
+                }
+
+                doc.DisableWatcher();
+            }
+        }
+
+        [TestMethod()]
+        public void DocumentFile_OrderAfter_2() {
+            using (var test = new TestDirectory()) {
+                test.CreateRawFile("A.txt");
+                test.CreateRawFile("B.txt");
+                test.CreateRawFile("C.txt");
+
+                var doc = new Document(test.Directory.FullName);
+                doc.EnableWatcher();
+
+                doc.RootFolder.GetFileByTitle("A").OrderAfter(doc.RootFolder.GetFileByTitle("C"));
+
+                {
+                    var files = new List<DocumentFile>(doc.RootFolder.GetFiles());
+                    Assert.AreEqual(3, files.Count);
+                    Assert.AreEqual("B", files[0].Name);
+                    Assert.AreEqual("C", files[1].Name);
+                    Assert.AreEqual("A", files[2].Name);
+                }
+
+                doc.DisableWatcher();
+            }
+        }
+
+        [TestMethod()]
+        public void DocumentFile_OrderAfter_3() {
+            using (var test = new TestDirectory()) {
+                test.CreateRawFile("A.txt");
+                test.CreateRawFile("B.txt");
+                test.CreateRawFile("C.txt");
+
+                var doc = new Document(test.Directory.FullName);
+                doc.EnableWatcher();
+
+                doc.RootFolder.GetFileByTitle("B").OrderAfter(null);
+
+                {
+                    var files = new List<DocumentFile>(doc.RootFolder.GetFiles());
+                    Assert.AreEqual(3, files.Count);
+                    Assert.AreEqual("B", files[0].Name);
+                    Assert.AreEqual("A", files[1].Name);
+                    Assert.AreEqual("C", files[2].Name);
+                }
+
+                doc.DisableWatcher();
+            }
+        }
+
+        [TestMethod()]
+        public void DocumentFile_OrderAfter_4() {
+            using (var test = new TestDirectory()) {
+                test.CreateRawFile("A.txt");
+                test.CreateRawFile("B.txt");
+                test.CreateRawFile("C.txt");
+
+                var doc = new Document(test.Directory.FullName);
+                doc.EnableWatcher();
+
+                doc.RootFolder.GetFileByTitle("C").OrderAfter(doc.RootFolder.GetFileByTitle("A"));
+
+                {
+                    var files = new List<DocumentFile>(doc.RootFolder.GetFiles());
+                    Assert.AreEqual(3, files.Count);
+                    Assert.AreEqual("A", files[0].Name);
+                    Assert.AreEqual("C", files[1].Name);
+                    Assert.AreEqual("B", files[2].Name);
+                }
+
+                doc.DisableWatcher();
+            }
+        }
+
+        [TestMethod()]
+        public void DocumentFile_OrderAfter_5() {
+            using (var test = new TestDirectory()) {
+                test.CreateRawFile("A.txt");
+                test.CreateRawFile("B.txt");
+                test.CreateRawFile("C.txt");
+
+                var doc = new Document(test.Directory.FullName);
+                doc.EnableWatcher();
+
+                doc.RootFolder.GetFileByTitle("C").OrderAfter(doc.RootFolder.GetFileByTitle("B"));
+
+                {
+                    var files = new List<DocumentFile>(doc.RootFolder.GetFiles());
+                    Assert.AreEqual(3, files.Count);
+                    Assert.AreEqual("A", files[0].Name);
+                    Assert.AreEqual("B", files[1].Name);
+                    Assert.AreEqual("C", files[2].Name);
                 }
 
                 doc.DisableWatcher();

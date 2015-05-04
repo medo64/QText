@@ -94,6 +94,7 @@ namespace QText {
         public bool IsPlainText { get { return this.Style == DocumentStyle.PlainText; } }
         public bool IsRichText { get { return this.Style == DocumentStyle.RichText; } }
 
+
         #region Encryption
 
         private byte[] PasswordBytes;
@@ -166,6 +167,7 @@ namespace QText {
             }
 
             this.Name = newName;
+            this.Folder.Document.WriteOrder();
         }
 
         public bool CanMove(DocumentFolder newFolder) {
@@ -185,7 +187,7 @@ namespace QText {
                     Helper.MovePath(oldPath, newPath);
                     this.Folder = newFolder;
                 }
-                this.MoveBefore(null);
+                this.OrderBefore(null);
             } catch (Exception ex) {
                 throw new ApplicationException(ex.Message, ex);
             }
@@ -268,8 +270,12 @@ namespace QText {
 
         #region Move
 
-        public void MoveBefore(DocumentFile file) {
-            this.Folder.Document.MoveBefore(this, file);
+        public void OrderBefore(DocumentFile pivotFile) {
+            this.Folder.Document.OrderBefore(this, pivotFile);
+        }
+
+        public void OrderAfter(DocumentFile pivotFile) {
+            this.Folder.Document.OrderAfter(this, pivotFile);
         }
 
         #endregion
@@ -353,6 +359,7 @@ namespace QText {
                     }
                 }
                 this._selected = value;
+                this.Folder.Document.WriteOrder();
             }
         }
 

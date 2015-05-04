@@ -60,6 +60,7 @@ namespace QText {
 
                     this.Name = newName;
                     this.Document.SortFolders();
+                    this.Document.WriteOrder();
                 }
             } catch (Exception ex) {
                 throw new ApplicationException(ex.Message, ex);
