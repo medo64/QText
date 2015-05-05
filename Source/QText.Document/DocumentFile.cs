@@ -244,7 +244,7 @@ namespace QText {
             }
             this.Kind = newKind;
 
-            this.Folder.Document.OnFolderChanged(new DocumentFolderEventArgs(this.Folder));
+            this.Folder.Document.OnFileChanged(new DocumentFileEventArgs(this));
         }
 
 
@@ -263,7 +263,7 @@ namespace QText {
                 }
             }
 
-            this.Folder.Document.OnFolderChanged(new DocumentFolderEventArgs(this.Folder));
+            this.Folder.Document.OnFileChanged(new DocumentFileEventArgs(this));
         }
 
         public void Decrypt() {
@@ -281,7 +281,7 @@ namespace QText {
                 }
             }
 
-            this.Folder.Document.OnFolderChanged(new DocumentFolderEventArgs(this.Folder));
+            this.Folder.Document.OnFileChanged(new DocumentFileEventArgs(this));
         }
 
         #endregion

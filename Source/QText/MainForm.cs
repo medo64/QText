@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.Globalization;
-using System.IO;
 using System.Security.Cryptography;
 using System.Security.Permissions;
 using System.Text;
@@ -322,9 +321,7 @@ namespace QText {
             RefreshAll(null, null);
             Form_Resize(null, null);
 
-            App.Document.Changed += Document_Changed;
-            App.Document.FolderChanged += Document_FolderChanged;
-            App.Document.FileChanged += Document_FileChanged;
+            App.Document.FileExternallyChanged += Document_FileExternallyChanged;
         }
 
         private void Form_FormClosing(object sender, FormClosingEventArgs e) {
@@ -335,8 +332,6 @@ namespace QText {
                 App.Tray.ShowBalloonOnMinimize();
             }
 #endif
-
-            //TODO: Document.WriteOrderedTitles(tabFiles);
 
             var failedTitles = new List<string>();
             var failedExceptions = new List<Exception>();
@@ -534,7 +529,6 @@ namespace QText {
                     try {
                         if (frm.ShowDialog(this) == DialogResult.OK) {
                             tabFiles.SelectedTab.Rename(frm.NewTitle);
-                            //TODO: Document.WriteOrderedTitles(tabFiles);
                         }
                     } catch (Exception ex) {
                         Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot rename file.\n\n{0}", ex.Message));
@@ -1500,13 +1494,7 @@ namespace QText {
         }
 
 
-        void Document_Changed(object sender, EventArgs e) {
-        }
-
-        private void Document_FolderChanged(object sender, DocumentFolderEventArgs e) {
-        }
-
-        private void Document_FileChanged(object sender, DocumentFileEventArgs e) {
+        private void Document_FileExternallyChanged(object sender, DocumentFileEventArgs e) {
             if (tabFiles.Enabled == false) { return; }
 
             try {
