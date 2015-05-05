@@ -323,6 +323,8 @@ namespace QText {
             Form_Resize(null, null);
 
             App.Document.Changed += Document_Changed;
+            App.Document.FolderChanged += Document_FolderChanged;
+            App.Document.FileChanged += Document_FileChanged;
         }
 
         private void Form_FormClosing(object sender, FormClosingEventArgs e) {
@@ -1498,13 +1500,19 @@ namespace QText {
         }
 
 
-        void Document_Changed(object sender, FileSystemEventArgs e) {
+        void Document_Changed(object sender, EventArgs e) {
+        }
+
+        private void Document_FolderChanged(object sender, DocumentFolderEventArgs e) {
+        }
+
+        private void Document_FileChanged(object sender, DocumentFileEventArgs e) {
             if (tabFiles.Enabled == false) { return; }
 
             try {
                 this.Invoke((MethodInvoker)delegate () {
                     foreach (TabFile tab in tabFiles.TabPages) {
-                        if (e.FullPath.Equals(tab.BaseFile.FullPath)) {
+                        if (tab.BaseFile.Equals(e.File)) {
                             if (!tab.IsChanged) { //don't reopen tabs that were changed
                                 try {
                                     tab.Reopen();

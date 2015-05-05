@@ -62,6 +62,7 @@ namespace QText {
                     this.Document.SortFolders();
                     this.Document.WriteOrder();
                 }
+                this.Document.OnFolderChanged(new DocumentFolderEventArgs(this));
             } catch (Exception ex) {
                 throw new ApplicationException(ex.Message, ex);
             }
@@ -87,6 +88,7 @@ namespace QText {
                     }
                     this.Document.ProcessDelete(this.FullPath);
                 }
+                this.Document.OnChanged(new EventArgs());
             } catch (Exception ex) {
                 throw new ApplicationException(ex.Message, ex);
             }

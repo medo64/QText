@@ -136,9 +136,13 @@ namespace QText {
         void Watcher_Changed(object sender, FileSystemEventArgs e) {
             Debug.WriteLine("FileSystemWatcher.Changed: " + e.FullPath);
             if (File.Exists(e.FullPath)) { //file - ignore directory changes
-                this.OnChanged(e);
+                foreach (var file in this.Files) {
+                    if (string.Equals(file.FullPath, e.FullPath, StringComparison.OrdinalIgnoreCase)) {
+                        this.OnFileChanged(new DocumentFileEventArgs(file));
+                        break;
+                    }
+                }
             }
-            this.OnDocumentChanged(new EventArgs());
         }
 
         void Watcher_Created(object sender, FileSystemEventArgs e) {
@@ -173,20 +177,18 @@ namespace QText {
 
                         this.Files.Add(newFile);
 
+                        this.OnFolderChanged(new DocumentFolderEventArgs(folder));
                         break;
                     }
                 }
 
             }
-
-            this.OnChanged(e);
-            this.OnDocumentChanged(new EventArgs());
         }
 
         void Watcher_Deleted(object sender, FileSystemEventArgs e) {
             Debug.WriteLine("FileSystemWatcher.Deleted: " + e.FullPath);
             ProcessDelete(e.FullPath);
-            this.OnChanged(e);
+            this.OnChanged(new EventArgs());
         }
 
         internal void ProcessDelete(string fullPath) {
@@ -203,7 +205,6 @@ namespace QText {
                     break;
                 }
             }
-            this.OnDocumentChanged(new EventArgs());
         }
 
         void Watcher_Renamed(object sender, RenamedEventArgs e) {
@@ -215,7 +216,6 @@ namespace QText {
                     if (!folder.IsRoot && string.Equals(folder.FullPath, e.OldFullPath, StringComparison.OrdinalIgnoreCase)) {
                         folder.Name = e.Name;
                         this.SortFolders();
-                        this.OnChanged(new FileSystemEventArgs(WatcherChangeTypes.Renamed, Path.GetDirectoryName(e.FullPath), null));
                         this.OnFolderChanged(new DocumentFolderEventArgs(folder));
                         break;
                     }
@@ -252,9 +252,7 @@ namespace QText {
                             file.Name = newName;
                         }
 
-                        this.OnChanged(new FileSystemEventArgs(WatcherChangeTypes.Renamed, Path.GetDirectoryName(e.FullPath), Path.GetFileName(e.FullPath)));
                         this.OnFolderChanged(new DocumentFolderEventArgs(file.Folder));
-
                         return;
                     }
                 }
@@ -270,32 +268,17 @@ namespace QText {
         }
 
 
-
-        /// <summary>
-        /// External change has occurred.
-        /// </summary>
-        public event EventHandler<FileSystemEventArgs> Changed;
-
-        /// <summary>
-        /// Raises Changed event.
-        /// </summary>
-        /// <param name="e">Event arguments.</param>
-        private void OnChanged(FileSystemEventArgs e) {
-            var eh = this.Changed;
-            if (eh != null) { eh.Invoke(this, e); }
-        }
-
         /// <summary>
         /// Change affecting all entries has occurred, e.g. folder deletion.
         /// </summary>
-        public event EventHandler<EventArgs> DocumentChanged;
+        public event EventHandler<EventArgs> Changed;
 
         /// <summary>
         /// Raises DocumentChanged event.
         /// </summary>
         /// <param name="e">Event arguments.</param>
-        private void OnDocumentChanged(EventArgs e) {
-            var eh = this.DocumentChanged;
+        internal void OnChanged(EventArgs e) {
+            var eh = this.Changed;
             if (eh != null) { eh.Invoke(this, e); }
         }
 
@@ -309,8 +292,23 @@ namespace QText {
         /// Raises FolderChanged event.
         /// </summary>
         /// <param name="e">Event arguments.</param>
-        private void OnFolderChanged(DocumentFolderEventArgs e) {
+        internal void OnFolderChanged(DocumentFolderEventArgs e) {
             var eh = this.FolderChanged;
+            if (eh != null) { eh.Invoke(this, e); }
+        }
+
+
+        /// <summary>
+        /// File change has occurred.
+        /// </summary>
+        public event EventHandler<DocumentFileEventArgs> FileChanged;
+
+        /// <summary>
+        /// Raises FileChanged event.
+        /// </summary>
+        /// <param name="e">Event arguments.</param>
+        internal void OnFileChanged(DocumentFileEventArgs e) {
+            var eh = this.FileChanged;
             if (eh != null) { eh.Invoke(this, e); }
         }
 
@@ -390,6 +388,8 @@ namespace QText {
                 var folder = new DocumentFolder(this, Path.GetFileName(newPath));
                 this.Folders.Add(folder);
                 this.SortFolders();
+
+                this.OnFolderChanged(new DocumentFolderEventArgs(folder));
                 return folder;
             } catch (Exception ex) {
                 throw new ApplicationException(ex.Message, ex);
@@ -418,6 +418,7 @@ namespace QText {
             File.WriteAllText(newFile.FullPath, "");
             this.Files.Add(newFile);
 
+            this.OnFolderChanged(new DocumentFolderEventArgs(newFile.Folder));
             return newFile;
         }
 

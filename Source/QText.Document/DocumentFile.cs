@@ -168,6 +168,8 @@ namespace QText {
 
             this.Name = newName;
             this.Folder.Document.WriteOrder();
+
+            this.Folder.Document.OnFileChanged(new DocumentFileEventArgs(this));
         }
 
         public bool CanMove(DocumentFolder newFolder) {
@@ -179,6 +181,7 @@ namespace QText {
 
         public void Move(DocumentFolder newFolder) {
             try {
+                var oldFolder = this.Folder;
                 var oldPath = this.FullPath;
                 var newPath = Path.Combine(newFolder.FullPath, this.Name + this.Extension);
 
@@ -188,6 +191,9 @@ namespace QText {
                     this.Folder = newFolder;
                 }
                 this.OrderBefore(null);
+
+                this.Folder.Document.OnFolderChanged(new DocumentFolderEventArgs(oldFolder));
+                this.Folder.Document.OnFolderChanged(new DocumentFolderEventArgs(this.Folder));
             } catch (Exception ex) {
                 throw new ApplicationException(ex.Message, ex);
             }
@@ -205,6 +211,7 @@ namespace QText {
                     }
                 }
                 this.Folder.Document.ProcessDelete(this.FullPath);
+                this.Folder.Document.OnFolderChanged(new DocumentFolderEventArgs(this.Folder));
             } catch (Exception ex) {
                 throw new ApplicationException(ex.Message, ex);
             }
@@ -236,6 +243,8 @@ namespace QText {
                 Helper.MovePath(this.FullPath, Path.Combine(this.Folder.FullPath, this.Name + FileExtensions.GetFromKind(newKind)));
             }
             this.Kind = newKind;
+
+            this.Folder.Document.OnFolderChanged(new DocumentFolderEventArgs(this.Folder));
         }
 
 
@@ -253,6 +262,8 @@ namespace QText {
                     File.Delete(oldPath);
                 }
             }
+
+            this.Folder.Document.OnFolderChanged(new DocumentFolderEventArgs(this.Folder));
         }
 
         public void Decrypt() {
@@ -269,6 +280,8 @@ namespace QText {
                     File.Delete(oldPath);
                 }
             }
+
+            this.Folder.Document.OnFolderChanged(new DocumentFolderEventArgs(this.Folder));
         }
 
         #endregion
