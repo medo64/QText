@@ -210,6 +210,12 @@ namespace QText {
             }
         }
 
+
+        public void OpenInExplorer() {
+            var exe = new ProcessStartInfo("explorer.exe", "/select,\"" + this.FullPath + "\"");
+            Process.Start(exe);
+        }
+
         #endregion
 
 

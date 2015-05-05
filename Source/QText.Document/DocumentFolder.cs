@@ -25,7 +25,7 @@ namespace QText {
         /// <summary>
         /// Gets full directory path.
         /// </summary>
-        public string FullPath {
+        internal string FullPath {
             get { return string.IsNullOrEmpty(this.Name) ? this.Document.RootDirectory.FullName : Path.Combine(this.Document.RootDirectory.FullName, this.Name); }
         }
 
@@ -90,6 +90,12 @@ namespace QText {
             } catch (Exception ex) {
                 throw new ApplicationException(ex.Message, ex);
             }
+        }
+
+
+        public void OpenInExplorer() {
+            var exe = new ProcessStartInfo("explorer.exe", "\"" + this.FullPath + "\"");
+            Process.Start(exe);
         }
 
         #endregion

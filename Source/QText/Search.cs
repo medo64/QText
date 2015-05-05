@@ -107,7 +107,7 @@ namespace QText {
                             tabs.FolderOpen(folder);
                         }
                         foreach (TabFile tab in tabs.TabPages) {
-                            if (string.Equals(tab.BaseFile.FullPath, folderTab.BaseFile.FullPath, StringComparison.OrdinalIgnoreCase)) {
+                            if (tab.BaseFile.Equals(folderTab.BaseFile)) {
                                 tab.Open();
                                 tab.TextBox.SelectionStart = folderTab.TextBox.SelectionStart;
                                 tab.TextBox.SelectionLength = folderTab.TextBox.SelectionLength;
