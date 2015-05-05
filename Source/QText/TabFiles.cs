@@ -173,23 +173,6 @@ namespace QText {
             }
         }
 
-        public void MoveTab(TabFile tab, string newFolder) {
-            string oldPath, newPath;
-            MoveTabPreview(tab, newFolder, out oldPath, out newPath);
-            tab.Save();
-            this.SelectedTab = GetNextTab();
-            this.TabPages.Remove(tab);
-            Helper.MovePath(oldPath, newPath);
-            //TODO: Document.WriteOrderedTitles(this);
-        }
-
-        public void MoveTabPreview(TabFile tab, string newFolder, out string oldPath, out string newPath) {
-            string destFolder = string.IsNullOrEmpty(newFolder) ? Settings.FilesLocation : Path.Combine(Settings.FilesLocation, newFolder);
-            var oldFile = new QFileInfo(tab.BaseFile.FullPath);
-            oldPath = oldFile.FullName;
-            newPath = Path.Combine(destFolder, oldFile.Name);
-        }
-
         #endregion
 
         #region Drag & drop
