@@ -119,6 +119,20 @@ namespace QText {
             return null;
         }
 
+        /// <summary>
+        /// Gets last selected file.
+        /// </summary>
+        public DocumentFile SelectedFile {
+            get {
+                DocumentFile firstFile = null;
+                foreach (var file in this.GetFiles()) {
+                    if (file.Selected) { return file; }
+                    if (firstFile == null) { firstFile = file; }
+                }
+                return firstFile;
+            }
+        }
+
         #endregion
 
 

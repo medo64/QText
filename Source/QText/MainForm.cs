@@ -1353,16 +1353,13 @@ namespace QText {
                 }
             }
 
-            var currentFolder = tabFiles.CurrentFolder ?? App.Document.RootFolder;
-
-            var selectedFile = App.Document.SelectedFile;
-            tabFiles.FolderOpen((selectedFile != null) ? selectedFile.Folder : Settings.LastFolder);
+            tabFiles.FolderOpen(Settings.LastFolder);
 
             try {
                 SetSelectedTab(tabFiles.SelectedTab);
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot load folder.\n\n{0}", ex.Message));
-                tabFiles.FolderOpen(currentFolder);
+                tabFiles.FolderOpen(tabFiles.CurrentFolder ?? App.Document.RootFolder);
             }
 
             mnuFolder.Text = tabFiles.CurrentFolder.Title;

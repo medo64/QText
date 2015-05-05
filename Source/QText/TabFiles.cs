@@ -81,7 +81,7 @@ namespace QText {
 
             TabFile selectedTab = (this.TabCount > 0) ? (TabFile)this.TabPages[0] : null;
             foreach (TabFile tab in this.TabPages) {
-                if (tab.BaseFile.Equals(App.Document.SelectedFile)) {
+                if (tab.BaseFile.Equals(folder.SelectedFile)) {
                     selectedTab = tab;
                 }
             }

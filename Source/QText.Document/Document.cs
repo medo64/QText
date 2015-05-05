@@ -36,18 +36,22 @@ namespace QText {
             } catch (IOException) {
             } catch (UnauthorizedAccessException) { }
 
-            DocumentFile selectedFile = null;
+            var selectedFiles = new List<DocumentFile>();
             this.Files.Sort(delegate (DocumentFile file1, DocumentFile file2) {
                 var index1 = Array.IndexOf(lines, file1.Folder.Name + "|" + file1.Name + "|");
                 if (index1 < 0) {
                     index1 = Array.IndexOf(lines, file1.Folder.Name + "|" + file1.Name + "|*");
-                    if (index1 >= 0) { selectedFile = file1; }
+                    if ((index1 >= 0) && !selectedFiles.Contains(file1)) {
+                        selectedFiles.Add(file1);
+                    }
                 }
 
                 var index2 = Array.IndexOf(lines, file2.Folder.Name + "|" + file2.Name + "|");
                 if (index2 < 0) {
                     index2 = Array.IndexOf(lines, file2.Folder.Name + "|" + file2.Name + "|*");
-                    if (index2 >= 0) { selectedFile = file2; }
+                    if ((index2 >= 0) && !selectedFiles.Contains(file2)) {
+                        selectedFiles.Add(file2);
+                    }
                 }
 
                 if ((index1 < 0) && (index2 < 0)) {
@@ -60,7 +64,9 @@ namespace QText {
                     return (index1 < index2) ? -1 : +1;
                 }
             });
-            if (selectedFile != null) { selectedFile.Selected = true; }
+            foreach (var selectedFile in selectedFiles) {
+                selectedFile.Selected = true;
+            }
 
             this.Watcher = new FileSystemWatcher(this.RootDirectory.FullName) { IncludeSubdirectories = true, InternalBufferSize = 32768 };
             this.Watcher.Changed += Watcher_Changed;
@@ -107,12 +113,6 @@ namespace QText {
                 if (file.Folder.Equals(folder)) {
                     yield return file;
                 }
-            }
-        }
-
-        internal IEnumerable<DocumentFile> GetAllFiles() {
-            foreach (var file in this.Files) {
-                yield return file;
             }
         }
 
@@ -473,18 +473,6 @@ namespace QText {
                     if (orderFile.Exists) { orderFile.Attributes = (FileAttributes)(orderFile.Attributes | FileAttributes.Hidden); }
                 } catch (IOException) {
                 } catch (UnauthorizedAccessException) { }
-            }
-        }
-
-        /// <summary>
-        /// Gets last selected file.
-        /// </summary>
-        public DocumentFile SelectedFile {
-            get {
-                foreach (var file in this.Files) {
-                    if (file.Selected) { return file; }
-                }
-                return (this.Files.Count > 0) ? this.Files[0] : null;
             }
         }
 
