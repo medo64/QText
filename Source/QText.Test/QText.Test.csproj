@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileTests.cs" />
+    <Compile Include="CarbonCopy.cs" />
     <Compile Include="FolderTests.cs" />
     <Compile Include="DocumentTests.cs" />
     <Compile Include="%28Helper%29\TestDirectory.cs" />
