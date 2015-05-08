@@ -52,8 +52,7 @@ namespace QText {
 
             //Carbon copy
             chbUseCarbonCopy.Checked = Settings.CarbonCopyUse;
-            txtCarbonCopyFolder.Text = Settings.CarbonCopyFolder;
-            chkCarbonCopyFolderCreate.Checked = Settings.CarbonCopyCreateFolder;
+            txtCarbonCopyFolder.Text = Settings.CarbonCopyDirectory;
             chbCarbonCopyIgnoreCopyErrors.Checked = Settings.CarbonCopyIgnoreErrors;
             chbUseCarbonCopy_CheckedChanged(null, null);
         }
@@ -147,7 +146,7 @@ namespace QText {
             using (var frm = new FolderOpenDialog() { InitialFolder = Settings.FilesLocation }) {
                 if (frm.ShowDialog(this) == DialogResult.OK) {
                     var newPath = frm.Folder;
-                    if (string.Equals(newPath, Settings.CarbonCopyFolder, StringComparison.OrdinalIgnoreCase)) {
+                    if (string.Equals(newPath, Settings.CarbonCopyDirectory, StringComparison.OrdinalIgnoreCase)) {
                         Medo.MessageBox.ShowWarning(this, "This folder is currenly used for carbon copy. Move will be aborted.");
                         return;
                     } else if (string.Equals(newPath, Settings.FilesLocation, StringComparison.OrdinalIgnoreCase)) {
@@ -256,7 +255,6 @@ namespace QText {
             lblCarbonCopyFolder.Enabled = chbUseCarbonCopy.Checked;
             txtCarbonCopyFolder.Enabled = chbUseCarbonCopy.Checked;
             btnCarbonCopyFolderSelect.Enabled = chbUseCarbonCopy.Checked;
-            chkCarbonCopyFolderCreate.Enabled = chbUseCarbonCopy.Checked;
             chbCarbonCopyIgnoreCopyErrors.Enabled = chbUseCarbonCopy.Checked;
             btnCarbonCopyOpenFolder.Enabled = txtCarbonCopyFolder.Text.Length > 0;
         }
@@ -267,10 +265,10 @@ namespace QText {
 
         private void btnCarbonCopyFolderSelect_Click(object sender, EventArgs e) {
             using (var frm = new FolderOpenDialog()) {
-                if (string.IsNullOrEmpty(Settings.CarbonCopyFolder)) {
+                if (string.IsNullOrEmpty(Settings.CarbonCopyDirectory)) {
                     frm.InitialFolder = Settings.FilesLocation;
                 } else {
-                    frm.InitialFolder = Settings.CarbonCopyFolder;
+                    frm.InitialFolder = Settings.CarbonCopyDirectory;
                 }
                 if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK) {
                     if (frm.Folder.StartsWith(Settings.FilesLocation, StringComparison.OrdinalIgnoreCase)) {
@@ -334,8 +332,7 @@ namespace QText {
 
             //Carbon copy
             Settings.CarbonCopyUse = chbUseCarbonCopy.Checked;
-            Settings.CarbonCopyFolder = txtCarbonCopyFolder.Text;
-            Settings.CarbonCopyCreateFolder = chkCarbonCopyFolderCreate.Checked;
+            Settings.CarbonCopyDirectory = txtCarbonCopyFolder.Text;
             Settings.CarbonCopyIgnoreErrors = chbCarbonCopyIgnoreCopyErrors.Checked;
         }
 

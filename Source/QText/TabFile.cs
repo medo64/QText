@@ -246,37 +246,8 @@ namespace QText {
 
             this.IsChanged = false;
             base.Text = this.Title;
-
-            SaveCarbonCopy(null);
         }
 
-        public void SaveCarbonCopy(IWin32Window owner) {
-            SaveCarbonCopy(owner, this.BaseFile.FullPath);
-        }
-
-        public static void SaveCarbonCopy(IWin32Window owner, string fullFileName) {
-            if ((Settings.CarbonCopyUse == false) || string.IsNullOrEmpty(Settings.CarbonCopyFolder)) { return; }
-
-            try {
-                var baseDirectory = new DirectoryInfo(Settings.FilesLocation).FullName;
-                if (fullFileName.StartsWith(baseDirectory, StringComparison.OrdinalIgnoreCase)) {
-                    var sufix = fullFileName.Remove(0, baseDirectory.Length);
-                    if (sufix.StartsWith("\\", StringComparison.Ordinal)) { sufix = sufix.Remove(0, 1); }
-                    var newFile = new FileInfo(Path.Combine(Settings.CarbonCopyFolder, sufix));
-                    if ((Directory.Exists(newFile.DirectoryName) == false) && Settings.CarbonCopyCreateFolder) {
-                        Helper.CreatePath(newFile.DirectoryName);
-                    }
-                    File.Copy(fullFileName, newFile.FullName, true);
-                } else {
-                    throw new InvalidOperationException("Cannot determine base path for carbon copy.");
-                }
-            } catch (Exception ex) {
-                if (Settings.CarbonCopyIgnoreErrors == false) {
-                    var title = QFileInfo.GetFileNameWithoutExtension(fullFileName);
-                    Medo.MessageBox.ShowWarning(owner, string.Format("Error making carbon copy of \"{0}\".\n\n{1}", title, ex.Message), MessageBoxButtons.OK);
-                }
-            }
-        }
 
         public void Rename(string newTitle) {
             if (newTitle == null) { throw new ArgumentNullException("newTitle", "Title cannot be null."); }

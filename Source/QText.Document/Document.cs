@@ -119,6 +119,53 @@ namespace QText {
         #endregion
 
 
+        #region Carbon copy
+
+        private String _carbonCopyRootPath;
+        /// <summary>
+        /// Gets root path for carbon copy.
+        /// Can be empty.
+        /// </summary>
+        public String CarbonCopyRootPath {
+            get {
+                return this._carbonCopyRootPath;
+            }
+            set {
+                if (value == null) {
+                    this._carbonCopyRootPath = value;
+                } else {
+                    var path = Path.GetFullPath(value);
+                    if (value.StartsWith(this.RootPath, StringComparison.OrdinalIgnoreCase)) {
+                        this._carbonCopyRootPath = null; //cannot be subfolder of root directory
+                    } else {
+                        this._carbonCopyRootPath = path;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets/sets if carbon copy errors are to be ignored.
+        /// </summary>
+        public bool CarbonCopyIgnoreErrors { get; set; }
+
+
+        /// <summary>
+        /// Writes all carbon copies.
+        /// </summary>
+        public void WriteAllCarbonCopies() {
+            if (this.CarbonCopyRootPath != null) {
+                foreach (var folder in this.GetFolders()) {
+                    foreach (var file in folder.GetFiles()) {
+                        file.WriteCarbonCopy();
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+
         #region Watcher
 
         internal readonly FileSystemWatcher Watcher;

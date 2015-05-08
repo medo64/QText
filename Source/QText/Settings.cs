@@ -46,12 +46,7 @@ namespace QText {
             set { Medo.Configuration.Settings.Write("ActivationHotkey", (int)value); }
         }
 
-        public static bool CarbonCopyCreateFolder {
-            get { return Medo.Configuration.Settings.Read("CarbonCopyCreateFolder", true); }
-            set { Medo.Configuration.Settings.Write("CarbonCopyCreateFolder", value); }
-        }
-
-        public static string CarbonCopyFolder {
+        public static string CarbonCopyDirectory {
             get { return Medo.Configuration.Settings.Read("CarbonCopyFolder", ""); }
             set {
                 if (FilesLocation == null) { return; }

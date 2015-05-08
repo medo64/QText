@@ -47,7 +47,9 @@ namespace QText {
                 Medo.Diagnostics.ErrorReport.DisableAutomaticSaveToTemp = Settings.NoRegistryWrites;
 
                 App.Document = new Document(Settings.FilesLocation) {
-                    DeleteToRecycleBin = Settings.FilesDeleteToRecycleBin
+                    DeleteToRecycleBin = Settings.FilesDeleteToRecycleBin,
+                    CarbonCopyRootPath = Settings.CarbonCopyUse ? Settings.CarbonCopyDirectory : null,
+                    CarbonCopyIgnoreErrors = Settings.CarbonCopyIgnoreErrors
                 };
                 App.Form = new MainForm();
 

@@ -1,4 +1,4 @@
-﻿namespace QText {
+namespace QText {
     partial class OptionsForm {
         /// <summary>
         /// Required designer variable.
@@ -46,6 +46,7 @@
             this.chkShowToolbar = new System.Windows.Forms.CheckBox();
             this.chkShowInTaskbar = new System.Windows.Forms.CheckBox();
             this.tab_pagFiles = new System.Windows.Forms.TabPage();
+            this.chbSavePlainWithLF = new System.Windows.Forms.CheckBox();
             this.nudQuickSaveIntervalInSeconds = new System.Windows.Forms.NumericUpDown();
             this.btnOpenLocationFolder = new System.Windows.Forms.Button();
             this.lblQuickSaveIntervalSeconds = new System.Windows.Forms.Label();
@@ -64,14 +65,12 @@
             this.btnCarbonCopyFolderSelect = new System.Windows.Forms.Button();
             this.chbCarbonCopyIgnoreCopyErrors = new System.Windows.Forms.CheckBox();
             this.chbUseCarbonCopy = new System.Windows.Forms.CheckBox();
-            this.chkCarbonCopyFolderCreate = new System.Windows.Forms.CheckBox();
             this.txtCarbonCopyFolder = new System.Windows.Forms.TextBox();
             this.lblCarbonCopyFolder = new System.Windows.Forms.Label();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnExit = new System.Windows.Forms.Button();
             this.btnAllowSave = new System.Windows.Forms.Button();
-            this.chbSavePlainWithLF = new System.Windows.Forms.CheckBox();
             this.tab.SuspendLayout();
             this.tab_pagAppearance.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudTabWidth)).BeginInit();
@@ -365,6 +364,16 @@
             this.tab_pagFiles.Text = "Files";
             this.tab_pagFiles.UseVisualStyleBackColor = true;
             // 
+            // chbSavePlainWithLF
+            // 
+            this.chbSavePlainWithLF.AutoSize = true;
+            this.chbSavePlainWithLF.Location = new System.Drawing.Point(7, 60);
+            this.chbSavePlainWithLF.Name = "chbSavePlainWithLF";
+            this.chbSavePlainWithLF.Size = new System.Drawing.Size(243, 21);
+            this.chbSavePlainWithLF.TabIndex = 4;
+            this.chbSavePlainWithLF.Text = "Save plain text with LF line ending";
+            this.chbSavePlainWithLF.UseVisualStyleBackColor = true;
+            // 
             // nudQuickSaveIntervalInSeconds
             // 
             this.nudQuickSaveIntervalInSeconds.DecimalPlaces = 1;
@@ -527,7 +536,6 @@
             this.tab_pagCarbonCopy.Controls.Add(this.btnCarbonCopyFolderSelect);
             this.tab_pagCarbonCopy.Controls.Add(this.chbCarbonCopyIgnoreCopyErrors);
             this.tab_pagCarbonCopy.Controls.Add(this.chbUseCarbonCopy);
-            this.tab_pagCarbonCopy.Controls.Add(this.chkCarbonCopyFolderCreate);
             this.tab_pagCarbonCopy.Controls.Add(this.txtCarbonCopyFolder);
             this.tab_pagCarbonCopy.Controls.Add(this.lblCarbonCopyFolder);
             this.tab_pagCarbonCopy.Location = new System.Drawing.Point(4, 25);
@@ -564,7 +572,7 @@
             // chbCarbonCopyIgnoreCopyErrors
             // 
             this.chbCarbonCopyIgnoreCopyErrors.AutoSize = true;
-            this.chbCarbonCopyIgnoreCopyErrors.Location = new System.Drawing.Point(23, 87);
+            this.chbCarbonCopyIgnoreCopyErrors.Location = new System.Drawing.Point(19, 60);
             this.chbCarbonCopyIgnoreCopyErrors.Name = "chbCarbonCopyIgnoreCopyErrors";
             this.chbCarbonCopyIgnoreCopyErrors.Size = new System.Drawing.Size(146, 21);
             this.chbCarbonCopyIgnoreCopyErrors.TabIndex = 5;
@@ -581,16 +589,6 @@
             this.chbUseCarbonCopy.Text = "Activate carbon copy";
             this.chbUseCarbonCopy.UseVisualStyleBackColor = true;
             this.chbUseCarbonCopy.CheckedChanged += new System.EventHandler(this.chbUseCarbonCopy_CheckedChanged);
-            // 
-            // chkCarbonCopyFolderCreate
-            // 
-            this.chkCarbonCopyFolderCreate.AutoSize = true;
-            this.chkCarbonCopyFolderCreate.Location = new System.Drawing.Point(23, 60);
-            this.chkCarbonCopyFolderCreate.Name = "chkCarbonCopyFolderCreate";
-            this.chkCarbonCopyFolderCreate.Size = new System.Drawing.Size(193, 21);
-            this.chkCarbonCopyFolderCreate.TabIndex = 4;
-            this.chkCarbonCopyFolderCreate.Text = "Create if one doesn\'t exist";
-            this.chkCarbonCopyFolderCreate.UseVisualStyleBackColor = true;
             // 
             // txtCarbonCopyFolder
             // 
@@ -661,16 +659,6 @@
             this.btnAllowSave.Text = "Allow save";
             this.btnAllowSave.UseVisualStyleBackColor = true;
             this.btnAllowSave.Click += new System.EventHandler(this.btnAllowSave_Click);
-            // 
-            // chbSavePlainWithLF
-            // 
-            this.chbSavePlainWithLF.AutoSize = true;
-            this.chbSavePlainWithLF.Location = new System.Drawing.Point(7, 60);
-            this.chbSavePlainWithLF.Name = "chbSavePlainWithLF";
-            this.chbSavePlainWithLF.Size = new System.Drawing.Size(243, 21);
-            this.chbSavePlainWithLF.TabIndex = 4;
-            this.chbSavePlainWithLF.Text = "Save plain text with LF line ending";
-            this.chbSavePlainWithLF.UseVisualStyleBackColor = true;
             // 
             // OptionsForm
             // 
@@ -751,7 +739,6 @@
         internal System.Windows.Forms.Button btnCarbonCopyFolderSelect;
         internal System.Windows.Forms.CheckBox chbCarbonCopyIgnoreCopyErrors;
         internal System.Windows.Forms.CheckBox chbUseCarbonCopy;
-        internal System.Windows.Forms.CheckBox chkCarbonCopyFolderCreate;
         internal System.Windows.Forms.TextBox txtCarbonCopyFolder;
         internal System.Windows.Forms.Label lblCarbonCopyFolder;
         internal System.Windows.Forms.Button btnOk;

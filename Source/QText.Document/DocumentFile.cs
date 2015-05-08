@@ -64,7 +64,7 @@ namespace QText {
         /// <summary>
         /// Gets full file path.
         /// </summary>
-        public string FullPath {
+        internal string FullPath {
             get { return Path.Combine(this.Folder.FullPath, this.Name + this.Extension); }
         }
 
@@ -333,7 +333,6 @@ namespace QText {
         public void Write(MemoryStream stream) {
             if (this.IsEncrypted && !this.HasPassword) { throw new ApplicationException("Missing password."); }
 
-
             using (var watcher = new Helper.FileSystemToggler(this.Folder.Document.Watcher)) {
                 stream.Position = 0;
                 using (var fileStream = new FileStream(this.FullPath, FileMode.Create, FileAccess.Write, FileShare.None)) {
@@ -355,6 +354,24 @@ namespace QText {
                         while ((len = stream.Read(buffer, 0, buffer.Length)) > 0) {
                             fileStream.Write(buffer, 0, len);
                         }
+                    }
+                }
+            }
+
+            this.WriteCarbonCopy();
+        }
+
+        internal void WriteCarbonCopy() {
+            if (this.Folder.Document.CarbonCopyRootPath != null) {
+                try {
+                    var ccPath = this.Folder.IsRoot ? this.Folder.Document.CarbonCopyRootPath : Path.Combine(this.Folder.Document.CarbonCopyRootPath, this.Folder.Name);
+                    Helper.CreatePath(ccPath);
+
+                    var ccFullPath = Path.Combine(ccPath, this.Name + this.Extension);
+                    File.Copy(this.FullPath, ccFullPath, true);
+                } catch (Exception ex) {
+                    if (!this.Folder.Document.CarbonCopyIgnoreErrors) {
+                        throw new ApplicationException("Error writing carbon copy for " + this.Title + ".\n\n" + ex.Message, ex);
                     }
                 }
             }

@@ -864,7 +864,14 @@ namespace QText {
                     Form_Resize(null, null);
                     this.tmrUpdateToolbar.Enabled = Settings.ShowToolbar;
                     tmrQuickSave.Interval = Settings.QuickSaveInterval;
-                    tabFiles.SaveCarbonCopies(this);
+
+                    App.Document.CarbonCopyRootPath = Settings.CarbonCopyUse ? Settings.CarbonCopyDirectory : null;
+                    App.Document.CarbonCopyIgnoreErrors = Settings.CarbonCopyIgnoreErrors;
+                    try {
+                        App.Document.WriteAllCarbonCopies();
+                    } catch (ApplicationException ex) {
+                        Medo.MessageBox.ShowError(this, ex.Message);
+                    }
                 }
             }
             tmrQuickSave.Enabled = true;
