@@ -9,11 +9,11 @@ namespace QText {
     public class Document {
 
         public Document(string path) {
-            this.RootDirectory = new DirectoryInfo(path);
+            this.RootPath = Path.GetFullPath(path);
 
             this.Folders.Add(new DocumentFolder(this, string.Empty));
-            foreach (var directory in this.RootDirectory.GetDirectories()) {
-                this.Folders.Add(new DocumentFolder(this, directory.Name));
+            foreach (var directory in Directory.GetDirectories(this.RootPath)) {
+                this.Folders.Add(new DocumentFolder(this, Path.GetFileName(directory)));
             }
             this.SortFolders();
 
@@ -27,11 +27,11 @@ namespace QText {
                 }
             }
 
-            var orderFile = new FileInfo(Path.Combine(this.RootDirectory.FullName, ".qtext"));
+            var orderFilePath = Path.Combine(this.RootPath, ".qtext");
             string[] lines = new string[] { };
             try {
-                if (orderFile.Exists) {
-                    lines = File.ReadAllLines(orderFile.FullName, Document.Encoding);
+                if (File.Exists(orderFilePath)) {
+                    lines = File.ReadAllLines(orderFilePath, Document.Encoding);
                 }
             } catch (IOException) {
             } catch (UnauthorizedAccessException) { }
@@ -68,7 +68,7 @@ namespace QText {
                 selectedFile.Selected = true;
             }
 
-            this.Watcher = new FileSystemWatcher(this.RootDirectory.FullName) { IncludeSubdirectories = true, InternalBufferSize = 32768 };
+            this.Watcher = new FileSystemWatcher(this.RootPath) { IncludeSubdirectories = true, InternalBufferSize = 32768 };
             this.Watcher.Changed += Watcher_Changed;
             this.Watcher.Created += Watcher_Created;
             this.Watcher.Deleted += Watcher_Deleted;
@@ -77,9 +77,9 @@ namespace QText {
 
 
         /// <summary>
-        /// Gets root directory.
+        /// Gets root path.
         /// </summary>
-        public DirectoryInfo RootDirectory { get; private set; }
+        public String RootPath { get; private set; }
 
         /// <summary>
         /// Gets/sets if file deletion is going to be performed to recycle bin
@@ -403,11 +403,11 @@ namespace QText {
 
         public DocumentFolder CreateFolder() {
             try {
-                var newPath = Path.Combine(this.RootDirectory.FullName, Helper.EncodeTitle("New folder"));
+                var newPath = Path.Combine(this.RootPath, Helper.EncodeTitle("New folder"));
                 int n = 1;
                 while (Directory.Exists(newPath)) {
                     var newTitle = string.Format(CultureInfo.CurrentUICulture, "New folder ({0})", n);
-                    newPath = Path.Combine(this.RootDirectory.FullName, Helper.EncodeTitle(newTitle));
+                    newPath = Path.Combine(this.RootPath, Helper.EncodeTitle(newTitle));
                     n += 1;
                 }
 
@@ -430,7 +430,7 @@ namespace QText {
 
         public DocumentFolder CreateFolder(string title) {
             try {
-                var newPath = Path.Combine(this.RootDirectory.FullName, Helper.EncodeTitle(title));
+                var newPath = Path.Combine(this.RootPath, Helper.EncodeTitle(title));
 
                 Debug.WriteLine("Create: " + Path.GetFileName(newPath));
 
@@ -521,10 +521,14 @@ namespace QText {
             if (this.LastOrderText != orderText) {
                 this.LastOrderText = orderText;
                 try {
-                    var orderFile = new FileInfo(Path.Combine(this.RootDirectory.FullName, ".qtext"));
-                    if (orderFile.Exists) { orderFile.Attributes = (FileAttributes)(orderFile.Attributes & (~FileAttributes.Hidden)); }
-                    File.WriteAllText(orderFile.FullName, orderText, Document.Encoding);
-                    if (orderFile.Exists) { orderFile.Attributes = (FileAttributes)(orderFile.Attributes | FileAttributes.Hidden); }
+                    var orderFilePath = Path.Combine(this.RootPath, ".qtext");
+                    var attributes = FileAttributes.Normal;
+                    if (File.Exists(orderFilePath)) {
+                        attributes = File.GetAttributes(orderFilePath);
+                        File.SetAttributes(orderFilePath, attributes & ~FileAttributes.Hidden);
+                    }
+                    File.WriteAllText(orderFilePath, orderText, Document.Encoding);
+                    File.SetAttributes(orderFilePath, attributes | FileAttributes.Hidden);
                 } catch (IOException) {
                 } catch (UnauthorizedAccessException) { }
             }

@@ -26,7 +26,7 @@ namespace QText {
         /// Gets full directory path.
         /// </summary>
         internal string FullPath {
-            get { return string.IsNullOrEmpty(this.Name) ? this.Document.RootDirectory.FullName : Path.Combine(this.Document.RootDirectory.FullName, this.Name); }
+            get { return string.IsNullOrEmpty(this.Name) ? this.Document.RootPath : Path.Combine(this.Document.RootPath, this.Name); }
         }
 
         /// <summary>
