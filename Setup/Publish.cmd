@@ -171,4 +171,4 @@ ECHO.
 ECHO --- DONE
 ECHO.
 
-PAUSE
+explorer /select,"..\Releases\%_SETUPEXE%"
