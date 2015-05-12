@@ -391,7 +391,7 @@ namespace QText {
             set {
                 if (value) {
                     foreach (var file in this.Folder.GetFiles()) {
-                        file.Selected = false;
+                        file._selected = false;
                     }
                 }
                 this._selected = value;
