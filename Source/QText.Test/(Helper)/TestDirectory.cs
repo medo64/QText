@@ -4,9 +4,11 @@ using System.IO;
 namespace QTextTest {
     internal class TestDirectory : IDisposable {
 
-        public TestDirectory() {
+        public TestDirectory(bool dontCreate = false) {
             this.Directory = new DirectoryInfo(Path.Combine(Path.GetTempPath(), "QText.Test " + Guid.NewGuid().ToString()));
-            this.Directory.Create();
+            if (!dontCreate) {
+                this.Directory.Create();
+            }
         }
 
         ~TestDirectory() {

@@ -142,80 +142,53 @@ namespace QText {
         }
 
         private void btnChangeLocation_Click(object sender, EventArgs e) {
-            var oldPath = Settings.FilesLocation;
-            using (var frm = new FolderOpenDialog() { InitialFolder = Settings.FilesLocation }) {
+            using (var frm = new FolderOpenDialog() { InitialFolder = App.Document.RootPath }) {
                 if (frm.ShowDialog(this) == DialogResult.OK) {
-                    var newPath = frm.Folder;
-                    if (string.Equals(newPath, Settings.CarbonCopyDirectory, StringComparison.OrdinalIgnoreCase)) {
-                        Medo.MessageBox.ShowWarning(this, "This folder is currenly used for carbon copy. Move will be aborted.");
-                        return;
-                    } else if (string.Equals(newPath, Settings.FilesLocation, StringComparison.OrdinalIgnoreCase)) {
-                        Medo.MessageBox.ShowWarning(this, "This folder is already used for storage. Move will be aborted.");
-                        return;
-                    } else if (newPath.StartsWith(Settings.FilesLocation, StringComparison.OrdinalIgnoreCase)) {
-                        Medo.MessageBox.ShowWarning(this, "This folder is already used as part of storage. Move will be aborted.");
-                        return;
-                    }
-
-                    var mapping = new Dictionary<QFileInfo, QFileInfo>();
                     try {
-                        FillMapping(mapping, oldPath, newPath, "");
-                        foreach (var folder in App.Document.GetSubFolders()) {
-                            FillMapping(mapping, oldPath, newPath, folder.Name);
+
+                        var copier = new DocumentCopier(App.Document, frm.Folder);
+                        //if (copier.DestinationRootAlreadyExisted) {
+                        //    if (Medo.MessageBox.ShowQuestion(this, "Destination already exists. Are you sure you want to move there?", MessageBoxButtons.YesNo) == DialogResult.No) {
+                        //        return;
+                        //    }
+                        //}
+
+                        var alwaysOverwrite = false;
+                        if (!copier.DestinationRootWasEmpty) {
+                            switch (Medo.MessageBox.ShowQuestion(this, "Destination is not empty. Do you want to overwrite all files?\n\nIf you select No, you will be asked for each file existing at the destination.", MessageBoxButtons.YesNoCancel)) {
+                                case DialogResult.Yes: alwaysOverwrite = true; break;
+                                case DialogResult.No: alwaysOverwrite = false; break;
+                                case DialogResult.Cancel: return;
+                            }
                         }
-                    } catch (Exception ex) {
-                        Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot enumerate current folder. Move will be aborted.\n\n{0}", ex.Message));
-                        return;
+
+                        copier.FolderOverwrite += delegate (object sender2, DocumentCopierOverwriteEventArgs e2) {
+                            switch (Medo.MessageBox.ShowQuestion(this, "Folder \"" + e2.RelativePath + "\" already exists at the destination. Do you wish to overwrite it?", MessageBoxButtons.YesNoCancel)) {
+                                case DialogResult.No: e2.Overwrite = false; break;
+                                case DialogResult.Cancel: e2.Cancel = true; break;
+                            }
+                        };
+
+                        copier.FileOverwrite += delegate (object sender2, DocumentCopierOverwriteEventArgs e2) {
+                            switch (Medo.MessageBox.ShowQuestion(this, "File \"" + e2.RelativePath + "\" already exists at the destination. Do you wish to overwrite it?", MessageBoxButtons.YesNoCancel)) {
+                                case DialogResult.No: e2.Overwrite = false; break;
+                                case DialogResult.Cancel: e2.Cancel = true; break;
+                            }
+                        };
+
+                        if (copier.CopyAll(alwaysOverwrite: alwaysOverwrite)) {
+                            App.Document = copier.GetDestinationDocument();
+                            Settings.FilesLocation = App.Document.RootPath;
+                        }
+
+                        Medo.MessageBox.ShowInformation(this, "Data location transfer succeeded.");
+                        this.DialogResult = DialogResult.OK;
+
+                    } catch (ApplicationException ex) {
+                        Medo.MessageBox.ShowError(this, ex.Message);
                     }
 
-                    if (mapping.Count > 0) {
-                        switch (Medo.MessageBox.ShowQuestion(this, "Do you want to copy existing files to new location?", MessageBoxButtons.YesNoCancel)) {
-                            case DialogResult.Yes: {
-                                    try {
-                                        foreach (var map in mapping) {
-                                            var oldFile = map.Key;
-                                            var newFile = map.Value;
-                                            if (Directory.Exists(newFile.DirectoryName) == false) { Helper.CreatePath(newFile.DirectoryName); }
-                                            if (newFile.Exists) {
-                                                switch (Medo.MessageBox.ShowQuestion(this, string.Format(CultureInfo.CurrentUICulture, "File \"{0}\" already exists at destination. Do you wish to overwrite it?", newFile.Name), MessageBoxButtons.YesNoCancel)) {
-                                                    case DialogResult.Yes: break;
-                                                    case DialogResult.No: continue;
-                                                    case DialogResult.Cancel: return;
-                                                }
-                                            }
-                                            File.Copy(oldFile.FullName, newFile.FullName, true);
-                                        }
-                                    } catch (Exception ex) {
-                                        Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot copy files to new location. Move will be aborted.\n\n{0}", ex.Message));
-                                        return;
-                                    }
-                                } break;
-
-                            case DialogResult.No: break;
-                            case DialogResult.Cancel: return;
-                        }
-                    }
-
-                    Settings.FilesLocation = newPath;
-                    Medo.MessageBox.ShowInformation(this, "Data location transfer succeeded.");
-                    this.DialogResult = DialogResult.OK;
                 }
-            }
-        }
-
-        private void FillMapping(Dictionary<QFileInfo, QFileInfo> mapping, string oldBasePath, string newBasePath, string folder) {
-            var oldPath = string.IsNullOrEmpty(folder) ? oldBasePath : Path.Combine(oldBasePath, folder);
-            var newPath = string.IsNullOrEmpty(folder) ? newBasePath : Path.Combine(newBasePath, folder);
-            if (File.Exists(Path.Combine(oldPath, ".qtext"))) {
-                mapping.Add(new QFileInfo(Path.Combine(oldPath, ".qtext")), new QFileInfo(Path.Combine(newPath, ".qtext")));
-            }
-            foreach (var file in Directory.GetFiles(oldPath, "*.txt")) {
-                var oldFile = new QFileInfo(file);
-                mapping.Add(oldFile, new QFileInfo(Path.Combine(newPath, oldFile.Name)));
-            }
-            foreach (var file in Directory.GetFiles(oldPath, "*.rtf")) {
-                var oldFile = new QFileInfo(file);
-                mapping.Add(oldFile, new QFileInfo(Path.Combine(newPath, oldFile.Name)));
             }
         }
 

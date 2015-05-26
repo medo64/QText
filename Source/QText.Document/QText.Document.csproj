@@ -54,6 +54,8 @@
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="Document.cs" />
+    <Compile Include="DocumentCopier.cs" />
+    <Compile Include="DocumentCopierOverwriteEventArgs.cs" />
     <Compile Include="DocumentFileEventArgs.cs" />
     <Compile Include="DocumentStyle.cs" />
     <Compile Include="FileExtensions.cs" />
