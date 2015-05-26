@@ -287,7 +287,7 @@ namespace QText {
         #endregion
 
 
-        #region Move
+        #region Order
 
         public void OrderBefore(DocumentFile pivotFile) {
             this.Folder.Document.OrderBefore(this, pivotFile);
