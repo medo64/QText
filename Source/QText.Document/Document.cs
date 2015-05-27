@@ -185,7 +185,7 @@ namespace QText {
             if (File.Exists(e.FullPath)) { //file - ignore directory changes
                 foreach (var file in this.Files) {
                     if (string.Equals(file.FullPath, e.FullPath, StringComparison.OrdinalIgnoreCase)) {
-                        this.OnFileChanged(new DocumentFileEventArgs(file));
+                        this.OnFileExternallyChanged(new DocumentFileEventArgs(file));
                         break;
                     }
                 }
