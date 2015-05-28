@@ -38,9 +38,9 @@ IF EXIST %COMPILE_TOOL_1% (
 
 RMDIR /Q /S "..\Binaries" 2> NUL
 %COMPILE_TOOL% /Build "Release" %FILE_SOLUTION%
+IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
 COPY ..\README.md ..\Binaries\ReadMe.txt
 COPY ..\LICENSE.md ..\Binaries\License.txt
-IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
 
 ECHO.
 
