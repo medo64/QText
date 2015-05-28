@@ -329,7 +329,7 @@ namespace QText {
             if (e.CloseReason == CloseReason.UserClosing) {
                 e.Cancel = true;
                 this.Hide();
-                App.Tray.ShowBalloonOnMinimize();
+                App.TrayContext.ShowBalloonOnMinimize();
             }
 #endif
 

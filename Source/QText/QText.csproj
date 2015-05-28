@@ -43,7 +43,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>..\..\Binaries\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -179,7 +179,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="TextSelection.cs" />
-    <Compile Include="Tray.cs" />
+    <Compile Include="TrayContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\App.manifest">

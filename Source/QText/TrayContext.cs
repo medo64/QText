@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 
 namespace QText {
-    internal class Tray : IDisposable {
+    internal class TrayContext : ApplicationContext {
 
         private NotifyIcon notMain = new NotifyIcon();
         public Form Form { get; private set; }
@@ -11,7 +11,7 @@ namespace QText {
 
         private static readonly object SyncRoot = new object();
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", Justification = "This program is not intended to be localized.")]
-        public Tray(Form form) {
+        public TrayContext(Form form) : base() {
             this.Form = form;
 
             this.Form.CreateControl();
@@ -24,33 +24,33 @@ namespace QText {
             }
             notMain.Text = Medo.Reflection.EntryAssembly.Title;
 
-            notMain.MouseClick += delegate(object sender, MouseEventArgs e) {
+            notMain.MouseClick += delegate (object sender, MouseEventArgs e) {
                 if ((e.Button == MouseButtons.Left) && (Settings.TrayOneClickActivation)) {
-                    ShowForm();
+                    this.ShowForm();
                 }
             };
-            notMain.MouseDoubleClick += delegate(object sender, MouseEventArgs e) {
+            notMain.MouseDoubleClick += delegate (object sender, MouseEventArgs e) {
                 if (e.Button == MouseButtons.Left) {
-                    ShowForm();
+                    this.ShowForm();
                 }
             };
 
             notMain.ContextMenu = new ContextMenu();
-            notMain.ContextMenu.Popup += delegate(object sender, EventArgs e) {
+            notMain.ContextMenu.Popup += delegate (object sender, EventArgs e) {
                 var showItem = new MenuItem("&Show") { DefaultItem = true };
                 if (App.Hotkey.IsRegistered) { showItem.Text += "\t" + Helper.GetKeyString(App.Hotkey.Key); }
-                showItem.Click += delegate(object sender2, EventArgs e2) {
-                    ShowForm();
+                showItem.Click += delegate (object sender2, EventArgs e2) {
+                    this.ShowForm();
                 };
 
                 var showOnPrimaryItem = new MenuItem("Show on primary screen");
-                showItem.Click += delegate(object sender2, EventArgs e2) {
-                    ShowForm(true);
+                showItem.Click += delegate (object sender2, EventArgs e2) {
+                    this.ShowForm(true);
                 };
 
                 var exitItem = new MenuItem("E&xit");
-                exitItem.Click += delegate(object sender2, EventArgs e2) {
-                    this.Hide();
+                exitItem.Click += delegate (object sender2, EventArgs e2) {
+                    this.HideIcon();
                     Application.Exit();
                 };
 
@@ -63,16 +63,39 @@ namespace QText {
         }
 
 
-        public void Show() {
+        public void ShowIcon() {
             notMain.Visible = true;
         }
 
-        public void Hide() {
+        public void HideIcon() {
             notMain.Visible = false;
         }
 
+
+        #region ShowForm
+
+        private delegate void ShowFormProcDelegate(bool showOnPrimary);
+
         public void ShowForm(bool showOnPrimary = false) {
-            lock (Tray.SyncRoot) {
+            try {
+                if (this.Form.InvokeRequired) {
+                    var method = new ShowFormProcDelegate(ShowFormProc);
+                    this.Form.Invoke(method, showOnPrimary);
+                } else {
+                    ShowFormProc(showOnPrimary);
+                }
+            } catch (Exception) { }
+        }
+
+        private void ShowFormProc(bool showOnPrimary) {
+            this.ShowIcon();
+
+            lock (TrayContext.SyncRoot) {
+                if (this.Form.IsHandleCreated == false) {
+                    this.Form.CreateControl();
+                    this.Form.Handle.GetType();
+                }
+
                 this.Form.Show();
                 if (this.Form.WindowState == FormWindowState.Minimized) { this.Form.WindowState = FormWindowState.Normal; }
 
@@ -121,6 +144,8 @@ namespace QText {
             }
         }
 
+        #endregion
+
         internal void ShowBalloonOnMinimize() {
             if (Settings.ShowBalloonOnNextMinimize) {
                 Settings.ShowBalloonOnNextMinimize = false;
@@ -133,13 +158,15 @@ namespace QText {
         }
 
 
-        #region Disposing
-
-        public void Dispose() {
-            this.Dispose(true);
+        protected override void ExitThreadCore() {
+            this.HideIcon();
+            base.ExitThreadCore();
         }
 
-        protected void Dispose(bool disposing) {
+
+        #region Disposing
+
+        protected override void Dispose(bool disposing) {
             if (disposing) {
                 notMain.Dispose();
             }

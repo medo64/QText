@@ -13,8 +13,7 @@ namespace QText {
 
     internal static class App {
 
-        public static MainForm Form;
-        public static Tray Tray;
+        public static TrayContext TrayContext;
         public static QText.Document Document;
 
         public static Medo.Windows.Forms.Hotkey Hotkey = new Medo.Windows.Forms.Hotkey();
@@ -51,7 +50,6 @@ namespace QText {
                     CarbonCopyRootPath = Settings.CarbonCopyUse ? Settings.CarbonCopyDirectory : null,
                     CarbonCopyIgnoreErrors = Settings.CarbonCopyIgnoreErrors
                 };
-                App.Form = new MainForm();
 
                 Medo.Application.SingleInstance.NewInstanceDetected += new EventHandler<Medo.Application.NewInstanceEventArgs>(SingleInstance_NewInstanceDetected);
                 if (Medo.Application.SingleInstance.IsOtherInstanceRunning) {
@@ -88,8 +86,8 @@ namespace QText {
                     }
                 }
 
-                App.Tray = new Tray(App.Form);
-                App.Tray.Show();
+                App.TrayContext = new TrayContext(new MainForm());
+                App.TrayContext.ShowIcon();
 
                 App.Hotkey.HotkeyActivated += new EventHandler<EventArgs>(Hotkey_HotkeyActivated);
                 if (Settings.ActivationHotkey != Keys.None) {
@@ -101,41 +99,24 @@ namespace QText {
                 }
 
                 if (Medo.Application.Args.Current.ContainsKey("hide") == false) {
-                    Tray.ShowForm();
+                    App.TrayContext.ShowForm();
                 }
-                Application.Run();
+                Application.Run(App.TrayContext);
             }
         }
 
 
         private static void SingleInstance_NewInstanceDetected(object sender, Medo.Application.NewInstanceEventArgs e) {
-            try {
-                if (App.Form.IsHandleCreated == false) {
-                    App.Form.CreateControl();
-                    App.Form.Handle.GetType();
-                }
-
-                NewInstanceDetectedProcDelegate method = new NewInstanceDetectedProcDelegate(NewInstanceDetectedProc);
-                App.Form.Invoke(method);
-            } catch (Exception) { }
+            App.TrayContext.ShowForm();
         }
 
-        private delegate void NewInstanceDetectedProcDelegate();
-
-        private static void NewInstanceDetectedProc() {
-            App.Tray.Show();
-            App.Form.Show();
-            if (App.Form.WindowState == FormWindowState.Minimized) { App.Form.WindowState = FormWindowState.Normal; }
-            App.Form.Activate();
-        }
 
         private static void Hotkey_HotkeyActivated(object sender, EventArgs e) {
-            NewInstanceDetectedProc();
+            App.TrayContext.ShowForm();
         }
 
 
         private static void ApplicationExit(object sender, System.EventArgs e) {
-            if (App.Tray != null) { App.Tray.Hide(); }
             Environment.Exit(0);
         }
 
