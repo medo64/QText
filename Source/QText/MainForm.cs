@@ -432,8 +432,6 @@ namespace QText {
 
             tmrQuickSave.Enabled = isVisible;
             tmrUpdateToolbar.Enabled = isVisible;
-
-            if (isVisible) { App.Document.EnableWatcher(); } else { App.Document.DisableWatcher(); }
         }
 
 

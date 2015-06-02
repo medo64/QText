@@ -37,7 +37,7 @@ namespace QText {
             } catch (UnauthorizedAccessException) { }
 
             var selectedFiles = new List<DocumentFile>();
-            this.Files.Sort(delegate(DocumentFile file1, DocumentFile file2) {
+            this.Files.Sort(delegate (DocumentFile file1, DocumentFile file2) {
                 var index1 = Array.IndexOf(lines, file1.Folder.Name + "|" + file1.Name + "|");
                 if (index1 < 0) {
                     index1 = Array.IndexOf(lines, file1.Folder.Name + "|" + file1.Name + "|*");
@@ -73,6 +73,8 @@ namespace QText {
             this.Watcher.Created += Watcher_Created;
             this.Watcher.Deleted += Watcher_Deleted;
             this.Watcher.Renamed += Watcher_Renamed;
+
+            this.EnableWatcher();
         }
 
 
@@ -92,7 +94,7 @@ namespace QText {
         private readonly List<DocumentFolder> Folders = new List<DocumentFolder>();
 
         internal void SortFolders() {
-            this.Folders.Sort(delegate(DocumentFolder folder1, DocumentFolder folder2) {
+            this.Folders.Sort(delegate (DocumentFolder folder1, DocumentFolder folder2) {
                 if (string.IsNullOrEmpty(folder1.Name) == string.IsNullOrEmpty(folder2.Name)) {
                     return string.Compare(folder1.Title, folder2.Title, StringComparison.OrdinalIgnoreCase);
                 } else {
