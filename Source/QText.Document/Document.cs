@@ -515,8 +515,10 @@ namespace QText {
             }
 
             Debug.WriteLine("File.New: " + name);
-            File.WriteAllText(newFile.FullPath, "");
-            this.Files.Add(newFile);
+            using (var watcher = new Helper.FileSystemToggler(this.Watcher)) {
+                File.WriteAllText(newFile.FullPath, "");
+                this.Files.Add(newFile);
+            }
 
             this.OnFolderChanged(new DocumentFolderEventArgs(newFile.Folder));
             return newFile;
