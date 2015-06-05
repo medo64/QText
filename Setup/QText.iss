@@ -81,6 +81,15 @@ begin
 end;
 
 
+function PrepareToInstall(var NeedsRestart: Boolean): String;
+var
+    ResultCode: Integer;
+begin
+    Exec(ExpandConstant('{sys}\taskkill.exe'), '/f /im qtext.exe', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+    Result := Result;
+end;
+
+
 function InitializeSetup(): Boolean;
 var
   productKeys       :TArrayOfString;
