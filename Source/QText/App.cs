@@ -117,6 +117,7 @@ namespace QText {
 
 
         private static void ApplicationExit(object sender, System.EventArgs e) {
+            if (App.Hotkey.IsRegistered) { App.Hotkey.Unregister(); }
             Environment.Exit(0);
         }
 
