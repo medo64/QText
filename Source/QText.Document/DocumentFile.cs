@@ -318,6 +318,9 @@ namespace QText {
                             }
                             stream.Position = 0;
                         }
+                    } catch (CryptographicException) {
+                        this.PasswordBytes = null; //clear password
+                        throw new ApplicationException("Decryption failed.");
                     } finally {
                         this.ProtectPassword();
                     }
