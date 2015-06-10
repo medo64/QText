@@ -95,7 +95,7 @@ namespace QText {
                     } else {
                         tab.Rename(newTitle);
                     }
-                } catch (ApplicationException ex) {
+                } catch (InvalidOperationException ex) {
                     e.CancelEdit = true;
                     Medo.MessageBox.ShowError(this, string.Format(CultureInfo.CurrentUICulture, "Cannot rename file.\n\n{0}", ex.Message));
                 }

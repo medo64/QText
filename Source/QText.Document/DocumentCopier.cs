@@ -12,16 +12,16 @@ namespace QText {
         /// </summary>
         /// <param name="document">Document.</param>
         /// <param name="destinationPath">Destination path.</param>
-        /// <exception cref="ApplicationException">Cannot copy into the current storage directory tree. -or- Cannot create destination's root direcory.</exception>
+        /// <exception cref="InvalidOperationException">Cannot copy into the current storage directory tree. -or- Cannot create destination's root direcory.</exception>
         public DocumentCopier(Document document, string destinationPath) {
             this.Document = document;
 
             var destinationRoot = Path.GetFullPath(destinationPath);
             if (destinationRoot.StartsWith(this.Document.RootPath, StringComparison.OrdinalIgnoreCase)) {
-                throw new ApplicationException("Cannot copy into the current storage directory tree.");
+                throw new InvalidOperationException("Cannot copy into the current storage directory tree.");
             }
             if ((this.Document.CarbonCopyRootPath != null) && (destinationRoot.StartsWith(this.Document.CarbonCopyRootPath, StringComparison.OrdinalIgnoreCase))) {
-                throw new ApplicationException("Cannot copy into the carbon copy directory tree.");
+                throw new InvalidOperationException("Cannot copy into the carbon copy directory tree.");
             }
             this.DestinationRootPath = destinationRoot;
 
@@ -31,7 +31,7 @@ namespace QText {
                 try {
                     Helper.CreatePath(this.DestinationRootPath);
                 } catch (Exception ex) {
-                    throw new ApplicationException("Cannot create destination's root direcory.", ex);
+                    throw new InvalidOperationException("Cannot create destination's root direcory.", ex);
                 }
             }
 

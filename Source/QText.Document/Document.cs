@@ -473,7 +473,7 @@ namespace QText {
                 this.OnChanged(new EventArgs());
                 return folder;
             } catch (Exception ex) {
-                throw new ApplicationException(ex.Message, ex);
+                throw new InvalidOperationException(ex.Message, ex);
             }
         }
 
@@ -494,7 +494,7 @@ namespace QText {
                 this.OnChanged(new EventArgs());
                 return folder;
             } catch (Exception ex) {
-                throw new ApplicationException(ex.Message, ex);
+                throw new InvalidOperationException(ex.Message, ex);
             }
         }
 

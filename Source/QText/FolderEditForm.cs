@@ -92,7 +92,7 @@ namespace QText {
             } else {
                 try {
                     oldFolder.Rename(newTitle);
-                } catch (ApplicationException ex) {
+                } catch (InvalidOperationException ex) {
                     e.CancelEdit = true;
                     Medo.MessageBox.ShowError(this, string.Format(CultureInfo.CurrentUICulture, "Cannot rename folder.\n\n{0}", ex.Message));
                 }
@@ -132,7 +132,7 @@ namespace QText {
                 item.Focused = true;
                 item.Selected = true;
                 item.BeginEdit();
-            } catch (ApplicationException ex) {
+            } catch (InvalidOperationException ex) {
                 Medo.MessageBox.ShowError(this, string.Format(CultureInfo.CurrentUICulture, "Cannot create folder.\n\n{0}", ex.Message));
             }
         }
@@ -158,7 +158,7 @@ namespace QText {
                         if (this.CurrentFolder.Equals(folder)) {
                             this.CurrentFolder = App.Document.RootFolder;
                         }
-                    } catch (ApplicationException ex) {
+                    } catch (InvalidOperationException ex) {
                         Medo.MessageBox.ShowError(this, string.Format(CultureInfo.CurrentUICulture, "Cannot delete folder.\n\n{0}", ex.Message));
                     }
                 }

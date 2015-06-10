@@ -184,7 +184,7 @@ namespace QText {
 
 
         public void Reopen() {
-            if (this.BaseFile.IsEncrypted && !this.BaseFile.HasPassword) { throw new ApplicationException("No password provided."); }
+            if (this.BaseFile.IsEncrypted && !this.BaseFile.HasPassword) { throw new InvalidOperationException("No password provided."); }
 
             try {
                 var txt = (this.TextBox != null) ? this.TextBox : GetEmptyTextBox();
@@ -211,7 +211,7 @@ namespace QText {
                 this.IsChanged = false;
                 this.IsOpened = true;
             } catch (Exception ex) {
-                throw new ApplicationException(ex.Message, ex);
+                throw new InvalidOperationException(ex.Message, ex);
             }
         }
 

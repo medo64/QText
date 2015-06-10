@@ -867,7 +867,7 @@ namespace QText {
                     App.Document.CarbonCopyIgnoreErrors = Settings.CarbonCopyIgnoreErrors;
                     try {
                         App.Document.WriteAllCarbonCopies();
-                    } catch (ApplicationException ex) {
+                    } catch (InvalidOperationException ex) {
                         Medo.MessageBox.ShowError(this, ex.Message);
                     }
                 }
@@ -981,7 +981,7 @@ namespace QText {
                 try {
                     tabFiles.SelectedTab.BaseFile.Move(folder);
                     tabFiles.RemoveTab(tabFiles.SelectedTab);
-                } catch (ApplicationException ex) {
+                } catch (InvalidOperationException ex) {
                     Medo.MessageBox.ShowError(this, "Error moving file!\n\n" + ex.Message);
                 }
             }
@@ -1509,11 +1509,11 @@ namespace QText {
                             if (!tab.IsChanged) { //don't reopen tabs that were changed
                                 try {
                                     tab.Reopen();
-                                } catch (ApplicationException) {
+                                } catch (InvalidOperationException) {
                                     Thread.Sleep(100);
                                     try {
                                         tab.Reopen();
-                                    } catch (ApplicationException) { }
+                                    } catch (InvalidOperationException) { }
                                 }
                             }
                         }

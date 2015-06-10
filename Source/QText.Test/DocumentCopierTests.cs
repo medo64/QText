@@ -101,7 +101,7 @@ namespace QTextTest {
 
 
         [TestMethod()]
-        [ExpectedException(typeof(ApplicationException))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void DocumentCopier_NotInOwn() {
             using (var src = new TestDirectory()) {
                 src.CreateRawFile("A.txt");
@@ -119,7 +119,7 @@ namespace QTextTest {
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(ApplicationException))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void DocumentCopier_NotInOwnTree() {
             using (var src = new TestDirectory()) {
                 src.CreateRawFile("A.txt");
@@ -138,7 +138,7 @@ namespace QTextTest {
 
 
         [TestMethod()]
-        [ExpectedException(typeof(ApplicationException))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void DocumentCopier_NotInCarbonCopy() {
             using (var src = new TestDirectory())
             using (var cc = new TestDirectory()) {
@@ -158,7 +158,7 @@ namespace QTextTest {
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(ApplicationException))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void DocumentCopier_NotInCarbonCopyTree() {
             using (var src = new TestDirectory())
             using (var cc = new TestDirectory()) {

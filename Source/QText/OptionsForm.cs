@@ -184,7 +184,7 @@ namespace QText {
                         Medo.MessageBox.ShowInformation(this, "Data location transfer succeeded.");
                         this.DialogResult = DialogResult.OK;
 
-                    } catch (ApplicationException ex) {
+                    } catch (InvalidOperationException ex) {
                         Medo.MessageBox.ShowError(this, ex.Message);
                     }
 

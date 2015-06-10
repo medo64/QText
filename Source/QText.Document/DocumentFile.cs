@@ -20,7 +20,7 @@ namespace QText {
             } else if (fileName.EndsWith(FileExtensions.EncryptedRichText, StringComparison.OrdinalIgnoreCase)) {
                 this.Kind = DocumentKind.EncryptedRichText;
             } else {
-                throw new ApplicationException("Cannot recognize file extension.");
+                throw new NotSupportedException("Cannot recognize file extension.");
             }
             this.Name = fileName.Substring(0, fileName.Length - this.Extension.Length);
         }
@@ -143,7 +143,7 @@ namespace QText {
                 case DocumentKind.RichText: newPath += FileExtensions.RichText; break;
                 case DocumentKind.EncryptedPlainText: newPath += FileExtensions.EncryptedPlainText; break;
                 case DocumentKind.EncryptedRichText: newPath += FileExtensions.EncryptedRichText; break;
-                default: throw new ApplicationException("Unknown file kind.");
+                default: throw new NotSupportedException("Unknown file kind.");
             }
         }
 
@@ -163,7 +163,7 @@ namespace QText {
                     Helper.MovePath(this.FullPath, newPath);
                 }
             } catch (Exception ex) {
-                throw new ApplicationException(ex.Message, ex);
+                throw new InvalidOperationException(ex.Message, ex);
             }
 
             this.Name = newName;
@@ -195,7 +195,7 @@ namespace QText {
                 this.Folder.Document.OnFolderChanged(new DocumentFolderEventArgs(oldFolder));
                 this.Folder.Document.OnFolderChanged(new DocumentFolderEventArgs(this.Folder));
             } catch (Exception ex) {
-                throw new ApplicationException(ex.Message, ex);
+                throw new InvalidOperationException(ex.Message, ex);
             }
         }
 
@@ -213,7 +213,7 @@ namespace QText {
                 this.Folder.Document.ProcessDelete(this.FullPath);
                 this.Folder.Document.OnFolderChanged(new DocumentFolderEventArgs(this.Folder));
             } catch (Exception ex) {
-                throw new ApplicationException(ex.Message, ex);
+                throw new InvalidOperationException(ex.Message, ex);
             }
         }
 
@@ -235,7 +235,7 @@ namespace QText {
             switch (newStyle) {
                 case DocumentStyle.PlainText: newKind = this.IsEncrypted ? DocumentKind.EncryptedPlainText : DocumentKind.PlainText; break;
                 case DocumentStyle.RichText: newKind = this.IsEncrypted ? DocumentKind.EncryptedRichText : DocumentKind.RichText; break;
-                default: throw new ApplicationException("Unknown file style.");
+                default: throw new NotSupportedException("Unknown file style.");
             }
 
             Debug.WriteLine("File.ChangeStyle: " + this.Name + " (" + this.Style.ToString() + " -> " + newStyle.ToString() + ")");
@@ -303,7 +303,7 @@ namespace QText {
         #region Read/write
 
         public void Read(MemoryStream stream) {
-            if (this.IsEncrypted && !this.HasPassword) { throw new ApplicationException("Missing password."); }
+            if (this.IsEncrypted && !this.HasPassword) { throw new InvalidOperationException("Missing password."); }
 
             using (var fileStream = new FileStream(this.FullPath, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                 var buffer = new byte[65536];
@@ -320,7 +320,7 @@ namespace QText {
                         }
                     } catch (CryptographicException) {
                         this.PasswordBytes = null; //clear password
-                        throw new ApplicationException("Decryption failed.");
+                        throw new InvalidOperationException("Decryption failed.");
                     } finally {
                         this.ProtectPassword();
                     }
@@ -334,7 +334,7 @@ namespace QText {
         }
 
         public void Write(MemoryStream stream) {
-            if (this.IsEncrypted && !this.HasPassword) { throw new ApplicationException("Missing password."); }
+            if (this.IsEncrypted && !this.HasPassword) { throw new InvalidOperationException("Missing password."); }
 
             using (var watcher = new Helper.FileSystemToggler(this.Folder.Document.Watcher)) {
                 stream.Position = 0;
@@ -374,7 +374,7 @@ namespace QText {
                     File.Copy(this.FullPath, ccFullPath, true);
                 } catch (Exception ex) {
                     if (!this.Folder.Document.CarbonCopyIgnoreErrors) {
-                        throw new ApplicationException("Error writing carbon copy for " + this.Title + ".\n\n" + ex.Message, ex);
+                        throw new InvalidOperationException("Error writing carbon copy for " + this.Title + ".\n\n" + ex.Message, ex);
                     }
                 }
             }

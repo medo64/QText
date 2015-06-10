@@ -64,7 +64,7 @@ namespace QText {
                 }
                 this.Document.OnFolderChanged(new DocumentFolderEventArgs(this));
             } catch (Exception ex) {
-                throw new ApplicationException(ex.Message, ex);
+                throw new InvalidOperationException(ex.Message, ex);
             }
         }
 
@@ -90,7 +90,7 @@ namespace QText {
                 }
                 this.Document.OnChanged(new EventArgs());
             } catch (Exception ex) {
-                throw new ApplicationException(ex.Message, ex);
+                throw new InvalidOperationException(ex.Message, ex);
             }
         }
 
