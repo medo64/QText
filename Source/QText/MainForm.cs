@@ -970,7 +970,11 @@ namespace QText {
 
             foreach (var folder in App.Document.GetFolders()) {
                 var item = new ToolStripMenuItem(folder.Title, null, mnxTabMoveTo_Click) { Tag = folder };
+                item.AutoToolTip = false;
                 item.Enabled = !folder.Equals(tabFiles.CurrentFolder) && tabFiles.SelectedTab.BaseFile.CanMove(folder);
+                if (!item.Enabled) {
+                    item.ToolTipText = folder.Equals(tabFiles.CurrentFolder) ? "File is already in this folder." : "File with same name already exists in destination folder.";
+                }
                 mnxTabMoveTo.DropDownItems.Add(item);
             }
         }
