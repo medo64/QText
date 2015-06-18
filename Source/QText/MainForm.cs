@@ -818,9 +818,9 @@ namespace QText {
                 if (!tabFiles.CurrentFolder.Equals(frm.CurrentFolder)) {
                     tabFiles.Enabled = true;
                     tabFiles.FolderOpen(frm.CurrentFolder, false);
-                    mnuFolder.Text = tabFiles.CurrentFolder.Title;
-                    Settings.LastFolder = tabFiles.CurrentFolder;
                 }
+                mnuFolder.Text = tabFiles.CurrentFolder.Title;
+                Settings.LastFolder = tabFiles.CurrentFolder;
             }
             tabFiles.Enabled = true;
             if (tabFiles.SelectedTab != null) { tabFiles.SelectedTab.Select(); }
