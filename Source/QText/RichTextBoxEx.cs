@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Printing;
@@ -238,10 +238,12 @@ namespace QText {
 
 
                 case Keys.Control | Keys.Oemplus:
+                case Keys.Control | Keys.Add:
                     this.ZoomIn();
                     return true;
 
                 case Keys.Control | Keys.OemMinus:
+                case Keys.Control | Keys.Subtract:
                     this.ZoomOut();
                     return true;
 
@@ -349,7 +351,7 @@ namespace QText {
         }
 
         public void ZoomReset() {
-            this.ZoomFactor = 2.1f;
+            this.ZoomFactor = 2.1f; //workaround for bug
             this.ZoomFactor = 1.0f;
         }
 
