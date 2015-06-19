@@ -122,6 +122,7 @@ namespace QText {
             this.ToolStripMenuItem14 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTabOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.tabFiles = new QText.TabFiles();
+            this.mnxTextResetFont = new System.Windows.Forms.ToolStripMenuItem();
             this.mnu.SuspendLayout();
             this.mnxText.SuspendLayout();
             this.mnxTab.SuspendLayout();
@@ -529,11 +530,12 @@ namespace QText {
             this.mnxTextItalic,
             this.mnxTextUnderline,
             this.mnxTextStrikeout,
+            this.mnxTextResetFont,
             this.mnxTextRtfSeparator,
             this.mnxTextSelection,
             this.mnxTextLines});
             this.mnxText.Name = "mnxTextBox";
-            this.mnxText.Size = new System.Drawing.Size(294, 450);
+            this.mnxText.Size = new System.Drawing.Size(294, 504);
             this.mnxText.Opening += new System.ComponentModel.CancelEventHandler(this.mnxText_Opening);
             // 
             // mnxTextUndo
@@ -1007,6 +1009,13 @@ namespace QText {
             this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
             this.tabFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabFiles_MouseDown);
             // 
+            // mnxTextResetFont
+            // 
+            this.mnxTextResetFont.Name = "mnxTextResetFont";
+            this.mnxTextResetFont.Size = new System.Drawing.Size(293, 26);
+            this.mnxTextResetFont.Text = "Reset font to default";
+            this.mnxTextResetFont.Click += new System.EventHandler(this.mnuResetFont_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1136,5 +1145,6 @@ namespace QText {
         private System.Windows.Forms.ToolStripMenuItem mnuAppOptions;
         private System.Windows.Forms.ToolStripSeparator mnuApp0;
         internal System.Windows.Forms.ToolStripSeparator ToolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem mnxTextResetFont;
     }
 }
