@@ -1,6 +1,6 @@
 ### Building Project ###
 
-First step would be to get current version of code from BitBucket.
+First step would be to get current version of code from [GitHub](https://github.com/medo64/qtext).
 
 After that you can download and install required tools.
 
