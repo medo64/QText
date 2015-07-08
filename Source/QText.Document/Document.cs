@@ -9,72 +9,80 @@ namespace QText {
     public class Document {
 
         public Document(string path) {
-            this.RootPath = Path.GetFullPath(path);
+            try {
+                this.RootPath = Path.GetFullPath(path);
 
-            this.Folders.Add(new DocumentFolder(this, string.Empty));
-            foreach (var directory in Directory.GetDirectories(this.RootPath)) {
-                this.Folders.Add(new DocumentFolder(this, Path.GetFileName(directory)));
-            }
-            this.SortFolders();
+                this.Folders.Add(new DocumentFolder(this, string.Empty));
+                foreach (var directory in Directory.GetDirectories(this.RootPath)) {
+                    this.Folders.Add(new DocumentFolder(this, Path.GetFileName(directory)));
+                }
+                this.SortFolders();
 
-            foreach (var folder in this.Folders) {
-                foreach (var extension in FileExtensions.All) {
-                    foreach (var fileName in Directory.GetFiles(folder.FullPath, "*" + extension, SearchOption.TopDirectoryOnly)) {
-                        if (fileName.EndsWith(extension, StringComparison.OrdinalIgnoreCase)) { //need this check because *.txt matches A.txt2 too.
-                            this.Files.Add(new DocumentFile(folder, Path.GetFileName(fileName)));
+                foreach (var folder in this.Folders) {
+                    foreach (var extension in FileExtensions.All) {
+                        foreach (var fileName in Directory.GetFiles(folder.FullPath, "*" + extension, SearchOption.TopDirectoryOnly)) {
+                            if (fileName.EndsWith(extension, StringComparison.OrdinalIgnoreCase)) { //need this check because *.txt matches A.txt2 too.
+                                this.Files.Add(new DocumentFile(folder, Path.GetFileName(fileName)));
+                            }
                         }
                     }
                 }
-            }
 
-            var orderFilePath = Path.Combine(this.RootPath, ".qtext");
-            string[] lines = new string[] { };
-            try {
-                if (File.Exists(orderFilePath)) {
-                    lines = File.ReadAllLines(orderFilePath, Document.Encoding);
-                }
-            } catch (IOException) {
-            } catch (UnauthorizedAccessException) { }
-
-            var selectedFiles = new List<DocumentFile>();
-            this.Files.Sort(delegate (DocumentFile file1, DocumentFile file2) {
-                var index1 = Array.IndexOf(lines, file1.Folder.Name + "|" + file1.Name + "|");
-                if (index1 < 0) {
-                    index1 = Array.IndexOf(lines, file1.Folder.Name + "|" + file1.Name + "|*");
-                    if ((index1 >= 0) && !selectedFiles.Contains(file1)) {
-                        selectedFiles.Add(file1);
+                var orderFilePath = Path.Combine(this.RootPath, ".qtext");
+                string[] lines = new string[] { };
+                try {
+                    if (File.Exists(orderFilePath)) {
+                        lines = File.ReadAllLines(orderFilePath, Document.Encoding);
                     }
-                }
+                } catch (IOException) {
+                } catch (UnauthorizedAccessException) { }
 
-                var index2 = Array.IndexOf(lines, file2.Folder.Name + "|" + file2.Name + "|");
-                if (index2 < 0) {
-                    index2 = Array.IndexOf(lines, file2.Folder.Name + "|" + file2.Name + "|*");
-                    if ((index2 >= 0) && !selectedFiles.Contains(file2)) {
-                        selectedFiles.Add(file2);
+                var selectedFiles = new List<DocumentFile>();
+                this.Files.Sort(delegate (DocumentFile file1, DocumentFile file2) {
+                    var index1 = Array.IndexOf(lines, file1.Folder.Name + "|" + file1.Name + "|");
+                    if (index1 < 0) {
+                        index1 = Array.IndexOf(lines, file1.Folder.Name + "|" + file1.Name + "|*");
+                        if ((index1 >= 0) && !selectedFiles.Contains(file1)) {
+                            selectedFiles.Add(file1);
+                        }
                     }
+
+                    var index2 = Array.IndexOf(lines, file2.Folder.Name + "|" + file2.Name + "|");
+                    if (index2 < 0) {
+                        index2 = Array.IndexOf(lines, file2.Folder.Name + "|" + file2.Name + "|*");
+                        if ((index2 >= 0) && !selectedFiles.Contains(file2)) {
+                            selectedFiles.Add(file2);
+                        }
+                    }
+
+                    if ((index1 < 0) && (index2 < 0)) {
+                        return string.Compare(file1.Title, file2.Title, StringComparison.OrdinalIgnoreCase);
+                    } else if (index1 < 0) {
+                        return -1;
+                    } else if (index2 < 0) {
+                        return +1;
+                    } else {
+                        return (index1 < index2) ? -1 : +1;
+                    }
+                });
+                foreach (var selectedFile in selectedFiles) {
+                    selectedFile.Selected = true;
                 }
 
-                if ((index1 < 0) && (index2 < 0)) {
-                    return string.Compare(file1.Title, file2.Title, StringComparison.OrdinalIgnoreCase);
-                } else if (index1 < 0) {
-                    return -1;
-                } else if (index2 < 0) {
-                    return +1;
-                } else {
-                    return (index1 < index2) ? -1 : +1;
-                }
-            });
-            foreach (var selectedFile in selectedFiles) {
-                selectedFile.Selected = true;
+                this.Watcher = new FileSystemWatcher(this.RootPath) { IncludeSubdirectories = true, InternalBufferSize = 32768 };
+                this.Watcher.Changed += Watcher_Changed;
+                this.Watcher.Created += Watcher_Created;
+                this.Watcher.Deleted += Watcher_Deleted;
+                this.Watcher.Renamed += Watcher_Renamed;
+
+                this.EnableWatcher();
+            } catch (DirectoryNotFoundException) {
+                throw; //just rethrow it
+            } catch (NotSupportedException) {
+                throw; //just rethrow it
+            } catch (Exception ex) {
+                throw new InvalidOperationException(ex.Message, ex);
             }
-
-            this.Watcher = new FileSystemWatcher(this.RootPath) { IncludeSubdirectories = true, InternalBufferSize = 32768 };
-            this.Watcher.Changed += Watcher_Changed;
-            this.Watcher.Created += Watcher_Created;
-            this.Watcher.Deleted += Watcher_Deleted;
-            this.Watcher.Renamed += Watcher_Renamed;
-
-            this.EnableWatcher();
         }
 
 
