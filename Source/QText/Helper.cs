@@ -21,7 +21,7 @@ namespace QText {
                     allPaths.Add(currPath);
                     currPath = System.IO.Path.GetDirectoryName(currPath);
                     if (string.IsNullOrEmpty(currPath)) {
-                        throw new IOException("Path \"" + path + "\" can not be created.");
+                        throw new InvalidOperationException("Path \"" + path + "\" can not be created.");
                     }
                 }
 
@@ -29,8 +29,8 @@ namespace QText {
                     for (int i = allPaths.Count - 1; i >= 0; i += -1) {
                         System.IO.Directory.CreateDirectory(allPaths[i]);
                     }
-                } catch (Exception) {
-                    throw new System.IO.IOException("Path \"" + path + "\" can not be created.");
+                } catch (Exception ex) {
+                    throw new InvalidOperationException("Path \"" + path + "\" can not be created.", ex);
                 }
             }
         }

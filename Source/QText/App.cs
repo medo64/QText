@@ -45,11 +45,45 @@ namespace QText {
                 Medo.Windows.Forms.State.NoRegistryWrites = Settings.NoRegistryWrites;
                 Medo.Diagnostics.ErrorReport.DisableAutomaticSaveToTemp = Settings.NoRegistryWrites;
 
-                App.Document = new Document(Settings.FilesLocation) {
-                    DeleteToRecycleBin = Settings.FilesDeleteToRecycleBin,
-                    CarbonCopyRootPath = Settings.CarbonCopyUse ? Settings.CarbonCopyDirectory : null,
-                    CarbonCopyIgnoreErrors = Settings.CarbonCopyIgnoreErrors
-                };
+                #region Init document
+
+                try {
+                    OpenDocument();
+                } catch (DirectoryNotFoundException) { //try to create it
+                    try {
+                        Helper.CreatePath(Settings.FilesLocation);
+                        OpenDocument();
+                    } catch (DirectoryNotFoundException) { //try to create it
+                        if (Medo.MessageBox.ShowError(null, "Directory " + Settings.FilesLocation + " cannot be found.\n\nDo you wish to use default location at " + Settings.DefaultFilesLocation + "?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+                            Settings.FilesLocation = Settings.DefaultFilesLocation;
+                            Helper.CreatePath(Settings.FilesLocation);
+                            OpenDocument();
+                        } else {
+                            return;
+                        }
+                    } catch (InvalidOperationException) { //try to create it
+                        if (Medo.MessageBox.ShowError(null, "Directory " + Settings.FilesLocation + " cannot be used.\n\nDo you wish to use default location at " + Settings.DefaultFilesLocation + "?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+                            Settings.FilesLocation = Settings.DefaultFilesLocation;
+                            Helper.CreatePath(Settings.FilesLocation);
+                            OpenDocument();
+                        } else {
+                            return;
+                        }
+                    }
+                } catch (NotSupportedException) { //path is invalid
+                    if (Medo.MessageBox.ShowError(null, "Directory " + Settings.FilesLocation + " is invalid.\n\nDo you wish to use default location at " + Settings.DefaultFilesLocation + "?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+                        Settings.FilesLocation = Settings.DefaultFilesLocation;
+                        Helper.CreatePath(Settings.FilesLocation);
+                        OpenDocument();
+                    } else {
+                        return;
+                    }
+                } catch (InvalidOperationException ex) {
+                    Medo.MessageBox.ShowError(null, "Fatal startup error: " + ex.Message);
+                    return;
+                }
+
+                #endregion
 
                 Medo.Application.SingleInstance.NewInstanceDetected += new EventHandler<Medo.Application.NewInstanceEventArgs>(SingleInstance_NewInstanceDetected);
                 if (Medo.Application.SingleInstance.IsOtherInstanceRunning) {
@@ -105,6 +139,13 @@ namespace QText {
             }
         }
 
+        private static void OpenDocument() {
+            App.Document = new Document(Settings.FilesLocation) {
+                DeleteToRecycleBin = Settings.FilesDeleteToRecycleBin,
+                CarbonCopyRootPath = Settings.CarbonCopyUse ? Settings.CarbonCopyDirectory : null,
+                CarbonCopyIgnoreErrors = Settings.CarbonCopyIgnoreErrors
+            };
+        }
 
         private static void SingleInstance_NewInstanceDetected(object sender, Medo.Application.NewInstanceEventArgs e) {
             App.TrayContext.ShowForm();
