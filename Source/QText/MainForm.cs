@@ -32,8 +32,6 @@ namespace QText {
             Helper.ScaleToolstrip(mnu, mnxTab, mnxText);
 
             tabFiles.Multiline = Settings.MultilineTabs;
-
-            Medo.Windows.Forms.State.Load(this);
         }
 
 
@@ -318,6 +316,8 @@ namespace QText {
         }
 
         private void Form_Load(object sender, EventArgs e) {
+            Medo.Windows.Forms.State.Load(this);
+
             RefreshAll(null, null);
             Form_Resize(null, null);
 
