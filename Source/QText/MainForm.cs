@@ -1499,7 +1499,11 @@ namespace QText {
             bool isTabSelected = (tabFiles.SelectedTab != null);
             bool isTabRichText = isTabSelected && tabFiles.SelectedTab.BaseFile.IsRichText;
             bool isTabPlainText = isTabSelected && (tabFiles.SelectedTab.BaseFile.IsRichText == false);
-            bool hasPrinters = (PrinterSettings.InstalledPrinters.Count > 0);
+
+            bool hasPrinters = false;
+            try {
+                hasPrinters = (PrinterSettings.InstalledPrinters.Count > 0);
+            } catch (Win32Exception) { }
 
             mnuSaveNow.Enabled = isTabSelected;
             mnuRename.Enabled = isTabSelected;
