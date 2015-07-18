@@ -23,6 +23,7 @@ namespace QText {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             this.tab = new System.Windows.Forms.TabControl();
             this.tab_pagAppearance = new System.Windows.Forms.TabPage();
             this.lblColorExample = new System.Windows.Forms.Label();
@@ -71,6 +72,7 @@ namespace QText {
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnExit = new System.Windows.Forms.Button();
             this.btnAllowSave = new System.Windows.Forms.Button();
+            this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.tab.SuspendLayout();
             this.tab_pagAppearance.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudTabWidth)).BeginInit();
@@ -126,6 +128,7 @@ namespace QText {
             this.lblColorExample.TabIndex = 8;
             this.lblColorExample.Text = "C";
             this.lblColorExample.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.tooltip.SetToolTip(this.lblColorExample, "Background and foreground color for plain text.");
             // 
             // btnColorBackground
             // 
@@ -134,6 +137,7 @@ namespace QText {
             this.btnColorBackground.Size = new System.Drawing.Size(98, 29);
             this.btnColorBackground.TabIndex = 9;
             this.btnColorBackground.Text = "Background";
+            this.tooltip.SetToolTip(this.btnColorBackground, "Browse background color.");
             this.btnColorBackground.UseVisualStyleBackColor = true;
             this.btnColorBackground.Click += new System.EventHandler(this.btnColorBackground_Click);
             // 
@@ -144,6 +148,7 @@ namespace QText {
             this.btnColorForeground.Size = new System.Drawing.Size(98, 29);
             this.btnColorForeground.TabIndex = 10;
             this.btnColorForeground.Text = "Foreground";
+            this.tooltip.SetToolTip(this.btnColorForeground, "Browse foreground color.");
             this.btnColorForeground.UseVisualStyleBackColor = true;
             this.btnColorForeground.Click += new System.EventHandler(this.btnColorForeground_Click);
             // 
@@ -175,6 +180,7 @@ namespace QText {
             this.btnFont.Size = new System.Drawing.Size(22, 22);
             this.btnFont.TabIndex = 6;
             this.btnFont.Text = "...";
+            this.tooltip.SetToolTip(this.btnFont, "Browse font selection.");
             this.btnFont.UseVisualStyleBackColor = true;
             this.btnFont.Click += new System.EventHandler(this.btnFont_Click);
             // 
@@ -195,6 +201,7 @@ namespace QText {
             this.nudTabWidth.Size = new System.Drawing.Size(53, 22);
             this.nudTabWidth.TabIndex = 3;
             this.nudTabWidth.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tooltip.SetToolTip(this.nudTabWidth, "Number of characters each tab will use for alignment.");
             this.nudTabWidth.Value = new decimal(new int[] {
             1,
             0,
@@ -218,6 +225,7 @@ namespace QText {
             this.chkFollowURLs.Size = new System.Drawing.Size(108, 21);
             this.chkFollowURLs.TabIndex = 1;
             this.chkFollowURLs.Text = "Follow URLs";
+            this.tooltip.SetToolTip(this.chkFollowURLs, "Controls whether clicking the URL will ");
             this.chkFollowURLs.UseVisualStyleBackColor = true;
             // 
             // chkDisplayURLs
@@ -228,6 +236,7 @@ namespace QText {
             this.chkDisplayURLs.Size = new System.Drawing.Size(115, 21);
             this.chkDisplayURLs.TabIndex = 0;
             this.chkDisplayURLs.Text = "Display URLs";
+            this.tooltip.SetToolTip(this.chkDisplayURLs, "If checked, URLs in text will be detected and displayed as such.");
             this.chkDisplayURLs.UseVisualStyleBackColor = true;
             this.chkDisplayURLs.CheckedChanged += new System.EventHandler(this.chkDisplayURLs_CheckedChanged);
             // 
@@ -241,6 +250,7 @@ namespace QText {
             this.txtFont.ReadOnly = true;
             this.txtFont.Size = new System.Drawing.Size(337, 22);
             this.txtFont.TabIndex = 5;
+            this.tooltip.SetToolTip(this.txtFont, "Font to use as a default. Rich text will use different fonts too if set.");
             // 
             // tab_pagDisplay
             // 
@@ -272,6 +282,7 @@ namespace QText {
             this.cmbSelectionDelimiters.Name = "cmbSelectionDelimiters";
             this.cmbSelectionDelimiters.Size = new System.Drawing.Size(320, 24);
             this.cmbSelectionDelimiters.TabIndex = 7;
+            this.tooltip.SetToolTip(this.cmbSelectionDelimiters, "Delimiters that will be used for double-click selection.");
             // 
             // lblSelectionDelimiters
             // 
@@ -291,6 +302,8 @@ namespace QText {
             this.chbMultilineTabs.Size = new System.Drawing.Size(161, 21);
             this.chbMultilineTabs.TabIndex = 3;
             this.chbMultilineTabs.Text = "Multiline tab headers";
+            this.tooltip.SetToolTip(this.chbMultilineTabs, "Controls if tabs are to be shown in multiple lines when they cannot fit on screen" +
+        ".");
             this.chbMultilineTabs.UseVisualStyleBackColor = true;
             // 
             // chbVerticalScrollbar
@@ -301,6 +314,7 @@ namespace QText {
             this.chbVerticalScrollbar.Size = new System.Drawing.Size(135, 21);
             this.chbVerticalScrollbar.TabIndex = 5;
             this.chbVerticalScrollbar.Text = "Vertical scrollbar";
+            this.tooltip.SetToolTip(this.chbVerticalScrollbar, "If checked, vertical scrollbar will be shown.");
             this.chbVerticalScrollbar.UseVisualStyleBackColor = true;
             // 
             // chbHorizontalScrollbar
@@ -312,6 +326,8 @@ namespace QText {
             this.chbHorizontalScrollbar.Size = new System.Drawing.Size(152, 21);
             this.chbHorizontalScrollbar.TabIndex = 4;
             this.chbHorizontalScrollbar.Text = "Horizontal scrollbar";
+            this.tooltip.SetToolTip(this.chbHorizontalScrollbar, "Controls if horizontal scrolling is to be allowed. If not checked, text will wrap" +
+        " on right edge.");
             this.chbHorizontalScrollbar.UseVisualStyleBackColor = true;
             // 
             // chbShowMinimizeMaximizeButtons
@@ -322,6 +338,7 @@ namespace QText {
             this.chbShowMinimizeMaximizeButtons.Size = new System.Drawing.Size(234, 21);
             this.chbShowMinimizeMaximizeButtons.TabIndex = 1;
             this.chbShowMinimizeMaximizeButtons.Text = "Show minimize/maximize buttons";
+            this.tooltip.SetToolTip(this.chbShowMinimizeMaximizeButtons, "If checked, both minimize and maximize buttons will be shown.");
             this.chbShowMinimizeMaximizeButtons.UseVisualStyleBackColor = true;
             this.chbShowMinimizeMaximizeButtons.CheckedChanged += new System.EventHandler(this.chbShowMinimizeMaximizeButtons_CheckedChanged);
             // 
@@ -333,6 +350,7 @@ namespace QText {
             this.chkShowToolbar.Size = new System.Drawing.Size(112, 21);
             this.chkShowToolbar.TabIndex = 2;
             this.chkShowToolbar.Text = "Show toolbar";
+            this.tooltip.SetToolTip(this.chkShowToolbar, "If true, toolbar will be shown.");
             this.chkShowToolbar.UseVisualStyleBackColor = true;
             // 
             // chkShowInTaskbar
@@ -343,6 +361,7 @@ namespace QText {
             this.chkShowInTaskbar.Size = new System.Drawing.Size(130, 21);
             this.chkShowInTaskbar.TabIndex = 0;
             this.chkShowInTaskbar.Text = "Show in taskbar";
+            this.tooltip.SetToolTip(this.chkShowInTaskbar, "If checked, QText window will be shown in taskbar.");
             this.chkShowInTaskbar.UseVisualStyleBackColor = true;
             this.chkShowInTaskbar.CheckedChanged += new System.EventHandler(this.chkShowInTaskbar_CheckedChanged);
             // 
@@ -372,6 +391,7 @@ namespace QText {
             this.chbSavePlainWithLF.Size = new System.Drawing.Size(243, 21);
             this.chbSavePlainWithLF.TabIndex = 4;
             this.chbSavePlainWithLF.Text = "Save plain text with LF line ending";
+            this.tooltip.SetToolTip(this.chbSavePlainWithLF, "Controls if plain text will use CRLF (Windows) or LF (Linux) line endings.");
             this.chbSavePlainWithLF.UseVisualStyleBackColor = true;
             // 
             // nudQuickSaveIntervalInSeconds
@@ -397,6 +417,7 @@ namespace QText {
             this.nudQuickSaveIntervalInSeconds.Size = new System.Drawing.Size(50, 22);
             this.nudQuickSaveIntervalInSeconds.TabIndex = 1;
             this.nudQuickSaveIntervalInSeconds.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tooltip.SetToolTip(this.nudQuickSaveIntervalInSeconds, "Number of seconds to wait before saving a file. Each key press restarts timer.");
             this.nudQuickSaveIntervalInSeconds.Value = new decimal(new int[] {
             3,
             0,
@@ -411,6 +432,7 @@ namespace QText {
             this.btnOpenLocationFolder.Size = new System.Drawing.Size(196, 29);
             this.btnOpenLocationFolder.TabIndex = 6;
             this.btnOpenLocationFolder.Text = "Open folder";
+            this.tooltip.SetToolTip(this.btnOpenLocationFolder, "Show all files in Explorer.");
             this.btnOpenLocationFolder.UseVisualStyleBackColor = true;
             this.btnOpenLocationFolder.Click += new System.EventHandler(this.btnOpenLocationFolder_Click);
             // 
@@ -440,6 +462,7 @@ namespace QText {
             this.chkDeleteToRecycleBin.Size = new System.Drawing.Size(159, 21);
             this.chkDeleteToRecycleBin.TabIndex = 5;
             this.chkDeleteToRecycleBin.Text = "Delete to recycle bin";
+            this.tooltip.SetToolTip(this.chkDeleteToRecycleBin, "If checked, all delete will be to recycle bin.");
             this.chkDeleteToRecycleBin.UseVisualStyleBackColor = true;
             // 
             // chkPreloadFilesOnStartup
@@ -450,6 +473,7 @@ namespace QText {
             this.chkPreloadFilesOnStartup.Size = new System.Drawing.Size(176, 21);
             this.chkPreloadFilesOnStartup.TabIndex = 3;
             this.chkPreloadFilesOnStartup.Text = "Preload files on startup";
+            this.tooltip.SetToolTip(this.chkPreloadFilesOnStartup, "All files will be loaded in advance.");
             this.chkPreloadFilesOnStartup.UseVisualStyleBackColor = true;
             // 
             // btnChangeLocation
@@ -461,6 +485,7 @@ namespace QText {
             this.btnChangeLocation.Size = new System.Drawing.Size(196, 29);
             this.btnChangeLocation.TabIndex = 7;
             this.btnChangeLocation.Text = "Change location";
+            this.tooltip.SetToolTip(this.btnChangeLocation, "Changes location of files.");
             this.btnChangeLocation.UseVisualStyleBackColor = true;
             this.btnChangeLocation.Click += new System.EventHandler(this.btnChangeLocation_Click);
             // 
@@ -487,6 +512,7 @@ namespace QText {
             this.txtHotkey.ReadOnly = true;
             this.txtHotkey.Size = new System.Drawing.Size(334, 22);
             this.txtHotkey.TabIndex = 1;
+            this.tooltip.SetToolTip(this.txtHotkey, "Hotkey to use for bringing up the window.");
             this.txtHotkey.Enter += new System.EventHandler(this.txtHotkey_Enter);
             this.txtHotkey.Leave += new System.EventHandler(this.txtHotkey_Leave);
             this.txtHotkey.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.txtHotkey_PreviewKeyDown);
@@ -507,6 +533,7 @@ namespace QText {
             this.chkRunAtStartup.Name = "chkRunAtStartup";
             this.chkRunAtStartup.Size = new System.Drawing.Size(184, 21);
             this.chkRunAtStartup.TabIndex = 4;
+            this.chkRunAtStartup.Tag = "If checked, QText will be started in tray on Windows startup.";
             this.chkRunAtStartup.Text = "Run on Windows startup";
             this.chkRunAtStartup.UseVisualStyleBackColor = true;
             // 
@@ -518,6 +545,7 @@ namespace QText {
             this.chkSingleClickTrayActivation.Size = new System.Drawing.Size(223, 21);
             this.chkSingleClickTrayActivation.TabIndex = 3;
             this.chkSingleClickTrayActivation.Text = "Tray activation with single click";
+            this.tooltip.SetToolTip(this.chkSingleClickTrayActivation, "Controls if tray icon will show window upon single or double click.");
             this.chkSingleClickTrayActivation.UseVisualStyleBackColor = true;
             // 
             // chkMinimizeToTray
@@ -528,6 +556,7 @@ namespace QText {
             this.chkMinimizeToTray.Size = new System.Drawing.Size(128, 21);
             this.chkMinimizeToTray.TabIndex = 2;
             this.chkMinimizeToTray.Text = "Minimize to tray";
+            this.tooltip.SetToolTip(this.chkMinimizeToTray, "If checked, QText will minimize to tray.");
             this.chkMinimizeToTray.UseVisualStyleBackColor = true;
             // 
             // tab_pagCarbonCopy
@@ -553,6 +582,7 @@ namespace QText {
             this.btnCarbonCopyOpenFolder.Size = new System.Drawing.Size(196, 29);
             this.btnCarbonCopyOpenFolder.TabIndex = 6;
             this.btnCarbonCopyOpenFolder.Text = "Open folder";
+            this.tooltip.SetToolTip(this.btnCarbonCopyOpenFolder, "Open backup folder in Explorer.");
             this.btnCarbonCopyOpenFolder.UseVisualStyleBackColor = true;
             this.btnCarbonCopyOpenFolder.Click += new System.EventHandler(this.btnCarbonCopyOpenFolder_Click);
             // 
@@ -566,6 +596,7 @@ namespace QText {
             this.btnCarbonCopyFolderSelect.Size = new System.Drawing.Size(22, 22);
             this.btnCarbonCopyFolderSelect.TabIndex = 3;
             this.btnCarbonCopyFolderSelect.Text = "...";
+            this.tooltip.SetToolTip(this.btnCarbonCopyFolderSelect, "Browse for folder.");
             this.btnCarbonCopyFolderSelect.UseVisualStyleBackColor = true;
             this.btnCarbonCopyFolderSelect.Click += new System.EventHandler(this.btnCarbonCopyFolderSelect_Click);
             // 
@@ -577,6 +608,7 @@ namespace QText {
             this.chbCarbonCopyIgnoreCopyErrors.Size = new System.Drawing.Size(146, 21);
             this.chbCarbonCopyIgnoreCopyErrors.TabIndex = 5;
             this.chbCarbonCopyIgnoreCopyErrors.Text = "Ignore copy errors";
+            this.tooltip.SetToolTip(this.chbCarbonCopyIgnoreCopyErrors, "If true, backup copy errors are ignored.");
             this.chbCarbonCopyIgnoreCopyErrors.UseVisualStyleBackColor = true;
             // 
             // chbUseCarbonCopy
@@ -587,6 +619,7 @@ namespace QText {
             this.chbUseCarbonCopy.Size = new System.Drawing.Size(162, 21);
             this.chbUseCarbonCopy.TabIndex = 0;
             this.chbUseCarbonCopy.Text = "Activate carbon copy";
+            this.tooltip.SetToolTip(this.chbUseCarbonCopy, "If true, all changes will be copied to another folder.");
             this.chbUseCarbonCopy.UseVisualStyleBackColor = true;
             this.chbUseCarbonCopy.CheckedChanged += new System.EventHandler(this.chbUseCarbonCopy_CheckedChanged);
             // 
@@ -599,6 +632,7 @@ namespace QText {
             this.txtCarbonCopyFolder.Name = "txtCarbonCopyFolder";
             this.txtCarbonCopyFolder.Size = new System.Drawing.Size(312, 22);
             this.txtCarbonCopyFolder.TabIndex = 2;
+            this.tooltip.SetToolTip(this.txtCarbonCopyFolder, "Location where copies are stored.");
             this.txtCarbonCopyFolder.TextChanged += new System.EventHandler(this.txtCarbonCopyFolder_TextChanged);
             // 
             // lblCarbonCopyFolder
@@ -620,6 +654,7 @@ namespace QText {
             this.btnOk.Size = new System.Drawing.Size(98, 29);
             this.btnOk.TabIndex = 4;
             this.btnOk.Text = "OK";
+            this.tooltip.SetToolTip(this.btnOk, "Apply all settings and close window.");
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
@@ -633,6 +668,7 @@ namespace QText {
             this.btnCancel.Size = new System.Drawing.Size(98, 29);
             this.btnCancel.TabIndex = 0;
             this.btnCancel.Text = "Cancel";
+            this.tooltip.SetToolTip(this.btnCancel, "Cancel changes.");
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
             // btnExit
@@ -645,6 +681,7 @@ namespace QText {
             this.btnExit.TabIndex = 2;
             this.btnExit.TabStop = false;
             this.btnExit.Text = "Exit";
+            this.tooltip.SetToolTip(this.btnExit, "Exit the application.");
             this.btnExit.UseVisualStyleBackColor = true;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
@@ -657,6 +694,7 @@ namespace QText {
             this.btnAllowSave.TabIndex = 3;
             this.btnAllowSave.TabStop = false;
             this.btnAllowSave.Text = "Allow save";
+            this.tooltip.SetToolTip(this.btnAllowSave, "Allow save of settings in registry.");
             this.btnAllowSave.UseVisualStyleBackColor = true;
             this.btnAllowSave.Click += new System.EventHandler(this.btnAllowSave_Click);
             // 
@@ -749,5 +787,6 @@ namespace QText {
         private System.Windows.Forms.ComboBox cmbSelectionDelimiters;
         private System.Windows.Forms.Button btnAllowSave;
         internal System.Windows.Forms.CheckBox chbSavePlainWithLF;
+        private System.Windows.Forms.ToolTip tooltip;
     }
 }
