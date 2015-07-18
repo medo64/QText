@@ -137,7 +137,7 @@ namespace QText {
         }
 
         public static bool DisplayShowInTaskbar {
-            get { return Medo.Configuration.Settings.Read("DisplayShowInTaskbar", false); }
+            get { return Medo.Configuration.Settings.Read("DisplayShowInTaskbar", AreWindowsInTabletMode() ); }
             set { Medo.Configuration.Settings.Write("DisplayShowInTaskbar", value); }
         }
 
@@ -339,6 +339,13 @@ namespace QText {
         public static bool GotoSortPreferPrefix {
             get { return Medo.Configuration.Settings.Read("GotoSortPreferPrefix", true); }
             set { Medo.Configuration.Settings.Write("GotoSortPreferPrefix", value); }
+        }
+
+
+        private static bool AreWindowsInTabletMode() {
+            var tabletModeValue = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ImmersiveShell", "TabletMode", 0);
+            if (tabletModeValue is int) { return ((int)tabletModeValue != 0); }
+            return false;
         }
 
     }
