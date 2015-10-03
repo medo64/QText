@@ -7,15 +7,72 @@ SET   FILE_EXECUTABLE="..\Binaries\QText.exe"
 SET  FILES_EXECUTABLE="..\Binaries\QText.exe" "..\Binaries\QText.Document.dll"
 SET       FILES_OTHER="..\Binaries\ReadMe.txt" "..\Binaries\License.txt"
 
-SET    COMPILE_TOOL_1="%PROGRAMFILES(X86)%\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe"
-SET    COMPILE_TOOL_2="%PROGRAMFILES(X86)%\Microsoft Visual Studio 12.0\Common7\IDE\WDExpress.exe"
+SET    COMPILE_TOOL_1="%PROGRAMFILES(X86)%\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe"
+SET    COMPILE_TOOL_2="%PROGRAMFILES(X86)%\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe"
+SET    COMPILE_TOOL_3="%PROGRAMFILES(X86)%\Microsoft Visual Studio 12.0\Common7\IDE\WDExpress.exe"
 SET        SETUP_TOOL="%PROGRAMFILES(x86)%\Inno Setup 5\iscc.exe"
 SET        MERGE_TOOL="%PROGRAMFILES(x86)%\Microsoft\ILMerge\ILMerge.exe"
 
-SET         SIGN_TOOL="%PROGRAMFILES(X86)%\Windows Kits\8.0\bin\x86\signtool.exe"
+SET       SIGN_TOOL_1="%PROGRAMFILES(X86)%\Windows Kits\8.1\bin\x86\signtool.exe"
+SET       SIGN_TOOL_2="%PROGRAMFILES(X86)%\Windows Kits\8.0\bin\x86\signtool.exe"
 SET         SIGN_HASH="C02FF227D5EE9F555C13D4C622697DF15C6FF871"
 SET SIGN_TIMESTAMPURL="http://timestamp.comodoca.com/rfc3161"
 
+
+ECHO --- DISCOVER TOOLS
+ECHO.
+
+IF EXIST %COMPILE_TOOL_1% (
+    ECHO Visual Studio 2015
+    SET COMPILE_TOOL=%COMPILE_TOOL_1%
+) ELSE (
+    IF EXIST %COMPILE_TOOL_2% (
+        ECHO Visual Studio 2013
+        SET COMPILE_TOOL=%COMPILE_TOOL_2%
+    ) ELSE (
+        IF EXIST %COMPILE_TOOL_3% (
+            ECHO Visual Studio Express 2013
+            SET COMPILE_TOOL=%COMPILE_TOOL_3%
+        ) ELSE (
+            ECHO Cannot find Visual Studio^^!
+            PAUSE && EXIT /B 255
+        )
+    )
+)
+
+IF EXIST %MERGE_TOOL% (
+    ECHO IL Merge
+) ELSE (
+    ECHO Cannot find IL Merge^^!
+    PAUSE && EXIT /B 255
+)
+
+IF EXIST %SETUP_TOOL% (
+    ECHO Inno Setup 5
+) ELSE (
+    ECHO Cannot find Inno Setup 5^^!
+    PAUSE && EXIT /B 255
+)
+
+IF EXIST %SIGN_TOOL_1% (
+    ECHO Windows SignTool 8.1
+    SET SIGN_TOOL=%SIGN_TOOL_1%
+) ELSE (
+    IF EXIST %SIGN_TOOL_2% (
+        ECHO Windows SignTool 8.0
+        SET SIGN_TOOL=%SIGN_TOOL_2%
+    ) ELSE (
+        ECHO Cannot find Windows SignTool^^!
+        PAUSE && EXIT /B 255
+    )
+)
+
+ECHO.
+ECHO.
+
+
+ECHO --- DISCOVER VERSION
+ECHO.
 
 FOR /F "delims=" %%N IN ('git log -n 1 --format^=%%h') DO @SET VERSION_HASH=%%N%
 
@@ -23,31 +80,29 @@ IF NOT [%VERSION_HASH%]==[] (
     FOR /F "delims=" %%N IN ('git rev-list --count HEAD') DO @SET VERSION_NUMBER=%%N%
     git diff --exit-code --quiet
     IF ERRORLEVEL 1 SET VERSION_HASH=%VERSION_HASH%+
+    ECHO %VERSION_HASH%
 )
+
+ECHO.
+ECHO.
 
 
 ECHO --- BUILD SOLUTION
 ECHO.
 
-IF EXIST %COMPILE_TOOL_1% (
-    ECHO Using Visual Studio
-    SET COMPILE_TOOL=%COMPILE_TOOL_1%
-) ELSE (
-    IF EXIST %COMPILE_TOOL_2% (
-        ECHO Using Visual Studio Express
-        SET COMPILE_TOOL=%COMPILE_TOOL_2%
-    ) ELSE (
-        ECHO Cannot find Visual Studio!
-        PAUSE && EXIT /B 255
-    )
-)
-
 RMDIR /Q /S "..\Binaries" 2> NUL
 %COMPILE_TOOL% /Build "Release" %FILE_SOLUTION%
 IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
-COPY ..\README.md ..\Binaries\ReadMe.txt
-COPY ..\LICENSE.md ..\Binaries\License.txt
 
+COPY ..\README.md ..\Binaries\ReadMe.txt > NUL
+IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
+
+COPY ..\LICENSE.md ..\Binaries\License.txt > NUL
+IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
+
+ECHO Completed.
+
+ECHO.
 ECHO.
 
 
@@ -133,6 +188,9 @@ IF EXIST %MERGE_TOOL% (
     MOVE ..\Binaries\Merged.exe %FILE_EXECUTABLE% > NUL
     IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
 
+    ECHO Completed.
+
+    ECHO.
     ECHO.
 
     
