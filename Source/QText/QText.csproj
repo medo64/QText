@@ -63,6 +63,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Security" />
     <Reference Include="System.Windows.Forms" />
@@ -127,6 +128,12 @@
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OptionsAdvancedForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OptionsAdvancedForm.Designer.cs">
+      <DependentUpon>OptionsAdvancedForm.cs</DependentUpon>
     </Compile>
     <Compile Include="OptionsForm.cs">
       <SubType>Form</SubType>
@@ -208,6 +215,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FileNewForm.resx">
       <DependentUpon>FileNewForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OptionsAdvancedForm.resx">
+      <DependentUpon>OptionsAdvancedForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OptionsForm.resx">
       <DependentUpon>OptionsForm.cs</DependentUpon>

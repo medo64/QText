@@ -73,6 +73,7 @@ namespace QText {
             this.btnExit = new System.Windows.Forms.Button();
             this.btnAllowSave = new System.Windows.Forms.Button();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.btnAdvanced = new System.Windows.Forms.Button();
             this.tab.SuspendLayout();
             this.tab_pagAppearance.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudTabWidth)).BeginInit();
@@ -652,7 +653,7 @@ namespace QText {
             this.btnOk.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(98, 29);
-            this.btnOk.TabIndex = 4;
+            this.btnOk.TabIndex = 5;
             this.btnOk.Text = "OK";
             this.tooltip.SetToolTip(this.btnOk, "Apply all settings and close window.");
             this.btnOk.UseVisualStyleBackColor = true;
@@ -698,6 +699,21 @@ namespace QText {
             this.btnAllowSave.UseVisualStyleBackColor = true;
             this.btnAllowSave.Click += new System.EventHandler(this.btnAllowSave_Click);
             // 
+            // btnAdvanced
+            // 
+            this.btnAdvanced.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnAdvanced.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnAdvanced.Location = new System.Drawing.Point(128, 272);
+            this.btnAdvanced.Name = "btnAdvanced";
+            this.btnAdvanced.Size = new System.Drawing.Size(98, 29);
+            this.btnAdvanced.TabIndex = 4;
+            this.btnAdvanced.TabStop = false;
+            this.btnAdvanced.Text = "Advanced";
+            this.tooltip.SetToolTip(this.btnAdvanced, "Allow save of settings in registry.");
+            this.btnAdvanced.UseVisualStyleBackColor = true;
+            this.btnAdvanced.Visible = false;
+            this.btnAdvanced.Click += new System.EventHandler(this.btnAdvanced_Click);
+            // 
             // OptionsForm
             // 
             this.AcceptButton = this.btnOk;
@@ -710,6 +726,7 @@ namespace QText {
             this.Controls.Add(this.tab);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this.btnAdvanced);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -788,5 +805,6 @@ namespace QText {
         private System.Windows.Forms.Button btnAllowSave;
         internal System.Windows.Forms.CheckBox chbSavePlainWithLF;
         private System.Windows.Forms.ToolTip tooltip;
+        private System.Windows.Forms.Button btnAdvanced;
     }
 }

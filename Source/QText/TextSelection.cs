@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 
 namespace QText {
@@ -75,7 +75,7 @@ namespace QText {
 
         private static UnicodeCategory GetLikeUnicodeCategory(char ch) {
             if (ch == '\n') { return UnicodeCategory.ParagraphSeparator; }
-            if (Settings.SelectionDelimiters.Contains(ch.ToString())) { return UnicodeCategory.OtherSymbol; }
+            if (Settings.Current.SelectionDelimiters.Contains(ch.ToString())) { return UnicodeCategory.OtherSymbol; }
             if (char.IsWhiteSpace(ch)) {
                 return UnicodeCategory.SpaceSeparator;
             } else {

@@ -1,4 +1,4 @@
-﻿namespace QText {
+namespace QText {
     internal static class SearchStatus {
 
         private static string _text;
@@ -12,13 +12,13 @@
         }
 
         public static bool CaseSensitive {
-            get { return Settings.SearchCaseSensitive; }
-            set { Settings.SearchCaseSensitive = value; }
+            get { return Settings.Current.SearchCaseSensitive; }
+            set { Settings.Current.SearchCaseSensitive = value; }
         }
 
         public static SearchScope Scope {
-            get { return Settings.SearchScope; }
-            set { Settings.SearchScope = value; }
+            get { return Settings.Current.SearchScope; }
+            set { Settings.Current.SearchScope = value; }
         }
 
 

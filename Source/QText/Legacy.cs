@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,7 +14,7 @@ namespace QText.Legacy {
             var orderedTitles = new List<string>();
             string selectedTitle = null;
             try {
-                string fileName = Path.Combine(QText.Settings.FilesLocation, "QText.xml");
+                string fileName = Path.Combine(QText.Settings.Current.FilesLocation, "QText.xml");
                 if ((File.Exists(fileName))) {
                     using (var xr = new XmlTextReader(fileName)) {
                         var walk = new Stack<string>();
@@ -69,7 +69,7 @@ namespace QText.Legacy {
                 //write to new format
                 FileStream fs = null;
                 try {
-                    fs = new FileStream(Path.Combine(QText.Settings.FilesLocation, ".qtext"), FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read);
+                    fs = new FileStream(Path.Combine(QText.Settings.Current.FilesLocation, ".qtext"), FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read);
                     try { fs.SetLength(0); } catch (IOException) { } //try to delete content
                     fs.Position = fs.Length;
                     using (var sw = new StreamWriter(fs)) {
@@ -98,10 +98,10 @@ namespace QText.Legacy {
 
         public static void Upgrade() {
             var filesAll = new List<string>();
-            filesAll.AddRange(Directory.GetFiles(QText.Settings.FilesLocation, "*.txt"));
-            filesAll.AddRange(Directory.GetFiles(QText.Settings.FilesLocation, "*.rtf"));
+            filesAll.AddRange(Directory.GetFiles(QText.Settings.Current.FilesLocation, "*.txt"));
+            filesAll.AddRange(Directory.GetFiles(QText.Settings.Current.FilesLocation, "*.rtf"));
 
-            var newPath = Path.Combine(QText.Settings.FilesLocation, "Hidden");
+            var newPath = Path.Combine(QText.Settings.Current.FilesLocation, "Hidden");
             Helper.CreatePath(newPath);
 
             var files = new List<string>();
@@ -123,7 +123,7 @@ namespace QText.Legacy {
 
     internal static class Settings {
         public static void Upgrade() {
-            if (QText.Settings.LegacySettingsCopied == false) {
+            if (QText.Settings.Current.LegacySettingsCopied == false) {
 
                 //kill old process
                 var currProcess = Process.GetCurrentProcess();
@@ -185,11 +185,11 @@ namespace QText.Legacy {
                             }
                             foreach (var iSourceFileName in sourceFileNames) {
                                 var iSource = new System.IO.FileInfo(iSourceFileName);
-                                var iDestinationFileName = System.IO.Path.Combine(QText.Settings.FilesLocation, iSource.Name);
+                                var iDestinationFileName = System.IO.Path.Combine(QText.Settings.Current.FilesLocation, iSource.Name);
                                 System.IO.File.Copy(iSource.FullName, iDestinationFileName);
                             }
                         } catch (Exception) {
-                            QText.Settings.FilesLocation = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"jmedved\QText");
+                            QText.Settings.Current.FilesLocation = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"jmedved\QText");
                         }
                         try {
                             foreach (var iSourceFileName in sourceFileNames) {
@@ -202,7 +202,7 @@ namespace QText.Legacy {
                         } catch (Exception) {
                         }
                     }
-                    QText.Settings.LegacySettingsCopied = true;
+                    QText.Settings.Current.LegacySettingsCopied = true;
                 } catch (Exception) {
                 }
             }

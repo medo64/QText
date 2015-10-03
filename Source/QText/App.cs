@@ -41,9 +41,9 @@ namespace QText {
 
                 Application.ApplicationExit += new System.EventHandler(ApplicationExit);
 
-                Medo.Configuration.Settings.NoRegistryWrites = Settings.NoRegistryWrites;
-                Medo.Windows.Forms.State.NoRegistryWrites = Settings.NoRegistryWrites;
-                Medo.Diagnostics.ErrorReport.DisableAutomaticSaveToTemp = Settings.NoRegistryWrites;
+                Medo.Configuration.Settings.NoRegistryWrites = Settings.Current.NoRegistryWrites;
+                Medo.Windows.Forms.State.NoRegistryWrites = Settings.Current.NoRegistryWrites;
+                Medo.Diagnostics.ErrorReport.DisableAutomaticSaveToTemp = Settings.Current.NoRegistryWrites;
 
                 #region Init document
 
@@ -51,29 +51,29 @@ namespace QText {
                     OpenDocument();
                 } catch (DirectoryNotFoundException) { //try to create it
                     try {
-                        Helper.CreatePath(Settings.FilesLocation);
+                        Helper.CreatePath(Settings.Current.FilesLocation);
                         OpenDocument();
                     } catch (DirectoryNotFoundException) { //try to create it
-                        if (Medo.MessageBox.ShowError(null, "Directory " + Settings.FilesLocation + " cannot be found.\n\nDo you wish to use default location at " + Settings.DefaultFilesLocation + "?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
-                            Settings.FilesLocation = Settings.DefaultFilesLocation;
-                            Helper.CreatePath(Settings.FilesLocation);
+                        if (Medo.MessageBox.ShowError(null, "Directory " + Settings.Current.FilesLocation + " cannot be found.\n\nDo you wish to use default location at " + Settings.Current.DefaultFilesLocation + "?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+                            Settings.Current.FilesLocation = Settings.Current.DefaultFilesLocation;
+                            Helper.CreatePath(Settings.Current.FilesLocation);
                             OpenDocument();
                         } else {
                             return;
                         }
                     } catch (InvalidOperationException) { //try to create it
-                        if (Medo.MessageBox.ShowError(null, "Directory " + Settings.FilesLocation + " cannot be used.\n\nDo you wish to use default location at " + Settings.DefaultFilesLocation + "?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
-                            Settings.FilesLocation = Settings.DefaultFilesLocation;
-                            Helper.CreatePath(Settings.FilesLocation);
+                        if (Medo.MessageBox.ShowError(null, "Directory " + Settings.Current.FilesLocation + " cannot be used.\n\nDo you wish to use default location at " + Settings.Current.DefaultFilesLocation + "?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+                            Settings.Current.FilesLocation = Settings.Current.DefaultFilesLocation;
+                            Helper.CreatePath(Settings.Current.FilesLocation);
                             OpenDocument();
                         } else {
                             return;
                         }
                     }
                 } catch (NotSupportedException) { //path is invalid
-                    if (Medo.MessageBox.ShowError(null, "Directory " + Settings.FilesLocation + " is invalid.\n\nDo you wish to use default location at " + Settings.DefaultFilesLocation + "?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
-                        Settings.FilesLocation = Settings.DefaultFilesLocation;
-                        Helper.CreatePath(Settings.FilesLocation);
+                    if (Medo.MessageBox.ShowError(null, "Directory " + Settings.Current.FilesLocation + " is invalid.\n\nDo you wish to use default location at " + Settings.Current.DefaultFilesLocation + "?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+                        Settings.Current.FilesLocation = Settings.Current.DefaultFilesLocation;
+                        Helper.CreatePath(Settings.Current.FilesLocation);
                         OpenDocument();
                     } else {
                         return;
@@ -101,14 +101,14 @@ namespace QText {
 
 
                 try {
-                    Helper.CreatePath(Settings.FilesLocation);
+                    Helper.CreatePath(Settings.Current.FilesLocation);
                 } catch (Exception ex) {
                     switch (Medo.MessageBox.ShowQuestion(null, ex.Message + Environment.NewLine + "Do you wish to try using default location instead?", MessageBoxButtons.YesNo)) {
                         case DialogResult.Yes:
                             try {
-                                string defaultPath = Settings.DefaultFilesLocation;
+                                string defaultPath = Settings.Current.DefaultFilesLocation;
                                 Helper.CreatePath(defaultPath);
-                                Settings.FilesLocation = defaultPath;
+                                Settings.Current.FilesLocation = defaultPath;
                             } catch (Exception ex2) {
                                 global::Medo.MessageBox.ShowError(null, ex2.Message, MessageBoxButtons.OK);
                                 Application.Exit();
@@ -124,9 +124,9 @@ namespace QText {
                 App.TrayContext.ShowIcon();
 
                 App.Hotkey.HotkeyActivated += new EventHandler<EventArgs>(Hotkey_HotkeyActivated);
-                if (Settings.ActivationHotkey != Keys.None) {
+                if (Settings.Current.ActivationHotkey != Keys.None) {
                     try {
-                        App.Hotkey.Register(Settings.ActivationHotkey);
+                        App.Hotkey.Register(Settings.Current.ActivationHotkey);
                     } catch (InvalidOperationException) {
                         Medo.MessageBox.ShowWarning(null, "Hotkey is already in use.");
                     }
@@ -140,10 +140,10 @@ namespace QText {
         }
 
         private static void OpenDocument() {
-            App.Document = new Document(Settings.FilesLocation) {
-                DeleteToRecycleBin = Settings.FilesDeleteToRecycleBin,
-                CarbonCopyRootPath = Settings.CarbonCopyUse ? Settings.CarbonCopyDirectory : null,
-                CarbonCopyIgnoreErrors = Settings.CarbonCopyIgnoreErrors
+            App.Document = new Document(Settings.Current.FilesLocation) {
+                DeleteToRecycleBin = Settings.Current.FilesDeleteToRecycleBin,
+                CarbonCopyRootPath = Settings.Current.CarbonCopyUse ? Settings.Current.CarbonCopyDirectory : null,
+                CarbonCopyIgnoreErrors = Settings.Current.CarbonCopyIgnoreErrors
             };
         }
 

@@ -14,58 +14,58 @@ namespace QText {
             this.Font = SystemFonts.MessageBoxFont;
             cmbSelectionDelimiters.Font = new Font("Courier New", SystemFonts.MessageBoxFont.SizeInPoints);
 
-            SetWritableState(!Settings.NoRegistryWrites);
+            SetWritableState(!Settings.Current.NoRegistryWrites);
         }
 
         private void OptionsForm_Load(object sender, EventArgs e) {
             //Appearance
-            chkDisplayURLs.Checked = Settings.DetectUrls;
-            chkFollowURLs.Checked = Settings.FollowURLs;
-            nudTabWidth.Value = Settings.DisplayTabWidth;
-            txtFont.Text = GetFontText(Settings.DisplayFont);
-            txtFont.Tag = Settings.DisplayFont;
-            lblColorExample.BackColor = Settings.DisplayBackgroundColor;
-            lblColorExample.ForeColor = Settings.DisplayForegroundColor;
+            chkDisplayURLs.Checked = Settings.Current.DetectUrls;
+            chkFollowURLs.Checked = Settings.Current.FollowURLs;
+            nudTabWidth.Value = Settings.Current.DisplayTabWidth;
+            txtFont.Text = GetFontText(Settings.Current.DisplayFont);
+            txtFont.Tag = Settings.Current.DisplayFont;
+            lblColorExample.BackColor = Settings.Current.DisplayBackgroundColor;
+            lblColorExample.ForeColor = Settings.Current.DisplayForegroundColor;
             chkDisplayURLs_CheckedChanged(null, null);
 
             //Display
-            chkShowInTaskbar.Checked = Settings.DisplayShowInTaskbar;
-            chbShowMinimizeMaximizeButtons.Checked = Settings.DisplayMinimizeMaximizeButtons;
-            chkShowToolbar.Checked = Settings.ShowToolbar;
-            chbMultilineTabs.Checked = Settings.MultilineTabs;
-            chbHorizontalScrollbar.Checked = (Settings.ScrollBars == ScrollBars.Horizontal) || (Settings.ScrollBars == ScrollBars.Both);
-            chbVerticalScrollbar.Checked = (Settings.ScrollBars == ScrollBars.Vertical) || (Settings.ScrollBars == ScrollBars.Both);
-            cmbSelectionDelimiters.Text = Settings.SelectionDelimiters;
+            chkShowInTaskbar.Checked = Settings.Current.DisplayShowInTaskbar;
+            chbShowMinimizeMaximizeButtons.Checked = Settings.Current.DisplayMinimizeMaximizeButtons;
+            chkShowToolbar.Checked = Settings.Current.ShowToolbar;
+            chbMultilineTabs.Checked = Settings.Current.MultilineTabs;
+            chbHorizontalScrollbar.Checked = (Settings.Current.ScrollBars == ScrollBars.Horizontal) || (Settings.Current.ScrollBars == ScrollBars.Both);
+            chbVerticalScrollbar.Checked = (Settings.Current.ScrollBars == ScrollBars.Vertical) || (Settings.Current.ScrollBars == ScrollBars.Both);
+            cmbSelectionDelimiters.Text = Settings.Current.SelectionDelimiters;
 
             //Files
-            chkPreloadFilesOnStartup.Checked = Settings.FilesPreload;
-            chkDeleteToRecycleBin.Checked = Settings.FilesDeleteToRecycleBin;
-            nudQuickSaveIntervalInSeconds.Value = Settings.QuickSaveInterval / 1000M;
-            chbSavePlainWithLF.Checked = Settings.PlainLineEndsWithLf;
+            chkPreloadFilesOnStartup.Checked = Settings.Current.FilesPreload;
+            chkDeleteToRecycleBin.Checked = Settings.Current.FilesDeleteToRecycleBin;
+            nudQuickSaveIntervalInSeconds.Value = Settings.Current.QuickSaveInterval / 1000M;
+            chbSavePlainWithLF.Checked = Settings.Current.PlainLineEndsWithLf;
 
             //Behavior
-            txtHotkey.Text = GetKeyString(Settings.ActivationHotkey);
-            txtHotkey.Tag = Settings.ActivationHotkey;
-            chkMinimizeToTray.Checked = Settings.TrayOnMinimize;
-            chkSingleClickTrayActivation.Checked = Settings.TrayOneClickActivation;
-            chkRunAtStartup.Checked = Settings.StartupRun;
+            txtHotkey.Text = GetKeyString(Settings.Current.ActivationHotkey);
+            txtHotkey.Tag = Settings.Current.ActivationHotkey;
+            chkMinimizeToTray.Checked = Settings.Current.TrayOnMinimize;
+            chkSingleClickTrayActivation.Checked = Settings.Current.TrayOneClickActivation;
+            chkRunAtStartup.Checked = Settings.Current.StartupRun;
 
             //Carbon copy
-            chbUseCarbonCopy.Checked = Settings.CarbonCopyUse;
-            txtCarbonCopyFolder.Text = Settings.CarbonCopyDirectory;
-            chbCarbonCopyIgnoreCopyErrors.Checked = Settings.CarbonCopyIgnoreErrors;
+            chbUseCarbonCopy.Checked = Settings.Current.CarbonCopyUse;
+            txtCarbonCopyFolder.Text = Settings.Current.CarbonCopyDirectory;
+            chbCarbonCopyIgnoreCopyErrors.Checked = Settings.Current.CarbonCopyIgnoreErrors;
             chbUseCarbonCopy_CheckedChanged(null, null);
         }
 
         private void OptionsForm_FormClosing(object sender, FormClosingEventArgs e) {
             if (this.DialogResult == DialogResult.OK) {
-                if (Settings.ActivationHotkey != App.Hotkey.Key) {
+                if (Settings.Current.ActivationHotkey != App.Hotkey.Key) {
                     if (App.Hotkey.IsRegistered) {
                         App.Hotkey.Unregister();
                     }
-                    if (Settings.ActivationHotkey != Keys.None) {
+                    if (Settings.Current.ActivationHotkey != Keys.None) {
                         try {
-                            App.Hotkey.Register(Settings.ActivationHotkey);
+                            App.Hotkey.Register(Settings.Current.ActivationHotkey);
                         } catch (InvalidOperationException) {
                             Medo.MessageBox.ShowWarning(null, "Hotkey is already in use.");
                         }
@@ -135,7 +135,7 @@ namespace QText {
 
         private void btnOpenLocationFolder_Click(object sender, EventArgs e) {
             try {
-                Process.Start(Settings.FilesLocation, null);
+                Process.Start(Settings.Current.FilesLocation, null);
             } catch (Win32Exception ex) {
                 Medo.MessageBox.ShowWarning(this, ex.Message);
             }
@@ -145,13 +145,7 @@ namespace QText {
             using (var frm = new FolderOpenDialog() { InitialFolder = App.Document.RootPath }) {
                 if (frm.ShowDialog(this) == DialogResult.OK) {
                     try {
-
                         var copier = new DocumentCopier(App.Document, frm.Folder);
-                        //if (copier.DestinationRootAlreadyExisted) {
-                        //    if (Medo.MessageBox.ShowQuestion(this, "Destination already exists. Are you sure you want to move there?", MessageBoxButtons.YesNo) == DialogResult.No) {
-                        //        return;
-                        //    }
-                        //}
 
                         var alwaysOverwrite = false;
                         if (!copier.DestinationRootWasEmpty) {
@@ -178,7 +172,7 @@ namespace QText {
 
                         if (copier.CopyAll(alwaysOverwrite: alwaysOverwrite)) {
                             App.Document = copier.GetDestinationDocument();
-                            Settings.FilesLocation = App.Document.RootPath;
+                            Settings.Current.FilesLocation = App.Document.RootPath;
                         }
 
                         Medo.MessageBox.ShowInformation(this, "Data location transfer succeeded.");
@@ -203,9 +197,9 @@ namespace QText {
         }
 
         private void txtHotkey_Leave(object sender, EventArgs e) {
-            if (hadRegistered && (Settings.ActivationHotkey != Keys.None)) {
+            if (hadRegistered && (Settings.Current.ActivationHotkey != Keys.None)) {
                 try {
-                    App.Hotkey.Register(Settings.ActivationHotkey);
+                    App.Hotkey.Register(Settings.Current.ActivationHotkey);
                 } catch (InvalidOperationException) {
                     Medo.MessageBox.ShowWarning(this, "Cannot register hotkey.");
                 }
@@ -238,13 +232,13 @@ namespace QText {
 
         private void btnCarbonCopyFolderSelect_Click(object sender, EventArgs e) {
             using (var frm = new FolderOpenDialog()) {
-                if (string.IsNullOrEmpty(Settings.CarbonCopyDirectory)) {
-                    frm.InitialFolder = Settings.FilesLocation;
+                if (string.IsNullOrEmpty(Settings.Current.CarbonCopyDirectory)) {
+                    frm.InitialFolder = Settings.Current.FilesLocation;
                 } else {
-                    frm.InitialFolder = Settings.CarbonCopyDirectory;
+                    frm.InitialFolder = Settings.Current.CarbonCopyDirectory;
                 }
                 if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK) {
-                    if (frm.Folder.StartsWith(Settings.FilesLocation, StringComparison.OrdinalIgnoreCase)) {
+                    if (frm.Folder.StartsWith(Settings.Current.FilesLocation, StringComparison.OrdinalIgnoreCase)) {
                         Medo.MessageBox.ShowWarning(this, "Carbon copy folder cannot be same as one used for main program storage.");
                     } else {
                         txtCarbonCopyFolder.Text = frm.Folder;
@@ -268,52 +262,58 @@ namespace QText {
 
         private void btnOk_Click(object sender, EventArgs e) {
             //Appearance
-            Settings.DetectUrls = chkDisplayURLs.Checked;
-            Settings.FollowURLs = chkFollowURLs.Checked;
-            Settings.DisplayTabWidth = Convert.ToInt32(nudTabWidth.Value);
-            Settings.DisplayFont = (System.Drawing.Font)txtFont.Tag;
-            Settings.DisplayBackgroundColor = lblColorExample.BackColor;
-            Settings.DisplayForegroundColor = lblColorExample.ForeColor;
+            Settings.Current.DetectUrls = chkDisplayURLs.Checked;
+            Settings.Current.FollowURLs = chkFollowURLs.Checked;
+            Settings.Current.DisplayTabWidth = Convert.ToInt32(nudTabWidth.Value);
+            Settings.Current.DisplayFont = (System.Drawing.Font)txtFont.Tag;
+            Settings.Current.DisplayBackgroundColor = lblColorExample.BackColor;
+            Settings.Current.DisplayForegroundColor = lblColorExample.ForeColor;
 
             //Display
-            Settings.DisplayShowInTaskbar = chkShowInTaskbar.Checked;
-            Settings.DisplayMinimizeMaximizeButtons = chbShowMinimizeMaximizeButtons.Checked;
-            Settings.ShowToolbar = chkShowToolbar.Checked;
-            Settings.MultilineTabs = chbMultilineTabs.Checked;
+            Settings.Current.DisplayShowInTaskbar = chkShowInTaskbar.Checked;
+            Settings.Current.DisplayMinimizeMaximizeButtons = chbShowMinimizeMaximizeButtons.Checked;
+            Settings.Current.ShowToolbar = chkShowToolbar.Checked;
+            Settings.Current.MultilineTabs = chbMultilineTabs.Checked;
             if ((chbHorizontalScrollbar.Checked && chbVerticalScrollbar.Checked)) {
-                Settings.ScrollBars = ScrollBars.Both;
+                Settings.Current.ScrollBars = ScrollBars.Both;
             } else if ((chbHorizontalScrollbar.Checked)) {
-                Settings.ScrollBars = ScrollBars.Horizontal;
+                Settings.Current.ScrollBars = ScrollBars.Horizontal;
             } else if ((chbVerticalScrollbar.Checked)) {
-                Settings.ScrollBars = ScrollBars.Vertical;
+                Settings.Current.ScrollBars = ScrollBars.Vertical;
             } else {
-                Settings.ScrollBars = ScrollBars.None;
+                Settings.Current.ScrollBars = ScrollBars.None;
             }
-            Settings.SelectionDelimiters = cmbSelectionDelimiters.Text;
+            Settings.Current.SelectionDelimiters = cmbSelectionDelimiters.Text;
 
             //Files
-            Settings.FilesPreload = chkPreloadFilesOnStartup.Checked;
-            Settings.FilesDeleteToRecycleBin = chkDeleteToRecycleBin.Checked;
-            Settings.QuickSaveInterval = Convert.ToInt32(nudQuickSaveIntervalInSeconds.Value * 1000);
-            Settings.PlainLineEndsWithLf = chbSavePlainWithLF.Checked;
+            Settings.Current.FilesPreload = chkPreloadFilesOnStartup.Checked;
+            Settings.Current.FilesDeleteToRecycleBin = chkDeleteToRecycleBin.Checked;
+            Settings.Current.QuickSaveInterval = Convert.ToInt32(nudQuickSaveIntervalInSeconds.Value * 1000);
+            Settings.Current.PlainLineEndsWithLf = chbSavePlainWithLF.Checked;
 
             //Behavior
-            Settings.ActivationHotkey = (Keys)txtHotkey.Tag;
-            Settings.TrayOnMinimize = chkMinimizeToTray.Checked;
-            Settings.TrayOneClickActivation = chkSingleClickTrayActivation.Checked;
-            Settings.StartupRun = chkRunAtStartup.Checked;
+            Settings.Current.ActivationHotkey = (Keys)txtHotkey.Tag;
+            Settings.Current.TrayOnMinimize = chkMinimizeToTray.Checked;
+            Settings.Current.TrayOneClickActivation = chkSingleClickTrayActivation.Checked;
+            Settings.Current.StartupRun = chkRunAtStartup.Checked;
 
             //Carbon copy
-            Settings.CarbonCopyUse = chbUseCarbonCopy.Checked;
-            Settings.CarbonCopyDirectory = txtCarbonCopyFolder.Text;
-            Settings.CarbonCopyIgnoreErrors = chbCarbonCopyIgnoreCopyErrors.Checked;
+            Settings.Current.CarbonCopyUse = chbUseCarbonCopy.Checked;
+            Settings.Current.CarbonCopyDirectory = txtCarbonCopyFolder.Text;
+            Settings.Current.CarbonCopyIgnoreErrors = chbCarbonCopyIgnoreCopyErrors.Checked;
         }
 
         private void btnAllowSave_Click(object sender, EventArgs e) {
             if (Medo.MessageBox.ShowQuestion(this, "Do you allow this program use of registry in order to save its settings?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
                 btnAllowSave.Visible = false;
-                Settings.NoRegistryWrites = false;
+                Settings.Current.NoRegistryWrites = false;
                 SetWritableState(true);
+            }
+        }
+
+        private void btnAdvanced_Click(object sender, EventArgs e) {
+            using (var frm = new OptionsAdvancedForm()) {
+                frm.ShowDialog(this);
             }
         }
 
@@ -322,6 +322,7 @@ namespace QText {
 
         private void SetWritableState(bool newState) {
             btnAllowSave.Visible = !newState;
+            btnAdvanced.Visible = newState;
 
             btnOk.Enabled = newState;
             foreach (Control control in tab.Controls) { control.Enabled = newState; }

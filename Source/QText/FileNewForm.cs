@@ -13,7 +13,7 @@ namespace QText {
 
             this.Folder = folder;
 
-            if (Settings.IsRichTextFileDefault) {
+            if (Settings.Current.IsRichTextFileDefault) {
                 radRichText.Checked = true;
             }
         }
@@ -39,7 +39,7 @@ namespace QText {
         private void btnOK_Click(object sender, EventArgs e) {
             this.Title = txtTitle.Text;
             this.IsRichText = radRichText.Checked;
-            Settings.IsRichTextFileDefault = radRichText.Checked;
+            Settings.Current.IsRichTextFileDefault = radRichText.Checked;
         }
 
     }

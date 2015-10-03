@@ -290,7 +290,7 @@ namespace QText {
         }
 
         protected override void OnLinkClicked(System.Windows.Forms.LinkClickedEventArgs e) {
-            if (Settings.FollowURLs) {
+            if (Settings.Current.FollowURLs) {
                 try {
                     if ((e != null) && (string.IsNullOrEmpty(e.LinkText) == false)) {
                         System.Diagnostics.Process.Start(e.LinkText);

@@ -21,7 +21,7 @@ namespace QText {
 
             this.GotFocus += txt_GotFocus;
 
-            if (Settings.FilesPreload && (this.BaseFile.IsEncrypted == false)) {
+            if (Settings.Current.FilesPreload && (this.BaseFile.IsEncrypted == false)) {
                 this.Open();
             }
         }
@@ -42,16 +42,16 @@ namespace QText {
         private static RichTextBoxEx GetEmptyTextBox() {
             var tb = new RichTextBoxEx();
             tb.AcceptsTab = true;
-            tb.BackColor = Settings.DisplayBackgroundColor;
+            tb.BackColor = Settings.Current.DisplayBackgroundColor;
             tb.Dock = DockStyle.Fill;
-            tb.Font = Settings.DisplayFont;
-            tb.ForeColor = Settings.DisplayForegroundColor;
+            tb.Font = Settings.Current.DisplayFont;
+            tb.ForeColor = Settings.Current.DisplayForegroundColor;
             tb.HideSelection = false;
             tb.MaxLength = 0;
             tb.Multiline = true;
             tb.ShortcutsEnabled = false;
-            tb.DetectUrls = Settings.DetectUrls;
-            switch (Settings.ScrollBars) {
+            tb.DetectUrls = Settings.Current.DetectUrls;
+            switch (Settings.Current.ScrollBars) {
                 case ScrollBars.None:
                     tb.ScrollBars = RichTextBoxScrollBars.None;
                     break;
@@ -65,7 +65,7 @@ namespace QText {
                     tb.ScrollBars = RichTextBoxScrollBars.ForcedBoth;
                     break;
             }
-            tb.WordWrap = Settings.DisplayWordWrap;
+            tb.WordWrap = Settings.Current.DisplayWordWrap;
             return tb;
         }
 
@@ -108,9 +108,9 @@ namespace QText {
 
             if (kind == DocumentKind.RichText) {
                 using (RichTextBox dummy = new RichTextBox()) {
-                    dummy.BackColor = Settings.DisplayBackgroundColor;
-                    dummy.Font = Settings.DisplayFont;
-                    dummy.ForeColor = Settings.DisplayForegroundColor;
+                    dummy.BackColor = Settings.Current.DisplayBackgroundColor;
+                    dummy.Font = Settings.Current.DisplayFont;
+                    dummy.ForeColor = Settings.Current.DisplayForegroundColor;
 
                     using (var stream = new MemoryStream()) {
                         dummy.SaveFile(stream, RichTextBoxStreamType.RichText);
@@ -275,17 +275,17 @@ namespace QText {
             switch (e.KeyData) {
 
                 case Keys.Control | Keys.X:
-                    this.Cut(QText.Settings.ForceTextCopyPaste);
+                    this.Cut(QText.Settings.Current.ForceTextCopyPaste);
                     e.IsInputKey = false;
                     break;
 
                 case Keys.Control | Keys.C:
-                    this.Copy(QText.Settings.ForceTextCopyPaste);
+                    this.Copy(QText.Settings.Current.ForceTextCopyPaste);
                     e.IsInputKey = false;
                     break;
 
                 case Keys.Control | Keys.V:
-                    this.Paste(QText.Settings.ForceTextCopyPaste);
+                    this.Paste(QText.Settings.Current.ForceTextCopyPaste);
                     e.IsInputKey = false;
                     break;
 
@@ -372,7 +372,7 @@ namespace QText {
             get {
                 try {
                     return (this.TextBox != null)
-                        && (Clipboard.ContainsText(TextDataFormat.UnicodeText) || (this.BaseFile.IsRichText && Settings.FullRichTextClipboard));
+                        && (Clipboard.ContainsText(TextDataFormat.UnicodeText) || (this.BaseFile.IsRichText && Settings.Current.FullRichTextClipboard));
                 } catch (ExternalException) {
                     return false;
                 }
@@ -385,7 +385,7 @@ namespace QText {
                     if (this.BaseFile.IsPlainText || forceText) {
                         var text = GetTextFromClipboard();
                         if (text != null) {
-                            this.TextBox.SelectionFont = Settings.DisplayFont;
+                            this.TextBox.SelectionFont = Settings.Current.DisplayFont;
                             this.TextBox.SelectedText = text;
                         }
                     } else {
@@ -517,12 +517,12 @@ namespace QText {
         public void UpdateTabWidth() {
             if (this.TextBox == null) { return; }
 
-            int dotWidth = TextRenderer.MeasureText(".", Settings.DisplayFont, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding).Width;
-            int dotXWidth = TextRenderer.MeasureText("X.", Settings.DisplayFont, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding).Width;
+            int dotWidth = TextRenderer.MeasureText(".", Settings.Current.DisplayFont, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding).Width;
+            int dotXWidth = TextRenderer.MeasureText("X.", Settings.Current.DisplayFont, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding).Width;
             int charWidth = dotXWidth - dotWidth;
 
             var tabs2 = new List<int>();
-            for (int i = 1; i <= 32; i++) { tabs2.Add((i * charWidth) * Settings.DisplayTabWidth); }
+            for (int i = 1; i <= 32; i++) { tabs2.Add((i * charWidth) * Settings.Current.DisplayTabWidth); }
 
             var ss = this.TextBox.SelectionStart;
             var sl = this.TextBox.SelectionLength;
@@ -563,7 +563,7 @@ namespace QText {
 
         private void SaveAsPlain() {
             using (var stream = new MemoryStream()) {
-                var text = string.Join(Settings.PlainLineEndsWithLf ? "\n" : Environment.NewLine, this.TextBox.Lines);
+                var text = string.Join(Settings.Current.PlainLineEndsWithLf ? "\n" : Environment.NewLine, this.TextBox.Lines);
                 var bytes = Utf8EncodingWithoutBom.GetBytes(text);
                 stream.Write(bytes, 0, bytes.Length);
                 this.BaseFile.Write(stream);

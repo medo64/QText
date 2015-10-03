@@ -11,7 +11,7 @@ namespace QText {
 
                 yield return new GotoResult(null, App.Document.RootFolder, null);
 
-            } else if (!Settings.GotoSortResults) {
+            } else if (!Settings.Current.GotoSortResults) {
 
                 foreach (var result in GetSuggestionsRaw(suggestion, allowLineNumbers)) {
                     yield return result;
@@ -23,7 +23,7 @@ namespace QText {
 
                 list.Sort(delegate(GotoResult item1, GotoResult item2) {
                     int initialCompare;
-                    if (!Settings.GotoSortPreferFolders || (item1.IsFolder == item2.IsFolder)) {
+                    if (!Settings.Current.GotoSortPreferFolders || (item1.IsFolder == item2.IsFolder)) {
                         initialCompare = 0;
                     } else if (item1.IsFolder && !item2.IsFolder) {
                         initialCompare = -1;
@@ -36,7 +36,7 @@ namespace QText {
                         var title2 = item2.ToString();
                         var starts1 = title1.StartsWith(suggestion, StringComparison.CurrentCultureIgnoreCase);
                         var starts2 = title2.StartsWith(suggestion, StringComparison.CurrentCultureIgnoreCase);
-                        if (!Settings.GotoSortPreferPrefix || (starts1 == starts2)) {
+                        if (!Settings.Current.GotoSortPreferPrefix || (starts1 == starts2)) {
                             return string.Compare(title1, title2, StringComparison.CurrentCultureIgnoreCase);
                         } else if (starts1 && !starts2) {
                             return -1;

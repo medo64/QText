@@ -206,7 +206,7 @@ namespace QText {
         private static KeyValuePair<int, string> GetSizeAndSet(params Control[] controls) {
             using (var g = controls[0].CreateGraphics()) {
                 var scale = Math.Max(Math.Max(g.DpiX, g.DpiY), 96.0) / 96.0;
-                scale += Settings.ScaleBoost;
+                scale += Settings.Current.ScaleBoost;
 
                 if (scale < 1.5) {
                     return new KeyValuePair<int, string>(16, "_16");

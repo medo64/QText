@@ -25,7 +25,7 @@ namespace QText {
             notMain.Text = Medo.Reflection.EntryAssembly.Title;
 
             notMain.MouseClick += delegate (object sender, MouseEventArgs e) {
-                if ((e.Button == MouseButtons.Left) && (Settings.TrayOneClickActivation)) {
+                if ((e.Button == MouseButtons.Left) && (Settings.Current.TrayOneClickActivation)) {
                     this.ShowForm();
                 }
             };
@@ -147,8 +147,8 @@ namespace QText {
         #endregion
 
         internal void ShowBalloonOnMinimize() {
-            if (Settings.ShowBalloonOnNextMinimize) {
-                Settings.ShowBalloonOnNextMinimize = false;
+            if (Settings.Current.ShowBalloonOnNextMinimize) {
+                Settings.Current.ShowBalloonOnNextMinimize = false;
                 var text = "Program continues to run in background.";
                 if (App.Hotkey.IsRegistered) {
                     text += "\n\nPress " + Helper.GetKeyString(App.Hotkey.Key) + " to show window again.";

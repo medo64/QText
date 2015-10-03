@@ -20,18 +20,18 @@ namespace QText {
             InitializeComponent();
             this.Font = SystemFonts.MessageBoxFont;
 
-            tmrQuickSave.Interval = Settings.QuickSaveInterval;
+            tmrQuickSave.Interval = Settings.Current.QuickSaveInterval;
 
-            if (Settings.DisplayMinimizeMaximizeButtons) {
+            if (Settings.Current.DisplayMinimizeMaximizeButtons) {
                 this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
             } else {
                 this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             }
-            this.ShowInTaskbar = Settings.DisplayShowInTaskbar;
+            this.ShowInTaskbar = Settings.Current.DisplayShowInTaskbar;
             mnu.Renderer = Helper.ToolstripRenderer;
             Helper.ScaleToolstrip(mnu, mnxTab, mnxText);
 
-            tabFiles.Multiline = Settings.MultilineTabs;
+            tabFiles.Multiline = Settings.Current.MultilineTabs;
         }
 
 
@@ -210,7 +210,7 @@ namespace QText {
                         if (!tabFiles.CurrentFolder.IsRoot) {
                             tabFiles.FolderOpen(App.Document.RootFolder);
                             mnuFolder.Text = tabFiles.CurrentFolder.Title;
-                            Settings.LastFolder = tabFiles.CurrentFolder;
+                            Settings.Current.LastFolder = tabFiles.CurrentFolder;
                         }
                     }
                     return true;
@@ -224,7 +224,7 @@ namespace QText {
                         if (index > 0) {
                             tabFiles.FolderOpen(list[index - 1]);
                             mnuFolder.Text = tabFiles.CurrentFolder.Title;
-                            Settings.LastFolder = tabFiles.CurrentFolder;
+                            Settings.Current.LastFolder = tabFiles.CurrentFolder;
                         }
                     }
                     return true;
@@ -238,7 +238,7 @@ namespace QText {
                         if (index < list.Count - 1) {
                             tabFiles.FolderOpen(list[index + 1]);
                             mnuFolder.Text = tabFiles.CurrentFolder.Title;
-                            Settings.LastFolder = tabFiles.CurrentFolder;
+                            Settings.Current.LastFolder = tabFiles.CurrentFolder;
                         }
                     }
                     return true;
@@ -375,7 +375,7 @@ namespace QText {
 
 
         private void Form_Activated(object sender, EventArgs e) {
-            this.tmrUpdateToolbar.Enabled = Settings.ShowToolbar;
+            this.tmrUpdateToolbar.Enabled = Settings.Current.ShowToolbar;
             if (tabFiles == null) { return; }
 
             if ((tabFiles.SelectedTab != null) && (tabFiles.SelectedTab.IsOpened)) {
@@ -418,8 +418,8 @@ namespace QText {
 
             if (this.WindowState != FormWindowState.Minimized) {
                 if (this.Visible) { Medo.Windows.Forms.State.Save(this); }
-                mnu.Visible = Settings.ShowToolbar;
-            } else if (Settings.TrayOnMinimize) {
+                mnu.Visible = Settings.Current.ShowToolbar;
+            } else if (Settings.Current.TrayOnMinimize) {
                 this.Visible = false;
                 this.Close();
             }
@@ -563,17 +563,17 @@ namespace QText {
             if (PrinterSettings.InstalledPrinters.Count == 0) { return; }
 
             var pageSettings = new PageSettings();
-            try { pageSettings.PaperSize.PaperName = Settings.PrintPaperName; } catch (ArgumentException) { }
-            try { pageSettings.PaperSource.SourceName = Settings.PrintPaperSource; } catch (ArgumentException) { }
-            pageSettings.Landscape = Settings.PrintIsPaperLandscape;
-            pageSettings.Margins = Settings.PrintMargins;
+            try { pageSettings.PaperSize.PaperName = Settings.Current.PrintPaperName; } catch (ArgumentException) { }
+            try { pageSettings.PaperSource.SourceName = Settings.Current.PrintPaperSource; } catch (ArgumentException) { }
+            pageSettings.Landscape = Settings.Current.PrintIsPaperLandscape;
+            pageSettings.Margins = Settings.Current.PrintMargins;
 
             using (var frm = new PageSetupDialog() { PageSettings = pageSettings }) {
                 if (frm.ShowDialog(this) == DialogResult.OK) {
-                    Settings.PrintPaperName = pageSettings.PaperSize.PaperName;
-                    Settings.PrintPaperSource = pageSettings.PaperSource.SourceName;
-                    Settings.PrintIsPaperLandscape = pageSettings.Landscape;
-                    Settings.PrintMargins = pageSettings.Margins;
+                    Settings.Current.PrintPaperName = pageSettings.PaperSize.PaperName;
+                    Settings.Current.PrintPaperSource = pageSettings.PaperSource.SourceName;
+                    Settings.Current.PrintIsPaperLandscape = pageSettings.Landscape;
+                    Settings.Current.PrintMargins = pageSettings.Margins;
                 }
             }
         }
@@ -583,7 +583,7 @@ namespace QText {
             tmrQuickSave.Enabled = false;
             try {
                 if (tabFiles.SelectedTab != null) {
-                    tabFiles.SelectedTab.Cut(Settings.ForceTextCopyPaste);
+                    tabFiles.SelectedTab.Cut(Settings.Current.ForceTextCopyPaste);
                 }
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Operation could not be completed.\n\n{0}", ex.Message));
@@ -595,7 +595,7 @@ namespace QText {
             tmrQuickSave.Enabled = false;
             try {
                 if (tabFiles.SelectedTab != null) {
-                    tabFiles.SelectedTab.Copy(Settings.ForceTextCopyPaste);
+                    tabFiles.SelectedTab.Copy(Settings.Current.ForceTextCopyPaste);
                 }
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Operation could not be completed.\n\n{0}", ex.Message));
@@ -607,7 +607,7 @@ namespace QText {
             tmrQuickSave.Enabled = false;
             try {
                 if (tabFiles.SelectedTab != null) {
-                    tabFiles.SelectedTab.Paste(Settings.ForceTextCopyPaste);
+                    tabFiles.SelectedTab.Paste(Settings.Current.ForceTextCopyPaste);
                 }
             } catch (Exception ex) {
                 Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Operation could not be completed.\n\n{0}", ex.Message));
@@ -714,7 +714,7 @@ namespace QText {
                             if (tf.TextBox.SelectionFont.Italic) { style |= FontStyle.Italic; }
                             if (tf.TextBox.SelectionFont.Underline) { style |= FontStyle.Underline; }
                             if (tf.TextBox.SelectionFont.Strikeout) { style |= FontStyle.Strikeout; }
-                            tf.TextBox.SelectionFont = new Font(Settings.DisplayFont, style); //to lazy to detect spans
+                            tf.TextBox.SelectionFont = new Font(Settings.Current.DisplayFont, style); //to lazy to detect spans
                         }
                         tf.TextBox.SelectionStart = selStart;
                         tf.TextBox.SelectionLength = selLength;
@@ -812,8 +812,8 @@ namespace QText {
 
         private void mnuAlwaysOnTop_Click(object sender, EventArgs e) {
             mnuAlwaysOnTop.Checked = !mnuAlwaysOnTop.Checked;
-            Settings.DisplayAlwaysOnTop = mnuAlwaysOnTop.Checked;
-            this.TopMost = Settings.DisplayAlwaysOnTop;
+            Settings.Current.DisplayAlwaysOnTop = mnuAlwaysOnTop.Checked;
+            this.TopMost = Settings.Current.DisplayAlwaysOnTop;
         }
 
 
@@ -852,7 +852,7 @@ namespace QText {
                     tabFiles.FolderOpen(frm.CurrentFolder, false);
                 }
                 mnuFolder.Text = tabFiles.CurrentFolder.Title;
-                Settings.LastFolder = tabFiles.CurrentFolder;
+                Settings.Current.LastFolder = tabFiles.CurrentFolder;
             }
             tabFiles.Enabled = true;
             if (tabFiles.SelectedTab != null) { tabFiles.SelectedTab.Select(); }
@@ -882,21 +882,21 @@ namespace QText {
                 this.tmrUpdateToolbar.Enabled = false;
                 RefreshAll(null, null);
                 if (frm.ShowDialog(this) == DialogResult.OK) {
-                    if (Settings.DisplayMinimizeMaximizeButtons) {
+                    if (Settings.Current.DisplayMinimizeMaximizeButtons) {
                         this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
                     } else {
                         this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
                     }
-                    this.ShowInTaskbar = Settings.DisplayShowInTaskbar;
-                    tabFiles.Multiline = Settings.MultilineTabs;
-                    this.TopMost = Settings.DisplayAlwaysOnTop;
+                    this.ShowInTaskbar = Settings.Current.DisplayShowInTaskbar;
+                    tabFiles.Multiline = Settings.Current.MultilineTabs;
+                    this.TopMost = Settings.Current.DisplayAlwaysOnTop;
                     RefreshAll(null, null);
                     Form_Resize(null, null);
-                    this.tmrUpdateToolbar.Enabled = Settings.ShowToolbar;
-                    tmrQuickSave.Interval = Settings.QuickSaveInterval;
+                    this.tmrUpdateToolbar.Enabled = Settings.Current.ShowToolbar;
+                    tmrQuickSave.Interval = Settings.Current.QuickSaveInterval;
 
-                    App.Document.CarbonCopyRootPath = Settings.CarbonCopyUse ? Settings.CarbonCopyDirectory : null;
-                    App.Document.CarbonCopyIgnoreErrors = Settings.CarbonCopyIgnoreErrors;
+                    App.Document.CarbonCopyRootPath = Settings.Current.CarbonCopyUse ? Settings.Current.CarbonCopyDirectory : null;
+                    App.Document.CarbonCopyIgnoreErrors = Settings.Current.CarbonCopyIgnoreErrors;
                     try {
                         App.Document.WriteAllCarbonCopies();
                     } catch (InvalidOperationException ex) {
@@ -1101,10 +1101,10 @@ namespace QText {
             mnxTextCopy.Enabled = isTabSelected && tabFiles.SelectedTab.CanCopy;
             mnxTextPaste.Enabled = isTabSelected && tabFiles.SelectedTab.CanPaste;
 
-            mnxTextCutPlain.Visible = isTabRichText && (Settings.ForceTextCopyPaste == false);
-            mnxTextCopyPlain.Visible = isTabRichText && (Settings.ForceTextCopyPaste == false);
-            mnxTextPastePlain.Visible = isTabRichText && (Settings.ForceTextCopyPaste == false);
-            mnxTextBoxCutCopyPasteAsTextSeparator.Visible = isTabRichText && (Settings.ForceTextCopyPaste == false);
+            mnxTextCutPlain.Visible = isTabRichText && (Settings.Current.ForceTextCopyPaste == false);
+            mnxTextCopyPlain.Visible = isTabRichText && (Settings.Current.ForceTextCopyPaste == false);
+            mnxTextPastePlain.Visible = isTabRichText && (Settings.Current.ForceTextCopyPaste == false);
+            mnxTextBoxCutCopyPasteAsTextSeparator.Visible = isTabRichText && (Settings.Current.ForceTextCopyPaste == false);
             mnxTextCutPlain.Enabled = isTabSelected && tabFiles.SelectedTab.CanCopy;
             mnxTextCopyPlain.Enabled = isTabSelected && tabFiles.SelectedTab.CanCopy;
             mnxTextPastePlain.Enabled = isTabSelected && tabFiles.SelectedTab.CanPaste;
@@ -1397,7 +1397,7 @@ namespace QText {
                 }
             }
 
-            tabFiles.FolderOpen(Settings.LastFolder);
+            tabFiles.FolderOpen(Settings.Current.LastFolder);
 
             try {
                 SetSelectedTab(tabFiles.SelectedTab);
@@ -1456,10 +1456,10 @@ namespace QText {
                 var printDocument = document.TextBox.PrintDocument;
                 printDocument.DocumentName = document.Title;
 
-                try { printDocument.DefaultPageSettings.PaperSize.PaperName = Settings.PrintPaperName; } catch (ArgumentException) { }
-                try { printDocument.DefaultPageSettings.PaperSource.SourceName = Settings.PrintPaperSource; } catch (ArgumentException) { }
-                printDocument.DefaultPageSettings.Landscape = Settings.PrintIsPaperLandscape;
-                printDocument.DefaultPageSettings.Margins = Settings.PrintMargins;
+                try { printDocument.DefaultPageSettings.PaperSize.PaperName = Settings.Current.PrintPaperName; } catch (ArgumentException) { }
+                try { printDocument.DefaultPageSettings.PaperSource.SourceName = Settings.Current.PrintPaperSource; } catch (ArgumentException) { }
+                printDocument.DefaultPageSettings.Landscape = Settings.Current.PrintIsPaperLandscape;
+                printDocument.DefaultPageSettings.Margins = Settings.Current.PrintMargins;
 
                 if (preview) {
                     using (var frm = new Medo.Windows.Forms.PrintPreviewDialog(printDocument)) {
@@ -1587,12 +1587,12 @@ namespace QText {
             if (!newFolder.Equals(oldFolder)) {
                 tabFiles.FolderOpen(newFolder);
                 mnuFolder.Text = tabFiles.CurrentFolder.Title;
-                Settings.LastFolder = tabFiles.CurrentFolder;
+                Settings.Current.LastFolder = tabFiles.CurrentFolder;
             }
         }
 
         private void ToggleMenu() {
-            if (Settings.ShowToolbar == false) {
+            if (Settings.Current.ShowToolbar == false) {
                 mnu.Visible = !mnu.Visible;
             }
             if (mnu.Visible) {
