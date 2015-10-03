@@ -371,7 +371,8 @@ namespace QText {
         public bool CanPaste {
             get {
                 try {
-                    return (this.TextBox != null) && Clipboard.ContainsText(TextDataFormat.UnicodeText);
+                    return (this.TextBox != null)
+                        && (Clipboard.ContainsText(TextDataFormat.UnicodeText) || (this.BaseFile.IsRichText && Settings.FullRichTextClipboard));
                 } catch (ExternalException) {
                     return false;
                 }

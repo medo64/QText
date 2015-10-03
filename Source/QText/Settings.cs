@@ -341,6 +341,11 @@ namespace QText {
             set { Medo.Configuration.Settings.Write("GotoSortPreferPrefix", value); }
         }
 
+        public static bool FullRichTextClipboard {
+            get { return Medo.Configuration.Settings.Read("FullRichTextClipboard", false); }
+            set { Medo.Configuration.Settings.Write("FullRichTextClipboard", value); }
+        }
+
 
         private static bool AreWindowsInTabletMode() {
             var tabletModeValue = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ImmersiveShell", "TabletMode", 0);
