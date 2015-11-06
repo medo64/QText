@@ -94,7 +94,7 @@ namespace QText {
 
         [Browsable(false)]
         public string DefaultFilesLocation {
-            get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Medo.Reflection.EntryAssembly.Company + @"\" + Medo.Reflection.EntryAssembly.Name); }
+            get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Medo.Reflection.EntryAssembly.Company + @"\" + Medo.Reflection.EntryAssembly.Title); }
         }
 
         [Category("Display")]
@@ -471,7 +471,8 @@ namespace QText {
             get { return Medo.Configuration.Settings.Read("ScaleBoost", 0.00); }
             set {
                 if ((value < -1) || (value > 4)) { return; }
-                Medo.Configuration.Settings.Write("ScaleBoost", value); }
+                Medo.Configuration.Settings.Write("ScaleBoost", value);
+            }
         }
 
         [Category("Goto")]
