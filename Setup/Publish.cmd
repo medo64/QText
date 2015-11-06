@@ -18,6 +18,8 @@ SET       SIGN_TOOL_2="%PROGRAMFILES(X86)%\Windows Kits\8.0\bin\x86\signtool.exe
 SET         SIGN_HASH="C02FF227D5EE9F555C13D4C622697DF15C6FF871"
 SET SIGN_TIMESTAMPURL="http://timestamp.comodoca.com/rfc3161"
 
+SET        GIT_TOOL_1="%PROGRAMFILES%\Git\mingw64\bin\git.exe"
+
 
 ECHO --- DISCOVER TOOLS
 ECHO.
@@ -67,6 +69,13 @@ IF EXIST %SIGN_TOOL_1% (
     )
 )
 
+IF EXIST %GIT_TOOL_1% (
+    ECHO Git
+    SET GIT_TOOL=%GIT_TOOL_1%
+) ELSE (
+    GIT_TOOL="git"
+)
+
 ECHO.
 ECHO.
 
@@ -74,11 +83,11 @@ ECHO.
 ECHO --- DISCOVER VERSION
 ECHO.
 
-FOR /F "delims=" %%N IN ('git log -n 1 --format^=%%h') DO @SET VERSION_HASH=%%N%
+FOR /F "delims=" %%N IN ('%GIT_TOOL% log -n 1 --format^=%%h') DO @SET VERSION_HASH=%%N%
 
 IF NOT [%VERSION_HASH%]==[] (
-    FOR /F "delims=" %%N IN ('git rev-list --count HEAD') DO @SET VERSION_NUMBER=%%N%
-    git diff --exit-code --quiet
+    FOR /F "delims=" %%N IN ('%GIT_TOOL% rev-list --count HEAD') DO @SET VERSION_NUMBER=%%N%
+    %GIT_TOOL% diff --exit-code --quiet
     IF ERRORLEVEL 1 SET VERSION_HASH=%VERSION_HASH%+
     ECHO %VERSION_HASH%
 )
