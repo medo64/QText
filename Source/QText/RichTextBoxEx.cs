@@ -315,8 +315,10 @@ namespace QText {
 
 
         private Int32 CaretPosition; //used for selection
+        public bool IsSelectionEmpty;
 
         protected override void OnSelectionChanged(EventArgs e) {
+            this.IsSelectionEmpty = (this.SelectionLength == 0);
             if (this.SelectionLength == 0) { this.CaretPosition = this.SelectionStart; }
             base.OnSelectionChanged(e);
         }

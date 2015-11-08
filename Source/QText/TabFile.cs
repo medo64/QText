@@ -353,7 +353,7 @@ namespace QText {
         }
 
         public bool CanCopy {
-            get { return (this.TextBox != null) && (this.TextBox.SelectionLength > 0); }
+            get { return (this.TextBox != null) && !this.TextBox.IsSelectionEmpty; }
         }
 
         public void Copy(bool forceText) {
