@@ -511,6 +511,31 @@ namespace QText {
             set { Medo.Configuration.Settings.Write("FullRichTextClipboard", value); }
         }
 
+        [Category("Text")]
+        [DisplayName("Use RichText 5.0")]
+        [Description("If true, RichText uses control version 5.0.\nChange requires restart.")]
+        [DefaultValue(true)]
+        public bool UseRichText50 {
+            get { return Medo.Configuration.Settings.Read("UseRichText50", true); }
+            set { Medo.Configuration.Settings.Write("UseRichText50", value); }
+        }
+
+        [Category("Text")]
+        [DisplayName("Check spelling")]
+        [Description("If true, text will be spell checked automatically.\nIt can only be used when RichText 5.0 control is enabled and if Windows 8 or higher is used.")]
+        [DefaultValue(false)]
+        [RefreshProperties(RefreshProperties.All)]
+        public bool UseSpellCheck {
+            get {
+                if ((Environment.OSVersion.Version.Major < 6) || ((Environment.OSVersion.Version.Major == 6) && (Environment.OSVersion.Version.Minor < 2))) { return false; } //not supported below Windows 8
+                return Medo.Configuration.Settings.Read("UseSpellCheck", false) && this.UseRichText50;
+            }
+            set {
+                if (value) { this.UseRichText50 = true; }
+                Medo.Configuration.Settings.Write("UseSpellCheck", value);
+            }
+        }
+
 
         private static bool AreWindowsInTabletMode() {
             var tabletModeValue = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ImmersiveShell", "TabletMode", 0);

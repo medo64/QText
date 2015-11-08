@@ -28,6 +28,38 @@ namespace QText {
         }
 
 
+        #region CreateParams
+
+        private static IntPtr RichTextLibraryHandle;
+
+        protected override CreateParams CreateParams {
+            get {
+                var createParams = base.CreateParams;
+
+                if (Settings.Current.UseRichText50) {
+                    if (RichTextLibraryHandle == IntPtr.Zero) { RichTextLibraryHandle = NativeMethods.LoadLibrary("msftedit.dll"); }
+
+                    if (RichTextLibraryHandle != IntPtr.Zero) { //if library has been loaded, change create params
+                        createParams.ClassName = "RichEdit50W";
+                    }
+                }
+
+                return createParams;
+            }
+        }
+
+        protected override void OnHandleCreated(EventArgs e) {
+            base.OnHandleCreated(e);
+            if (Settings.Current.UseSpellCheck) {
+                int opts = (int)NativeMethods.SendMessage(this.Handle, NativeMethods.EM_GETLANGOPTIONS, IntPtr.Zero, IntPtr.Zero);
+                opts |= NativeMethods.IMF_SPELLCHECKING;
+                NativeMethods.SendMessage(this.Handle, NativeMethods.EM_SETLANGOPTIONS, IntPtr.Zero, new IntPtr(opts));
+            }
+        }
+
+        #endregion
+
+
         [UIPermissionAttribute(SecurityAction.InheritanceDemand, Window = UIPermissionWindow.AllWindows)]
         protected override bool IsInputKey(Keys keyData) {
             Debug.WriteLine("RichTextBoxEx_IsInputKey: " + keyData.ToString());
@@ -417,8 +449,11 @@ namespace QText {
             internal const int VK_MENU = 0x12;
 
             internal const int EM_SETEVENTMASK = 1073;
-
             internal const int EM_SETSEL = 0x00B1;
+
+            internal const int IMF_SPELLCHECKING = 0x0800;
+            internal const int EM_SETLANGOPTIONS = 0x0400 + 120;
+            internal const int EM_GETLANGOPTIONS = 0x0400 + 121;
 
             internal const int WM_LBUTTONDBLCLK = 0x0203;
             internal const int WM_SETREDRAW = 11;
@@ -468,6 +503,10 @@ namespace QText {
                 public RECT rcPage;            //Region of the whole DC (page size) (in twips)
                 public CHARRANGE chrg;         //Range of text to draw (see earlier declaration)
             }
+
+
+            [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+            public static extern IntPtr LoadLibrary(String path);
 
 
             public static IntPtr SendMessage(IntPtr hWnd, uint Msg, int wParam, IntPtr lParam) {
