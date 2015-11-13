@@ -528,7 +528,7 @@ namespace QText {
         public bool UseSpellCheck {
             get {
                 if ((Environment.OSVersion.Version.Major < 6) || ((Environment.OSVersion.Version.Major == 6) && (Environment.OSVersion.Version.Minor < 2))) { return false; } //not supported below Windows 8
-                return Medo.Configuration.Settings.Read("UseSpellCheck", false) && this.UseRichText50;
+                return Medo.Configuration.Settings.Read("UseSpellCheck", true) && this.UseRichText50;
             }
             set {
                 if (value) { this.UseRichText50 = true; }
