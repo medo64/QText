@@ -256,7 +256,6 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\QText.Document\QText.Document.csproj">
       <Project>{caff612a-7419-46fe-abbe-bb1d9b26b9cf}</Project>

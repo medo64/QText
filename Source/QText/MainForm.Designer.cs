@@ -86,6 +86,7 @@ namespace QText {
             this.mnxTextItalic = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextUnderline = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextStrikeout = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTextResetFont = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextRtfSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTextSelection = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextSelectionUpper = new System.Windows.Forms.ToolStripMenuItem();
@@ -122,7 +123,7 @@ namespace QText {
             this.ToolStripMenuItem14 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTabOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.tabFiles = new QText.TabFiles();
-            this.mnxTextResetFont = new System.Windows.Forms.ToolStripMenuItem();
+            this.bwCheckForUpgrade = new System.ComponentModel.BackgroundWorker();
             this.mnu.SuspendLayout();
             this.mnxText.SuspendLayout();
             this.mnxTab.SuspendLayout();
@@ -535,7 +536,7 @@ namespace QText {
             this.mnxTextSelection,
             this.mnxTextLines});
             this.mnxText.Name = "mnxTextBox";
-            this.mnxText.Size = new System.Drawing.Size(294, 504);
+            this.mnxText.Size = new System.Drawing.Size(294, 476);
             this.mnxText.Opening += new System.ComponentModel.CancelEventHandler(this.mnxText_Opening);
             // 
             // mnxTextUndo
@@ -701,6 +702,13 @@ namespace QText {
             this.mnxTextStrikeout.Tag = "mnuStrikeout";
             this.mnxTextStrikeout.Text = "S&trikeout";
             this.mnxTextStrikeout.Click += new System.EventHandler(this.mnuStrikeout_Click);
+            // 
+            // mnxTextResetFont
+            // 
+            this.mnxTextResetFont.Name = "mnxTextResetFont";
+            this.mnxTextResetFont.Size = new System.Drawing.Size(293, 26);
+            this.mnxTextResetFont.Text = "Reset font to default";
+            this.mnxTextResetFont.Click += new System.EventHandler(this.mnuResetFont_Click);
             // 
             // mnxTextRtfSeparator
             // 
@@ -1009,12 +1017,11 @@ namespace QText {
             this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
             this.tabFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabFiles_MouseDown);
             // 
-            // mnxTextResetFont
+            // bwCheckForUpgrade
             // 
-            this.mnxTextResetFont.Name = "mnxTextResetFont";
-            this.mnxTextResetFont.Size = new System.Drawing.Size(293, 26);
-            this.mnxTextResetFont.Text = "Reset font to default";
-            this.mnxTextResetFont.Click += new System.EventHandler(this.mnuResetFont_Click);
+            this.bwCheckForUpgrade.WorkerSupportsCancellation = true;
+            this.bwCheckForUpgrade.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwCheckForUpgrade_DoWork);
+            this.bwCheckForUpgrade.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwCheckForUpgrade_RunWorkerCompleted);
             // 
             // MainForm
             // 
@@ -1033,6 +1040,7 @@ namespace QText {
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form_FormClosed);
             this.Load += new System.EventHandler(this.Form_Load);
+            this.Shown += new System.EventHandler(this.Form_Shown);
             this.VisibleChanged += new System.EventHandler(this.Form_VisibleChanged);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form_MouseDown);
             this.Move += new System.EventHandler(this.Form_Move);
@@ -1146,5 +1154,6 @@ namespace QText {
         private System.Windows.Forms.ToolStripSeparator mnuApp0;
         internal System.Windows.Forms.ToolStripSeparator ToolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem mnxTextResetFont;
+        private System.ComponentModel.BackgroundWorker bwCheckForUpgrade;
     }
 }

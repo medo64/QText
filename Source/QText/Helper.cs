@@ -203,6 +203,21 @@ namespace QText {
             imageList.Images.Add(resources.GetObject("staFile" + set) as Bitmap);
         }
 
+        internal static void ScaleToolstripItem(ToolStripItem item, string name) {
+            var sizeAndSet = GetSizeAndSet(item.GetCurrentParent());
+            var size = sizeAndSet.Key;
+            var set = sizeAndSet.Value;
+
+            var resources = QText.Properties.Resources.ResourceManager;
+            Bitmap bitmap = resources.GetObject(name + set) as Bitmap;
+            item.ImageScaling = ToolStripItemImageScaling.None;
+#if DEBUG
+            item.Image = (bitmap != null) ? new Bitmap(bitmap, size, size) : new Bitmap(size, size, PixelFormat.Format8bppIndexed);
+#else
+            if (bitmap != null) { item.Image = new Bitmap(bitmap, size, size); }
+#endif
+        }
+
         private static KeyValuePair<int, string> GetSizeAndSet(params Control[] controls) {
             using (var g = controls[0].CreateGraphics()) {
                 var scale = Math.Max(Math.Max(g.DpiX, g.DpiY), 96.0) / 96.0;
