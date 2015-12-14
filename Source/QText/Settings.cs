@@ -523,7 +523,7 @@ namespace QText {
         [Category("Text")]
         [DisplayName("Check spelling")]
         [Description("If true, text will be spell checked automatically.\nIt can only be used when RichText 5.0 control is enabled and if Windows 8 or higher is used.")]
-        [DefaultValue(false)]
+        [DefaultValue(true)]
         [RefreshProperties(RefreshProperties.All)]
         public bool UseSpellCheck {
             get {
