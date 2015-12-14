@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Windows.Forms;
 
 namespace QText {
@@ -142,8 +141,9 @@ namespace QText {
         }
 
         private void mnuSort_Click(object sender, EventArgs e) {
-            //TODO: Sort
+            this.TabFiles.CurrentFolder.Sort();
             this.TabFiles.FolderOpen(this.TabFiles.CurrentFolder, saveBeforeOpen: false);
+            this.DialogResult = DialogResult.OK;
         }
 
         #endregion

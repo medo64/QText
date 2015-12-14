@@ -100,6 +100,12 @@ namespace QText {
             Process.Start(exe);
         }
 
+
+        public void Sort() {
+            this.Document.SortFiles(this);
+            this.Document.WriteOrder();
+        }
+
         #endregion
 
 

@@ -111,6 +111,20 @@ namespace QText {
             });
         }
 
+        internal void SortFiles(DocumentFolder folder) {
+            this.Files.Sort(delegate (DocumentFile file1, DocumentFile file2) {
+                if ((file1.Folder == folder) && (file2.Folder == folder)) {
+                    return string.Compare(file1.Title, file2.Title, StringComparison.CurrentCultureIgnoreCase);
+                } else if (file1.Folder == folder) {
+                    return -1;
+                } else if (file2.Folder == folder) {
+                    return +1;
+                } else {
+                    return this.Files.IndexOf(file1).CompareTo(this.Files.IndexOf(file2));
+                }
+            });
+        }
+
         #endregion
 
 
