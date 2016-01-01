@@ -87,7 +87,7 @@
     <Compile Include="%28Medo%29\State [015].cs" />
     <Compile Include="%28Medo%29\UnhandledCatch [008].cs" />
     <Compile Include="%28Medo%29\Hotkey [001].cs" />
-    <Compile Include="%28Medo%29\Upgrade [002].cs" />
+    <Compile Include="%28Medo%29\Upgrade [004].cs" />
     <Compile Include="App.cs" />
     <Compile Include="ChangePasswordForm.cs">
       <SubType>Form</SubType>

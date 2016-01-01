@@ -917,23 +917,19 @@ namespace QText {
         private void mnuAppFeedback_Click(object sender, EventArgs e) {
             tmrQuickSave.Enabled = false;
             Medo.Diagnostics.ErrorReport.TopMost = this.TopMost;
-            Medo.Diagnostics.ErrorReport.ShowDialog(this, null, new Uri("http://jmedved.com/feedback/"));
+            Medo.Diagnostics.ErrorReport.ShowDialog(this, null, new Uri("https://medo64.com/feedback/"));
             tmrQuickSave.Enabled = true;
         }
 
         private void mnuAppUpgrade_Click(object sender, EventArgs e) {
             tmrQuickSave.Enabled = false;
-            Medo.Services.Upgrade.ShowDialog(this, new Uri("http://jmedved.com/upgrade/"));
+            Medo.Services.Upgrade.ShowDialog(this, new Uri("https://medo64.com/upgrade/"));
             tmrQuickSave.Enabled = true;
-        }
-
-        private void mnuAppDonate_Click(object sender, EventArgs e) {
-            Process.Start("http://www.jmedved.com/donate/");
         }
 
         private void mnuAppAbout_Click(object sender, EventArgs e) {
             tmrQuickSave.Enabled = false;
-            Medo.Windows.Forms.AboutBox.ShowDialog(this, new Uri("http://www.jmedved.com/qtext/"));
+            Medo.Windows.Forms.AboutBox.ShowDialog(this, new Uri("https://www.medo64.com/qtext/"));
 
             if (tabFiles.SelectedTab != null) {
                 tabFiles.SelectedTab.TextBox.Select();
@@ -1620,7 +1616,7 @@ namespace QText {
                 if (bwCheckForUpgrade.CancellationPending) { return; }
             }
 
-            var file = Medo.Services.Upgrade.GetUpgradeFile(new Uri("http://jmedved.com/upgrade/"));
+            var file = Medo.Services.Upgrade.GetUpgradeFile(new Uri("https://medo64.com/upgrade/"));
             if (file != null) {
                 if (bwCheckForUpgrade.CancellationPending) { return; }
                 e.Cancel = false;
