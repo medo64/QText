@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.Globalization;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Security.Permissions;
 using System.Text;
@@ -437,7 +438,8 @@ namespace QText {
 
 
         private void Form_Shown(object sender, EventArgs e) {
-            bwCheckForUpgrade.RunWorkerAsync();
+            var version = Assembly.GetExecutingAssembly().GetName().Version; //don't auto-check for development builds
+            if ((version.Major != 0) || (version.Minor != 0)) { bwCheckForUpgrade.RunWorkerAsync(); }
         }
 
 
