@@ -121,8 +121,8 @@ namespace QText {
             this.mnxTabPrint = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem14 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTabOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabFiles = new QText.TabFiles();
             this.bwCheckForUpgrade = new System.ComponentModel.BackgroundWorker();
+            this.tabFiles = new QText.TabFiles();
             this.mnu.SuspendLayout();
             this.mnxText.SuspendLayout();
             this.mnxTab.SuspendLayout();
@@ -993,6 +993,12 @@ namespace QText {
             this.mnxTabOpenContainingFolder.Text = "Open containing folder";
             this.mnxTabOpenContainingFolder.Click += new System.EventHandler(this.mnxTabOpenContainingFolder_Click);
             // 
+            // bwCheckForUpgrade
+            // 
+            this.bwCheckForUpgrade.WorkerSupportsCancellation = true;
+            this.bwCheckForUpgrade.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwCheckForUpgrade_DoWork);
+            this.bwCheckForUpgrade.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwCheckForUpgrade_RunWorkerCompleted);
+            // 
             // tabFiles
             // 
             this.tabFiles.ContextMenuStrip = this.mnxTab;
@@ -1008,12 +1014,6 @@ namespace QText {
             this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
             this.tabFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabFiles_MouseDown);
             // 
-            // bwCheckForUpgrade
-            // 
-            this.bwCheckForUpgrade.WorkerSupportsCancellation = true;
-            this.bwCheckForUpgrade.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwCheckForUpgrade_DoWork);
-            this.bwCheckForUpgrade.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwCheckForUpgrade_RunWorkerCompleted);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1023,7 +1023,7 @@ namespace QText {
             this.Controls.Add(this.mnu);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
-            this.MinimumSize = new System.Drawing.Size(400, 300);
+            this.MinimumSize = new System.Drawing.Size(320, 200);
             this.Name = "MainForm";
             this.Text = "QText";
             this.Activated += new System.EventHandler(this.Form_Activated);
