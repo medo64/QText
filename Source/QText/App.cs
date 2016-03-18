@@ -172,10 +172,6 @@ namespace QText {
             }
             Medo.Diagnostics.ErrorReport.ShowDialog(null, e.Exception, new Uri("https://medo64.com/feedback/"));
 
-            if (System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major > 0) {
-                Medo.Services.Upgrade.ShowDialog(null, new Uri("http://medo64.com/upgrade/"));
-            }
-
             if (Medo.Application.Restart.IsRegistered) { throw e.Exception; }
 #else
             throw e.Exception;
