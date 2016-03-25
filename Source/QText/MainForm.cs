@@ -762,11 +762,13 @@ namespace QText {
         }
 
         private void mnuFindFind_Click(object sender, EventArgs e) {
+            SaveAllChanged();
             FindFirst();
         }
 
         private void mnuFindFindNext_Click(object sender, EventArgs e) {
             if (!string.IsNullOrEmpty(SearchStatus.Text)) {
+                SaveAllChanged();
                 Search.FindNext(this, this.tabFiles, this.tabFiles.SelectedTab);
             }
         }
@@ -778,6 +780,7 @@ namespace QText {
                 hasText = tf.IsOpened;
             }
 
+            SaveAllChanged();
             using (var frm = new GotoForm(hasText)) {
                 frm.TopMost = this.TopMost;
                 if (frm.ShowDialog(this) == DialogResult.OK) {
