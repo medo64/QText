@@ -71,7 +71,6 @@ namespace QText {
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnExit = new System.Windows.Forms.Button();
-            this.btnAllowSave = new System.Windows.Forms.Button();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.btnAdvanced = new System.Windows.Forms.Button();
             this.tab.SuspendLayout();
@@ -686,19 +685,6 @@ namespace QText {
             this.btnExit.UseVisualStyleBackColor = true;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
-            // btnAllowSave
-            // 
-            this.btnAllowSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnAllowSave.Location = new System.Drawing.Point(128, 272);
-            this.btnAllowSave.Name = "btnAllowSave";
-            this.btnAllowSave.Size = new System.Drawing.Size(98, 29);
-            this.btnAllowSave.TabIndex = 3;
-            this.btnAllowSave.TabStop = false;
-            this.btnAllowSave.Text = "Allow save";
-            this.tooltip.SetToolTip(this.btnAllowSave, "Allow save of settings in registry.");
-            this.btnAllowSave.UseVisualStyleBackColor = true;
-            this.btnAllowSave.Click += new System.EventHandler(this.btnAllowSave_Click);
-            // 
             // btnAdvanced
             // 
             this.btnAdvanced.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -721,7 +707,6 @@ namespace QText {
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(522, 313);
-            this.Controls.Add(this.btnAllowSave);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.tab);
             this.Controls.Add(this.btnOk);
@@ -802,7 +787,6 @@ namespace QText {
         private System.Windows.Forms.Button btnExit;
         internal System.Windows.Forms.Label lblSelectionDelimiters;
         private System.Windows.Forms.ComboBox cmbSelectionDelimiters;
-        private System.Windows.Forms.Button btnAllowSave;
         internal System.Windows.Forms.CheckBox chbSavePlainWithLF;
         private System.Windows.Forms.ToolTip tooltip;
         private System.Windows.Forms.Button btnAdvanced;

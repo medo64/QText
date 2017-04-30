@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="%28Medo%29\AboutBox [013].cs" />
     <Compile Include="%28Medo%29\Args [002].cs" />
+    <Compile Include="%28Medo%29\Config [003].cs" />
     <Compile Include="%28Medo%29\EntryAssembly [003].cs" />
     <Compile Include="%28Medo%29\ErrorReport [019].cs" />
     <Compile Include="%28Medo%29\History [001].cs" />

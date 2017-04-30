@@ -21,16 +21,14 @@ namespace QText {
 
         [STAThread]
         public static void Main() {
-            bool createdNew;
             var mutexSecurity = new MutexSecurity();
             mutexSecurity.AddAccessRule(new MutexAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), MutexRights.FullControl, AccessControlType.Allow));
-            using (var setupMutex = new Mutex(false, @"Global\JosipMedved_QText", out createdNew, mutexSecurity)) {
+            using (var setupMutex = new Mutex(false, @"Global\JosipMedved_QText", out var createdNew, mutexSecurity)) {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo(Medo.Configuration.Settings.Read("CultureName", "en-US"));
 
                 if (Medo.Application.Args.Current.ContainsKey("setup")) {
-                    Legacy.Settings.Upgrade();
                     Legacy.OrderedFiles.Upgrade();
                     Legacy.HiddenFiles.Upgrade();
                 }
@@ -41,7 +39,6 @@ namespace QText {
 
                 Application.ApplicationExit += new System.EventHandler(ApplicationExit);
 
-                Medo.Configuration.Settings.NoRegistryWrites = Settings.Current.NoRegistryWrites;
                 Medo.Windows.Forms.State.NoRegistryWrites = Settings.Current.NoRegistryWrites;
                 Medo.Diagnostics.ErrorReport.DisableAutomaticSaveToTemp = Settings.Current.NoRegistryWrites;
 

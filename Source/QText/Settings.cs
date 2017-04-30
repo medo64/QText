@@ -6,11 +6,12 @@ using System.Drawing.Printing;
 using System.IO;
 using System.Security;
 using System.Windows.Forms;
+using Medo.Configuration;
 
 namespace QText {
     internal class Settings {
 
-        private static readonly Medo.Configuration.RunOnStartup StartupConfig = new Medo.Configuration.RunOnStartup(Medo.Configuration.RunOnStartup.Current.Title, Medo.Configuration.RunOnStartup.Current.ExecutablePath, "/hide");
+        private static readonly RunOnStartup StartupConfig = new RunOnStartup(Medo.Configuration.RunOnStartup.Current.Title, Medo.Configuration.RunOnStartup.Current.ExecutablePath, "/hide");
 
         public static Settings Current = new Settings();
 
@@ -19,33 +20,7 @@ namespace QText {
         [DisplayName("No registry writes")]
         [Description("If true, registry writes will be suppressed. Do notice that all settings are to be DELETED upon changing this value.")]
         [DefaultValue(false)]
-        public bool NoRegistryWrites {
-            get {
-                try {
-                    using (var key = Registry.CurrentUser.OpenSubKey(Medo.Configuration.Settings.SubkeyPath)) {
-                        return (key == null);
-                    }
-                } catch (SecurityException) {
-                    return true;
-                }
-            }
-            set {
-                try {
-                    if (value) { //remove subkey
-                        try {
-                            Registry.CurrentUser.DeleteSubKeyTree(Medo.Configuration.Settings.SubkeyPath);
-                        } catch (ArgumentException) { }
-                    } else {
-                        Registry.CurrentUser.CreateSubKey(Medo.Configuration.Settings.SubkeyPath);
-                    }
-                    Medo.Configuration.Settings.NoRegistryWrites = value;
-                    Medo.Windows.Forms.State.NoRegistryWrites = value;
-                    Medo.Diagnostics.ErrorReport.DisableAutomaticSaveToTemp = value;
-                } catch (IOException) {
-                } catch (SecurityException) {
-                } catch (UnauthorizedAccessException) { }
-            }
-        }
+        public bool NoRegistryWrites => !Config.IsAssumedInstalled;
 
 
         [Category("Behavior")]
@@ -53,8 +28,8 @@ namespace QText {
         [Description("Hotkey used for the program activation")]
         [DefaultValue(Keys.Control | Keys.Shift | Keys.Q)]
         public Keys ActivationHotkey {
-            get { return (Keys)Medo.Configuration.Settings.Read("ActivationHotkey", Convert.ToInt32(Keys.Control | Keys.Shift | Keys.Q)); }
-            set { Medo.Configuration.Settings.Write("ActivationHotkey", (int)value); }
+            get { return (Keys)Config.Read("ActivationHotkey", Medo.Configuration.Settings.Read("ActivationHotkey", Convert.ToInt32(Keys.Control | Keys.Shift | Keys.Q))); }
+            set { Config.Write("ActivationHotkey", (int)value); }
         }
 
         [Category("Carbon copy")]
@@ -62,12 +37,12 @@ namespace QText {
         [Description("Directory used for storage of file carbon copies.")]
         [DefaultValue("")]
         public string CarbonCopyDirectory {
-            get { return Medo.Configuration.Settings.Read("CarbonCopyFolder", ""); }
+            get { return Config.Read("CarbonCopy.Directory", Medo.Configuration.Settings.Read("CarbonCopyFolder", "")); }
             set {
-                if (FilesLocation == null) { return; }
-                if ((string.Compare(value.Trim(), FilesLocation.Trim(), true) == 0)) { return; }
-                Medo.Configuration.Settings.Write("CarbonCopyFolder", value);
-                if (string.IsNullOrEmpty(value)) { CarbonCopyUse = false; }
+                if (this.FilesLocation == null) { return; }
+                if ((string.Compare(value.Trim(), this.FilesLocation.Trim(), true) == 0)) { return; }
+                Config.Write("CarbonCopy.Directory", value);
+                if (string.IsNullOrEmpty(value)) { this.CarbonCopyUse = false; }
             }
         }
 
@@ -76,8 +51,8 @@ namespace QText {
         [Description("If true, errors occuring during carbon copy are silently ignored.")]
         [DefaultValue(true)]
         public bool CarbonCopyIgnoreErrors {
-            get { return Medo.Configuration.Settings.Read("CarbonCopyIgnoreErrors", true); }
-            set { Medo.Configuration.Settings.Write("CarbonCopyIgnoreErrors", value); }
+            get { return Config.Read("CarbonCopy.IgnoreErrors", Medo.Configuration.Settings.Read("CarbonCopyIgnoreErrors", true)); }
+            set { Config.Write("CarbonCopy.IgnoreErrors", value); }
         }
 
         [Category("Carbon copy")]
@@ -85,10 +60,10 @@ namespace QText {
         [Description("If true, carbon copy functionality is activated. Note that directory has to be set.")]
         [DefaultValue(false)]
         public bool CarbonCopyUse {
-            get { return Medo.Configuration.Settings.Read("CarbonCopyUse", false); }
+            get { return Config.Read("CarbonCopy.Active", Medo.Configuration.Settings.Read("CarbonCopyUse", false)); }
             set {
                 if (string.IsNullOrEmpty(this.CarbonCopyDirectory)) { return; }
-                Medo.Configuration.Settings.Write("CarbonCopyUse", value);
+                Config.Write("CarbonCopy.Active", value);
             }
         }
 
@@ -102,8 +77,8 @@ namespace QText {
         [Description("If true, program is going to displayed above all other windows.")]
         [DefaultValue(false)]
         public bool DisplayAlwaysOnTop {
-            get { return Medo.Configuration.Settings.Read("DisplayAlwaysOnTop", false); }
-            set { Medo.Configuration.Settings.Write("DisplayAlwaysOnTop", value); }
+            get { return Config.Read("AlwaysOnTop", Medo.Configuration.Settings.Read("DisplayAlwaysOnTop", false)); }
+            set { Config.Write("AlwaysOnTop", value); }
         }
 
         [Category("Display")]
@@ -113,12 +88,12 @@ namespace QText {
         public Color DisplayBackgroundColor {
             get {
                 try {
-                    return Color.FromArgb(Medo.Configuration.Settings.Read("DisplayBackgroundColor", SystemColors.Window.ToArgb()));
+                    return Color.FromArgb(Config.Read("Color.Background", Medo.Configuration.Settings.Read("DisplayBackgroundColor", SystemColors.Window.ToArgb())));
                 } catch {
                     return SystemColors.Window;
                 }
             }
-            set { Medo.Configuration.Settings.Write("DisplayBackgroundColor", value.ToArgb()); }
+            set { Config.Write("Color.Background", value.ToArgb()); }
         }
 
         [Category("Text")]
@@ -127,9 +102,9 @@ namespace QText {
         [DefaultValue(typeof(Font), "Vertical")]
         public Font DisplayFont {
             get {
-                string tmpFamilyName = Medo.Configuration.Settings.Read("DisplayFont_FamilyName", SystemFonts.MessageBoxFont.Name);
-                double tmpSize = Medo.Configuration.Settings.Read("DisplayFont_Size", SystemFonts.MessageBoxFont.Size);
-                int tmpStyle = Medo.Configuration.Settings.Read("DisplayFont_Style", (Int32)SystemFonts.MessageBoxFont.Style);
+                string tmpFamilyName = Config.Read("Font.Name", Medo.Configuration.Settings.Read("DisplayFont_FamilyName", SystemFonts.MessageBoxFont.Name));
+                double tmpSize = Config.Read("Font.Size", Medo.Configuration.Settings.Read("DisplayFont_Size", SystemFonts.MessageBoxFont.Size));
+                int tmpStyle = Config.Read("Font.Style", Medo.Configuration.Settings.Read("DisplayFont_Style", (Int32)SystemFonts.MessageBoxFont.Style));
                 try {
                     return new Font(tmpFamilyName, Convert.ToSingle(tmpSize), (FontStyle)tmpStyle);
                 } catch (Exception) {
@@ -137,9 +112,9 @@ namespace QText {
                 }
             }
             set {
-                Medo.Configuration.Settings.Write("DisplayFont_FamilyName", value.Name);
-                Medo.Configuration.Settings.Write("DisplayFont_Size", value.Size);
-                Medo.Configuration.Settings.Write("DisplayFont_Style", (Int32)value.Style);
+                Config.Write("Font.Name", value.Name);
+                Config.Write("Font.Size", value.Size);
+                Config.Write("Font.Style", (Int32)value.Style);
             }
         }
 
@@ -150,12 +125,12 @@ namespace QText {
         public Color DisplayForegroundColor {
             get {
                 try {
-                    return Color.FromArgb(Medo.Configuration.Settings.Read("DisplayForegroundColor", SystemColors.WindowText.ToArgb()));
+                    return Color.FromArgb(Config.Read("Color.Foreground", Medo.Configuration.Settings.Read("DisplayForegroundColor", SystemColors.WindowText.ToArgb())));
                 } catch (Exception) {
                     return System.Drawing.SystemColors.WindowText;
                 }
             }
-            set { Medo.Configuration.Settings.Write("DisplayForegroundColor", value.ToArgb()); }
+            set { Config.Write("Color.Foreground", value.ToArgb()); }
         }
 
         [Category("Display")]
@@ -163,8 +138,8 @@ namespace QText {
         [Description("If true, minimize and maximize window buttons are to be shown.")]
         [DefaultValue(true)]
         public bool DisplayMinimizeMaximizeButtons {
-            get { return Medo.Configuration.Settings.Read("DisplayMinimizeMaximizeButtons", true); }
-            set { Medo.Configuration.Settings.Write("DisplayMinimizeMaximizeButtons", value); }
+            get { return Config.Read("ShowMinMaxButtons", Medo.Configuration.Settings.Read("DisplayMinimizeMaximizeButtons", true)); }
+            set { Config.Write("ShowMinMaxButtons", value); }
         }
 
         [Category("Display")]
@@ -172,8 +147,8 @@ namespace QText {
         [Description("If true, tabs are shown in multiple lines.")]
         [DefaultValue(false)]
         public bool MultilineTabs {
-            get { return Medo.Configuration.Settings.Read("MultilineTabs", false); }
-            set { Medo.Configuration.Settings.Write("MultilineTabs", value); }
+            get { return Config.Read("MultilineTabs", Medo.Configuration.Settings.Read("MultilineTabs", false)); }
+            set { Config.Write("MultilineTabs", value); }
         }
 
         [Category("Display")]
@@ -183,12 +158,12 @@ namespace QText {
         public ScrollBars ScrollBars {
             get {
                 try {
-                    return (ScrollBars)Medo.Configuration.Settings.Read("DisplayScrollbars", Convert.ToInt32(ScrollBars.Vertical));
+                    return (ScrollBars)Config.Read("ScrollBars", Medo.Configuration.Settings.Read("DisplayScrollbars", Convert.ToInt32(ScrollBars.Vertical)));
                 } catch (Exception) {
                     return ScrollBars.Vertical;
                 }
             }
-            set { Medo.Configuration.Settings.Write("DisplayScrollbars", Convert.ToInt32(value)); }
+            set { Config.Write("ScrollBars", Convert.ToInt32(value)); }
         }
 
         [Category("Display")]
@@ -196,8 +171,8 @@ namespace QText {
         [Description("If true, program will be displayed in taskbar.")]
         [DefaultValue(false)]
         public bool DisplayShowInTaskbar {
-            get { return Medo.Configuration.Settings.Read("DisplayShowInTaskbar", AreWindowsInTabletMode()); }
-            set { Medo.Configuration.Settings.Write("DisplayShowInTaskbar", value); }
+            get { return Config.Read("ShowInTaskbar", Medo.Configuration.Settings.Read("DisplayShowInTaskbar", AreWindowsInTabletMode())); }
+            set { Config.Write("ShowInTaskbar", value); }
         }
 
         [Category("Display")]
@@ -205,8 +180,8 @@ namespace QText {
         [Description("If true, toolbar will be shown.")]
         [DefaultValue(true)]
         public bool ShowToolbar {
-            get { return Medo.Configuration.Settings.Read("ShowToolbar", true); }
-            set { Medo.Configuration.Settings.Write("ShowToolbar", value); }
+            get { return Config.Read("ShowToolbar", Medo.Configuration.Settings.Read("ShowToolbar", true)); }
+            set { Config.Write("ShowToolbar", value); }
         }
 
         [Category("Text")]
@@ -214,10 +189,10 @@ namespace QText {
         [Description("Width of tab character.")]
         [DefaultValue(4)]
         public int DisplayTabWidth {
-            get { return Medo.Configuration.Settings.Read("DisplayTabWidth", 4); }
+            get { return Config.Read("TabWidth", Medo.Configuration.Settings.Read("DisplayTabWidth", 4)); }
             set {
                 if ((value >= 1) && (value <= 16)) {
-                    Medo.Configuration.Settings.Write("DisplayTabWidth", value);
+                    Config.Write("TabWidth", value);
                 }
             }
         }
@@ -227,13 +202,13 @@ namespace QText {
         [Description("If true, URLs are going to be automatically underlined.")]
         [DefaultValue(true)]
         public bool DetectUrls {
-            get { return Medo.Configuration.Settings.Read("DisplayUnderlineURLs", true); }
-            set { Medo.Configuration.Settings.Write("DisplayUnderlineURLs", value); }
+            get { return Config.Read("DetectURLs", Medo.Configuration.Settings.Read("DisplayUnderlineURLs", true)); }
+            set { Config.Write("DetectURLs", value); }
         }
 
         [Browsable(false)]
         public bool DisplayWordWrap {
-            get { return (ScrollBars == ScrollBars.Vertical); }
+            get { return (this.ScrollBars == ScrollBars.Vertical); }
         }
 
         [Category("Storage")]
@@ -241,8 +216,8 @@ namespace QText {
         [Description("If true, all deleted files are moved to recycle bin.")]
         [DefaultValue(true)]
         public bool FilesDeleteToRecycleBin {
-            get { return Medo.Configuration.Settings.Read("FilesDeleteToRecycleBin", true); }
-            set { Medo.Configuration.Settings.Write("FilesDeleteToRecycleBin", value); }
+            get { return Config.Read("DeleteToRecycleBin", Medo.Configuration.Settings.Read("FilesDeleteToRecycleBin", true)); }
+            set { Config.Write("DeleteToRecycleBin", value); }
         }
 
         [Browsable(false)]
@@ -254,15 +229,15 @@ namespace QText {
                 } else {
                     defaultPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Medo.Reflection.EntryAssembly.Company + "\\" + Medo.Reflection.EntryAssembly.Name);
                 }
-                return Medo.Configuration.Settings.Read("DataPath", defaultPath);
+                return Config.Read("DataDirectory", Medo.Configuration.Settings.Read("DataPath", defaultPath));
             }
-            set { Medo.Configuration.Settings.Write("DataPath", value); }
+            set { Config.Write(nameof(FilesLocation), value); }
         }
 
         [Browsable(false)]
         public bool FilesPreload {
-            get { return Medo.Configuration.Settings.Read("FilesPreload", false); }
-            set { Medo.Configuration.Settings.Write("FilesPreload", value); }
+            get { return Config.Read("PreloadFiles", Medo.Configuration.Settings.Read("FilesPreload", false)); }
+            set { Config.Write("PreloadFiles", value); }
         }
 
         [Category("Text")]
@@ -270,8 +245,8 @@ namespace QText {
         [Description("If true, URLs are clickable.")]
         [DefaultValue(true)]
         public bool FollowURLs {
-            get { return Medo.Configuration.Settings.Read("FollowURLs", true); }
-            set { Medo.Configuration.Settings.Write("FollowURLs", value); }
+            get { return Config.Read("FollowURLs", Medo.Configuration.Settings.Read("FollowURLs", true)); }
+            set { Config.Write("FollowURLs", value); }
         }
 
         [Category("Text")]
@@ -279,8 +254,8 @@ namespace QText {
         [Description("If true, text is always pasted as plain.")]
         [DefaultValue(false)]
         public bool ForceTextCopyPaste {
-            get { return Medo.Configuration.Settings.Read("ForceTextCopyPaste", false); }
-            set { Medo.Configuration.Settings.Write("ForceTextCopyPaste", value); }
+            get { return Config.Read("ForcePlainCopyPaste", Medo.Configuration.Settings.Read("ForceTextCopyPaste", false)); }
+            set { Config.Write("ForcePlainCopyPaste", value); }
         }
 
         [Category("Text")]
@@ -288,14 +263,8 @@ namespace QText {
         [Description("If true, Rich text is default selection for new files.")]
         [DefaultValue(false)]
         public bool IsRichTextFileDefault {
-            get { return Medo.Configuration.Settings.Read("IsRichTextFileDefault", false); }
-            set { Medo.Configuration.Settings.Write("IsRichTextFileDefault", value); }
-        }
-
-        [Browsable(false)]
-        public bool LegacySettingsCopied {
-            get { return Medo.Configuration.Settings.Read("LegacySettingsCopied", false); }
-            set { Medo.Configuration.Settings.Write("LegacySettingsCopied", value); }
+            get { return Config.Read("DefaultToRichText", Medo.Configuration.Settings.Read("IsRichTextFileDefault", false)); }
+            set { Config.Write("DefaultToRichText", value); }
         }
 
         [Category("Internal")]
@@ -303,8 +272,8 @@ namespace QText {
         [Description("If true, all errors are logged to temporary directory.")]
         [DefaultValue(true)]
         public bool LogUnhandledErrorsToTemp {
-            get { return Medo.Configuration.Settings.Read("LogUnhandledErrorsToTemp", true); }
-            set { Medo.Configuration.Settings.Write("LogUnhandledErrorsToTemp", value); }
+            get { return Config.Read("LogUnhandledErrorsToTemp", Medo.Configuration.Settings.Read("LogUnhandledErrorsToTemp", true)); }
+            set { Config.Write("LogUnhandledErrorsToTemp", value); }
         }
 
 
@@ -313,8 +282,8 @@ namespace QText {
         [Description("Default paper name (i.e. Letter, A4).")]
         [DefaultValue("")]
         public string PrintPaperName {
-            get { return Medo.Configuration.Settings.Read("PrintPaperName", ""); }
-            set { Medo.Configuration.Settings.Write("PrintPaperName", value); }
+            get { return Config.Read("Paper.Name", Medo.Configuration.Settings.Read("PrintPaperName", "")); }
+            set { Config.Write("Paper.Name", value); }
         }
 
         [Category("Printing")]
@@ -322,8 +291,8 @@ namespace QText {
         [Description("Default paper source.")]
         [DefaultValue("")]
         public string PrintPaperSource {
-            get { return Medo.Configuration.Settings.Read("PrintPaperSource", ""); }
-            set { Medo.Configuration.Settings.Write("PrintPaperSource", value); }
+            get { return Config.Read("Paper.Source", Medo.Configuration.Settings.Read("PrintPaperSource", "")); }
+            set { Config.Write("Paper.Source", value); }
         }
 
         [Category("Printing")]
@@ -331,8 +300,8 @@ namespace QText {
         [Description("If true, printing is done in landscape.")]
         [DefaultValue(false)]
         public bool PrintIsPaperLandscape {
-            get { return Medo.Configuration.Settings.Read("PrintIsPaperLandscape", false); }
-            set { Medo.Configuration.Settings.Write("PrintIsPaperLandscape", value); }
+            get { return Config.Read("Paper.Landscape", Medo.Configuration.Settings.Read("PrintIsPaperLandscape", false)); }
+            set { Config.Write("Paper.Landscape", value); }
         }
 
         [Category("Printing")]
@@ -341,17 +310,17 @@ namespace QText {
         [DefaultValue(typeof(Margins), "50, 50, 50, 50")]
         public Margins PrintMargins {
             get {
-                var left = Medo.Configuration.Settings.Read("PrintMarginLeft", 50);
-                var right = Medo.Configuration.Settings.Read("PrintMarginRight", 50);
-                var top = Medo.Configuration.Settings.Read("PrintMarginTop", 50);
-                var bottom = Medo.Configuration.Settings.Read("PrintMarginBottom", 50);
+                var left = Config.Read("Paper.Margin.Left", Medo.Configuration.Settings.Read("PrintMarginLeft", 50));
+                var right = Config.Read("Paper.Margin.Right", Medo.Configuration.Settings.Read("PrintMarginRight", 50));
+                var top = Config.Read("Paper.Margin.Top", Medo.Configuration.Settings.Read("PrintMarginTop", 50));
+                var bottom = Config.Read("Paper.Margin.Bottom", Medo.Configuration.Settings.Read("PrintMarginBottom", 50));
                 return new Margins(left, right, top, bottom);
             }
             set {
-                Medo.Configuration.Settings.Write("PrintMarginLeft", value.Left);
-                Medo.Configuration.Settings.Write("PrintMarginRight", value.Right);
-                Medo.Configuration.Settings.Write("PrintMarginTop", value.Top);
-                Medo.Configuration.Settings.Write("PrintMarginBottom", value.Bottom);
+                Config.Write("Paper.Margin.Left", value.Left);
+                Config.Write("Paper.Margin.Right", value.Right);
+                Config.Write("Paper.Margin.Top", value.Top);
+                Config.Write("Paper.Margin.Bottom", value.Bottom);
             }
         }
 
@@ -361,7 +330,7 @@ namespace QText {
         [DefaultValue(2500)]
         public int QuickSaveInterval {
             get {
-                var value = Medo.Configuration.Settings.Read("QuickSaveInterval", 2500);
+                var value = Config.Read("QuickSaveInterval", Medo.Configuration.Settings.Read("QuickSaveInterval", 2500));
                 if (value < 500) { return 500; }
                 if (value > 10000) { return 10000; }
                 return value;
@@ -369,7 +338,7 @@ namespace QText {
             set {
                 if (value < 500) { value = 500; }
                 if (value > 10000) { value = 10000; }
-                Medo.Configuration.Settings.Write("QuickSaveInterval", value);
+                Config.Write("QuickSaveInterval", value);
             }
         }
 
@@ -393,8 +362,8 @@ namespace QText {
         [Description("If true, program is moved to tray upon minimize.")]
         [DefaultValue(false)]
         public bool TrayOnMinimize {
-            get { return Medo.Configuration.Settings.Read("TrayOnMinimize", false); }
-            set { Medo.Configuration.Settings.Write("TrayOnMinimize", value); }
+            get { return Config.Read("MinimizeToTray", Medo.Configuration.Settings.Read("TrayOnMinimize", false)); }
+            set { Config.Write("MinimizeToTray", value); }
         }
 
         [Category("Tray")]
@@ -402,17 +371,17 @@ namespace QText {
         [Description("If true, program is activated by a single click, instead of double.")]
         [DefaultValue(true)]
         public bool TrayOneClickActivation {
-            get { return Medo.Configuration.Settings.Read("TrayOneClickActivation", true); }
-            set { Medo.Configuration.Settings.Write("TrayOneClickActivation", value); }
+            get { return Config.Read("OneClickTrayActivation", Medo.Configuration.Settings.Read("TrayOneClickActivation", true)); }
+            set { Config.Write("OneClickTrayActivation", value); }
         }
 
         [Browsable(false)]
         public DocumentFolder LastFolder {
             get {
-                var lastFolderName = Medo.Configuration.Settings.Read("LastFolder", "");
+                var lastFolderName = Config.Read("LastFolder", Medo.Configuration.Settings.Read("LastFolder", ""));
                 return App.Document.GetFolder(lastFolderName) ?? App.Document.RootFolder;
             }
-            set { Medo.Configuration.Settings.Write("LastFolder", value.Name); }
+            set { Config.Write("LastFolder", value.Name); }
         }
 
         [Category("Behavior")]
@@ -420,8 +389,8 @@ namespace QText {
         [Description("Delimiters used for end-of-word detection.")]
         [DefaultValue(@""".,:;!?/|\()[]{}<>")]
         public string SelectionDelimiters {
-            get { return Medo.Configuration.Settings.Read("SelectionDelimiters", @""".,:;!?/|\()[]{}<>"); }
-            set { Medo.Configuration.Settings.Write("SelectionDelimiters", value); }
+            get { return Config.Read("SelectionDelimiters", Medo.Configuration.Settings.Read("SelectionDelimiters", @""".,:;!?/|\()[]{}<>")); }
+            set { Config.Write("SelectionDelimiters", value); }
         }
 
         [Category("Storage")]
@@ -429,8 +398,8 @@ namespace QText {
         [Description("If true, <LF> is used instead of usual <CR><LF> for the line ending.")]
         [DefaultValue(false)]
         public bool PlainLineEndsWithLf {
-            get { return Medo.Configuration.Settings.Read("PlainLineEndsWithLf", false); }
-            set { Medo.Configuration.Settings.Write("PlainLineEndsWithLf", value); }
+            get { return Config.Read("PlainLineEndsWithLf", Medo.Configuration.Settings.Read("PlainLineEndsWithLf", false)); }
+            set { Config.Write("PlainLineEndsWithLf", value); }
         }
 
         [Category("Tray")]
@@ -438,28 +407,28 @@ namespace QText {
         [Description("If true, information balloon is shown upon next movement to tray.")]
         [DefaultValue(false)]
         public Boolean ShowBalloonOnNextMinimize {
-            get { return Medo.Configuration.Settings.Read("ShowBalloonOnNextMinimize", true) && !Settings.Current.NoRegistryWrites; }
-            set { Medo.Configuration.Settings.Write("ShowBalloonOnNextMinimize", value); }
+            get { return Config.Read("ShowBalloonOnNextTray", Medo.Configuration.Settings.Read("ShowBalloonOnNextMinimize", true)) && !Settings.Current.NoRegistryWrites; }
+            set { Config.Write("ShowBalloonOnNextTray", value); }
         }
 
 
         [Browsable(false)]
         public SearchScope SearchScope {
             get {
-                switch (Medo.Configuration.Settings.Read("SearchScope", (int)SearchScope.File)) {
+                switch (Config.Read("Search.Scope", Medo.Configuration.Settings.Read("SearchScope", (int)SearchScope.File))) {
                     case 0: return SearchScope.File;
                     case 1: return SearchScope.Folder;
                     case 2: return SearchScope.Folders;
                     default: return SearchScope.File;
                 }
             }
-            set { Medo.Configuration.Settings.Write("SearchScope", (int)value); }
+            set { Config.Write("Search.Scope", (int)value); }
         }
 
         [Browsable(false)]
         public Boolean SearchCaseSensitive {
-            get { return Medo.Configuration.Settings.Read("SearchCaseSensitive", false); }
-            set { Medo.Configuration.Settings.Write("SearchCaseSensitive", value); }
+            get { return Config.Read("Search.CaseSensitive", Medo.Configuration.Settings.Read("SearchCaseSensitive", false)); }
+            set { Config.Write("Search.CaseSensitive", value); }
         }
 
 
@@ -468,10 +437,10 @@ namespace QText {
         [Description("Amount of boost to apply for toolbar size. Changes apply on the next startup.")]
         [DefaultValue(0.00)]
         public double ScaleBoost {
-            get { return Medo.Configuration.Settings.Read("ScaleBoost", 0.00); }
+            get { return Config.Read("ScaleBoost", Medo.Configuration.Settings.Read("ScaleBoost", 0.00)); }
             set {
                 if ((value < -1) || (value > 4)) { return; }
-                Medo.Configuration.Settings.Write("ScaleBoost", value);
+                Config.Write("ScaleBoost", value);
             }
         }
 
@@ -480,8 +449,8 @@ namespace QText {
         [Description("If true, Goto window results are sorted.")]
         [DefaultValue(true)]
         public bool GotoSortResults {
-            get { return Medo.Configuration.Settings.Read("GotoSortResults", true); }
-            set { Medo.Configuration.Settings.Write("GotoSortResults", value); }
+            get { return Config.Read("Goto.Sort", Medo.Configuration.Settings.Read("GotoSortResults", true)); }
+            set { Config.Write("Goto.Sort", value); }
         }
 
         [Category("Goto")]
@@ -489,8 +458,8 @@ namespace QText {
         [Description("If true, Goto window results are sorted with folders first.")]
         [DefaultValue(true)]
         public bool GotoSortPreferFolders {
-            get { return Medo.Configuration.Settings.Read("GotoSortPreferFolders", true); }
-            set { Medo.Configuration.Settings.Write("GotoSortPreferFolders", value); }
+            get { return Config.Read("Goto.Sort.PreferFolders", Medo.Configuration.Settings.Read("GotoSortPreferFolders", true)); }
+            set { Config.Write("Goto.Sort.PreferFolders", value); }
         }
 
         [Category("Goto")]
@@ -498,8 +467,8 @@ namespace QText {
         [Description("If true, Goto window results are sorted with prefix matches first.")]
         [DefaultValue(true)]
         public bool GotoSortPreferPrefix {
-            get { return Medo.Configuration.Settings.Read("GotoSortPreferPrefix", true); }
-            set { Medo.Configuration.Settings.Write("GotoSortPreferPrefix", value); }
+            get { return Config.Read("Goto.Sort.PreferPrefix", Medo.Configuration.Settings.Read("GotoSortPreferPrefix", true)); }
+            set { Config.Write("Goto.Sort.PreferPrefix", value); }
         }
 
         [Category("Text")]
@@ -507,8 +476,8 @@ namespace QText {
         [Description("If true, RichText clipboard is not restricted to text.")]
         [DefaultValue(false)]
         public bool FullRichTextClipboard {
-            get { return Medo.Configuration.Settings.Read("FullRichTextClipboard", false); }
-            set { Medo.Configuration.Settings.Write("FullRichTextClipboard", value); }
+            get { return Config.Read("UnrestrictedRichTextClipboard", Medo.Configuration.Settings.Read("FullRichTextClipboard", false)); }
+            set { Config.Write("UnrestrictedRichTextClipboard", value); }
         }
 
         [Category("Text")]
@@ -516,8 +485,8 @@ namespace QText {
         [Description("If true, RichText uses control version 5.0.\nChange requires restart.")]
         [DefaultValue(true)]
         public bool UseRichText50 {
-            get { return Medo.Configuration.Settings.Read("UseRichText50", true); }
-            set { Medo.Configuration.Settings.Write("UseRichText50", value); }
+            get { return Config.Read("UseRichText50", Medo.Configuration.Settings.Read("UseRichText50", true)); }
+            set { Config.Write("UseRichText50", value); }
         }
 
         [Category("Text")]
@@ -528,11 +497,11 @@ namespace QText {
         public bool UseSpellCheck {
             get {
                 if ((Environment.OSVersion.Version.Major < 6) || ((Environment.OSVersion.Version.Major == 6) && (Environment.OSVersion.Version.Minor < 2))) { return false; } //not supported below Windows 8
-                return Medo.Configuration.Settings.Read("UseSpellCheck", true) && this.UseRichText50;
+                return Config.Read("UseSpellCheck", Medo.Configuration.Settings.Read("UseSpellCheck", true)) && this.UseRichText50;
             }
             set {
                 if (value) { this.UseRichText50 = true; }
-                Medo.Configuration.Settings.Write("UseSpellCheck", value);
+                Config.Write("UseSpellCheck", value);
             }
         }
 

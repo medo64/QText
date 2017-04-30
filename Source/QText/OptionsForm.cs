@@ -13,8 +13,6 @@ namespace QText {
             InitializeComponent();
             this.Font = SystemFonts.MessageBoxFont;
             cmbSelectionDelimiters.Font = new Font("Courier New", SystemFonts.MessageBoxFont.SizeInPoints);
-
-            SetWritableState(!Settings.Current.NoRegistryWrites);
         }
 
         private void OptionsForm_Load(object sender, EventArgs e) {
@@ -303,13 +301,6 @@ namespace QText {
             Settings.Current.CarbonCopyIgnoreErrors = chbCarbonCopyIgnoreCopyErrors.Checked;
         }
 
-        private void btnAllowSave_Click(object sender, EventArgs e) {
-            if (Medo.MessageBox.ShowQuestion(this, "Do you allow this program use of registry in order to save its settings?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
-                btnAllowSave.Visible = false;
-                Settings.Current.NoRegistryWrites = false;
-                SetWritableState(true);
-            }
-        }
 
         private void btnAdvanced_Click(object sender, EventArgs e) {
             using (var frm = new OptionsAdvancedForm()) {
@@ -319,14 +310,6 @@ namespace QText {
 
 
         #region Helper
-
-        private void SetWritableState(bool newState) {
-            btnAllowSave.Visible = !newState;
-            btnAdvanced.Visible = newState;
-
-            btnOk.Enabled = newState;
-            foreach (Control control in tab.Controls) { control.Enabled = newState; }
-        }
 
         private static string GetKeyString(Keys keyData) {
             if ((keyData & Keys.LWin) == Keys.LWin) { return string.Empty; }
