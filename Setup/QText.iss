@@ -7,8 +7,10 @@
 #define AppSetupFile   AppBase + StringChange(AppVersion, '.', '')
 
 #define AppVersionEx   StringChange(AppVersion, '0.00', '')
-#if "" != VersionHash
-#  define AppVersionEx AppVersionEx + " (" + VersionHash + ")"
+#ifdef VersionHash
+#  if "" != VersionHash
+#    define AppVersionEx AppVersionEx + " (" + VersionHash + ")"
+#  endif
 #endif
 
 
@@ -29,6 +31,7 @@ SourceDir=..\Binaries
 AppId=JosipMedved_QText
 CloseApplications="yes"
 RestartApplications="no"
+AppMutex=Global\JosipMedved_QText
 UninstallDisplayIcon={app}\QText.exe
 AlwaysShowComponentsList=no
 ArchitecturesInstallIn64BitMode=x64
@@ -46,18 +49,18 @@ LicenseFile=..\Setup\License.rtf
 [Messages]
 SetupAppTitle=Setup {#AppName} {#AppVersionEx}
 SetupWindowTitle=Setup {#AppName} {#AppVersionEx}
-BeveledLabel=www.medo64.com
+BeveledLabel=medo64.com
 
 [Dirs]
 Name: "{userappdata}\Josip Medved\QText";  Flags: uninsalwaysuninstall
 
 [Files]
-Source: "QText.exe";            DestDir: "{app}";                      Flags: ignoreversion;
-Source: "QText.pdb";            DestDir: "{app}";                      Flags: ignoreversion;
-Source: "QText.Document.dll";   DestDir: "{app}";                      Flags: ignoreversion;
-Source: "QText.Document.pdb";   DestDir: "{app}";                      Flags: ignoreversion;
-Source: "ReadMe.txt";           DestDir: "{app}";  Attribs: readonly;  Flags: overwritereadonly uninsremovereadonly;
-Source: "License.txt";          DestDir: "{app}";  Attribs: readonly;  Flags: overwritereadonly uninsremovereadonly;
+Source: "QText.exe";           DestDir: "{app}";                            Flags: ignoreversion;
+Source: "QText.pdb";           DestDir: "{app}";                            Flags: ignoreversion;
+Source: "QText.Document.dll";  DestDir: "{app}";                            Flags: ignoreversion;
+Source: "QText.Document.pdb";  DestDir: "{app}";                            Flags: ignoreversion;
+Source: "..\README.md";        DestDir: "{app}";  DestName: "ReadMe.txt";   Flags: overwritereadonly uninsremovereadonly;  Attribs: readonly;
+Source: "..\LICENSE.md";       DestDir: "{app}";  DestName: "License.txt";  Flags: overwritereadonly uninsremovereadonly;  Attribs: readonly;
 
 [Icons]
 Name: "{userstartmenu}\QText";  Filename: "{app}\QText.exe"

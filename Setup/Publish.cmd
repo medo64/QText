@@ -1,265 +1,268 @@
 @ECHO OFF
-SETLOCAL enabledelayedexpansion
+SETLOCAL EnableDelayedExpansion
 
-SET        FILE_SETUP=".\QText.iss"
-SET     FILE_SOLUTION="..\Source\QText.sln"
-SET   FILE_EXECUTABLE="..\Binaries\QText.exe"
-SET  FILES_EXECUTABLE="..\Binaries\QText.exe" "..\Binaries\QText.Document.dll"
-SET       FILES_OTHER="..\Binaries\ReadMe.txt" "..\Binaries\License.txt"
+SET        SOURCE_SOLUTION="..\Source\QText.sln"
+SET       SOURCE_INNOSETUP=".\QText.iss"
+SET       FILES_EXECUTABLE="..\Binaries\QText.exe" "..\Binaries\QText.Document.dll"
+SET            FILES_OTHER="..\README.md" "..\LICENSE.md"
 
-SET   COMPILE_TOOL_15="%PROGRAMFILES(X86)%\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe"
-SET   COMPILE_TOOL_14="%PROGRAMFILES(X86)%\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe"
-SET  COMPILE_TOOL_14E="%PROGRAMFILES(X86)%\Microsoft Visual Studio 14.0\Common7\IDE\WDExpress.exe"
+SET              TOOLS_GIT="%PROGRAMFILES(X86)%\Git\mingw64\bin\git.exe" "%PROGRAMFILES%\Git\mingw64\bin\git.exe" "C:\Program Files\Git\mingw64\bin\git.exe"
+SET     TOOLS_VISUALSTUDIO="%PROGRAMFILES(X86)%\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe"
+SET         TOOLS_SIGNTOOL="%PROGRAMFILES(X86)%\Microsoft SDKs\ClickOnce\SignTool\signtool.exe" "%PROGRAMFILES(X86)%\Windows Kits\10\App Certification Kit\signtool.exe" "%PROGRAMFILES(X86)%\Windows Kits\10\bin\x86\signtool.exe"
+SET        TOOLS_INNOSETUP="%PROGRAMFILES(X86)%\Inno Setup 5\iscc.exe"
+SET           TOOLS_WINRAR="%PROGRAMFILES(X86)%\WinRAR\WinRAR.exe" "%PROGRAMFILES%\WinRAR\WinRAR.exe" "C:\Program Files\WinRAR\WinRAR.exe"
+SET          TOOLS_ILMERGE="%PROGRAMFILES(x86)%\Microsoft\ILMerge\ILMerge.exe"
 
-SET        SETUP_TOOL="%PROGRAMFILES(x86)%\Inno Setup 5\iscc.exe"
-
-SET        MERGE_TOOL="%PROGRAMFILES(x86)%\Microsoft\ILMerge\ILMerge.exe"
-
-SET       SIGN_TOOL_1="%PROGRAMFILES(X86)%\Microsoft SDKs\ClickOnce\SignTool\signtool.exe"
-SET       SIGN_TOOL_2="%PROGRAMFILES(X86)%\Windows Kits\10\App Certification Kit\signtool.exe"
-SET       SIGN_TOOL_3="%PROGRAMFILES(X86)%\Windows Kits\10\bin\x86\signtool.exe"
-SET   SIGN_THUMBPRINT="df26e797ffaee47a40c1fab756e995d3763da968"
-SET SIGN_TIMESTAMPURL="http://timestamp.comodoca.com/rfc3161"
-
-SET        GIT_TOOL_1="%PROGRAMFILES%\Git\mingw64\bin\git.exe"
-
-SET          RAR_TOOL="%PROGRAMFILES%\WinRAR\WinRAR.exe"
+SET CERTIFICATE_THUMBPRINT="df26e797ffaee47a40c1fab756e995d3763da968"
+SET      SIGN_TIMESTAMPURL="http://timestamp.comodoca.com/rfc3161"
 
 
 ECHO --- DISCOVER TOOLS
-ECHO.
+ECHO:
 
-IF EXIST %COMPILE_TOOL_15% (
-    ECHO Visual Studio 2017
-    SET COMPILE_TOOL=%COMPILE_TOOL_15%
+WHERE /Q git
+IF ERRORLEVEL 1 (
+    FOR %%I IN (%TOOLS_GIT%) DO (
+        IF EXIST %%I IF NOT DEFINED TOOL_GIT SET TOOL_GIT=%%I
+    )
 ) ELSE (
-    IF EXIST %COMPILE_TOOL_14% (
-        ECHO Visual Studio 2015
-        SET COMPILE_TOOL=%COMPILE_TOOL_14%
-    ) ELSE (
-        IF EXIST %COMPILE_TOOL_14E% (
-            ECHO Visual Studio Express 2015
-            SET COMPILE_TOOL=%COMPILE_TOOL_14E%
-        ) ELSE (
-            ECHO Cannot find Visual Studio^^!
-            PAUSE && EXIT /B 255
-        )
+    SET TOOL_GIT="git"
+)
+IF [%TOOL_GIT%]==[] SET WARNING=1
+ECHO Git .................: %TOOL_GIT%
+
+FOR %%I IN (%TOOLS_VISUALSTUDIO%) DO (
+    IF EXIST %%I IF NOT DEFINED TOOL_VISUALSTUDIO SET TOOL_VISUALSTUDIO=%%I
+)
+IF [%TOOL_VISUALSTUDIO%]==[] ECHO Visual Studio not found^^! & GOTO Error
+ECHO Visual Studio .......: %TOOL_VISUALSTUDIO%
+
+FOR %%I IN (%TOOLS_ILMERGE%) DO (
+    IF EXIST %%I IF NOT DEFINED TOOL_ILMERGE SET TOOL_ILMERGE=%%I
+)
+IF [%TOOL_ILMERGE%]==[] SET WARNING=1
+ECHO ILMerge .............: %TOOL_ILMERGE%
+
+FOR %%I IN (%TOOLS_SIGNTOOL%) DO (
+    IF EXIST %%I IF NOT DEFINED TOOL_SIGNTOOL SET TOOL_SIGNTOOL=%%I
+)
+IF [%TOOL_SIGNTOOL%]==[] SET WARNING=1
+ECHO SignTool ............: %TOOL_SIGNTOOL%
+
+FOR %%I IN (%TOOLS_INNOSETUP%) DO (
+    IF EXIST %%I IF NOT DEFINED TOOL_INNOSETUP SET TOOL_INNOSETUP=%%I
+)
+IF [%TOOL_INNOSETUP%]==[] ECHO InnoSetup not found^^! & GOTO Error
+ECHO InnoSetup ...........: %TOOL_INNOSETUP%
+
+FOR %%I IN (%TOOLS_WINRAR%) DO (
+    IF EXIST %%I IF NOT DEFINED TOOL_WINRAR SET TOOL_WINRAR=%%I
+)
+IF [%TOOL_WINRAR%]==[] SET WARNING=1
+ECHO WinRAR ..............: %TOOL_WINRAR%
+
+IF NOT [%CERTIFICATE_THUMBPRINT%]==[] (
+    CERTUTIL -silent -verifystore -user My %CERTIFICATE_THUMBPRINT% > NUL
+    IF NOT ERRORLEVEL 0 (
+        SET CERTIFICATE_THUMBPRINT=
+        SET WARNING=1
     )
 )
 
-IF EXIST %MERGE_TOOL% (
-    ECHO IL Merge
-) ELSE (
-    ECHO Cannot find IL Merge^^!
-    PAUSE && EXIT /B 255
-)
+ECHO:
+ECHO:
 
-IF EXIST %SETUP_TOOL% (
-    ECHO Inno Setup 5
-) ELSE (
-    ECHO Cannot find Inno Setup 5^^!
-    PAUSE && EXIT /B 255
-)
 
-IF EXIST %SIGN_TOOL_1% (
-    ECHO Windows SignTool 10 ^(ClickOnce^)
-    SET SIGN_TOOL=%SIGN_TOOL_1%
-) ELSE (
-    IF EXIST %SIGN_TOOL_2% (
-        ECHO Windows SignTool 10 ^(App Certification Kit^)
-        SET SIGN_TOOL=%SIGN_TOOL_2%
-    ) ELSE (
-        IF EXIST %SIGN_TOOL_3% (
-            ECHO Windows SignTool 10 ^(SDK^)
-            SET SIGN_TOOL=%SIGN_TOOL_3%
-        ) ELSE (
-            ECHO Cannot find Windows SignTool^^!
-            PAUSE && EXIT /B 255
-        )
+IF NOT [%TOOL_GIT%]==[] (
+    ECHO --- DISCOVER VERSION
+    ECHO:
+
+    FOR /F "delims=" %%I IN ('%TOOL_GIT% log -n 1 --format^=%%h') DO @SET VERSION_HASH=%%I%
+
+    IF NOT [!VERSION_HASH!]==[] (
+        FOR /F "delims=" %%I IN ('%TOOL_GIT% rev-list --count HEAD') DO @SET VERSION_NUMBER=%%I%
+        %TOOL_GIT% diff --exit-code --quiet
+        IF NOT ERRORLEVEL 0 SET VERSION_HASH=%VERSION_HASH%+
     )
+    ECHO Hash ...: !VERSION_HASH!
+    ECHO Revision: !VERSION_NUMBER!
+
+    ECHO:
+    ECHO:
 )
-
-IF EXIST %GIT_TOOL_1% (
-    ECHO Git
-    SET GIT_TOOL=%GIT_TOOL_1%
-) ELSE (
-    GIT_TOOL="git"
-)
-
-IF NOT EXIST %RAR_TOOL% (
-    ECHO WinRAR not present^^!
-)
-
-ECHO.
-ECHO.
-
-
-ECHO --- DISCOVER VERSION
-ECHO.
-
-FOR /F "delims=" %%N IN ('%GIT_TOOL% log -n 1 --format^=%%h') DO @SET VERSION_HASH=%%N%
-
-IF NOT [%VERSION_HASH%]==[] (
-    FOR /F "delims=" %%N IN ('%GIT_TOOL% rev-list --count HEAD') DO @SET VERSION_NUMBER=%%N%
-    %GIT_TOOL% diff --exit-code --quiet
-    IF ERRORLEVEL 1 SET VERSION_HASH=%VERSION_HASH%+
-    ECHO %VERSION_HASH%
-)
-
-ECHO.
-ECHO.
 
 
 ECHO --- BUILD SOLUTION
-ECHO.
+ECHO:
 
 RMDIR /Q /S "..\Binaries" 2> NUL
-%COMPILE_TOOL% /Build "Release" %FILE_SOLUTION%
-IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
+%TOOL_VISUALSTUDIO% /Build "Release" %SOURCE_SOLUTION%
+IF NOT ERRORLEVEL 0 ECHO Build failed^^! & GOTO Error
 
-COPY ..\README.md ..\Binaries\ReadMe.txt > NUL
-IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
+ECHO Build successful.
 
-COPY ..\LICENSE.md ..\Binaries\License.txt > NUL
-IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
-
-ECHO Completed.
-
-ECHO.
-ECHO.
+ECHO:
+ECHO:
 
 
-CERTUTIL -silent -verifystore -user My %SIGN_THUMBPRINT% > NUL
-IF %ERRORLEVEL%==0 (
-    ECHO --- SIGN SOLUTION
-    ECHO.
-    
-    IF [%SIGN_TIMESTAMPURL%]==[] (
-        %SIGN_TOOL% sign /s "My" /sha1 %SIGN_THUMBPRINT% /v %FILES_EXECUTABLE%
-    ) ELSE (
-        %SIGN_TOOL% sign /s "My" /sha1 %SIGN_THUMBPRINT% /tr %SIGN_TIMESTAMPURL% /v %FILES_EXECUTABLE%
+IF NOT [%TOOL_SIGNTOOL%]==[] IF NOT [%CERTIFICATE_THUMBPRINT%]==[] (
+    ECHO --- SIGN EXECUTABLES
+    ECHO:
+
+    FOR %%I IN (%FILES_EXECUTABLE%) DO (
+        SET SHOULD_SIGN=FALSE
+        IF [%%~xI]==[.exe] SET SHOULD_SIGN=TRUE
+        IF [%%~xI]==[.dll] SET SHOULD_SIGN=TRUE
+        IF [!SHOULD_SIGN!]==[TRUE] (
+            IF [%SIGN_TIMESTAMPURL%]==[] (
+                %TOOL_SIGNTOOL% sign /s "My" /sha1 %CERTIFICATE_THUMBPRINT% /v %%I
+            ) ELSE (
+                %TOOL_SIGNTOOL% sign /s "My" /sha1 %CERTIFICATE_THUMBPRINT% /tr %SIGN_TIMESTAMPURL% /v %%I
+            )
+            IF NOT ERRORLEVEL 0 GOTO Error
+        )
     )
-    IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
-) ELSE (
-    ECHO --- DID NOT SIGN SOLUTION
-    IF NOT [%SIGN_THUMBPRINT%]==[] (
-        ECHO.
-        ECHO No certificate with hash %SIGN_THUMBPRINT%.
-    ) 
+
+    ECHO:
+    ECHO:
 )
-ECHO.
-ECHO.
 
-
-ECHO --- BUILD SETUP
-ECHO.
 
 RMDIR /Q /S ".\Temp" 2> NUL
-CALL %SETUP_TOOL% /DVersionHash=%VERSION_HASH% /O".\Temp" %FILE_SETUP%
-IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
-
-FOR /F %%I IN ('DIR ".\Temp\*.exe" /B') DO SET _SETUPEXE=%%I
-ECHO Setup is in file %_SETUPEXE%
-
-ECHO.
-ECHO.
+MKDIR ".\Temp"
 
 
-ECHO --- RENAME BUILD
-ECHO.
+IF NOT [%TOOL_INNOSETUP%]==[] (
+    ECHO --- BUILD SETUP
+    ECHO:
 
-SET _OLDSETUPEXE=%_SETUPEXE%
-IF NOT [%VERSION_HASH%]==[] (
-    SET _SETUPEXE=!_SETUPEXE:000=-rev%VERSION_NUMBER%-%VERSION_HASH%!
-)
-IF NOT "%_OLDSETUPEXE%"=="%_SETUPEXE%" (
-    ECHO Renaming %_OLDSETUPEXE% to %_SETUPEXE%
-    MOVE ".\Temp\%_OLDSETUPEXE%" ".\Temp\%_SETUPEXE%"
-) ELSE (
-    ECHO No rename needed.
-)
+    SET TOOL_INNOSETUP_ISPP=%TOOL_INNOSETUP:iscc.exe=ispp.dll%
+    IF NOT EXIST !!TOOL_INNOSETUP_ISPP!! ECHO InnoSetup pre-processor not installed^^! & GOTO Error
 
-ECHO.
-ECHO.
+    CALL %TOOL_INNOSETUP% /DVersionHash=%VERSION_HASH% /O".\Temp" %SOURCE_INNOSETUP%
+    IF NOT ERRORLEVEL 0 GOTO Error
+
+    FOR /F %%I IN ('DIR ".\Temp\*.exe" /B') DO SET SETUPEXE=%%I
+
+    ECHO:
+    ECHO:
 
 
-CERTUTIL -silent -verifystore -user My %SIGN_THUMBPRINT% > NUL
-IF %ERRORLEVEL%==0 (
-    ECHO --- SIGN SETUP
-    ECHO.
-    
-    IF [%SIGN_TIMESTAMPURL%]==[] (
-        %SIGN_TOOL% sign /s "My" /sha1 %SIGN_THUMBPRINT% /v ".\Temp\%_SETUPEXE%"
-    ) ELSE (
-        %SIGN_TOOL% sign /s "My" /sha1 %SIGN_THUMBPRINT% /tr %SIGN_TIMESTAMPURL% /v ".\Temp\%_SETUPEXE%"
+    IF NOT [%TOOL_SIGNTOOL%]==[] IF NOT [%CERTIFICATE_THUMBPRINT%]==[] (
+        ECHO --- SIGN SETUP
+        ECHO:
+        
+        IF [%SIGN_TIMESTAMPURL%]==[] (
+            %TOOL_SIGNTOOL% sign /s "My" /sha1 %CERTIFICATE_THUMBPRINT% /v ".\Temp\!SETUPEXE!"
+        ) ELSE (
+            %TOOL_SIGNTOOL% sign /s "My" /sha1 %CERTIFICATE_THUMBPRINT% /tr %SIGN_TIMESTAMPURL% /v ".\Temp\!SETUPEXE!"
+        )
+        IF NOT ERRORLEVEL 0 GOTO Error
+
+        ECHO:
+        ECHO:
     )
-    IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
 ) ELSE (
-    ECHO --- DID NOT SIGN SETUP
+    FOR %%I IN (%FILES%) DO (
+        IF [%%~xI]==[.exe] (
+            IF NOT DEFINED SETUPEXE SET SETUPEXE=%%~nI000%%~xI
+        )
+    )
 )
-ECHO.
-ECHO.
 
 
-IF EXIST %MERGE_TOOL% (
+IF NOT [%TOOL_ILMERGE%]==[] (
     ECHO --- MERGE ASSEMBLIES
-    ECHO.
+    ECHO:
     
-    %MERGE_TOOL% /keyfile:..\Source\QText\Properties\App.snk /out:..\Binaries\Merged.exe %FILES_EXECUTABLE%
-    IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
-
-    MOVE ..\Binaries\Merged.exe %FILE_EXECUTABLE% > NUL
+    %TOOL_ILMERGE% /targetplatform:v4 /keyfile:..\Source\QText\Properties\App.snk /out:..\Binaries\Merged.exe %FILES_EXECUTABLE%
     IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
 
     ECHO Completed.
 
-    ECHO.
-    ECHO.
+    ECHO:
+    ECHO:
 
     
-    CERTUTIL -silent -verifystore -user My %SIGN_THUMBPRINT% > NUL
+    CERTUTIL -silent -verifystore -user My %CERTIFICATE_THUMBPRINT% > NUL
     IF %ERRORLEVEL%==0 (
         ECHO --- RESIGN SOLUTION
-        ECHO.
-        
+        ECHO:
+
         IF [%SIGN_TIMESTAMPURL%]==[] (
-            %SIGN_TOOL% sign /s "My" /sha1 %SIGN_THUMBPRINT% /v %FILE_EXECUTABLE%
+            %TOOL_SIGNTOOL% sign /s "My" /sha1 %CERTIFICATE_THUMBPRINT% /v ..\Binaries\Merged.exe
         ) ELSE (
-            %SIGN_TOOL% sign /s "My" /sha1 %SIGN_THUMBPRINT% /tr %SIGN_TIMESTAMPURL% /v %FILE_EXECUTABLE%
+            %TOOL_SIGNTOOL% sign /s "My" /sha1 %CERTIFICATE_THUMBPRINT% /tr %SIGN_TIMESTAMPURL% /v ..\Binaries\Merged.exe
         )
-        IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
-        ECHO.
-        ECHO.
-    )
-    
-    ECHO --- BUILD ZIP
-    ECHO.
+        IF NOT ERRORLEVEL 0 GOTO Error
 
-    IF EXIST %RAR_TOOL% (
-        ECHO Zipping into %_SETUPEXE:.exe=.zip%
-        "%PROGRAMFILES%\WinRAR\WinRAR.exe" a -afzip -ep -m5 ".\Temp\%_SETUPEXE:.exe=.zip%" %FILE_EXECUTABLE% %FILES_OTHER%
-        IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
-    ) ELSE (
-        ECHO No WinRAR
+        ECHO:
+        ECHO:
     )
 
-    ECHO.
-    ECHO.
+
+    IF NOT [%TOOL_WINRAR%]==[] (
+        ECHO --- BUILD ZIP
+        ECHO:
+
+        ECHO Zipping into !SETUPEXE:.exe=.zip!
+        %TOOL_WINRAR% a -afzip -ep -m5 ".\Temp\!SETUPEXE:.exe=.zip!" ..\Binaries\Merged.exe %FILES_OTHER%
+        %TOOL_WINRAR% rn ".\Temp\!SETUPEXE:.exe=.zip!" Merged.exe QText.exe
+        %TOOL_WINRAR% rn ".\Temp\!SETUPEXE:.exe=.zip!" *.md *.txt
+        IF NOT ERRORLEVEL 0 GOTO Error
+
+        ECHO:
+        ECHO:
+    )
 )
 
 
 ECHO --- RELEASE
-ECHO.
+ECHO:
 
 MKDIR "..\Releases" 2> NUL
-MOVE ".\Temp\*.*" "..\Releases\." > NUL
-IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
-RMDIR /Q /S ".\Temp"
+FOR %%I IN (".\Temp\*.*") DO (
+    SET FILE_FROM=%%~nI%%~xI
+    IF NOT [%VERSION_HASH%]==[] (
+        SET FILE_TO=!FILE_FROM:000=-rev%VERSION_NUMBER%-%VERSION_HASH%!
+    ) ELSE (
+        SET FILE_TO=!FILE_FROM!
+    )
+    MOVE ".\Temp\!FILE_FROM!" "..\Releases\!FILE_TO!" > NUL
+    IF NOT ERRORLEVEL 0 GOTO Error
+    ECHO !FILE_TO!
+    IF NOT DEFINED FILE_RELEASED SET FILE_RELEASED=!FILE_TO!
+)
 
-ECHO.
+IF [%FILE_RELEASED%]==[] ECHO No files.
+
+ECHO:
+ECHO:
 
 
 ECHO --- DONE
-ECHO.
 
-explorer /select,"..\Releases\%_SETUPEXE%"
+IF NOT [%WARNING%]==[] (    
+    ECHO:
+    IF [%TOOL_GIT%]==[] ECHO Git executable not found.
+    IF [%TOOL_SIGNTOOL%]==[] ECHO SignTool executable not found.
+    IF [%TOOL_INNOSETUP%]==[] ECHO InnoSetup executable not found.
+    IF [%TOOL_WINRAR%]==[] ECHO WinRAR executable not found.
+    IF [%TOOL_ILMERGE%]==[] ECHO ILMerge executable not found.
+
+    IF [%CERTIFICATE_THUMBPRINT%]==[] ECHO Executables not signed.
+    PAUSE
+)
+
+IF NOT [%FILE_RELEASED%]==[] explorer /select,"..\Releases\!FILE_RELEASED!"
+
+ENDLOCAL
+RMDIR /Q /S ".\Temp" 2> NUL
+EXIT /B 0
+
+
+:Error
+ENDLOCAL
+RMDIR /Q /S ".\Temp" 2> NUL
+PAUSE
+EXIT /B 1
