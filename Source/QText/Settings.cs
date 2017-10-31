@@ -224,14 +224,14 @@ namespace QText {
         public string FilesLocation {
             get {
                 string defaultPath;
-                if (Settings.Current.NoRegistryWrites) {
+                if (Config.IsAssumedInstalled == false) {
                     defaultPath = Path.Combine(Application.StartupPath, "Data");
                 } else {
                     defaultPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Medo.Reflection.EntryAssembly.Company + "\\" + Medo.Reflection.EntryAssembly.Name);
                 }
-                return Config.Read("DataDirectory", Medo.Configuration.Settings.Read("DataPath", defaultPath));
+                return Config.Read("FilesLocation", Medo.Configuration.Settings.Read("DataPath", defaultPath));
             }
-            set { Config.Write(nameof(FilesLocation), value); }
+            set { Config.Write("FilesLocation", value); }
         }
 
         [Browsable(false)]
