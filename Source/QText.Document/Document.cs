@@ -206,8 +206,9 @@ namespace QText {
 
         void Watcher_Changed(object sender, FileSystemEventArgs e) {
             Debug.WriteLine("FileSystemWatcher.Changed: " + e.FullPath);
+            var files = new List<DocumentFile>(this.Files); //copy existing collection first to avoid concurrency issues
             if (File.Exists(e.FullPath)) { //file - ignore directory changes
-                foreach (var file in this.Files) {
+                foreach (var file in files) {
                     if (string.Equals(file.FullPath, e.FullPath, StringComparison.OrdinalIgnoreCase)) {
                         this.OnFileExternallyChanged(new DocumentFileEventArgs(file));
                         break;
