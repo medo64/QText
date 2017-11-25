@@ -1,4 +1,4 @@
-﻿namespace QText {
+namespace QText {
     partial class SpellingForm {
         /// <summary>
         /// Required designer variable.
@@ -79,9 +79,9 @@
             this.lblSpelling.AutoSize = true;
             this.lblSpelling.Location = new System.Drawing.Point(12, 43);
             this.lblSpelling.Name = "lblSpelling";
-            this.lblSpelling.Size = new System.Drawing.Size(58, 17);
+            this.lblSpelling.Size = new System.Drawing.Size(62, 17);
             this.lblSpelling.TabIndex = 2;
-            this.lblSpelling.Text = "Spelling";
+            this.lblSpelling.Text = "Spelling:";
             // 
             // SpellingForm
             // 
@@ -101,7 +101,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Spelling";
+            this.Text = "Phonetic spelling";
             this.ResumeLayout(false);
             this.PerformLayout();
 

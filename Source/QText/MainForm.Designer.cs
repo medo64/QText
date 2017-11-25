@@ -757,7 +757,7 @@ namespace QText {
             this.mnxTextSelectionSpelling.Name = "mnxTextSelectionSpelling";
             this.mnxTextSelectionSpelling.ShortcutKeyDisplayString = "Shift+F1";
             this.mnxTextSelectionSpelling.Size = new System.Drawing.Size(350, 26);
-            this.mnxTextSelectionSpelling.Text = "Spelling";
+            this.mnxTextSelectionSpelling.Text = "Phonetic spelling";
             this.mnxTextSelectionSpelling.Click += new System.EventHandler(this.mnxTextSelectionSpelling_Click);
             // 
             // mnxTextLines
