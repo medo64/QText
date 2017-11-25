@@ -33,6 +33,8 @@ namespace QText {
             Helper.ScaleToolstrip(mnu, mnxTab, mnxText);
 
             tabFiles.Multiline = Settings.Current.MultilineTabs;
+
+            mnuAppUpgrade.Visible = Medo.Configuration.Config.IsAssumedInstalled;
         }
 
 
@@ -175,8 +177,7 @@ namespace QText {
                     return true;
 
 
-                case Keys.Alt | Keys.Left:
-                    {
+                case Keys.Alt | Keys.Left: {
                         if (tabFiles.SelectedTab == null) {
                             if (tabFiles.TabPages.Count > 0) {
                                 tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[0];
@@ -191,8 +192,7 @@ namespace QText {
                     return true;
 
 
-                case Keys.Alt | Keys.Right:
-                    {
+                case Keys.Alt | Keys.Right: {
                         if (tabFiles.SelectedTab == null) {
                             if (tabFiles.TabPages.Count > 0) {
                                 tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[tabFiles.TabPages.Count - 1];
@@ -206,8 +206,7 @@ namespace QText {
                     }
                     return true;
 
-                case Keys.Alt | Keys.Home:
-                    {
+                case Keys.Alt | Keys.Home: {
                         if (!tabFiles.CurrentFolder.IsRoot) {
                             tabFiles.FolderOpen(App.Document.RootFolder);
                             mnuFolder.Text = tabFiles.CurrentFolder.Title;
@@ -217,8 +216,7 @@ namespace QText {
                     return true;
 
                 case Keys.Alt | Keys.PageUp:
-                case Keys.Alt | Keys.Up:
-                    {
+                case Keys.Alt | Keys.Up: {
                         var currFolder = tabFiles.CurrentFolder;
                         var list = new List<DocumentFolder>(App.Document.GetFolders());
                         var index = list.FindIndex(delegate (DocumentFolder folder) { return folder.Equals(currFolder); });
@@ -231,8 +229,7 @@ namespace QText {
                     return true;
 
                 case Keys.Alt | Keys.PageDown:
-                case Keys.Alt | Keys.Down:
-                    {
+                case Keys.Alt | Keys.Down: {
                         var currFolder = tabFiles.CurrentFolder;
                         var list = new List<DocumentFolder>(App.Document.GetFolders());
                         var index = list.FindIndex(delegate (DocumentFolder folder) { return folder.Equals(currFolder); });
@@ -244,16 +241,14 @@ namespace QText {
                     }
                     return true;
 
-                case Keys.Alt | Keys.Shift | Keys.D:
-                    {
+                case Keys.Alt | Keys.Shift | Keys.D: {
                         if ((tabFiles.SelectedTab != null) && (tabFiles.SelectedTab.IsOpened)) {
                             tabFiles.SelectedTab.TextBox.SelectedText = DateTime.Now.ToShortDateString();
                         }
                     }
                     return true;
 
-                case Keys.Alt | Keys.Shift | Keys.T:
-                    {
+                case Keys.Alt | Keys.Shift | Keys.T: {
                         if ((tabFiles.SelectedTab != null) && (tabFiles.SelectedTab.IsOpened)) {
                             tabFiles.SelectedTab.TextBox.SelectedText = DateTime.Now.ToShortTimeString();
                         }
@@ -271,8 +266,7 @@ namespace QText {
             Debug.WriteLine("MainForm_ProcessCmdKey: " + keyData.ToString());
             switch (keyData) {
 
-                case Keys.Shift | Keys.F1:
-                    {
+                case Keys.Shift | Keys.F1: {
                         mnxTextSelectionSpelling_Click(null, null);
                     }
                     return true;
