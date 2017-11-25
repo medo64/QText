@@ -77,7 +77,6 @@ namespace QText {
             this.mnxTextCutPlain = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextCopyPlain = new System.Windows.Forms.ToolStripMenuItem();
             this.mnxTextPastePlain = new System.Windows.Forms.ToolStripMenuItem();
-            this.ToolStripMenuItem16 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTextSelectAll = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTextFont = new System.Windows.Forms.ToolStripMenuItem();
@@ -123,6 +122,11 @@ namespace QText {
             this.mnxTabOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.bwCheckForUpgrade = new System.ComponentModel.BackgroundWorker();
             this.tabFiles = new QText.TabFiles();
+            this.mnxTextInsertDateTime = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTextInsertTime = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnxTextInsertDate = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnxTextInsertDateTimeBoth = new System.Windows.Forms.ToolStripMenuItem();
             this.mnu.SuspendLayout();
             this.mnxText.SuspendLayout();
             this.mnxTab.SuspendLayout();
@@ -514,7 +518,7 @@ namespace QText {
             this.mnxTextCutPlain,
             this.mnxTextCopyPlain,
             this.mnxTextPastePlain,
-            this.ToolStripMenuItem16,
+            this.toolStripMenuItem2,
             this.mnxTextSelectAll,
             this.ToolStripMenuItem4,
             this.mnxTextFont,
@@ -525,9 +529,10 @@ namespace QText {
             this.mnxTextResetFont,
             this.mnxTextRtfSeparator,
             this.mnxTextSelection,
-            this.mnxTextLines});
+            this.mnxTextLines,
+            this.mnxTextInsertDateTime});
             this.mnxText.Name = "mnxTextBox";
-            this.mnxText.Size = new System.Drawing.Size(292, 476);
+            this.mnxText.Size = new System.Drawing.Size(292, 530);
             this.mnxText.Opening += new System.ComponentModel.CancelEventHandler(this.mnxText_Opening);
             // 
             // mnxTextUndo
@@ -624,11 +629,6 @@ namespace QText {
             this.mnxTextPastePlain.Tag = "mnuPaste";
             this.mnxTextPastePlain.Text = "Paste as plain text";
             this.mnxTextPastePlain.Click += new System.EventHandler(this.mnxTextPastePlain_Click);
-            // 
-            // ToolStripMenuItem16
-            // 
-            this.ToolStripMenuItem16.Name = "ToolStripMenuItem16";
-            this.ToolStripMenuItem16.Size = new System.Drawing.Size(288, 6);
             // 
             // mnxTextSelectAll
             // 
@@ -1014,6 +1014,43 @@ namespace QText {
             this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
             this.tabFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabFiles_MouseDown);
             // 
+            // mnxTextInsertDateTime
+            // 
+            this.mnxTextInsertDateTime.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnxTextInsertDateTimeBoth,
+            this.mnxTextInsertTime,
+            this.mnxTextInsertDate});
+            this.mnxTextInsertDateTime.Name = "mnxTextInsertDateTime";
+            this.mnxTextInsertDateTime.Size = new System.Drawing.Size(291, 26);
+            this.mnxTextInsertDateTime.Text = "Insert time/&date";
+            // 
+            // mnxTextInsertTime
+            // 
+            this.mnxTextInsertTime.Name = "mnxTextInsertTime";
+            this.mnxTextInsertTime.Size = new System.Drawing.Size(181, 26);
+            this.mnxTextInsertTime.Text = "&Time";
+            this.mnxTextInsertTime.Click += new System.EventHandler(this.mnxTextInsertTime_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(288, 6);
+            // 
+            // mnxTextInsertDate
+            // 
+            this.mnxTextInsertDate.Name = "mnxTextInsertDate";
+            this.mnxTextInsertDate.Size = new System.Drawing.Size(181, 26);
+            this.mnxTextInsertDate.Text = "&Date";
+            this.mnxTextInsertDate.Click += new System.EventHandler(this.mnxTextInsertDate_Click);
+            // 
+            // mnxTextInsertDateTimeBoth
+            // 
+            this.mnxTextInsertDateTimeBoth.Name = "mnxTextInsertDateTimeBoth";
+            this.mnxTextInsertDateTimeBoth.ShortcutKeyDisplayString = "F5";
+            this.mnxTextInsertDateTimeBoth.Size = new System.Drawing.Size(181, 26);
+            this.mnxTextInsertDateTimeBoth.Text = "&Both";
+            this.mnxTextInsertDateTimeBoth.Click += new System.EventHandler(this.mnxTextInsertDateTimeBoth_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1079,7 +1116,6 @@ namespace QText {
         internal System.Windows.Forms.ToolStripMenuItem mnxTextCutPlain;
         internal System.Windows.Forms.ToolStripMenuItem mnxTextCopyPlain;
         internal System.Windows.Forms.ToolStripMenuItem mnxTextPastePlain;
-        internal System.Windows.Forms.ToolStripSeparator ToolStripMenuItem16;
         internal System.Windows.Forms.ToolStripMenuItem mnxTextSelectAll;
         internal System.Windows.Forms.ToolStripSeparator ToolStripMenuItem4;
         internal System.Windows.Forms.ToolStripMenuItem mnxTextFont;
@@ -1145,5 +1181,10 @@ namespace QText {
         internal System.Windows.Forms.ToolStripSeparator ToolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem mnxTextResetFont;
         private System.ComponentModel.BackgroundWorker bwCheckForUpgrade;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem mnxTextInsertDateTime;
+        private System.Windows.Forms.ToolStripMenuItem mnxTextInsertDateTimeBoth;
+        private System.Windows.Forms.ToolStripMenuItem mnxTextInsertTime;
+        private System.Windows.Forms.ToolStripMenuItem mnxTextInsertDate;
     }
 }

@@ -271,6 +271,11 @@ namespace QText {
                     }
                     return true;
 
+                case Keys.F5: {
+                        mnxTextInsertDateTimeBoth_Click(null, null);
+                    }
+                    return true;
+
 
                 case Keys.Control | Keys.Tab:
                 case Keys.Control | Keys.Shift | Keys.Tab:
@@ -1344,6 +1349,27 @@ namespace QText {
             }
         }
 
+        private void mnxTextInsertDateTimeBoth_Click(object sender, EventArgs e) {
+            if (tabFiles.SelectedTab != null) {
+                var txt = tabFiles.SelectedTab.TextBox;
+                txt.SelectedText = DateTime.Now.ToString(Settings.Current.DateTimeFormat) + Settings.Current.DateTimeSeparator;
+            }
+        }
+
+        private void mnxTextInsertTime_Click(object sender, EventArgs e) {
+            if (tabFiles.SelectedTab != null) {
+                var txt = tabFiles.SelectedTab.TextBox;
+                txt.SelectedText = DateTime.Now.ToString("t") + Settings.Current.DateTimeSeparator;
+            }
+        }
+
+        private void mnxTextInsertDate_Click(object sender, EventArgs e) {
+            if (tabFiles.SelectedTab != null) {
+                var txt = tabFiles.SelectedTab.TextBox;
+                txt.SelectedText = DateTime.Now.ToString("d") + Settings.Current.DateTimeSeparator;
+            }
+        }
+
         #endregion
 
 
@@ -1628,6 +1654,5 @@ namespace QText {
                 mnuAppUpgrade.Text = "Upgrade is available";
             }
         }
-
     }
 }

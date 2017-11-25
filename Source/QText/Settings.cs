@@ -505,6 +505,24 @@ namespace QText {
             }
         }
 
+        [Category("Text")]
+        [DisplayName("Date/time format")]
+        [Description("Format of default date/time string.")]
+        [DefaultValue("g")]
+        public string DateTimeFormat {
+            get { return Config.Read("DateTimeFormat", "g"); }
+            set { Config.Write("DateTimeFormat", value); }
+        }
+
+        [Category("Text")]
+        [DisplayName("Date/time separator")]
+        [Description("Separator to be used after date/time format has been inserted.")]
+        [DefaultValue("\t")]
+        public string DateTimeSeparator {
+            get { return Config.Read("DateTimeSeparator", "\t"); }
+            set { Config.Write("DateTimeSeparator", value); }
+        }
+
 
         private static bool AreWindowsInTabletMode() {
             var tabletModeValue = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ImmersiveShell", "TabletMode", 0);
