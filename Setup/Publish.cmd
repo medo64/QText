@@ -175,7 +175,7 @@ IF NOT [%TOOL_ILMERGE%]==[] (
     ECHO --- MERGE ASSEMBLIES
     ECHO:
     
-    %TOOL_ILMERGE% /targetplatform:v4 /keyfile:..\Source\QText\Properties\App.snk /out:..\Binaries\Merged.exe %FILES_EXECUTABLE%
+    %TOOL_ILMERGE% /targetplatform:v4 /keyfile:..\Source\QText\Properties\App.snk /out:..\Binaries\QTextPortable.exe %FILES_EXECUTABLE%
     IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
 
     ECHO Completed.
@@ -190,9 +190,9 @@ IF NOT [%TOOL_ILMERGE%]==[] (
         ECHO:
 
         IF [%SIGN_TIMESTAMPURL%]==[] (
-            %TOOL_SIGNTOOL% sign /s "My" /sha1 %CERTIFICATE_THUMBPRINT% /v ..\Binaries\Merged.exe
+            %TOOL_SIGNTOOL% sign /s "My" /sha1 %CERTIFICATE_THUMBPRINT% /v ..\Binaries\QTextPortable.exe
         ) ELSE (
-            %TOOL_SIGNTOOL% sign /s "My" /sha1 %CERTIFICATE_THUMBPRINT% /tr %SIGN_TIMESTAMPURL% /v ..\Binaries\Merged.exe
+            %TOOL_SIGNTOOL% sign /s "My" /sha1 %CERTIFICATE_THUMBPRINT% /tr %SIGN_TIMESTAMPURL% /v ..\Binaries\QTextPortable.exe
         )
         IF NOT ERRORLEVEL 0 GOTO Error
 
@@ -206,8 +206,8 @@ IF NOT [%TOOL_ILMERGE%]==[] (
         ECHO:
 
         ECHO Zipping into !SETUPEXE:.exe=.zip!
-        %TOOL_WINRAR% a -afzip -ep -m5 ".\Temp\!SETUPEXE:.exe=.zip!" ..\Binaries\Merged.exe %FILES_OTHER%
-        %TOOL_WINRAR% rn ".\Temp\!SETUPEXE:.exe=.zip!" Merged.exe QText.exe
+        %TOOL_WINRAR% a -afzip -ep -m5 ".\Temp\!SETUPEXE:.exe=.zip!" ..\Binaries\QTextPortable.exe %FILES_OTHER%
+        %TOOL_WINRAR% rn ".\Temp\!SETUPEXE:.exe=.zip!" QTextPortable.exe QText.exe
         %TOOL_WINRAR% rn ".\Temp\!SETUPEXE:.exe=.zip!" *.md *.txt
         IF NOT ERRORLEVEL 0 GOTO Error
 
