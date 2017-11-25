@@ -8,7 +8,7 @@ Simple note taking program with multi-folder support, auto-save, and encryption 
   * `Esc`                     Close
   * `F2`                      Rename
   * `F3`                      Find next
-  * `F5`                      Refresh
+  * `F5`                      Insert date/time.
   * `F10`                     Activate toolbar.
   * `Ctrl+A`                  Select all
   * `Ctrl+C`                  Copy
@@ -30,6 +30,8 @@ Simple note taking program with multi-folder support, auto-save, and encryption 
   * `Ctrl+Delete`             Delete word on right.
   * `Ctrl+PgUp`               Select tab on the left.
   * `Ctrl+PgDn`               Select tab on the right.
+  * `Ctrl+;`                  Insert date.
+  * `Ctrl+:`                  Insert time.
   * `Ctrl+Shift+C`            Copy as plain text
   * `Ctrl+Shift+V`            Paste as plain text
   * `Ctrl+Shift+X`            Cut as plain text

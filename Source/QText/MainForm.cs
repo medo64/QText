@@ -276,6 +276,16 @@ namespace QText {
                     }
                     return true;
 
+                case Keys.Control | Keys.OemSemicolon: {
+                        mnxTextInsertDate_Click(null, null);
+                    }
+                    return true;
+
+                case Keys.Control | Keys.Shift | Keys.OemSemicolon: {
+                        mnxTextInsertTime_Click(null, null);
+                    }
+                    return true;
+
 
                 case Keys.Control | Keys.Tab:
                 case Keys.Control | Keys.Shift | Keys.Tab:
