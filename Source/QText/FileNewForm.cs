@@ -25,7 +25,7 @@ namespace QText {
 
 
         private void txtTitle_TextChanged(object sender, EventArgs e) {
-            var newFileTitle = txtTitle.Text.Trim();
+            string newFileTitle = txtTitle.Text.Trim();
             var canCreate = this.Folder.CanNewFile(newFileTitle);
             if (canCreate) {
                 erp.SetError(txtTitle, null);

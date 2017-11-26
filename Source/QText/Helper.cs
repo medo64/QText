@@ -15,7 +15,7 @@ namespace QText {
 
         public static void CreatePath(string path) {
             if ((!Directory.Exists(path))) {
-                string currPath = path;
+                var currPath = path;
                 var allPaths = new List<string>();
                 while (!(Directory.Exists(currPath))) {
                     allPaths.Add(currPath);
@@ -26,7 +26,7 @@ namespace QText {
                 }
 
                 try {
-                    for (int i = allPaths.Count - 1; i >= 0; i += -1) {
+                    for (var i = allPaths.Count - 1; i >= 0; i += -1) {
                         System.IO.Directory.CreateDirectory(allPaths[i]);
                     }
                 } catch (Exception ex) {
@@ -48,7 +48,7 @@ namespace QText {
             if (tabFiles == null) { throw new ArgumentNullException("tabFiles", "Tab parent cannot be null."); }
             if (tabToDelete == null) { throw new ArgumentNullException("tabToDelete", "Tab cannot be null."); }
 
-            bool askForConfirmation = false;
+            var askForConfirmation = false;
             if (tabToDelete.BaseFile.IsEncrypted) {
                 askForConfirmation = true;
             } else {
@@ -184,8 +184,9 @@ namespace QText {
 #endif
                     }
 
-                    var toolstripSplitButton = item as ToolStripSplitButton;
-                    if (toolstripSplitButton != null) { ScaleToolstrip(toolstripSplitButton.DropDown); }
+                    if (item is ToolStripSplitButton toolstripSplitButton) {
+                        ScaleToolstrip(toolstripSplitButton.DropDown);
+                    }
                 }
             }
         }
@@ -209,7 +210,7 @@ namespace QText {
             var set = sizeAndSet.Value;
 
             var resources = QText.Properties.Resources.ResourceManager;
-            Bitmap bitmap = resources.GetObject(name + set) as Bitmap;
+            var bitmap = resources.GetObject(name + set) as Bitmap;
             item.ImageScaling = ToolStripItemImageScaling.None;
 #if DEBUG
             item.Image = (bitmap != null) ? new Bitmap(bitmap, size, size) : new Bitmap(size, size, PixelFormat.Format8bppIndexed);
@@ -247,8 +248,9 @@ namespace QText {
 
         public static IEnumerable<TabFile> GetTabs(IEnumerable<DocumentFile> files, ContextMenuStrip contextMenuStrip) {
             foreach (var file in files) {
-                var tab = new TabFile(file);
-                tab.ContextMenuStrip = contextMenuStrip;
+                var tab = new TabFile(file) {
+                    ContextMenuStrip = contextMenuStrip
+                };
                 yield return tab;
             }
         }

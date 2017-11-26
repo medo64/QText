@@ -21,7 +21,7 @@ namespace QText {
 
 
         private void txtTitle_TextChanged(object sender, EventArgs e) {
-            bool alreadyTaken = false;
+            var alreadyTaken = false;
             if (string.Equals(this.File.Title, txtTitle.Text, StringComparison.OrdinalIgnoreCase) == false) {
                 var newFileTitle = txtTitle.Text.Trim();
                 alreadyTaken = (this.File.Folder.GetFileByTitle(newFileTitle) != null);

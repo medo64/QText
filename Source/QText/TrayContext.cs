@@ -100,9 +100,9 @@ namespace QText {
                 if (this.Form.WindowState == FormWindowState.Minimized) { this.Form.WindowState = FormWindowState.Normal; }
 
                 if (showOnPrimary) {
-                    Rectangle priBounds = Screen.PrimaryScreen.WorkingArea;
-                    Rectangle currBounds = this.Form.Bounds;
-                    Rectangle normalBounds = default(Rectangle);
+                    var priBounds = Screen.PrimaryScreen.WorkingArea;
+                    var currBounds = this.Form.Bounds;
+                    var normalBounds = default(Rectangle);
                     if ((this.Form.WindowState == FormWindowState.Normal)) {
                         normalBounds = this.Form.Bounds;
                     } else {
@@ -110,7 +110,7 @@ namespace QText {
                     }
 
                     if (!((currBounds.Left >= priBounds.Left) && (currBounds.Right <= priBounds.Right) && (currBounds.Top >= priBounds.Top) && (currBounds.Bottom <= priBounds.Bottom))) {
-                        FormWindowState oldState = this.Form.WindowState;
+                        var oldState = this.Form.WindowState;
 
                         if (oldState != FormWindowState.Normal) {
                             this.Form.WindowState = FormWindowState.Normal;

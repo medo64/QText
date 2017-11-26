@@ -205,7 +205,7 @@ namespace QText {
         }
 
         private void txtHotkey_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) {
-            string str = GetKeyString(e.KeyData);
+            var str = GetKeyString(e.KeyData);
             if (!string.IsNullOrEmpty(str)) {
                 txtHotkey.Text = str;
                 txtHotkey.Tag = e.KeyData;
@@ -316,9 +316,9 @@ namespace QText {
             if ((keyData & Keys.RWin) == Keys.RWin) { return string.Empty; }
 
             var sb = new System.Text.StringBuilder();
-            bool usesShift = false;
-            bool usesCtrl = false;
-            bool usesAlt = false;
+            var usesShift = false;
+            var usesCtrl = false;
+            var usesAlt = false;
 
             if ((keyData & Keys.Control) == Keys.Control) {
                 if (sb.Length > 0) { sb.Append("+"); }

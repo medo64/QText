@@ -86,12 +86,9 @@ namespace QText {
 
 
         public override bool Equals(object obj) {
-            var other = obj as QFileInfo;
-            if (other != null) { return string.Equals(this.FullName, other.FullName, StringComparison.OrdinalIgnoreCase); }
-            var otherFileInfo = obj as FileInfo;
-            if (otherFileInfo != null) { return string.Equals(this.FullName, otherFileInfo.FullName, StringComparison.OrdinalIgnoreCase); }
-            var otherString = obj as string;
-            if (otherString != null) { return string.Equals(this.FullName, otherString, StringComparison.OrdinalIgnoreCase); }
+            if (obj is QFileInfo other) { return string.Equals(this.FullName, other.FullName, StringComparison.OrdinalIgnoreCase); }
+            if (obj is FileInfo otherFileInfo) { return string.Equals(this.FullName, otherFileInfo.FullName, StringComparison.OrdinalIgnoreCase); }
+            if (obj is string otherString) { return string.Equals(this.FullName, otherString, StringComparison.OrdinalIgnoreCase); }
             return false;
         }
 

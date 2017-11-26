@@ -29,7 +29,7 @@ namespace QText {
                 }
 
                 var orderFilePath = Path.Combine(this.RootPath, ".qtext");
-                string[] lines = new string[] { };
+                var lines = new string[] { };
                 try {
                     if (File.Exists(orderFilePath)) {
                         lines = File.ReadAllLines(orderFilePath, Document.Encoding);
@@ -70,10 +70,10 @@ namespace QText {
                 }
 
                 this.Watcher = new FileSystemWatcher(this.RootPath) { IncludeSubdirectories = true, InternalBufferSize = 32768 };
-                this.Watcher.Changed += Watcher_Changed;
-                this.Watcher.Created += Watcher_Created;
-                this.Watcher.Deleted += Watcher_Deleted;
-                this.Watcher.Renamed += Watcher_Renamed;
+                this.Watcher.Changed += this.Watcher_Changed;
+                this.Watcher.Created += this.Watcher_Created;
+                this.Watcher.Deleted += this.Watcher_Deleted;
+                this.Watcher.Renamed += this.Watcher_Renamed;
 
                 this.EnableWatcher();
             } catch (DirectoryNotFoundException) {
@@ -264,13 +264,13 @@ namespace QText {
         }
 
         internal void ProcessDelete(string fullPath) {
-            for (int i = this.Files.Count - 1; i >= 0; i--) {
+            for (var i = this.Files.Count - 1; i >= 0; i--) {
                 var file = this.Files[i];
                 if (string.Equals(file.FullPath, fullPath, StringComparison.OrdinalIgnoreCase) || string.Equals(file.Folder.FullPath, fullPath, StringComparison.OrdinalIgnoreCase)) {
                     this.Files.RemoveAt(i);
                 }
             }
-            for (int i = 0; i < this.Folders.Count; i++) {
+            for (var i = 0; i < this.Folders.Count; i++) {
                 var folder = this.Folders[i];
                 if (!folder.IsRoot && string.Equals(folder.FullPath, fullPath, StringComparison.OrdinalIgnoreCase)) {
                     this.Folders.RemoveAt(i);
@@ -283,7 +283,7 @@ namespace QText {
             Debug.WriteLine("FileSystemWatcher.Renamed: " + e.OldFullPath + " -> " + e.FullPath);
             if (Directory.Exists(e.FullPath)) { //directory
 
-                for (int i = 0; i < this.Folders.Count; i++) {
+                for (var i = 0; i < this.Folders.Count; i++) {
                     var folder = this.Folders[i];
                     if (!folder.IsRoot && string.Equals(folder.FullPath, e.OldFullPath, StringComparison.OrdinalIgnoreCase)) {
                         folder.Name = e.Name;
@@ -295,7 +295,7 @@ namespace QText {
 
             } else if (File.Exists(e.FullPath)) { //file
 
-                for (int i = 0; i < this.Files.Count; i++) {
+                for (var i = 0; i < this.Files.Count; i++) {
                     var file = this.Files[i];
                     var oldName = file.Name;
                     var oldKind = file.Style;
@@ -476,7 +476,7 @@ namespace QText {
         public DocumentFolder CreateFolder() {
             try {
                 var newPath = Path.Combine(this.RootPath, Helper.EncodeTitle("New folder"));
-                int n = 1;
+                var n = 1;
                 while (Directory.Exists(newPath)) {
                     var newTitle = string.Format(CultureInfo.CurrentUICulture, "New folder ({0})", n);
                     newPath = Path.Combine(this.RootPath, Helper.EncodeTitle(newTitle));

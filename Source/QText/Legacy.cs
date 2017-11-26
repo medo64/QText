@@ -12,9 +12,9 @@ namespace QText.Legacy {
 
         public static void Upgrade() {
             var orderedTitles = new List<string>();
-            string selectedTitle = null;
+            var selectedTitle = default(string);
             try {
-                string fileName = Path.Combine(QText.Settings.Current.FilesLocation, "QText.xml");
+                var fileName = Path.Combine(QText.Settings.Current.FilesLocation, "QText.xml");
                 if ((File.Exists(fileName))) {
                     using (var xr = new XmlTextReader(fileName)) {
                         var walk = new Stack<string>();
@@ -40,7 +40,7 @@ namespace QText.Legacy {
                                         if ((walk.Peek() != "FileOrder")) { throw new InvalidOperationException(); }
                                         if ((!xr.IsEmptyElement)) { walk.Push(xr.Name); }
 
-                                        string currTitle = xr.GetAttribute("title");
+                                        var currTitle = xr.GetAttribute("title");
                                         if (string.IsNullOrEmpty(currTitle) == false) {
                                             orderedTitles.Add(currTitle);
                                         }

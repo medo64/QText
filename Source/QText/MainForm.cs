@@ -289,14 +289,15 @@ namespace QText {
 
                 case Keys.Control | Keys.Tab:
                 case Keys.Control | Keys.Shift | Keys.Tab:
-                    if ((tabFiles.TabPages.Count >= 1) && (tabFiles.SelectedTab == null))
+                    if ((tabFiles.TabPages.Count >= 1) && (tabFiles.SelectedTab == null)) {
                         tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[0];
+                    }
                     if ((tabFiles.TabPages.Count >= 2)) {
                         var tp = GetPreviousSelectedTab();
                         if ((tp != null)) {
                             tabFiles.SelectedTab = tp;
                         } else {
-                            int i = tabFiles.TabPages.IndexOf(tabFiles.SelectedTab);
+                            var i = tabFiles.TabPages.IndexOf(tabFiles.SelectedTab);
                             i = (i + 1) % tabFiles.TabPages.Count;
                             tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[i];
                         }
@@ -331,7 +332,7 @@ namespace QText {
             RefreshAll(null, null);
             Form_Resize(null, null);
 
-            App.Document.FileExternallyChanged += Document_FileExternallyChanged;
+            App.Document.FileExternallyChanged += this.Document_FileExternallyChanged;
         }
 
         private void Form_FormClosing(object sender, FormClosingEventArgs e) {
@@ -361,7 +362,7 @@ namespace QText {
                 var sb = new StringBuilder("Cannot save ");
                 sb.Append((failedTitles.Count == 1) ? "file" : "files");
                 sb.Append(" ");
-                for (int i = 0; i < failedTitles.Count; i++) {
+                for (var i = 0; i < failedTitles.Count; i++) {
                     if (i != 0) {
                         sb.Append((i < failedTitles.Count - 1) ? ", " : " and");
                     }
@@ -410,7 +411,7 @@ namespace QText {
                         tabFiles.ContextMenuStrip.Show(tabFiles, e.X - tabFiles.Left, e.Y - tabFiles.Top);
                     }
                 } else {
-                    Rectangle rect = tabFiles.ClientRectangle;
+                    var rect = tabFiles.ClientRectangle;
                     if ((e.Y >= rect.Top) && (e.Y <= rect.Bottom)) {
                         tabFiles.ContextMenuStrip.Show(tabFiles, e.X - tabFiles.Left, e.Y - tabFiles.Top);
                     }
@@ -454,7 +455,7 @@ namespace QText {
 
         private void tabFiles_MouseDown(object sender, MouseEventArgs e) {
             if (e.Button == System.Windows.Forms.MouseButtons.Right) {
-                for (int i = 0; i <= tabFiles.TabPages.Count - 1; i++) {
+                for (var i = 0; i <= tabFiles.TabPages.Count - 1; i++) {
                     if (tabFiles.GetTabRect(i).Contains(e.X, e.Y)) {
                         tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[i];
                         break;
@@ -510,7 +511,7 @@ namespace QText {
 
         private void mnuNew_Click(object sender, EventArgs e) {
             tmrQuickSave.Enabled = false;
-            using (FileNewForm frm = new FileNewForm(tabFiles.CurrentFolder)) {
+            using (var frm = new FileNewForm(tabFiles.CurrentFolder)) {
                 frm.TopMost = this.TopMost;
                 if (frm.ShowDialog(this) == DialogResult.OK) {
                     try {
@@ -636,7 +637,7 @@ namespace QText {
         private void mnuFont_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
-                TabFile tf = tabFiles.SelectedTab;
+                var tf = tabFiles.SelectedTab;
                 if (tf.BaseFile.IsRichText) {
                     using (var f = new System.Windows.Forms.FontDialog()) {
                         f.AllowScriptChange = true;
@@ -667,7 +668,7 @@ namespace QText {
         private void mnuBold_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
-                TabFile tf = tabFiles.SelectedTab;
+                var tf = tabFiles.SelectedTab;
                 if (tf.BaseFile.IsRichText) {
                     ToogleStyle(tf.TextBox, FontStyle.Bold);
                 }
@@ -678,7 +679,7 @@ namespace QText {
         private void mnuItalic_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
-                TabFile tf = tabFiles.SelectedTab;
+                var tf = tabFiles.SelectedTab;
                 if (tf.BaseFile.IsRichText) {
                     ToogleStyle(tf.TextBox, FontStyle.Italic);
                 }
@@ -689,7 +690,7 @@ namespace QText {
         private void mnuUnderline_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
-                TabFile tf = tabFiles.SelectedTab;
+                var tf = tabFiles.SelectedTab;
                 if (tf.BaseFile.IsRichText) {
                     if (tf.TextBox.SelectionFont != null) {
                         ToogleStyle(tf.TextBox, FontStyle.Underline);
@@ -702,7 +703,7 @@ namespace QText {
         private void mnuStrikeout_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
-                TabFile tf = tabFiles.SelectedTab;
+                var tf = tabFiles.SelectedTab;
                 if (tf.BaseFile.IsRichText) {
                     if (tf.TextBox.SelectionFont != null) {
                         ToogleStyle(tf.TextBox, FontStyle.Strikeout);
@@ -715,14 +716,14 @@ namespace QText {
         private void mnuResetFont_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
-                TabFile tf = tabFiles.SelectedTab;
+                var tf = tabFiles.SelectedTab;
                 if (tf.BaseFile.IsRichText) {
                     try {
                         tf.TextBox.BeginUpdate();
                         tf.TextBox.Cursor = Cursors.WaitCursor;
                         var selStart = tf.TextBox.SelectionStart;
                         var selLength = tf.TextBox.SelectionLength;
-                        for (int i = selStart; i < selStart + selLength; i++) {
+                        for (var i = selStart; i < selStart + selLength; i++) {
                             tf.TextBox.SelectionStart = i;
                             tf.TextBox.SelectionLength = 1;
 
@@ -783,9 +784,9 @@ namespace QText {
         }
 
         private void mnuFindGoto_Click(object sender, EventArgs e) {
-            bool hasText = false;
+            var hasText = false;
             if (tabFiles.SelectedTab != null) {
-                TabFile tf = tabFiles.SelectedTab;
+                var tf = tabFiles.SelectedTab;
                 hasText = tf.IsOpened;
             }
 
@@ -796,7 +797,7 @@ namespace QText {
                     var destination = frm.SelectedItem;
                     if (destination.IsLineNumber) {
                         if (tabFiles.SelectedTab != null) {
-                            TabFile tf = tabFiles.SelectedTab;
+                            var tf = tabFiles.SelectedTab;
                             var index = tf.TextBox.GetFirstCharIndexFromLine(destination.LineNumber.Value - 1);
                             if (index == -1) { //go to last line
                                 var lastLine = tf.TextBox.GetLineFromCharIndex(tf.TextBox.TextLength);
@@ -841,15 +842,15 @@ namespace QText {
             mnuFolder.DropDownItems.Clear();
 
             foreach (var folder in App.Document.GetFolders()) {
-                var item = new ToolStripMenuItem(folder.Title, null, mnuFolder_Click) { Tag = folder };
+                var item = new ToolStripMenuItem(folder.Title, null, this.mnuFolder_Click) { Tag = folder };
                 item.Enabled = !folder.Equals(tabFiles.CurrentFolder);
                 mnuFolder.DropDownItems.Add(item);
             }
 
             mnuFolder.DropDownItems.Add(new ToolStripSeparator());
 
-            mnuFolder.DropDownItems.Add(new ToolStripMenuItem("Edit folders", null, mnuFolderEdit_Click));
-            mnuFolder.DropDownItems.Add(new ToolStripMenuItem("Edit files", null, mnuFilesEdit_Click));
+            mnuFolder.DropDownItems.Add(new ToolStripMenuItem("Edit folders", null, this.mnuFolderEdit_Click));
+            mnuFolder.DropDownItems.Add(new ToolStripMenuItem("Edit files", null, this.mnuFilesEdit_Click));
         }
 
         private void mnuFolder_Click(object sender, EventArgs e) {
@@ -957,12 +958,12 @@ namespace QText {
         #region Tabs menu
 
         private void mnxTab_Opening(object sender, CancelEventArgs e) {
-            bool isTabSelected = (tabFiles.SelectedTab != null);
-            bool isTabRich = isTabSelected && tabFiles.SelectedTab.BaseFile.IsRichText;
-            bool isTabPlain = isTabSelected && (tabFiles.SelectedTab.BaseFile.IsRichText == false);
-            bool isTabEncryptable = isTabSelected && (tabFiles.SelectedTab.BaseFile.IsEncrypted == false);
-            bool isTabDecryptable = isTabSelected && (tabFiles.SelectedTab.BaseFile.IsEncrypted);
-            bool isZoomResetable = isTabSelected && tabFiles.SelectedTab.TextBox.HasZoom;
+            var isTabSelected = (tabFiles.SelectedTab != null);
+            var isTabRich = isTabSelected && tabFiles.SelectedTab.BaseFile.IsRichText;
+            var isTabPlain = isTabSelected && (tabFiles.SelectedTab.BaseFile.IsRichText == false);
+            var isTabEncryptable = isTabSelected && (tabFiles.SelectedTab.BaseFile.IsEncrypted == false);
+            var isTabDecryptable = isTabSelected && (tabFiles.SelectedTab.BaseFile.IsEncrypted);
+            var isZoomResetable = isTabSelected && tabFiles.SelectedTab.TextBox.HasZoom;
 
             mnxTabReopen.Enabled = isTabSelected;
             mnxTabSaveNow.Enabled = isTabSelected;
@@ -987,7 +988,7 @@ namespace QText {
 
         private void mnxTabReopen_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
-                TabFile tf = tabFiles.SelectedTab;
+                var tf = tabFiles.SelectedTab;
                 if (tf.IsChanged) {
                     switch (Medo.MessageBox.ShowQuestion(this, "File is not saved. Are you sure?", global::Medo.Reflection.EntryAssembly.Title + ": Reload", MessageBoxButtons.YesNo, MessageBoxDefaultButton.Button2)) {
                         case System.Windows.Forms.DialogResult.Yes:
@@ -1017,7 +1018,7 @@ namespace QText {
             mnxTabMoveTo.DropDownItems.Clear();
 
             foreach (var folder in App.Document.GetFolders()) {
-                var item = new ToolStripMenuItem(folder.Title, null, mnxTabMoveTo_Click) { Tag = folder };
+                var item = new ToolStripMenuItem(folder.Title, null, this.mnxTabMoveTo_Click) { Tag = folder };
                 item.AutoToolTip = false;
                 item.Enabled = !folder.Equals(tabFiles.CurrentFolder) && tabFiles.SelectedTab.BaseFile.CanMove(folder);
                 if (!item.Enabled) {
@@ -1103,12 +1104,12 @@ namespace QText {
         #region Text menu
 
         private void mnxText_Opening(object sender, CancelEventArgs e) {
-            bool isTabSelected = (tabFiles.SelectedTab != null);
-            bool isTabRichText = isTabSelected && tabFiles.SelectedTab.BaseFile.IsRichText;
-            bool isTabPlainText = isTabSelected && (tabFiles.SelectedTab.BaseFile.IsRichText == false);
-            bool isTextSelected = isTabSelected && (tabFiles.SelectedTab.TextBox.SelectedText.Length > 0);
-            bool hasText = isTabSelected && (tabFiles.SelectedTab.TextBox.Text.Length > 0);
-            bool isZoomResetable = isTabSelected && (tabFiles.SelectedTab.TextBox.ZoomFactor != 1);
+            var isTabSelected = (tabFiles.SelectedTab != null);
+            var isTabRichText = isTabSelected && tabFiles.SelectedTab.BaseFile.IsRichText;
+            var isTabPlainText = isTabSelected && (tabFiles.SelectedTab.BaseFile.IsRichText == false);
+            var isTextSelected = isTabSelected && (tabFiles.SelectedTab.TextBox.SelectedText.Length > 0);
+            var hasText = isTabSelected && (tabFiles.SelectedTab.TextBox.Text.Length > 0);
+            var isZoomResetable = isTabSelected && (tabFiles.SelectedTab.TextBox.ZoomFactor != 1);
 
             mnxTextUndo.Enabled = isTabSelected && tabFiles.SelectedTab.CanUndo;
             mnxTextRedo.Enabled = isTabSelected && tabFiles.SelectedTab.CanRedo;
@@ -1186,8 +1187,8 @@ namespace QText {
         private void mnxTextSelectionLower_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 TextBoxBase txt = tabFiles.SelectedTab.TextBox;
-                int ss = txt.SelectionStart;
-                int sl = txt.SelectionLength;
+                var ss = txt.SelectionStart;
+                var sl = txt.SelectionLength;
 
                 txt.SelectedText = txt.SelectedText.ToLower();
 
@@ -1199,8 +1200,8 @@ namespace QText {
         private void mnxTextSelectionUpper_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 TextBoxBase txt = tabFiles.SelectedTab.TextBox;
-                int ss = txt.SelectionStart;
-                int sl = txt.SelectionLength;
+                var ss = txt.SelectionStart;
+                var sl = txt.SelectionLength;
 
                 txt.SelectedText = txt.SelectedText.ToUpper();
 
@@ -1212,8 +1213,8 @@ namespace QText {
         private void mnxTextSelectionTitle_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 TextBoxBase txt = tabFiles.SelectedTab.TextBox;
-                int ss = txt.SelectionStart;
-                int sl = txt.SelectionLength;
+                var ss = txt.SelectionStart;
+                var sl = txt.SelectionLength;
 
                 txt.SelectedText = Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToLower(txt.SelectedText));
 
@@ -1225,17 +1226,17 @@ namespace QText {
         private void mnxTextSelectionDrGrammar_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 TextBoxBase txt = tabFiles.SelectedTab.TextBox;
-                int ss = txt.SelectionStart;
-                int sl = txt.SelectionLength;
+                var ss = txt.SelectionStart;
+                var sl = txt.SelectionLength;
 
-                System.Text.StringBuilder sb = new System.Text.StringBuilder(txt.SelectedText.ToLower());
-                int startOfWord = -1;
-                for (int i = 0; i <= sb.Length; i++) {
+                var sb = new StringBuilder(txt.SelectedText.ToLower());
+                var startOfWord = -1;
+                for (var i = 0; i <= sb.Length; i++) {
                     if ((i < sb.Length) && (char.IsLetter(sb[i]) || (sb[i] == '\''))) {
                         if (startOfWord == -1) { startOfWord = i; }
                     } else {
                         if (startOfWord > -1) {
-                            string word = txt.SelectedText.Substring(startOfWord, i - startOfWord).ToLower();
+                            var word = txt.SelectedText.Substring(startOfWord, i - startOfWord).ToLower();
                             switch (word) {
                                 case "a":
                                 case "an":
@@ -1282,16 +1283,16 @@ namespace QText {
                 var txt = tabFiles.SelectedTab.TextBox;
                 txt.SelectLineBlock();
 
-                int ss = txt.SelectionStart;
-                int sl = txt.SelectionLength;
+                var ss = txt.SelectionStart;
+                var sl = txt.SelectionLength;
 
                 var text = txt.SelectedText;
-                bool addLf = false;
+                var addLf = false;
                 if (text.EndsWith("\n")) {
                     addLf = true;
                     text = text.Remove(text.Length - 1);
                 }
-                string[] selSplit = text.Split(new string[] { "\n" }, StringSplitOptions.None);
+                var selSplit = text.Split(new string[] { "\n" }, StringSplitOptions.None);
                 Array.Sort(selSplit, new SortAZ());
                 text = string.Join("\n", selSplit);
                 if (addLf) { text += "\n"; }
@@ -1307,16 +1308,16 @@ namespace QText {
                 var txt = tabFiles.SelectedTab.TextBox;
                 txt.SelectLineBlock();
 
-                int ss = txt.SelectionStart;
-                int sl = txt.SelectionLength;
+                var ss = txt.SelectionStart;
+                var sl = txt.SelectionLength;
 
                 var text = txt.SelectedText;
-                bool addLf = false;
+                var addLf = false;
                 if (text.EndsWith("\n")) {
                     addLf = true;
                     text = text.Remove(text.Length - 1);
                 }
-                string[] selSplit = text.Split(new string[] { "\n" }, StringSplitOptions.None);
+                var selSplit = text.Split(new string[] { "\n" }, StringSplitOptions.None);
                 Array.Sort(selSplit, new SortZA());
                 text = string.Join("\n", selSplit);
                 if (addLf) { text += "\n"; }
@@ -1333,18 +1334,18 @@ namespace QText {
                 var txt = tabFiles.SelectedTab.TextBox;
                 txt.SelectLineBlock();
 
-                int ss = txt.SelectionStart;
-                int sl = txt.SelectionLength;
+                var ss = txt.SelectionStart;
+                var sl = txt.SelectionLength;
 
                 var text = txt.SelectedText;
-                bool addLf = false;
+                var addLf = false;
                 if (text.EndsWith("\n")) {
                     addLf = true;
                     text = text.Remove(text.Length - 1);
                 }
-                string[] selSplit = text.Split(new string[] { "\n" }, StringSplitOptions.None);
+                var selSplit = text.Split(new string[] { "\n" }, StringSplitOptions.None);
                 var lenDiff = 0;
-                for (int i = 0; i < selSplit.Length; i++) {
+                for (var i = 0; i < selSplit.Length; i++) {
                     var beforeLen = selSplit[i].Length;
                     selSplit[i] = selSplit[i].Trim();
                     var afterLen = selSplit[i].Length;
@@ -1411,9 +1412,9 @@ namespace QText {
         }
 
         private void RefreshAll(object sender, EventArgs e) {
-            bool unsaved = false;
-            for (int i = 0; i <= tabFiles.TabPages.Count - 1; i++) {
-                TabFile tf = (TabFile)tabFiles.TabPages[i];
+            var unsaved = false;
+            for (var i = 0; i <= tabFiles.TabPages.Count - 1; i++) {
+                var tf = (TabFile)tabFiles.TabPages[i];
                 if (tf.IsChanged) {
                     unsaved = true;
                     break;
@@ -1423,8 +1424,8 @@ namespace QText {
             if (unsaved) {
                 switch (Medo.MessageBox.ShowQuestion(this, "Content of unsaved files will be lost if not saved. Do you with to save it now?", MessageBoxButtons.YesNo)) {
                     case DialogResult.Yes:
-                        for (int i = 0; i <= tabFiles.TabPages.Count - 1; i++) {
-                            TabFile tf = (TabFile)tabFiles.TabPages[i];
+                        for (var i = 0; i <= tabFiles.TabPages.Count - 1; i++) {
+                            var tf = (TabFile)tabFiles.TabPages[i];
                             if (tf.IsChanged) {
                                 tf.Save();
                             }
@@ -1451,13 +1452,13 @@ namespace QText {
                 richTextBox.SelectionFont = new Font(richTextBox.SelectionFont, richTextBox.SelectionFont.Style ^ fontStyle);
             } else {
                 richTextBox.BeginUpdate();
-                int selStart = richTextBox.SelectionStart;
-                int selLength = richTextBox.SelectionLength;
-                bool toRegular = false;
-                for (int i = selStart; i <= selStart + selLength - 1; i++) {
+                var selStart = richTextBox.SelectionStart;
+                var selLength = richTextBox.SelectionLength;
+                var toRegular = false;
+                for (var i = selStart; i <= selStart + selLength - 1; i++) {
                     richTextBox.SelectionStart = i;
                     richTextBox.SelectionLength = 1;
-                    bool isStyleOn = (richTextBox.SelectionFont.Style & fontStyle) == fontStyle;
+                    var isStyleOn = (richTextBox.SelectionFont.Style & fontStyle) == fontStyle;
                     if (i == selStart) {
                         toRegular = isStyleOn;
                     }
@@ -1533,11 +1534,11 @@ namespace QText {
         }
 
         private void tmrUpdateToolbar_Tick(object sender, EventArgs e) {
-            bool isTabSelected = (tabFiles.SelectedTab != null);
-            bool isTabRichText = isTabSelected && tabFiles.SelectedTab.BaseFile.IsRichText;
-            bool isTabPlainText = isTabSelected && (tabFiles.SelectedTab.BaseFile.IsRichText == false);
+            var isTabSelected = (tabFiles.SelectedTab != null);
+            var isTabRichText = isTabSelected && tabFiles.SelectedTab.BaseFile.IsRichText;
+            var isTabPlainText = isTabSelected && (tabFiles.SelectedTab.BaseFile.IsRichText == false);
 
-            bool hasPrinters = false;
+            var hasPrinters = false;
             try {
                 hasPrinters = (PrinterSettings.InstalledPrinters.Count > 0);
             } catch (Win32Exception) { }

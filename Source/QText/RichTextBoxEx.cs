@@ -51,7 +51,7 @@ namespace QText {
         protected override void OnHandleCreated(EventArgs e) {
             base.OnHandleCreated(e);
             if (Settings.Current.UseSpellCheck) {
-                int opts = (int)NativeMethods.SendMessage(this.Handle, NativeMethods.EM_GETLANGOPTIONS, IntPtr.Zero, IntPtr.Zero);
+                var opts = (int)NativeMethods.SendMessage(this.Handle, NativeMethods.EM_GETLANGOPTIONS, IntPtr.Zero, IntPtr.Zero);
                 opts |= NativeMethods.IMF_SPELLCHECKING;
                 NativeMethods.SendMessage(this.Handle, NativeMethods.EM_SETLANGOPTIONS, IntPtr.Zero, new IntPtr(opts));
             }
@@ -212,7 +212,7 @@ namespace QText {
                             if (this.Text[endIndex] == '\n') { endIndex -= 1; } //if this is end of line
                             var text = this.Text.Substring(startIndex, endIndex - startIndex);
                             var lines = text.Split(new string[] { "\n" }, StringSplitOptions.None);
-                            for (int i = 0; i < lines.Length; i++) {
+                            for (var i = 0; i < lines.Length; i++) {
                                 lines[i] = "\t" + lines[i];
                             }
                             this.BeginUpdate();
@@ -250,7 +250,7 @@ namespace QText {
                             var text = this.Text.Substring(startIndex, endIndex - startIndex);
                             var lines = text.Split(new string[] { "\n" }, StringSplitOptions.None);
                             var countRemoved = 0;
-                            for (int i = 0; i < lines.Length; i++) {
+                            for (var i = 0; i < lines.Length; i++) {
                                 if (lines[i].StartsWith("\t", StringComparison.InvariantCultureIgnoreCase)) {
                                     lines[i] = lines[i].Substring(1);
                                     countRemoved += 1;
@@ -345,16 +345,16 @@ namespace QText {
                 return;
             }
 
-            _originalEventMask = NativeMethods.SendMessage(new HandleRef(this, Handle).Handle, NativeMethods.EM_SETEVENTMASK, 0, 0); // Prevent the control from raising any events.
-            NativeMethods.SendMessage(new HandleRef(this, Handle).Handle, NativeMethods.WM_SETREDRAW, 0, 0); //Prevent the control from redrawing itself.
+            _originalEventMask = NativeMethods.SendMessage(new HandleRef(this, this.Handle).Handle, NativeMethods.EM_SETEVENTMASK, 0, 0); // Prevent the control from raising any events.
+            NativeMethods.SendMessage(new HandleRef(this, this.Handle).Handle, NativeMethods.WM_SETREDRAW, 0, 0); //Prevent the control from redrawing itself.
         }
 
         public void EndUpdate() {
             this._beginUpdateCount -= 1;
             if (_beginUpdateCount > 0) { return; }
 
-            NativeMethods.SendMessage(new HandleRef(this, Handle).Handle, NativeMethods.WM_SETREDRAW, 1, 0); // Allow the control to redraw itself.
-            NativeMethods.SendMessage(new HandleRef(this, Handle).Handle, NativeMethods.EM_SETEVENTMASK, 0, _originalEventMask); // Allow the control to raise event messages.
+            NativeMethods.SendMessage(new HandleRef(this, this.Handle).Handle, NativeMethods.WM_SETREDRAW, 1, 0); // Allow the control to redraw itself.
+            NativeMethods.SendMessage(new HandleRef(this, this.Handle).Handle, NativeMethods.EM_SETEVENTMASK, 0, _originalEventMask); // Allow the control to raise event messages.
 
             this.Refresh();
         }
@@ -424,8 +424,8 @@ namespace QText {
 
 
         private int PrintRtf(int charFrom, int charTo, PrintPageEventArgs e) {
-            IntPtr hdc = IntPtr.Zero;
-            IntPtr lParam = IntPtr.Zero;
+            var hdc = IntPtr.Zero;
+            var lParam = IntPtr.Zero;
             try {
                 hdc = e.Graphics.GetHdc();
                 var fmtRange = new NativeMethods.FORMATRANGE(hdc, e.PageBounds, e.MarginBounds, charFrom, charTo);

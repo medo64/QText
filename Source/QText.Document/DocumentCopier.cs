@@ -73,7 +73,7 @@ namespace QText {
                 var fileName = Path.GetFileName(filePath);
 
                 var destinationFilePath = Path.Combine(destinationPath, fileName);
-                bool canOverwrite = true;
+                var canOverwrite = true;
                 if (File.Exists(destinationFilePath) && !alwaysOverwrite) {
                     if ((level == 0) && fileName.Equals(".qtext", StringComparison.OrdinalIgnoreCase)) {
                         canOverwrite = false; //if there is a .qtext at destination, leave it be
@@ -93,7 +93,7 @@ namespace QText {
 
                 var destinationDirectoryPath = Path.Combine(destinationPath, directoryName);
                 var relativeDirectoryPath = string.IsNullOrEmpty(relativePath) ? directoryName : relativePath + "\\" + directoryName;
-                bool canOverwrite = true;
+                var canOverwrite = true;
                 if (Directory.Exists(destinationDirectoryPath) && !alwaysOverwrite) {
                     var e = new DocumentCopierOverwriteEventArgs(relativeDirectoryPath);
                     this.OnFolderOverwrite(e);

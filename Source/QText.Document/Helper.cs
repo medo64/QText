@@ -40,8 +40,7 @@ namespace QText {
                 if (inEncoded) {
                     if (ch == '~') { //end decode
                         if (sbDecode.Length == 2) { //could be
-                            int value;
-                            if (int.TryParse(sbDecode.ToString(), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out value)) {
+                            if (int.TryParse(sbDecode.ToString(), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var value)) {
                                 var charValue = Convert.ToChar(value);
                                 if (Array.IndexOf(InvalidTitleChars, charValue) >= 0) {
                                     sb.Append(charValue);
@@ -87,7 +86,7 @@ namespace QText {
 
         public static void CreatePath(string path) {
             if ((!Directory.Exists(path))) {
-                string currPath = path;
+                var currPath = path;
                 var allPaths = new List<string>();
                 while (!(Directory.Exists(currPath))) {
                     allPaths.Add(currPath);
@@ -98,7 +97,7 @@ namespace QText {
                 }
 
                 try {
-                    for (int i = allPaths.Count - 1; i >= 0; i += -1) {
+                    for (var i = allPaths.Count - 1; i >= 0; i += -1) {
                         System.IO.Directory.CreateDirectory(allPaths[i]);
                     }
                 } catch (Exception) {

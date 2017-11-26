@@ -148,14 +148,12 @@ namespace QText {
         }
 
         public bool CanRename(string newTitle) {
-            string newName, newPath;
-            GatherRenameData(ref newTitle, out newName, out newPath);
+            GatherRenameData(ref newTitle, out var newName, out var newPath);
             return !File.Exists(newPath);
         }
 
         public void Rename(string newTitle) {
-            string newName, newPath;
-            GatherRenameData(ref newTitle, out newName, out newPath);
+            GatherRenameData(ref newTitle, out var newName, out var newPath);
 
             Debug.WriteLine("File.Rename: " + this.Name + " -> " + newName);
             try {

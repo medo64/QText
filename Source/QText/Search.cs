@@ -40,7 +40,7 @@ namespace QText {
             foreach (TabFile tab in tabs.TabPages) {
                 all.Add(tab);
             }
-            for (int i = 0; i < all.Count; i++) {
+            for (var i = 0; i < all.Count; i++) {
                 if (all[0].Equals(selectedTab)) {
                     break;
                 }
@@ -49,7 +49,7 @@ namespace QText {
             }
 
             var currSearchStart = selectedTab.TextBox.SelectionStart + selectedTab.TextBox.SelectionLength;
-            for (int i = 0; i < all.Count; i++) {
+            for (var i = 0; i < all.Count; i++) {
                 var tab = all[i];
                 if (tab.FindForward(SearchStatus.Text, SearchStatus.CaseSensitive, (i == 0) ? currSearchStart : 0)) {
                     return tab;
@@ -74,7 +74,7 @@ namespace QText {
                 currTabs.Add(tab);
             }
             var count = currTabs.Count;
-            for (int i = 0; i < count; i++) {
+            for (var i = 0; i < count; i++) {
                 if (currTabs[0].Equals(selectedTab)) {
                     break;
                 }
@@ -82,7 +82,7 @@ namespace QText {
                 currTabs.RemoveAt(0);
             }
             var currSearchStart = selectedTab.TextBox.SelectionStart + selectedTab.TextBox.SelectionLength;
-            for (int i = 0; i < currTabs.Count; i++) {
+            for (var i = 0; i < currTabs.Count; i++) {
                 var tab = currTabs[i];
                 if (tab.FindForward(SearchStatus.Text, SearchStatus.CaseSensitive, (i == 0) ? currSearchStart : 0)) {
                     return tab;
@@ -91,7 +91,7 @@ namespace QText {
 
             //search in other folders
             var folders = new List<DocumentFolder>(App.Document.GetFolders());
-            for (int i = 0; i < folders.Count; i++) {
+            for (var i = 0; i < folders.Count; i++) {
                 if (folders[0].Name.Equals(tabs.CurrentFolder)) {
                     folders.RemoveAt(0);
                     break;

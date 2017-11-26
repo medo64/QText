@@ -57,8 +57,7 @@ namespace QText {
 
         internal static IEnumerable<GotoResult> GetSuggestionsRaw(string suggestion, bool allowLineNumbers) {
             if (allowLineNumbers) {
-                int lineNumber;
-                if (int.TryParse(suggestion, NumberStyles.Integer, CultureInfo.CurrentCulture, out lineNumber)) {
+                if (int.TryParse(suggestion, NumberStyles.Integer, CultureInfo.CurrentCulture, out var lineNumber)) {
                     if (lineNumber > 0) {
                         yield return new GotoResult(lineNumber, null, null);
                     }
@@ -95,7 +94,7 @@ namespace QText {
 
         public int ImageIndex {
             get {
-                if (LineNumber.HasValue) {
+                if (this.LineNumber.HasValue) {
                     return -1;
                 } else {
                     if (this.File == null) {
@@ -120,8 +119,8 @@ namespace QText {
         }
 
         public override string ToString() {
-            if (LineNumber.HasValue) {
-                return "Line " + LineNumber.Value.ToString() + " in current file";
+            if (this.LineNumber.HasValue) {
+                return "Line " + this.LineNumber.Value.ToString() + " in current file";
             } else {
                 if (this.File == null) {
                     return this.Folder.Title;

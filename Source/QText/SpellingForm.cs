@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
@@ -16,7 +16,7 @@ namespace QText {
 
         private void txtInput_TextChanged(object sender, EventArgs e) {
             var sb = new StringBuilder();
-            bool noSpace = true;
+            var noSpace = true;
             foreach (var ch in txtInput.Text.ToUpperInvariant()) {
                 if (noSpace) { noSpace = false; } else { sb.Append(" "); }
                 if (char.IsLetterOrDigit(ch)) {

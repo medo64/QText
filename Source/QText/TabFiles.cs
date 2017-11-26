@@ -55,8 +55,7 @@ namespace QText {
         }
 
         protected override void OnSelected(TabControlEventArgs e) {
-            var tabFile = e.TabPage as TabFile;
-            if (tabFile != null) { tabFile.BaseFile.Selected = true; }
+            if (e.TabPage is TabFile tabFile) { tabFile.BaseFile.Selected = true; }
         }
 
 
@@ -79,7 +78,7 @@ namespace QText {
                 this.TabPages.Add(tab);
             }
 
-            TabFile selectedTab = (this.TabCount > 0) ? (TabFile)this.TabPages[0] : null;
+            var selectedTab = (this.TabCount > 0) ? (TabFile)this.TabPages[0] : null;
             foreach (TabFile tab in this.TabPages) {
                 if (tab.BaseFile.Equals(folder.SelectedFile)) {
                     selectedTab = tab;
@@ -104,7 +103,7 @@ namespace QText {
             if (preferredTab.BaseFile.IsEncrypted) {
                 var currIndex = this.TabPages.IndexOf(preferredTab);
                 preferredTab = null; //remove it in case that no unencrypted tab is found
-                for (int i = 0; i < this.TabPages.Count; i++) {
+                for (var i = 0; i < this.TabPages.Count; i++) {
                     var nextIndex = (currIndex + i) % this.TabPages.Count;
                     var nextTab = (TabFile)this.TabPages[nextIndex];
                     if (nextTab.BaseFile.IsEncrypted == false) {
@@ -123,7 +122,7 @@ namespace QText {
         }
 
         private TabPage GetTabPageFromXY(int x, int y) {
-            for (int i = 0; i <= base.TabPages.Count - 1; i++) {
+            for (var i = 0; i <= base.TabPages.Count - 1; i++) {
                 if (base.GetTabRect(i).Contains(x, y)) {
                     return base.TabPages[i];
                 }
@@ -209,7 +208,7 @@ namespace QText {
 
         protected override void OnMouseUp(MouseEventArgs e) {
             if ((e != null) && (e.Button == MouseButtons.Left) && (this._dragTabPage != null)) {
-                TabPage currTabPage = GetTabPageFromXY(e.X, e.Y);
+                var currTabPage = GetTabPageFromXY(e.X, e.Y);
                 if ((currTabPage != null) && (!currTabPage.Equals(this._dragTabPage))) {
                     var currRect = base.GetTabRect(base.TabPages.IndexOf(currTabPage));
                     base.Enabled = false;
@@ -240,7 +239,7 @@ namespace QText {
 
 
         private TabFile GetNextTab() {
-            int tindex = this.TabPages.IndexOf(this.SelectedTab) + 1; //select next tab
+            var tindex = this.TabPages.IndexOf(this.SelectedTab) + 1; //select next tab
             if (tindex >= this.TabPages.Count) {
                 tindex -= 2; //go to one in front of it
             }

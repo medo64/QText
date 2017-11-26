@@ -19,7 +19,7 @@ namespace QText {
 
             base.Text = this.Title;
 
-            this.GotFocus += txt_GotFocus;
+            this.GotFocus += this.txt_GotFocus;
 
             if (Settings.Current.FilesPreload && (this.BaseFile.IsEncrypted == false)) {
                 this.Open();
@@ -32,25 +32,26 @@ namespace QText {
             this.TextBox = txt;
             this.TextBox.ContextMenuStrip = this.ContextMenuStrip;
 
-            this.TextBox.Enter += txt_GotFocus;
-            this.TextBox.TextChanged += txt_TextChanged;
-            this.TextBox.PreviewKeyDown += txt_PreviewKeyDown;
+            this.TextBox.Enter += this.txt_GotFocus;
+            this.TextBox.TextChanged += this.txt_TextChanged;
+            this.TextBox.PreviewKeyDown += this.txt_PreviewKeyDown;
 
             base.Controls.Add(this.TextBox);
         }
 
         private static RichTextBoxEx GetEmptyTextBox() {
-            var tb = new RichTextBoxEx();
-            tb.AcceptsTab = true;
-            tb.BackColor = Settings.Current.DisplayBackgroundColor;
-            tb.Dock = DockStyle.Fill;
-            tb.Font = Settings.Current.DisplayFont;
-            tb.ForeColor = Settings.Current.DisplayForegroundColor;
-            tb.HideSelection = false;
-            tb.MaxLength = 0;
-            tb.Multiline = true;
-            tb.ShortcutsEnabled = false;
-            tb.DetectUrls = Settings.Current.DetectUrls;
+            var tb = new RichTextBoxEx {
+                AcceptsTab = true,
+                BackColor = Settings.Current.DisplayBackgroundColor,
+                Dock = DockStyle.Fill,
+                Font = Settings.Current.DisplayFont,
+                ForeColor = Settings.Current.DisplayForegroundColor,
+                HideSelection = false,
+                MaxLength = 0,
+                Multiline = true,
+                ShortcutsEnabled = false,
+                DetectUrls = Settings.Current.DetectUrls
+            };
             switch (Settings.Current.ScrollBars) {
                 case ScrollBars.None:
                     tb.ScrollBars = RichTextBoxScrollBars.None;
@@ -107,7 +108,7 @@ namespace QText {
             var newFile = folder.NewFile(title, kind);
 
             if (kind == DocumentKind.RichText) {
-                using (RichTextBox dummy = new RichTextBox()) {
+                using (var dummy = new RichTextBox()) {
                     dummy.BackColor = Settings.Current.DisplayBackgroundColor;
                     dummy.Font = Settings.Current.DisplayFont;
                     dummy.ForeColor = Settings.Current.DisplayForegroundColor;
@@ -152,7 +153,7 @@ namespace QText {
             if (this.IsOpened == false) { throw new InvalidOperationException("File is not loaded."); }
             if (this.BaseFile.IsRichText) { throw new InvalidOperationException("File is already in rich text format."); }
 
-            string text = this.TextBox.Text;
+            var text = this.TextBox.Text;
 
             this.BaseFile.ChangeStyle(DocumentStyle.RichText);
             this.SaveAsRich();
@@ -164,7 +165,7 @@ namespace QText {
             if (this.IsOpened == false) { throw new InvalidOperationException("File is not loaded."); }
             if (this.BaseFile.IsEncrypted) { throw new InvalidOperationException("File is already encrypted."); }
 
-            string text = this.TextBox.Text;
+            var text = this.TextBox.Text;
 
             this.BaseFile.Encrypt(password);
             this.Reopen();
@@ -175,7 +176,7 @@ namespace QText {
             if (this.BaseFile.IsEncrypted == false) { throw new InvalidOperationException("File is already decrypted."); }
             if (!this.BaseFile.HasPassword) { throw new InvalidOperationException("No decryption password found."); }
 
-            string text = this.TextBox.Text;
+            var text = this.TextBox.Text;
 
             this.BaseFile.Decrypt();
             this.Save();
@@ -187,7 +188,7 @@ namespace QText {
             if (this.BaseFile.IsEncrypted && !this.BaseFile.HasPassword) { throw new InvalidOperationException("No password provided."); }
 
             try {
-                var txt = (this.TextBox != null) ? this.TextBox : GetEmptyTextBox();
+                var txt = this.TextBox ?? GetEmptyTextBox();
                 var oldSelStart = txt.SelectionStart;
                 var oldSelLength = txt.SelectionLength;
 
@@ -441,7 +442,7 @@ namespace QText {
         #region Search
 
         public bool Find(string text, bool caseSensitive) {
-            StringComparison comparisionType = default(StringComparison);
+            var comparisionType = default(StringComparison);
             if (caseSensitive) {
                 comparisionType = StringComparison.CurrentCulture;
             } else {
@@ -452,7 +453,7 @@ namespace QText {
                 if (this.BaseFile.NeedsPassword && !this.BaseFile.HasPassword) { return false; }
                 this.Open();
             }
-            int index = this.TextBox.Text.IndexOf(text, this.TextBox.SelectionStart + this.TextBox.SelectionLength, comparisionType);
+            var index = this.TextBox.Text.IndexOf(text, this.TextBox.SelectionStart + this.TextBox.SelectionLength, comparisionType);
             if ((index < 0) && (this.TextBox.SelectionStart + this.TextBox.SelectionLength > 0)) {
                 index = this.TextBox.Text.IndexOf(text, 0, comparisionType);
             }
@@ -467,7 +468,7 @@ namespace QText {
         }
 
         public bool FindForward(string text, bool caseSensitive, int startingIndex) {
-            StringComparison comparisionType = default(StringComparison);
+            var comparisionType = default(StringComparison);
             if (caseSensitive) {
                 comparisionType = StringComparison.CurrentCulture;
             } else {
@@ -478,7 +479,7 @@ namespace QText {
                 if (this.BaseFile.NeedsPassword && !this.BaseFile.HasPassword) { return false; }
                 this.Open();
             }
-            int index = this.TextBox.Text.IndexOf(text, startingIndex, comparisionType);
+            var index = this.TextBox.Text.IndexOf(text, startingIndex, comparisionType);
 
             if ((index >= 0) && (index < int.MaxValue)) {
                 this.TextBox.SelectionStart = index;
@@ -490,11 +491,11 @@ namespace QText {
         }
 
         public Rectangle GetSelectedRectangle() {
-            Point pt1 = this.TextBox.PointToScreen(this.TextBox.GetPositionFromCharIndex(this.TextBox.SelectionStart));
+            var pt1 = this.TextBox.PointToScreen(this.TextBox.GetPositionFromCharIndex(this.TextBox.SelectionStart));
 
-            Point ptEnd = this.TextBox.PointToScreen(this.TextBox.GetPositionFromCharIndex(this.TextBox.SelectionStart + this.TextBox.SelectionLength));
-            Point pt2 = default(Point);
-            using (Graphics g = this.TextBox.CreateGraphics()) {
+            var ptEnd = this.TextBox.PointToScreen(this.TextBox.GetPositionFromCharIndex(this.TextBox.SelectionStart + this.TextBox.SelectionLength));
+            var pt2 = default(Point);
+            using (var g = this.TextBox.CreateGraphics()) {
                 if ((this.TextBox != null) && (this.TextBox.SelectionFont != null)) {
                     pt2 = new Point(ptEnd.X, ptEnd.Y + g.MeasureString("XXX", this.TextBox.SelectionFont).ToSize().Height);
                 } else {
@@ -504,10 +505,10 @@ namespace QText {
 
             var thisRectangle = this.RectangleToScreen(this.Bounds);
 
-            int left = Math.Max(Math.Min(pt1.X, pt2.X), thisRectangle.Left) - 32;
-            int top = Math.Max(Math.Min(pt1.Y, pt2.Y), thisRectangle.Top) - 32;
-            int right = Math.Min(Math.Max(pt1.X, pt2.X), thisRectangle.Right) + 32;
-            int bottom = Math.Min(Math.Max(pt1.Y, pt2.Y), thisRectangle.Bottom) + 32;
+            var left = Math.Max(Math.Min(pt1.X, pt2.X), thisRectangle.Left) - 32;
+            var top = Math.Max(Math.Min(pt1.Y, pt2.Y), thisRectangle.Top) - 32;
+            var right = Math.Min(Math.Max(pt1.X, pt2.X), thisRectangle.Right) + 32;
+            var bottom = Math.Min(Math.Max(pt1.Y, pt2.Y), thisRectangle.Bottom) + 32;
 
             return new Rectangle(left, top, right - left, bottom - top);
         }
@@ -517,12 +518,12 @@ namespace QText {
         public void UpdateTabWidth() {
             if (this.TextBox == null) { return; }
 
-            int dotWidth = TextRenderer.MeasureText(".", Settings.Current.DisplayFont, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding).Width;
-            int dotXWidth = TextRenderer.MeasureText("X.", Settings.Current.DisplayFont, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding).Width;
-            int charWidth = dotXWidth - dotWidth;
+            var dotWidth = TextRenderer.MeasureText(".", Settings.Current.DisplayFont, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding).Width;
+            var dotXWidth = TextRenderer.MeasureText("X.", Settings.Current.DisplayFont, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding).Width;
+            var charWidth = dotXWidth - dotWidth;
 
             var tabs2 = new List<int>();
-            for (int i = 1; i <= 32; i++) { tabs2.Add((i * charWidth) * Settings.Current.DisplayTabWidth); }
+            for (var i = 1; i <= 32; i++) { tabs2.Add((i * charWidth) * Settings.Current.DisplayTabWidth); }
 
             var ss = this.TextBox.SelectionStart;
             var sl = this.TextBox.SelectionLength;

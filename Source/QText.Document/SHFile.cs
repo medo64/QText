@@ -15,13 +15,14 @@ namespace QText {
                 throw new FileNotFoundException("Cannot delete " + path + ": Cannot find the specified file.");
             }
 
-            var fileOp = new NativeMethods.SHFILEOPSTRUCTW();
-            fileOp.hwnd = IntPtr.Zero;
-            fileOp.wFunc = NativeMethods.FO_DELETE;
-            fileOp.pFrom = path + "\0";
-            fileOp.pTo = "\0";
-            fileOp.fFlags = NativeMethods.FOF_NOCONFIRMATION | NativeMethods.FOF_ALLOWUNDO;
-            fileOp.lpszProgressTitle = "\0";
+            var fileOp = new NativeMethods.SHFILEOPSTRUCTW {
+                hwnd = IntPtr.Zero,
+                wFunc = NativeMethods.FO_DELETE,
+                pFrom = path + "\0",
+                pTo = "\0",
+                fFlags = NativeMethods.FOF_NOCONFIRMATION | NativeMethods.FOF_ALLOWUNDO,
+                lpszProgressTitle = "\0"
+            };
             if (NativeMethods.SHFileOperation(ref fileOp) != 0) {
                 throw new Win32Exception();
             }
@@ -32,13 +33,14 @@ namespace QText {
                 throw new FileNotFoundException("Cannot delete " + path + ": Cannot find the specified file.");
             }
 
-            var fileOp = new NativeMethods.SHFILEOPSTRUCTW();
-            fileOp.hwnd = IntPtr.Zero;
-            fileOp.wFunc = NativeMethods.FO_DELETE;
-            fileOp.pFrom = path + "\0";
-            fileOp.pTo = "\0";
-            fileOp.fFlags = NativeMethods.FOF_NOCONFIRMATION | NativeMethods.FOF_ALLOWUNDO;
-            fileOp.lpszProgressTitle = "\0";
+            var fileOp = new NativeMethods.SHFILEOPSTRUCTW {
+                hwnd = IntPtr.Zero,
+                wFunc = NativeMethods.FO_DELETE,
+                pFrom = path + "\0",
+                pTo = "\0",
+                fFlags = NativeMethods.FOF_NOCONFIRMATION | NativeMethods.FOF_ALLOWUNDO,
+                lpszProgressTitle = "\0"
+            };
             if (NativeMethods.SHFileOperation(ref fileOp) != 0) {
                 throw new Win32Exception();
             }

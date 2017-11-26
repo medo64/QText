@@ -150,8 +150,9 @@ namespace QTextTest {
                 src.CreateRawFile("Steve\\F.txt");
                 src.CreateRawFile("Steve\\Steve.Inner\\G.txt");
 
-                var doc = new Document(src.Directory.FullName);
-                doc.CarbonCopyRootPath = cc.Directory.FullName;
+                var doc = new Document(src.Directory.FullName) {
+                    CarbonCopyRootPath = cc.Directory.FullName
+                };
 
                 var copier = new DocumentCopier(doc, doc.CarbonCopyRootPath);
             }
@@ -170,8 +171,9 @@ namespace QTextTest {
                 src.CreateRawFile("Steve\\F.txt");
                 src.CreateRawFile("Steve\\Steve.Inner\\G.txt");
 
-                var doc = new Document(src.Directory.FullName);
-                doc.CarbonCopyRootPath = cc.Directory.FullName;
+                var doc = new Document(src.Directory.FullName) {
+                    CarbonCopyRootPath = cc.Directory.FullName
+                };
 
                 var copier = new DocumentCopier(doc, Path.Combine(doc.CarbonCopyRootPath, "XXX"));
             }

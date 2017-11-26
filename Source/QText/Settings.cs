@@ -20,8 +20,9 @@ namespace QText {
         [DisplayName("No registry writes")]
         [Description("If true, registry writes will be suppressed. Do notice that all settings are to be DELETED upon changing this value.")]
         [DefaultValue(false)]
-        public bool NoRegistryWrites => !Config.IsAssumedInstalled;
-
+        public bool NoRegistryWrites {
+            get { return !Config.IsAssumedInstalled; }
+        }
 
         [Category("Behavior")]
         [DisplayName("Hotkey")]
@@ -102,9 +103,9 @@ namespace QText {
         [DefaultValue(typeof(Font), "Vertical")]
         public Font DisplayFont {
             get {
-                string tmpFamilyName = Config.Read("Font.Name", Medo.Configuration.Settings.Read("DisplayFont_FamilyName", SystemFonts.MessageBoxFont.Name));
-                double tmpSize = Config.Read("Font.Size", Medo.Configuration.Settings.Read("DisplayFont_Size", SystemFonts.MessageBoxFont.Size));
-                int tmpStyle = Config.Read("Font.Style", Medo.Configuration.Settings.Read("DisplayFont_Style", (Int32)SystemFonts.MessageBoxFont.Style));
+                var tmpFamilyName = Config.Read("Font.Name", Medo.Configuration.Settings.Read("DisplayFont_FamilyName", SystemFonts.MessageBoxFont.Name));
+                var tmpSize = Config.Read("Font.Size", Medo.Configuration.Settings.Read("DisplayFont_Size", SystemFonts.MessageBoxFont.Size));
+                var tmpStyle = Config.Read("Font.Style", Medo.Configuration.Settings.Read("DisplayFont_Style", (Int32)SystemFonts.MessageBoxFont.Style));
                 try {
                     return new Font(tmpFamilyName, Convert.ToSingle(tmpSize), (FontStyle)tmpStyle);
                 } catch (Exception) {

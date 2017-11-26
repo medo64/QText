@@ -103,7 +103,7 @@ namespace QText {
                     switch (Medo.MessageBox.ShowQuestion(null, ex.Message + Environment.NewLine + "Do you wish to try using default location instead?", MessageBoxButtons.YesNo)) {
                         case DialogResult.Yes:
                             try {
-                                string defaultPath = Settings.Current.DefaultFilesLocation;
+                                var defaultPath = Settings.Current.DefaultFilesLocation;
                                 Helper.CreatePath(defaultPath);
                                 Settings.Current.FilesLocation = defaultPath;
                             } catch (Exception ex2) {

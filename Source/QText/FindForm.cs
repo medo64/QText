@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Security.Permissions;
 using System.Windows.Forms;
@@ -36,7 +36,7 @@ namespace QText {
 
         private void Form_Load(object sender, EventArgs e) {
             if (_tabFiles.SelectedTab != null) {
-                TabFile tf = _tabFiles.SelectedTab;
+                var tf = _tabFiles.SelectedTab;
                 if (tf.TextBox.SelectedText.Length > 0) {
                     SearchStatus.Text = tf.TextBox.SelectedText;
                 }
@@ -68,14 +68,14 @@ namespace QText {
                 Cursor.Current = Cursors.WaitCursor;
 
                 if (Search.FindNext(this, this._tabFiles, this._tabFiles.SelectedTab)) {
-                    Rectangle selRect = this._tabFiles.SelectedTab.GetSelectedRectangle();
+                    var selRect = this._tabFiles.SelectedTab.GetSelectedRectangle();
                     var thisRect = this.Bounds;
                     if ((thisRect.IntersectsWith(selRect))) {
-                        Rectangle screenRect = Screen.GetWorkingArea(selRect.Location);
-                        int rightSpace = screenRect.Right - selRect.Right;
-                        int leftSpace = selRect.Left - screenRect.Left;
-                        int topSpace = selRect.Top - screenRect.Top;
-                        int bottomSpace = screenRect.Bottom - selRect.Bottom;
+                        var screenRect = Screen.GetWorkingArea(selRect.Location);
+                        var rightSpace = screenRect.Right - selRect.Right;
+                        var leftSpace = selRect.Left - screenRect.Left;
+                        var topSpace = selRect.Top - screenRect.Top;
+                        var bottomSpace = screenRect.Bottom - selRect.Bottom;
 
                         if ((bottomSpace >= thisRect.Height)) {
                             this.Location = new Point(thisRect.Left, selRect.Bottom);

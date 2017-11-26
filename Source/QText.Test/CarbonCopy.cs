@@ -28,8 +28,9 @@ namespace QTextTest {
                 test.CreateRawFile("Alex\\A.txt");
                 test.CreateRawFile("Steve\\B.txt");
                 using (var testCC = new TestDirectory()) {
-                    var doc = new Document(test.Directory.FullName);
-                    doc.CarbonCopyRootPath = testCC.Directory.FullName;
+                    var doc = new Document(test.Directory.FullName) {
+                        CarbonCopyRootPath = testCC.Directory.FullName
+                    };
 
                     Assert.IsNotNull(doc.CarbonCopyRootPath, "Carbon-copy path must not be null.");
                     doc.WriteAllCarbonCopies();
@@ -59,8 +60,9 @@ namespace QTextTest {
                 test.CreateRawFile("Alex\\A.txt");
                 test.CreateRawFile("Steve\\B.txt");
                 using (var testCC = new TestDirectory()) {
-                    var doc = new Document(test.Directory.FullName);
-                    doc.CarbonCopyRootPath = testCC.Directory.FullName;
+                    var doc = new Document(test.Directory.FullName) {
+                        CarbonCopyRootPath = testCC.Directory.FullName
+                    };
                     Assert.IsNotNull(doc.CarbonCopyRootPath, "Carbon-copy path must not be null.");
 
                     using (var ms = new MemoryStream(new byte[] { 0x41 })) {
