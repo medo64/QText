@@ -127,6 +127,7 @@ namespace QText {
             this.mnxTabOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.bwCheckForUpgrade = new System.ComponentModel.BackgroundWorker();
             this.tabFiles = new QText.TabFiles();
+            this.tip = new System.Windows.Forms.ToolTip(this.components);
             this.mnu.SuspendLayout();
             this.mnxText.SuspendLayout();
             this.mnxTab.SuspendLayout();
@@ -532,7 +533,7 @@ namespace QText {
             this.mnxTextLines,
             this.mnxTextInsertDateTime});
             this.mnxText.Name = "mnxTextBox";
-            this.mnxText.Size = new System.Drawing.Size(292, 530);
+            this.mnxText.Size = new System.Drawing.Size(292, 502);
             this.mnxText.Opening += new System.ComponentModel.CancelEventHandler(this.mnxText_Opening);
             // 
             // mnxTextUndo
@@ -816,7 +817,7 @@ namespace QText {
             // 
             this.mnxTextInsertDateTimeBoth.Name = "mnxTextInsertDateTimeBoth";
             this.mnxTextInsertDateTimeBoth.ShortcutKeyDisplayString = "F5";
-            this.mnxTextInsertDateTimeBoth.Size = new System.Drawing.Size(181, 26);
+            this.mnxTextInsertDateTimeBoth.Size = new System.Drawing.Size(162, 26);
             this.mnxTextInsertDateTimeBoth.Text = "&Both";
             this.mnxTextInsertDateTimeBoth.Click += new System.EventHandler(this.mnxTextInsertDateTimeBoth_Click);
             // 
@@ -824,7 +825,7 @@ namespace QText {
             // 
             this.mnxTextInsertTime.Name = "mnxTextInsertTime";
             this.mnxTextInsertTime.ShortcutKeyDisplayString = "Ctrl+:";
-            this.mnxTextInsertTime.Size = new System.Drawing.Size(181, 26);
+            this.mnxTextInsertTime.Size = new System.Drawing.Size(162, 26);
             this.mnxTextInsertTime.Text = "&Time";
             this.mnxTextInsertTime.Click += new System.EventHandler(this.mnxTextInsertTime_Click);
             // 
@@ -832,7 +833,7 @@ namespace QText {
             // 
             this.mnxTextInsertDate.Name = "mnxTextInsertDate";
             this.mnxTextInsertDate.ShortcutKeyDisplayString = "Ctrl+;";
-            this.mnxTextInsertDate.Size = new System.Drawing.Size(181, 26);
+            this.mnxTextInsertDate.Size = new System.Drawing.Size(162, 26);
             this.mnxTextInsertDate.Text = "&Date";
             this.mnxTextInsertDate.Click += new System.EventHandler(this.mnxTextInsertDate_Click);
             // 
@@ -1188,5 +1189,6 @@ namespace QText {
         private System.Windows.Forms.ToolStripMenuItem mnxTextInsertDateTimeBoth;
         private System.Windows.Forms.ToolStripMenuItem mnxTextInsertTime;
         private System.Windows.Forms.ToolStripMenuItem mnxTextInsertDate;
+        private System.Windows.Forms.ToolTip tip;
     }
 }
