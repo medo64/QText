@@ -391,6 +391,17 @@ namespace QText {
                         }
                     } else {
                         this.TextBox.Paste();
+                        this.TextBox.Update();
+
+                        var ss = this.TextBox.SelectionStart;
+                        var sl = this.TextBox.SelectionLength;
+                        try {
+                            this.TextBox.SelectAll();
+                            this.TextBox.ResetSelectionParagraphSpacing();
+                        } finally {
+                            this.TextBox.SelectionStart = ss;
+                            this.TextBox.SelectionLength = sl;
+                        }
                     }
                 }
             } catch (ExternalException) { }

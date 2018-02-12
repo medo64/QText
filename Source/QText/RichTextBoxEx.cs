@@ -407,7 +407,7 @@ namespace QText {
             }
         }
 
-        public void ResetSelectionLineSpacing() {
+        public void ResetSelectionParagraphSpacing() {
             try {
                 this.BeginUpdate();
 

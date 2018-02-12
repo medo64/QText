@@ -733,7 +733,7 @@ namespace QText {
                 if (tf.BaseFile.IsRichText) {
                     tf.TextBox.Cursor = Cursors.WaitCursor;
                     tf.TextBox.ResetSelectionFont();
-                    tf.TextBox.ResetSelectionLineSpacing();
+                    tf.TextBox.ResetSelectionParagraphSpacing();
                     tf.TextBox.Cursor = Cursors.Default;
                 }
                 tmrQuickSave.Enabled = true;
