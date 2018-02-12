@@ -92,12 +92,13 @@ namespace QText {
             //search in other folders
             var folders = new List<DocumentFolder>(App.Document.GetFolders());
             for (var i = 0; i < folders.Count; i++) {
-                if (folders[0].Name.Equals(tabs.CurrentFolder)) {
+                if (folders[0].Equals(tabs.CurrentFolder)) {
                     folders.RemoveAt(0);
                     break;
+                } else {
+                    folders.Add(folders[0]);
+                    folders.RemoveAt(0);
                 }
-                folders.Add(folders[0]);
-                folders.RemoveAt(0);
             }
             foreach (var folder in folders) {
                 var folderTabs = Helper.GetTabs(folder.GetFiles(), null);
