@@ -713,6 +713,19 @@ namespace QText {
             }
         }
 
+        private void mnuListBullets_Click(object sender, EventArgs e) {
+            if (tabFiles.SelectedTab != null) {
+                tmrQuickSave.Enabled = false;
+                var tf = tabFiles.SelectedTab;
+                if (tf.BaseFile.IsRichText) {
+                    if (tf.TextBox.SelectionFont != null) {
+                        tf.TextBox.SelectionBullet = !tf.TextBox.SelectionBullet;
+                    }
+                }
+                tmrQuickSave.Enabled = true;
+            }
+        }
+
         private void mnuResetFont_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
@@ -1561,6 +1574,7 @@ namespace QText {
             mnuItalic.Visible = isTabRichText;
             mnuUnderline.Visible = isTabRichText;
             mnuStrikeout.Visible = isTabRichText;
+            mnuListBullets.Visible = isTabRichText;
             mnuRtfSeparator.Visible = isTabRichText;
 
             mnuUndo.Enabled = isTabSelected && tabFiles.SelectedTab.CanUndo;
@@ -1674,5 +1688,6 @@ namespace QText {
                 tip.Show("Upgrade is available.", this, tipX, tipY, 1729);
             }
         }
+
     }
 }

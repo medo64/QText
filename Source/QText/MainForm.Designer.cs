@@ -46,6 +46,7 @@ namespace QText {
             this.mnuUnderline = new System.Windows.Forms.ToolStripButton();
             this.mnuStrikeout = new System.Windows.Forms.ToolStripButton();
             this.mnuRtfSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuListBullets = new System.Windows.Forms.ToolStripButton();
             this.mnuUndo = new System.Windows.Forms.ToolStripButton();
             this.mnuRedo = new System.Windows.Forms.ToolStripButton();
             this.ToolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -126,8 +127,8 @@ namespace QText {
             this.ToolStripMenuItem14 = new System.Windows.Forms.ToolStripSeparator();
             this.mnxTabOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.bwCheckForUpgrade = new System.ComponentModel.BackgroundWorker();
-            this.tabFiles = new QText.TabFiles();
             this.tip = new System.Windows.Forms.ToolTip(this.components);
+            this.tabFiles = new QText.TabFiles();
             this.mnu.SuspendLayout();
             this.mnxText.SuspendLayout();
             this.mnxTab.SuspendLayout();
@@ -153,6 +154,7 @@ namespace QText {
             this.mnuItalic,
             this.mnuUnderline,
             this.mnuStrikeout,
+            this.mnuListBullets,
             this.mnuRtfSeparator,
             this.mnuUndo,
             this.mnuRedo,
@@ -165,7 +167,7 @@ namespace QText {
             this.mnu.Location = new System.Drawing.Point(0, 0);
             this.mnu.Name = "mnu";
             this.mnu.Padding = new System.Windows.Forms.Padding(1, 0, 1, 0);
-            this.mnu.Size = new System.Drawing.Size(612, 27);
+            this.mnu.Size = new System.Drawing.Size(702, 27);
             this.mnu.TabIndex = 1;
             // 
             // mnuNew
@@ -342,6 +344,16 @@ namespace QText {
             // 
             this.mnuRtfSeparator.Name = "mnuRtfSeparator";
             this.mnuRtfSeparator.Size = new System.Drawing.Size(6, 27);
+            // 
+            // mnuListBullets
+            // 
+            this.mnuListBullets.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.mnuListBullets.Image = global::QText.Properties.Resources.mnuListBullets_16;
+            this.mnuListBullets.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuListBullets.Name = "mnuListBullets";
+            this.mnuListBullets.Size = new System.Drawing.Size(24, 24);
+            this.mnuListBullets.Text = "toolStripButton1";
+            this.mnuListBullets.Click += new System.EventHandler(this.mnuListBullets_Click);
             // 
             // mnuUndo
             // 
@@ -1048,7 +1060,7 @@ namespace QText {
             this.tabFiles.Margin = new System.Windows.Forms.Padding(0);
             this.tabFiles.Name = "tabFiles";
             this.tabFiles.SelectedIndex = 0;
-            this.tabFiles.Size = new System.Drawing.Size(612, 326);
+            this.tabFiles.Size = new System.Drawing.Size(702, 326);
             this.tabFiles.TabContextMenuStrip = this.mnxText;
             this.tabFiles.TabIndex = 0;
             this.tabFiles.SelectedIndexChanged += new System.EventHandler(this.tabFiles_SelectedIndexChanged);
@@ -1058,7 +1070,7 @@ namespace QText {
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(612, 353);
+            this.ClientSize = new System.Drawing.Size(702, 353);
             this.Controls.Add(this.tabFiles);
             this.Controls.Add(this.mnu);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1190,5 +1202,6 @@ namespace QText {
         private System.Windows.Forms.ToolStripMenuItem mnxTextInsertTime;
         private System.Windows.Forms.ToolStripMenuItem mnxTextInsertDate;
         private System.Windows.Forms.ToolTip tip;
+        private System.Windows.Forms.ToolStripButton mnuListBullets;
     }
 }
