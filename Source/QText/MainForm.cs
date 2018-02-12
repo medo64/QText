@@ -734,6 +734,7 @@ namespace QText {
                     tf.TextBox.Cursor = Cursors.WaitCursor;
                     tf.TextBox.ResetSelectionFont();
                     tf.TextBox.ResetSelectionParagraphSpacing();
+                    tf.TextBox.ResetSelectionParagraphIndent();
                     tf.TextBox.Cursor = Cursors.Default;
                 }
                 tmrQuickSave.Enabled = true;

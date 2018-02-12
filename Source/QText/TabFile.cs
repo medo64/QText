@@ -398,6 +398,7 @@ namespace QText {
                         try {
                             this.TextBox.SelectAll();
                             this.TextBox.ResetSelectionParagraphSpacing();
+                            this.TextBox.ResetSelectionParagraphIndent();
                         } finally {
                             this.TextBox.SelectionStart = ss;
                             this.TextBox.SelectionLength = sl;

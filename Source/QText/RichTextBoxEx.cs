@@ -425,6 +425,23 @@ namespace QText {
             }
         }
 
+        public void ResetSelectionParagraphIndent() {
+            try {
+                this.BeginUpdate();
+
+                var format = new NativeMethods.PARAFORMAT2() {
+                    dwMask = NativeMethods.PFM_STARTINDENT,
+                    dxStartIndent = 0,
+                    dxOffset = 0,
+                };
+                format.cbSize = Marshal.SizeOf(format);
+
+                NativeMethods.SendMessage(this.Handle, NativeMethods.EM_SETPARAFORMAT, IntPtr.Zero, ref format);
+            } finally {
+                this.EndUpdate();
+            }
+        }
+
 
         #region Zooming
 
@@ -523,6 +540,7 @@ namespace QText {
 
             internal const Int32 EM_GETPARAFORMAT = 1085;
             internal const Int32 EM_SETPARAFORMAT = 1095;
+            internal const Int32 PFM_STARTINDENT = 1;
             internal const Int32 PFM_SPACEBEFORE = 64;
             internal const Int32 PFM_SPACEAFTER = 128;
 
