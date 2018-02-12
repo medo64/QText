@@ -449,6 +449,15 @@ namespace QText {
             get { return (this.TextBox != null) && (this.TextBox.SelectionFont != null) && (this.TextBox.SelectionFont.Strikeout); }
         }
 
+
+        public bool IsTextBulleted {
+            get { return (this.TextBox != null) && this.TextBox.SelectionBullet; }
+        }
+
+        public bool IsTextNumbered {
+            get { return (this.TextBox != null) && this.TextBox.SelectionNumbered; }
+        }
+
         #endregion
 
         #region Search

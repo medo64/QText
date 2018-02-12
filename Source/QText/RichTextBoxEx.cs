@@ -379,6 +379,9 @@ namespace QText {
             this.SelectionLength = endIndex - startIndex + 1;
         }
 
+
+        #region Decorations
+
         /// <summary>
         /// Resets font while keeping font attributes intact.
         /// </summary>
@@ -441,6 +444,42 @@ namespace QText {
                 this.EndUpdate();
             }
         }
+
+
+        public bool SelectionNumbered {
+            get {
+                var format = new NativeMethods.PARAFORMAT2();
+                format.cbSize = Marshal.SizeOf(format);
+                NativeMethods.SendMessage(this.Handle, NativeMethods.EM_GETPARAFORMAT, IntPtr.Zero, ref format);
+                return (format.wNumbering != 0) && (format.wNumbering != NativeMethods.PFN_BULLET);
+            }
+            set {
+                if (value) {
+                    var formatFirst = new NativeMethods.PARAFORMAT2() {
+                        dwMask = NativeMethods.PFM_NUMBERINGSTART,
+                        wNumberingStart = 1,
+                    };
+                    formatFirst.cbSize = Marshal.SizeOf(formatFirst);
+                    NativeMethods.SendMessage(this.Handle, NativeMethods.EM_SETPARAFORMAT, IntPtr.Zero, ref formatFirst); //has to be a separate message otherwise multi-line selection would number all paragraphs as 1)
+
+                    var formatAll = new NativeMethods.PARAFORMAT2() {
+                        dwMask = NativeMethods.PFM_NUMBERING | NativeMethods.PFM_NUMBERINGSTYLE,
+                        wNumbering = NativeMethods.PFN_ARABIC,
+                    };
+                    formatAll.cbSize = Marshal.SizeOf(formatAll);
+                    NativeMethods.SendMessage(this.Handle, NativeMethods.EM_SETPARAFORMAT, IntPtr.Zero, ref formatAll);
+                } else {
+                    var format = new NativeMethods.PARAFORMAT2() {
+                        dwMask = NativeMethods.PFM_NUMBERING,
+                        wNumbering = NativeMethods.PFN_NONE,
+                    };
+                    format.cbSize = Marshal.SizeOf(format);
+                    NativeMethods.SendMessage(this.Handle, NativeMethods.EM_SETPARAFORMAT, IntPtr.Zero, ref format);
+                }
+            }
+        }
+
+        #endregion Decorations
 
 
         #region Zooming
@@ -540,9 +579,16 @@ namespace QText {
 
             internal const Int32 EM_GETPARAFORMAT = 1085;
             internal const Int32 EM_SETPARAFORMAT = 1095;
-            internal const Int32 PFM_STARTINDENT = 1;
-            internal const Int32 PFM_SPACEBEFORE = 64;
-            internal const Int32 PFM_SPACEAFTER = 128;
+            internal const Int32 PFM_STARTINDENT = 0x0001;
+            internal const Int32 PFM_NUMBERING = 0x0020;
+            internal const Int32 PFM_SPACEBEFORE = 0x0040;
+            internal const Int32 PFM_SPACEAFTER = 0x0080;
+            internal const Int32 PFM_NUMBERINGSTYLE = 0x2000;
+            internal const Int32 PFM_NUMBERINGSTART = 0x8000;
+            internal const Int16 PFN_NONE = 0;
+            internal const Int16 PFN_BULLET = 1;
+            internal const Int16 PFN_ARABIC = 2;
+            internal const UInt16 PFNS_NEWNUMBER = 0x8000;
 
 
             [StructLayout(LayoutKind.Sequential)]
@@ -607,7 +653,7 @@ namespace QText {
                 public Int16 wShadingWeight;
                 public Int16 wShadingStyle;
                 public Int16 wNumberingStart;
-                public Int16 wNumberingStyle;
+                public UInt16 wNumberingStyle;
                 public Int16 wNumberingTab;
                 public Int16 wBorderSpace;
                 public Int16 wBorderWidth;

@@ -45,8 +45,10 @@ namespace QText {
             this.mnuItalic = new System.Windows.Forms.ToolStripButton();
             this.mnuUnderline = new System.Windows.Forms.ToolStripButton();
             this.mnuStrikeout = new System.Windows.Forms.ToolStripButton();
-            this.mnuRtfSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuRtfSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuListBullets = new System.Windows.Forms.ToolStripButton();
+            this.mnuListNumbers = new System.Windows.Forms.ToolStripButton();
+            this.mnuRtfSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuUndo = new System.Windows.Forms.ToolStripButton();
             this.mnuRedo = new System.Windows.Forms.ToolStripButton();
             this.ToolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -154,8 +156,10 @@ namespace QText {
             this.mnuItalic,
             this.mnuUnderline,
             this.mnuStrikeout,
+            this.mnuRtfSeparator1,
             this.mnuListBullets,
-            this.mnuRtfSeparator,
+            this.mnuListNumbers,
+            this.mnuRtfSeparator2,
             this.mnuUndo,
             this.mnuRedo,
             this.ToolStripSeparator3,
@@ -340,10 +344,10 @@ namespace QText {
             this.mnuStrikeout.Text = "Strikeout";
             this.mnuStrikeout.Click += new System.EventHandler(this.mnuStrikeout_Click);
             // 
-            // mnuRtfSeparator
+            // mnuRtfSeparator1
             // 
-            this.mnuRtfSeparator.Name = "mnuRtfSeparator";
-            this.mnuRtfSeparator.Size = new System.Drawing.Size(6, 27);
+            this.mnuRtfSeparator1.Name = "mnuRtfSeparator1";
+            this.mnuRtfSeparator1.Size = new System.Drawing.Size(6, 27);
             // 
             // mnuListBullets
             // 
@@ -352,8 +356,23 @@ namespace QText {
             this.mnuListBullets.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuListBullets.Name = "mnuListBullets";
             this.mnuListBullets.Size = new System.Drawing.Size(24, 24);
-            this.mnuListBullets.Text = "toolStripButton1";
+            this.mnuListBullets.Text = "Bullet-point list";
             this.mnuListBullets.Click += new System.EventHandler(this.mnuListBullets_Click);
+            // 
+            // mnuListNumbers
+            // 
+            this.mnuListNumbers.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.mnuListNumbers.Image = global::QText.Properties.Resources.mnuListNumbers_16;
+            this.mnuListNumbers.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuListNumbers.Name = "mnuListNumbers";
+            this.mnuListNumbers.Size = new System.Drawing.Size(24, 24);
+            this.mnuListNumbers.Text = "Numbered list.";
+            this.mnuListNumbers.Click += new System.EventHandler(this.mnuListNumbers_Click);
+            // 
+            // mnuRtfSeparator2
+            // 
+            this.mnuRtfSeparator2.Name = "mnuRtfSeparator2";
+            this.mnuRtfSeparator2.Size = new System.Drawing.Size(6, 27);
             // 
             // mnuUndo
             // 
@@ -1114,7 +1133,7 @@ namespace QText {
         internal System.Windows.Forms.ToolStripButton mnuItalic;
         internal System.Windows.Forms.ToolStripButton mnuUnderline;
         internal System.Windows.Forms.ToolStripButton mnuStrikeout;
-        internal System.Windows.Forms.ToolStripSeparator mnuRtfSeparator;
+        internal System.Windows.Forms.ToolStripSeparator mnuRtfSeparator2;
         internal System.Windows.Forms.ToolStripButton mnuUndo;
         internal System.Windows.Forms.ToolStripButton mnuRedo;
         internal System.Windows.Forms.ToolStripSeparator ToolStripSeparator3;
@@ -1203,5 +1222,7 @@ namespace QText {
         private System.Windows.Forms.ToolStripMenuItem mnxTextInsertDate;
         private System.Windows.Forms.ToolTip tip;
         private System.Windows.Forms.ToolStripButton mnuListBullets;
+        private System.Windows.Forms.ToolStripButton mnuListNumbers;
+        private System.Windows.Forms.ToolStripSeparator mnuRtfSeparator1;
     }
 }

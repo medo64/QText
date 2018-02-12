@@ -726,6 +726,19 @@ namespace QText {
             }
         }
 
+        private void mnuListNumbers_Click(object sender, EventArgs e) {
+            if (tabFiles.SelectedTab != null) {
+                tmrQuickSave.Enabled = false;
+                var tf = tabFiles.SelectedTab;
+                if (tf.BaseFile.IsRichText) {
+                    if (tf.TextBox.SelectionFont != null) {
+                        tf.TextBox.SelectionNumbered = !tf.TextBox.SelectionNumbered;
+                    }
+                }
+                tmrQuickSave.Enabled = true;
+            }
+        }
+
         private void mnuResetFont_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
@@ -1557,8 +1570,10 @@ namespace QText {
             mnuItalic.Visible = isTabRichText;
             mnuUnderline.Visible = isTabRichText;
             mnuStrikeout.Visible = isTabRichText;
+            mnuRtfSeparator1.Visible = isTabRichText;
             mnuListBullets.Visible = isTabRichText;
-            mnuRtfSeparator.Visible = isTabRichText;
+            mnuListNumbers.Visible = isTabRichText;
+            mnuRtfSeparator2.Visible = isTabRichText;
 
             mnuUndo.Enabled = isTabSelected && tabFiles.SelectedTab.CanUndo;
             mnuRedo.Enabled = isTabSelected && tabFiles.SelectedTab.CanRedo;
@@ -1571,6 +1586,8 @@ namespace QText {
                 mnuItalic.Checked = tabFiles.SelectedTab.IsTextItalic;
                 mnuUnderline.Checked = tabFiles.SelectedTab.IsTextUnderline;
                 mnuStrikeout.Checked = tabFiles.SelectedTab.IsTextStrikeout;
+                mnuListBullets.Checked = tabFiles.SelectedTab.IsTextBulleted;
+                mnuListNumbers.Checked = tabFiles.SelectedTab.IsTextNumbered;
             }
         }
 
