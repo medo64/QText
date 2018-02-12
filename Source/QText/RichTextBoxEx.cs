@@ -142,7 +142,8 @@ namespace QText {
                                 this.SelectedText = "";
                             }
                         }
-                    } return true;
+                    }
+                    return true;
 
                 case Keys.Control | Keys.Delete: { //delete word from cursor
                         if (this.SelectionLength > 0) { //first delete selection
@@ -154,14 +155,16 @@ namespace QText {
                                 this.SelectedText = "";
                             }
                         }
-                    } return true;
+                    }
+                    return true;
 
                 case Keys.Control | Keys.Left: {
                         var selection = TextSelection.FindWordStart(this, this.SelectionStart);
                         if (selection.IsNotEmpty) {
                             this.Select(selection.Start, 0);
                         }
-                    } return true;
+                    }
+                    return true;
 
                 case Keys.Control | Keys.Shift | Keys.Left: {
                         TextSelection selection;
@@ -173,14 +176,16 @@ namespace QText {
                         if (selection.IsNotEmpty) {
                             NativeMethods.SendMessage(this.Handle, NativeMethods.EM_SETSEL, new IntPtr(this.CaretPosition), new IntPtr(selection.Start));
                         }
-                    } return true;
+                    }
+                    return true;
 
                 case Keys.Control | Keys.Right: {
                         var selection = TextSelection.FindWordEnd(this, this.SelectionStart + this.SelectionLength);
                         if (selection.IsNotEmpty) {
                             this.Select(selection.Start, 0);
                         }
-                    } return true;
+                    }
+                    return true;
 
                 case Keys.Control | Keys.Shift | Keys.Right: {
                         TextSelection selection;
@@ -192,11 +197,13 @@ namespace QText {
                         if (selection.IsNotEmpty) {
                             NativeMethods.SendMessage(this.Handle, NativeMethods.EM_SETSEL, new IntPtr(this.CaretPosition), new IntPtr(selection.End));
                         }
-                    } return true;
+                    }
+                    return true;
 
                 case Keys.Control | Keys.A: {
                         this.SelectAll();
-                    } return true;
+                    }
+                    return true;
 
                 case Keys.Tab: {
                         var startLine = this.GetLineFromCharIndex(this.SelectionStart);
@@ -223,7 +230,8 @@ namespace QText {
                             this.SelectionLength = (origStart == startIndex) ? origLen + lines.Length : origLen + lines.Length - 1;
                             this.EndUpdate();
                         }
-                    } return true;
+                    }
+                    return true;
 
                 case Keys.Shift | Keys.Tab: {
                         var startLine = this.GetLineFromCharIndex(this.SelectionStart);
@@ -266,7 +274,8 @@ namespace QText {
                                 this.EndUpdate();
                             }
                         }
-                    } return true;
+                    }
+                    return true;
 
 
                 case Keys.Control | Keys.Oemplus:
@@ -298,7 +307,8 @@ namespace QText {
                             this.SelectionStart = selection.Start;
                             this.SelectionLength = selection.Length;
                         }
-                    } return;
+                    }
+                    return;
 
                 case NativeMethods.WM_SYSKEYDOWN:
                 case NativeMethods.WM_SYSKEYUP:
@@ -367,6 +377,52 @@ namespace QText {
             if (endIndex < 0) { endIndex = this.Text.Length; }
             this.SelectionStart = startIndex;
             this.SelectionLength = endIndex - startIndex + 1;
+        }
+
+        /// <summary>
+        /// Resets font while keeping font attributes intact.
+        /// </summary>
+        public void ResetSelectionFont() {
+            try {
+                this.BeginUpdate();
+
+                var selStart = this.SelectionStart;
+                var selLength = this.SelectionLength;
+                for (var i = selStart; i < selStart + selLength; i++) {
+                    this.SelectionStart = i;
+                    this.SelectionLength = 1;
+
+                    var style = FontStyle.Regular;
+                    if (this.SelectionFont.Bold) { style |= FontStyle.Bold; }
+                    if (this.SelectionFont.Italic) { style |= FontStyle.Italic; }
+                    if (this.SelectionFont.Underline) { style |= FontStyle.Underline; }
+                    if (this.SelectionFont.Strikeout) { style |= FontStyle.Strikeout; }
+                    this.SelectionFont = new Font(Settings.Current.DisplayFont, style); //to lazy to detect spans
+                }
+
+                this.SelectionStart = selStart;
+                this.SelectionLength = selLength;
+            } finally {
+                this.EndUpdate();
+            }
+        }
+
+        public void ResetSelectionLineSpacing() {
+            try {
+                this.BeginUpdate();
+
+                var format = new NativeMethods.PARAFORMAT2() {
+                    dwMask = NativeMethods.PFM_SPACEBEFORE | NativeMethods.PFM_SPACEAFTER,
+                    dySpaceBefore = 0,    //no space before
+                    dySpaceAfter = 0,     //no space after
+                    bLineSpacingRule = 0, //single spacing
+                };
+                format.cbSize = Marshal.SizeOf(format);
+
+                NativeMethods.SendMessage(this.Handle, NativeMethods.EM_SETPARAFORMAT, IntPtr.Zero, ref format);
+            } finally {
+                this.EndUpdate();
+            }
         }
 
 
@@ -465,6 +521,11 @@ namespace QText {
             internal const int WM_USER = 0x0400;
             internal const int EM_FORMATRANGE = WM_USER + 57;
 
+            internal const Int32 EM_GETPARAFORMAT = 1085;
+            internal const Int32 EM_SETPARAFORMAT = 1095;
+            internal const Int32 PFM_SPACEBEFORE = 64;
+            internal const Int32 PFM_SPACEAFTER = 128;
+
 
             [StructLayout(LayoutKind.Sequential)]
             internal struct RECT {
@@ -506,25 +567,57 @@ namespace QText {
                 public CHARRANGE chrg;         //Range of text to draw (see earlier declaration)
             }
 
+            [StructLayout(LayoutKind.Sequential)]
+            internal struct PARAFORMAT2 {
+                public Int32 cbSize;
+                public Int32 dwMask;
+                public Int16 wNumbering;
+                public Int16 wReserved;
+                public Int32 dxStartIndent;
+                public Int32 dxRightIndent;
+                public Int32 dxOffset;
+                public Int16 wAlignment;
+                public Int16 cTabCount;
+                [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+                public Int32[] rgxTabs;
+                public Int32 dySpaceBefore;
+                public Int32 dySpaceAfter;
+                public Int32 dyLineSpacing;
+                public Int16 sStyle;
+                public Byte bLineSpacingRule;
+                public Byte bOutlineLevel;
+                public Int16 wShadingWeight;
+                public Int16 wShadingStyle;
+                public Int16 wNumberingStart;
+                public Int16 wNumberingStyle;
+                public Int16 wNumberingTab;
+                public Int16 wBorderSpace;
+                public Int16 wBorderWidth;
+                public Int16 wBorders;
+            }
+
 
             [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-            public static extern IntPtr LoadLibrary(String path);
+            internal static extern IntPtr LoadLibrary(String path);
 
 
-            public static IntPtr SendMessage(IntPtr hWnd, uint Msg, int wParam, IntPtr lParam) {
+            internal static IntPtr SendMessage(IntPtr hWnd, uint Msg, int wParam, IntPtr lParam) {
                 return SendMessage(hWnd, Msg, new IntPtr(wParam), ref lParam);
             }
 
-            public static IntPtr SendMessage(IntPtr hWnd, uint Msg, int wParam, int lParam) {
+            internal static IntPtr SendMessage(IntPtr hWnd, uint Msg, int wParam, int lParam) {
                 var x = new IntPtr(lParam);
                 return SendMessage(hWnd, Msg, new IntPtr(wParam), ref x);
             }
 
             [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-            public static extern IntPtr SendMessage([InAttribute()] IntPtr hWnd, uint Msg, IntPtr wParam, ref IntPtr lParam);
+            internal static extern IntPtr SendMessage([InAttribute()] IntPtr hWnd, uint Msg, IntPtr wParam, ref IntPtr lParam);
 
             [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-            internal static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
+            internal static extern IntPtr SendMessage(IntPtr hWnd, Int32 msg, IntPtr wp, IntPtr lp);
+
+            [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+            internal static extern IntPtr SendMessage([InAttribute()] IntPtr hWnd, UInt32 Msg, IntPtr wParam, ref PARAFORMAT2 lParam);
 
         }
 

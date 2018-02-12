@@ -731,28 +731,10 @@ namespace QText {
                 tmrQuickSave.Enabled = false;
                 var tf = tabFiles.SelectedTab;
                 if (tf.BaseFile.IsRichText) {
-                    try {
-                        tf.TextBox.BeginUpdate();
-                        tf.TextBox.Cursor = Cursors.WaitCursor;
-                        var selStart = tf.TextBox.SelectionStart;
-                        var selLength = tf.TextBox.SelectionLength;
-                        for (var i = selStart; i < selStart + selLength; i++) {
-                            tf.TextBox.SelectionStart = i;
-                            tf.TextBox.SelectionLength = 1;
-
-                            var style = FontStyle.Regular;
-                            if (tf.TextBox.SelectionFont.Bold) { style |= FontStyle.Bold; }
-                            if (tf.TextBox.SelectionFont.Italic) { style |= FontStyle.Italic; }
-                            if (tf.TextBox.SelectionFont.Underline) { style |= FontStyle.Underline; }
-                            if (tf.TextBox.SelectionFont.Strikeout) { style |= FontStyle.Strikeout; }
-                            tf.TextBox.SelectionFont = new Font(Settings.Current.DisplayFont, style); //to lazy to detect spans
-                        }
-                        tf.TextBox.SelectionStart = selStart;
-                        tf.TextBox.SelectionLength = selLength;
-                    } finally {
-                        tf.TextBox.EndUpdate();
-                        tf.TextBox.Cursor = Cursors.Default;
-                    }
+                    tf.TextBox.Cursor = Cursors.WaitCursor;
+                    tf.TextBox.ResetSelectionFont();
+                    tf.TextBox.ResetSelectionLineSpacing();
+                    tf.TextBox.Cursor = Cursors.Default;
                 }
                 tmrQuickSave.Enabled = true;
             }
