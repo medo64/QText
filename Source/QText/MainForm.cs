@@ -329,6 +329,20 @@ namespace QText {
         private void Form_Load(object sender, EventArgs e) {
             Medo.Windows.Forms.State.Load(this);
 
+            //get plugin buttons
+            ToolStripItem lastPluginItem = new ToolStripSeparator();
+            mnu.Items.Insert(mnu.Items.IndexOf(mnuAlwaysOnTop) + 1, lastPluginItem);
+            foreach (var plugin in App.GetEnabledPlugins()) {
+                foreach (var item in plugin.GetToolStripItems()) {
+                    if ((item is ToolStripSeparator) && (lastPluginItem is ToolStripSeparator)) {
+                        //no double separators
+                    } else {
+                        mnu.Items.Insert(mnu.Items.IndexOf(lastPluginItem) + 1, item);
+                        lastPluginItem = item;
+                    }
+                }
+            }
+
             RefreshAll(null, null);
             Form_Resize(null, null);
 
@@ -382,6 +396,11 @@ namespace QText {
 
         private void Form_FormClosed(object sender, FormClosedEventArgs e) {
             bwCheckForUpgrade.CancelAsync();
+
+            foreach (var plugin in App.GetEnabledPlugins()) {
+                plugin.Terminate();
+            }
+
             Application.Exit();
         }
 
@@ -1087,7 +1106,7 @@ namespace QText {
                     frm.TopMost = this.TopMost;
                     if (frm.ShowDialog(this) == DialogResult.OK) {
                         tabFiles.SelectedTab.BaseFile.Password = frm.Password;
-                        tabFiles.SelectedTab.Save(); ;
+                        tabFiles.SelectedTab.Save();
                     }
                 }
             }

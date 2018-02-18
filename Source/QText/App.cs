@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -8,6 +10,7 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Threading;
 using System.Windows.Forms;
+using QText.Plugins;
 
 namespace QText {
 
@@ -129,6 +132,11 @@ namespace QText {
                     }
                 }
 
+                //initialize plugins
+                foreach (var plugin in App.GetEnabledPlugins()) {
+                    plugin.Initialize(App.TrayContext);
+                }
+
                 if (Medo.Application.Args.Current.ContainsKey("hide") == false) {
                     App.TrayContext.ShowForm();
                 }
@@ -174,6 +182,25 @@ namespace QText {
             throw e.Exception;
 #endif
         }
+
+
+        #region Plugins
+
+        private static ReadOnlyCollection<IPlugin> AllPlugins;
+
+        public static IEnumerable<IPlugin> GetEnabledPlugins() {
+            if (App.AllPlugins == null) { //TODO: Dynamic loading whenever I have more plugins
+                var list = new List<IPlugin>();
+                list.Add(new Plugins.Reminder.ReminderPlugin());
+                App.AllPlugins = list.AsReadOnly();
+            }
+
+            foreach (var plugin in App.AllPlugins) {
+                yield return plugin;
+            }
+        }
+
+        #endregion Plugins
 
 
         private static class NativeMethods {

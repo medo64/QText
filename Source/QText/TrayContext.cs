@@ -6,12 +6,12 @@ namespace QText {
     internal class TrayContext : ApplicationContext {
 
         private NotifyIcon notMain = new NotifyIcon();
-        public Form Form { get; private set; }
+        public MainForm Form { get; private set; }
 
 
         private static readonly object SyncRoot = new object();
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", Justification = "This program is not intended to be localized.")]
-        public TrayContext(Form form) : base() {
+        public TrayContext(MainForm form) : base() {
             this.Form = form;
 
             this.Form.CreateControl();
@@ -153,8 +153,14 @@ namespace QText {
                 if (App.Hotkey.IsRegistered) {
                     text += "\n\nPress " + Helper.GetKeyString(App.Hotkey.Key) + " to show window again.";
                 }
-                notMain.ShowBalloonTip(0, "QText", text, ToolTipIcon.Info);
+                ShowBalloon("QText", text);
             }
+        }
+
+        internal void ShowBalloon(string title, string text, ToolTipIcon icon = ToolTipIcon.Info) {
+            if (title == null) { throw new ArgumentNullException(nameof(title), "Title cannot be null."); }
+            if (text == null) { throw new ArgumentNullException(nameof(text), "Text cannot be null."); }
+            notMain.ShowBalloonTip(0, title, text, icon);
         }
 
 

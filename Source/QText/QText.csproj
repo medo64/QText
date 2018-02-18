@@ -124,6 +124,7 @@
     </Compile>
     <Compile Include="GotoResult.cs" />
     <Compile Include="Helper.cs" />
+    <Compile Include="Plugins\IPlugin.cs" />
     <Compile Include="Legacy.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -149,6 +150,20 @@
     <Compile Include="PasswordForm.Designer.cs">
       <DependentUpon>PasswordForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Plugins\Reminder\ReminderData.cs" />
+    <Compile Include="Plugins\Reminder\ReminderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Plugins\Reminder\ReminderForm.Designer.cs">
+      <DependentUpon>ReminderForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Plugins\Reminder\RemindersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Plugins\Reminder\RemindersForm.Designer.cs">
+      <DependentUpon>RemindersForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Plugins\Reminder\ReminderPlugin.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -229,6 +244,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="PasswordForm.resx">
       <DependentUpon>PasswordForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Plugins\Reminder\ReminderForm.resx">
+      <DependentUpon>ReminderForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Plugins\Reminder\RemindersForm.resx">
+      <DependentUpon>RemindersForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

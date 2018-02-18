@@ -7,6 +7,8 @@ using System.IO;
 using System.Security;
 using System.Windows.Forms;
 using Medo.Configuration;
+using QText.Plugins.Reminder;
+using System.Collections.Generic;
 
 namespace QText {
     internal class Settings {
@@ -417,10 +419,14 @@ namespace QText {
         public SearchScope SearchScope {
             get {
                 switch (Config.Read("Search.Scope", Medo.Configuration.Settings.Read("SearchScope", (int)SearchScope.File))) {
-                    case 0: return SearchScope.File;
-                    case 1: return SearchScope.Folder;
-                    case 2: return SearchScope.Folders;
-                    default: return SearchScope.File;
+                    case 0:
+                        return SearchScope.File;
+                    case 1:
+                        return SearchScope.Folder;
+                    case 2:
+                        return SearchScope.Folders;
+                    default:
+                        return SearchScope.File;
                 }
             }
             set { Config.Write("Search.Scope", (int)value); }
@@ -522,6 +528,29 @@ namespace QText {
         public string DateTimeSeparator {
             get { return Config.Read("DateTimeSeparator", "\t"); }
             set { Config.Write("DateTimeSeparator", value); }
+        }
+
+
+        [Category("Reminders")]
+        [DisplayName("Reminders")]
+        [Description("List of reminders.")]
+        [Browsable(false)]
+        public IEnumerable<ReminderData> Reminders {
+            get {
+                var list = new List<ReminderData>();
+                foreach (var data in Config.Read("Reminder")) {
+                    var reminder = ReminderData.Parse(data);
+                    if (reminder != null) { list.Add(reminder); }
+                }
+                return list.AsReadOnly();
+            }
+            set {
+                var list = new List<string>();
+                foreach (var reminder in value) {
+                    list.Add(reminder.ToString());
+                }
+                Config.Write("Reminder", list);
+            }
         }
 
 
