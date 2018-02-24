@@ -313,9 +313,15 @@ namespace QText {
                 case NativeMethods.WM_SYSKEYDOWN:
                 case NativeMethods.WM_SYSKEYUP:
                     switch (m.WParam.ToInt32()) { //keys to process
-                        case NativeMethods.VK_MENU: base.WndProc(ref m); break;
-                        case NativeMethods.VK_F4: base.WndProc(ref m); break;
-                        case NativeMethods.VK_BACK: base.WndProc(ref m); break;
+                        case NativeMethods.VK_MENU:
+                            base.WndProc(ref m);
+                            break;
+                        case NativeMethods.VK_F4:
+                            base.WndProc(ref m);
+                            break;
+                        case NativeMethods.VK_BACK:
+                            base.WndProc(ref m);
+                            break;
                     }
                     Debug.WriteLine("WndProc:WParam: " + m.WParam.ToInt64().ToString());
                     return;
@@ -328,10 +334,10 @@ namespace QText {
         public bool IsSelectionEmpty;
 
         protected override void OnSelectionChanged(EventArgs e) {
-                var range = new NativeMethods.CHARRANGE();
-                NativeMethods.SendMessage(this.Handle, NativeMethods.EM_EXGETSEL, IntPtr.Zero, ref range); //check directly so SelectedText is not internally called
-                this.IsSelectionEmpty = this.IsSelectionEmpty = (range.cpMin == range.cpMax);
-                if (this.IsSelectionEmpty) { this.CaretPosition = range.cpMin; }
+            var range = new NativeMethods.CHARRANGE();
+            NativeMethods.SendMessage(this.Handle, NativeMethods.EM_EXGETSEL, IntPtr.Zero, ref range); //check directly so SelectedText is not internally called
+            this.IsSelectionEmpty = this.IsSelectionEmpty = (range.cpMin == range.cpMax);
+            if (this.IsSelectionEmpty) { this.CaretPosition = range.cpMin; }
             base.OnSelectionChanged(e);
         }
 
