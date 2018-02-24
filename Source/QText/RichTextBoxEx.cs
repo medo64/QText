@@ -328,8 +328,10 @@ namespace QText {
         public bool IsSelectionEmpty;
 
         protected override void OnSelectionChanged(EventArgs e) {
-            this.IsSelectionEmpty = (this.SelectionLength == 0);
-            if (this.SelectionLength == 0) { this.CaretPosition = this.SelectionStart; }
+                var range = new NativeMethods.CHARRANGE();
+                NativeMethods.SendMessage(this.Handle, NativeMethods.EM_EXGETSEL, IntPtr.Zero, ref range); //check directly so SelectedText is not internally called
+                this.IsSelectionEmpty = this.IsSelectionEmpty = (range.cpMin == range.cpMax);
+                if (this.IsSelectionEmpty) { this.CaretPosition = range.cpMin; }
             base.OnSelectionChanged(e);
         }
 
@@ -566,8 +568,8 @@ namespace QText {
             internal const int EM_SETSEL = 0x00B1;
 
             internal const int IMF_SPELLCHECKING = 0x0800;
-            internal const int EM_SETLANGOPTIONS = 0x0400 + 120;
-            internal const int EM_GETLANGOPTIONS = 0x0400 + 121;
+            internal const int EM_SETLANGOPTIONS = WM_USER + 120;
+            internal const int EM_GETLANGOPTIONS = WM_USER + 121;
 
             internal const int WM_LBUTTONDBLCLK = 0x0203;
             internal const int WM_SETREDRAW = 11;
@@ -575,6 +577,7 @@ namespace QText {
             internal const int WM_SYSKEYUP = 0x0105;
 
             internal const int WM_USER = 0x0400;
+            internal const int EM_EXGETSEL = WM_USER + 52;
             internal const int EM_FORMATRANGE = WM_USER + 57;
 
             internal const Int32 EM_GETPARAFORMAT = 1085;
@@ -682,6 +685,9 @@ namespace QText {
 
             [DllImport("user32.dll", CharSet = CharSet.Unicode)]
             internal static extern IntPtr SendMessage([InAttribute()] IntPtr hWnd, UInt32 Msg, IntPtr wParam, ref PARAFORMAT2 lParam);
+
+            [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+            internal static extern IntPtr SendMessage([InAttribute()] IntPtr hWnd, Int32 Msg, IntPtr wParam, ref CHARRANGE lParam);
 
         }
 
