@@ -10,6 +10,7 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Threading;
 using System.Windows.Forms;
+using Medo.Configuration;
 using QText.Plugins;
 
 namespace QText {
@@ -50,6 +51,15 @@ namespace QText {
 
                 Medo.Windows.Forms.State.NoRegistryWrites = Settings.Current.NoRegistryWrites;
                 Medo.Diagnostics.ErrorReport.DisableAutomaticSaveToTemp = Settings.Current.NoRegistryWrites;
+
+                if (!Config.IsAssumedInstalled) {
+                    Medo.Windows.Forms.State.ReadState += delegate (object sender, Medo.Windows.Forms.StateReadEventArgs e) {
+                        e.Value = Config.Read("State!" + e.Name.Replace("QText.", ""), e.DefaultValue);
+                    };
+                    Medo.Windows.Forms.State.WriteState += delegate (object sender, Medo.Windows.Forms.StateWriteEventArgs e) {
+                        Config.Write("State!" + e.Name.Replace("QText.", ""), e.Value);
+                    };
+                }
 
                 #region Init document
 
