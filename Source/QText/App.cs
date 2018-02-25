@@ -20,7 +20,9 @@ namespace QText {
         public static QText.Document Document;
 
         public static Medo.Windows.Forms.Hotkey Hotkey = new Medo.Windows.Forms.Hotkey();
-
+        private static bool ArgHide;
+        private static bool ArgRestart;
+        private static bool ArgSetup;
 
         [STAThread]
         public static void Main() {
@@ -31,7 +33,11 @@ namespace QText {
                 Application.SetCompatibleTextRenderingDefault(false);
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo(Medo.Configuration.Settings.Read("CultureName", "en-US"));
 
-                if (Medo.Application.Args.Current.ContainsKey("setup")) {
+                ArgHide = Medo.Application.Args.Current.ContainsKey("hide");
+                ArgSetup = Medo.Application.Args.Current.ContainsKey("setup");
+                ArgRestart = Medo.Application.Args.Current.ContainsKey("restart");
+
+                if (ArgSetup) {
                     Legacy.OrderedFiles.Upgrade();
                     Legacy.HiddenFiles.Upgrade();
                 }
@@ -137,7 +143,7 @@ namespace QText {
                     plugin.Initialize(App.TrayContext);
                 }
 
-                if (Medo.Application.Args.Current.ContainsKey("hide") == false) {
+                if (!ArgHide && !ArgRestart) {
                     App.TrayContext.ShowForm();
                 }
                 Application.Run(App.TrayContext);
@@ -153,7 +159,9 @@ namespace QText {
         }
 
         private static void SingleInstance_NewInstanceDetected(object sender, Medo.Application.NewInstanceEventArgs e) {
-            App.TrayContext.ShowForm();
+            if (!ArgHide && !ArgRestart) {
+                App.TrayContext.ShowForm();
+            }
         }
 
 
