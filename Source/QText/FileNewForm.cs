@@ -25,19 +25,19 @@ namespace QText {
 
 
         private void txtTitle_TextChanged(object sender, EventArgs e) {
-            string newFileTitle = txtTitle.Text.Trim();
+            var newFileTitle = txtTitle.Text.Trim();
             var canCreate = this.Folder.CanNewFile(newFileTitle);
             if (canCreate) {
                 erp.SetError(txtTitle, null);
             } else {
                 erp.SetError(txtTitle, "File with same name already exists.");
             }
-            btnOK.Enabled = (txtTitle.Text.Length > 0) && canCreate;
+            btnOK.Enabled = (newFileTitle.Length > 0) && canCreate;
         }
 
 
         private void btnOK_Click(object sender, EventArgs e) {
-            this.Title = txtTitle.Text;
+            this.Title = txtTitle.Text.Trim();
             this.IsRichText = radRichText.Checked;
             Settings.Current.IsRichTextFileDefault = radRichText.Checked;
         }
