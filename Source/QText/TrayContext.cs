@@ -144,6 +144,31 @@ namespace QText {
             }
         }
 
+
+        public void HideForm(bool showOnPrimary = false) {
+            try {
+                if (this.Form.InvokeRequired) {
+                    var method = new HideFormProcDelegate(this.HideFormProc);
+                    this.Form.Invoke(method, showOnPrimary);
+                } else {
+                    this.HideFormProc();
+                }
+            } catch (Exception) { }
+        }
+
+        private delegate void HideFormProcDelegate();
+
+        private void HideFormProc() {
+            this.ShowIcon();
+
+            lock (TrayContext.SyncRoot) {
+                if (this.Form.IsHandleCreated == false) { return; } //ignore if handle is not created
+                if (System.Windows.Forms.Form.ActiveForm != this.Form) { return; } //ignore if form is not active
+
+                this.Form.Close();
+            }
+       }
+
         #endregion
 
         internal void ShowBalloonOnMinimize() {

@@ -73,6 +73,7 @@ namespace QText {
             this.btnExit = new System.Windows.Forms.Button();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.btnAdvanced = new System.Windows.Forms.Button();
+            this.chbHotkeyTogglesVisibility = new System.Windows.Forms.CheckBox();
             this.tab.SuspendLayout();
             this.tab_pagAppearance.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudTabWidth)).BeginInit();
@@ -491,6 +492,7 @@ namespace QText {
             // 
             // tab_pagBehavior
             // 
+            this.tab_pagBehavior.Controls.Add(this.chbHotkeyTogglesVisibility);
             this.tab_pagBehavior.Controls.Add(this.txtHotkey);
             this.tab_pagBehavior.Controls.Add(this.lblHotkey);
             this.tab_pagBehavior.Controls.Add(this.chkRunAtStartup);
@@ -700,6 +702,17 @@ namespace QText {
             this.btnAdvanced.Visible = false;
             this.btnAdvanced.Click += new System.EventHandler(this.btnAdvanced_Click);
             // 
+            // chbHotkeyTogglesVisibility
+            // 
+            this.chbHotkeyTogglesVisibility.AutoSize = true;
+            this.chbHotkeyTogglesVisibility.Location = new System.Drawing.Point(3, 122);
+            this.chbHotkeyTogglesVisibility.Name = "chbHotkeyTogglesVisibility";
+            this.chbHotkeyTogglesVisibility.Size = new System.Drawing.Size(176, 21);
+            this.chbHotkeyTogglesVisibility.TabIndex = 5;
+            this.chbHotkeyTogglesVisibility.Text = "Hotkey toggles visibility";
+            this.tooltip.SetToolTip(this.chbHotkeyTogglesVisibility, "If checked, hotkey will show window if its hidden and hide it if visible.");
+            this.chbHotkeyTogglesVisibility.UseVisualStyleBackColor = true;
+            // 
             // OptionsForm
             // 
             this.AcceptButton = this.btnOk;
@@ -790,5 +803,6 @@ namespace QText {
         internal System.Windows.Forms.CheckBox chbSavePlainWithLF;
         private System.Windows.Forms.ToolTip tooltip;
         private System.Windows.Forms.Button btnAdvanced;
+        internal System.Windows.Forms.CheckBox chbHotkeyTogglesVisibility;
     }
 }

@@ -176,7 +176,20 @@ namespace QText {
 
 
         private static void Hotkey_HotkeyActivated(object sender, EventArgs e) {
-            App.TrayContext.ShowForm();
+            var doShow = true;
+            if (Settings.Current.HotkeyTogglesVisibility) {
+                var activeHwnd = NativeMethods.GetForegroundWindow();
+                if (activeHwnd != IntPtr.Zero) {
+                    NativeMethods.GetWindowThreadProcessId(activeHwnd, out var activeProcess);
+                    doShow = !(activeProcess == Process.GetCurrentProcess().Id); //hide if already active
+                }
+            }
+
+            if (doShow) {
+                App.TrayContext.ShowForm();
+            } else {
+                App.TrayContext.HideForm();
+            }
         }
 
 
@@ -223,7 +236,13 @@ namespace QText {
 
         private static class NativeMethods {
 
-            [DllImportAttribute("user32.dll", EntryPoint = "AllowSetForegroundWindow")]
+            [DllImport("user32.dll")]
+            public static extern IntPtr GetForegroundWindow();
+
+            [DllImport("user32.dll")]
+            public static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
+
+            [DllImport("user32.dll", EntryPoint = "AllowSetForegroundWindow")]
             [return: MarshalAsAttribute(UnmanagedType.Bool)]
             public static extern bool AllowSetForegroundWindow(int dwProcessId);
 

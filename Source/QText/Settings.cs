@@ -1,14 +1,13 @@
-using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
-using System.Security;
 using System.Windows.Forms;
 using Medo.Configuration;
+using Microsoft.Win32;
 using QText.Plugins.Reminder;
-using System.Collections.Generic;
 
 namespace QText {
     internal class Settings {
@@ -33,6 +32,15 @@ namespace QText {
         public Keys ActivationHotkey {
             get { return (Keys)Config.Read("ActivationHotkey", Medo.Configuration.Settings.Read("ActivationHotkey", Convert.ToInt32(Keys.Control | Keys.Shift | Keys.Q))); }
             set { Config.Write("ActivationHotkey", (int)value); }
+        }
+
+        [Category("Behavior")]
+        [DisplayName("Hotkey toggles visibility")]
+        [Description("If trues, hotkey will toggle visibility of window instead of just showing it.")]
+        [DefaultValue(false)]
+        public bool HotkeyTogglesVisibility {
+            get { return Config.Read("HotkeyTogglesVisibility", false); }
+            set { Config.Write("HotkeyTogglesVisibility", value); }
         }
 
         [Category("Carbon copy")]
