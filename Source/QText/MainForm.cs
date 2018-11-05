@@ -329,6 +329,9 @@ namespace QText {
         private void Form_Load(object sender, EventArgs e) {
             Medo.Windows.Forms.State.Load(this);
 
+            this.TopMost = Settings.Current.DisplayAlwaysOnTop;
+            mnuAlwaysOnTop.Checked = this.TopMost;
+
             //get plugin buttons
             ToolStripItem lastPluginItem = new ToolStripSeparator();
             mnu.Items.Insert(mnu.Items.IndexOf(mnuAlwaysOnTop) + 1, lastPluginItem);
