@@ -1104,6 +1104,7 @@ namespace QText {
             this.Load += new System.EventHandler(this.Form_Load);
             this.Shown += new System.EventHandler(this.Form_Shown);
             this.VisibleChanged += new System.EventHandler(this.Form_VisibleChanged);
+            this.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.Form_MouseDoubleClick);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form_MouseDown);
             this.Move += new System.EventHandler(this.Form_Move);
             this.Resize += new System.EventHandler(this.Form_Resize);

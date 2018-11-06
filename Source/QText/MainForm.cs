@@ -423,20 +423,19 @@ namespace QText {
         }
 
 
+        private void Form_MouseDoubleClick(object sender, MouseEventArgs e) {
+            if (e.Button == MouseButtons.Left) {
+                if (GetNonTabLocation(e.Location) != null) {
+                    if (mnuNew.Enabled) { mnuNew.PerformClick(); }
+                }
+            }
+        }
+
         private void Form_MouseDown(object sender, MouseEventArgs e) {
-            if (e.Button == System.Windows.Forms.MouseButtons.Right) {
-                if (tabFiles.TabPages.Count > 0) {
-                    var rect = tabFiles.GetTabRect(tabFiles.TabCount - 1);
-                    rect.Offset(tabFiles.Left, tabFiles.Top);
-                    if ((e.Y >= rect.Top) && (e.Y <= rect.Bottom) && (e.X >= rect.Right)) {
-                        tabFiles.SelectedTab = null;
-                        tabFiles.ContextMenuStrip.Show(tabFiles, e.X - tabFiles.Left, e.Y - tabFiles.Top);
-                    }
-                } else {
-                    var rect = tabFiles.ClientRectangle;
-                    if ((e.Y >= rect.Top) && (e.Y <= rect.Bottom)) {
-                        tabFiles.ContextMenuStrip.Show(tabFiles, e.X - tabFiles.Left, e.Y - tabFiles.Top);
-                    }
+            if (e.Button == MouseButtons.Right) {
+                var location = GetNonTabLocation(e.Location);
+                if (location != null) {
+                    tabFiles.ContextMenuStrip.Show(tabFiles, location.Value.X, location.Value.Y);
                 }
             }
         }
@@ -1419,6 +1418,23 @@ namespace QText {
 
         private TabFile _CurrSelectedTab;
         private TabFile _PrevSelectedTab;
+
+        private Point? GetNonTabLocation(Point e) { //location of point next to tabs (due to transparency tab click is received on form)
+            if (tabFiles.TabPages.Count > 0) {
+                var rect = tabFiles.GetTabRect(tabFiles.TabCount - 1);
+                rect.Offset(tabFiles.Left, tabFiles.Top);
+                if ((e.Y >= rect.Top) && (e.Y <= rect.Bottom) && (e.X >= rect.Right)) {
+                    tabFiles.SelectedTab = null;
+                    return new Point(e.X - tabFiles.Left, e.Y - tabFiles.Top);
+                }
+            } else {
+                var rect = tabFiles.ClientRectangle;
+                if ((e.Y >= rect.Top) && (e.Y <= rect.Bottom)) {
+                    return new Point(e.X - tabFiles.Left, e.Y - tabFiles.Top);
+                }
+            }
+            return null;
+        }
 
         private void SetSelectedTab(TabFile tabPage) {
             this._PrevSelectedTab = this._CurrSelectedTab;
