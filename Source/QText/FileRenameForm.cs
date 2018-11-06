@@ -22,12 +22,12 @@ namespace QText {
 
         private void txtTitle_TextChanged(object sender, EventArgs e) {
             var alreadyTaken = false;
-            if (string.Equals(this.File.Title, txtTitle.Text, StringComparison.OrdinalIgnoreCase) == false) {
-                var newFileTitle = txtTitle.Text.Trim();
+            var newFileTitle = txtTitle.Text.Trim();
+            if (string.Equals(this.File.Title, newFileTitle, StringComparison.OrdinalIgnoreCase) == false) {
                 alreadyTaken = (this.File.Folder.GetFileByTitle(newFileTitle) != null);
                 if (alreadyTaken) { erp.SetError(txtTitle, "File with same name already exists."); } else { erp.SetError(txtTitle, null); }
             }
-            btnOK.Enabled = (txtTitle.Text.Length > 0) && (alreadyTaken == false) && (txtTitle.Text.Equals(this.File.Title, StringComparison.Ordinal) == false);
+            btnOK.Enabled = (newFileTitle.Length > 0) && (alreadyTaken == false) && (newFileTitle.Equals(this.File.Title, StringComparison.Ordinal) == false);
         }
 
 
