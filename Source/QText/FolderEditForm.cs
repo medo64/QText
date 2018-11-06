@@ -87,7 +87,7 @@ namespace QText {
             var oldFolder = (DocumentFolder)lsv.Items[e.Item].Tag;
 
             var newTitle = e.Label.Trim();
-            if (string.Equals(oldFolder.Title, newTitle, StringComparison.Ordinal)) {
+            if (string.IsNullOrWhiteSpace(newTitle) || string.Equals(oldFolder.Title, newTitle, StringComparison.Ordinal)) {
                 e.CancelEdit = true;
             } else {
                 try {
