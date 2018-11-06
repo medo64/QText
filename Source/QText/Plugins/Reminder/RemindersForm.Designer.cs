@@ -29,8 +29,8 @@ namespace QText.Plugins.Reminder {
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.lsvReminders = new System.Windows.Forms.ListView();
-            this.lsvRemainders_colTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lsvRemainders_colDescription = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lsvReminders_colTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lsvReminders_colDescription = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // btnAdd
@@ -99,8 +99,8 @@ namespace QText.Plugins.Reminder {
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lsvReminders.CheckBoxes = true;
             this.lsvReminders.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.lsvRemainders_colTime,
-            this.lsvRemainders_colDescription});
+            this.lsvReminders_colTime,
+            this.lsvReminders_colDescription});
             this.lsvReminders.FullRowSelect = true;
             this.lsvReminders.GridLines = true;
             this.lsvReminders.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
@@ -115,15 +115,15 @@ namespace QText.Plugins.Reminder {
             this.lsvReminders.ItemActivate += new System.EventHandler(this.btnEdit_Click);
             this.lsvReminders.SelectedIndexChanged += new System.EventHandler(this.lsvReminders_SelectedIndexChanged);
             // 
-            // lsvRemainders_colTime
+            // lsvReminders_colTime
             // 
-            this.lsvRemainders_colTime.Text = "Time";
-            this.lsvRemainders_colTime.Width = 90;
+            this.lsvReminders_colTime.Text = "Time";
+            this.lsvReminders_colTime.Width = 90;
             // 
-            // lsvRemainders_colDescription
+            // lsvReminders_colDescription
             // 
-            this.lsvRemainders_colDescription.Text = "Description";
-            this.lsvRemainders_colDescription.Width = 420;
+            this.lsvReminders_colDescription.Text = "Description";
+            this.lsvReminders_colDescription.Width = 420;
             // 
             // RemindersForm
             // 
@@ -145,7 +145,7 @@ namespace QText.Plugins.Reminder {
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Remainders";
+            this.Text = "Reminders";
             this.Load += new System.EventHandler(this.Form_Load);
             this.ResumeLayout(false);
 
@@ -159,7 +159,7 @@ namespace QText.Plugins.Reminder {
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.ListView lsvReminders;
-        private System.Windows.Forms.ColumnHeader lsvRemainders_colTime;
-        private System.Windows.Forms.ColumnHeader lsvRemainders_colDescription;
+        private System.Windows.Forms.ColumnHeader lsvReminders_colTime;
+        private System.Windows.Forms.ColumnHeader lsvReminders_colDescription;
     }
 }
