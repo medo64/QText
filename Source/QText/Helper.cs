@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Globalization;
 using System.Windows.Forms;
-using System.Drawing;
-using System.Drawing.Imaging;
 
 namespace QText {
 
@@ -122,10 +123,14 @@ namespace QText {
             }
 
             switch (keyData) {
-                case 0: return string.Empty;
-                case Keys.ControlKey: return string.Empty;
-                case Keys.Menu: return string.Empty;
-                case Keys.ShiftKey: return string.Empty;
+                case 0:
+                    return string.Empty;
+                case Keys.ControlKey:
+                    return string.Empty;
+                case Keys.Menu:
+                    return string.Empty;
+                case Keys.ShiftKey:
+                    return string.Empty;
                 default:
                     if (sb.Length > 0) { sb.Append("+"); }
                     sb.Append(keyData.ToString());
@@ -254,6 +259,217 @@ namespace QText {
                 yield return tab;
             }
         }
+
+        #region RichText
+
+        private enum RichTextParseState { None, Text, Escape, Command, Argument }
+        [DebuggerDisplay("{Text.ToString()}")]
+        private class RichTextParseResult {
+            public bool IsVisible = true;
+            public StringBuilder Text = new StringBuilder();
+        }
+
+        internal static string FilterRichText(string richText) {
+            var sbCommand = new StringBuilder();
+            var sbArgument = new StringBuilder();
+            var groupStack = new Stack<RichTextParseResult>(new RichTextParseResult[] { new RichTextParseResult() });
+
+            //Debug.WriteLine(new string('-', 80));
+            //Debug.WriteLine(richText);
+            //Debug.WriteLine(new string('-', 80));
+
+            var state = RichTextParseState.None;
+            foreach (var ch in richText) {
+                switch (state) {
+                    case RichTextParseState.None:
+                        if (ch == '{') { //begin group
+                            groupStack.Push(new RichTextParseResult());
+                            state = RichTextParseState.Text;
+                        }
+                        break;
+
+                    case RichTextParseState.Text:
+                        if (ch == '\\') {
+                            state = RichTextParseState.Escape;
+                        } else if (ch == '{') {
+                            groupStack.Push(new RichTextParseResult());
+                        } else if (ch == '}') {
+                            ProcessRichTextGroupPop(groupStack);
+                        } else {
+                            groupStack.Peek().Text.Append(ch);
+                        }
+                        break;
+
+                    case RichTextParseState.Escape:
+                        if (char.IsLetter(ch) || (ch == '*')) {
+                            sbCommand.Clear();
+                            sbArgument.Clear();
+                            sbCommand.Append(ch);
+                            state = RichTextParseState.Command;
+                        } else {
+                            groupStack.Peek().Text.Append('\\');
+                            groupStack.Peek().Text.Append(ch);
+                            state = RichTextParseState.Text;
+                        }
+                        break;
+
+                    case RichTextParseState.Command:
+                        if (char.IsLetter(ch)) {
+                            sbCommand.Append(ch);
+                        } else if (char.IsDigit(ch)) {
+                            sbArgument.Append(ch);
+                            state = RichTextParseState.Argument;
+                        } else if (ch == '\\') {
+                            ProcessRichTextCommand(groupStack, sbCommand.ToString(), sbArgument.ToString());
+                            state = RichTextParseState.Escape;
+                        } else if (ch == '{') {
+                            ProcessRichTextCommand(groupStack, sbCommand.ToString(), sbArgument.ToString());
+                            groupStack.Push(new RichTextParseResult());
+                            state = RichTextParseState.Text;
+                        } else if (ch == '}') {
+                            ProcessRichTextCommand(groupStack, sbCommand.ToString(), sbArgument.ToString());
+                            ProcessRichTextGroupPop(groupStack);
+                            state = RichTextParseState.Text;
+                        } else if (ch == ' ') {
+                            sbArgument.Append(ch);
+                            ProcessRichTextCommand(groupStack, sbCommand.ToString(), sbArgument.ToString());
+                            state = RichTextParseState.Text;
+                        }
+
+                        break;
+
+                    case RichTextParseState.Argument:
+                        if (ch == '\\') {
+                            ProcessRichTextCommand(groupStack, sbCommand.ToString(), sbArgument.ToString());
+                            state = RichTextParseState.Escape;
+                        } else if (ch == '{') {
+                            ProcessRichTextCommand(groupStack, sbCommand.ToString(), sbArgument.ToString());
+                            groupStack.Push(new RichTextParseResult());
+                            state = RichTextParseState.Text;
+                        } else if (ch == '}') {
+                            ProcessRichTextCommand(groupStack, sbCommand.ToString(), sbArgument.ToString());
+                            ProcessRichTextGroupPop(groupStack);
+                            state = RichTextParseState.Text;
+                        } else if (ch == ' ') {
+                            sbArgument.Append(ch);
+                            ProcessRichTextCommand(groupStack, sbCommand.ToString(), sbArgument.ToString());
+                            state = RichTextParseState.Text;
+                        } else {
+                            sbArgument.Append(ch);
+                        }
+                        break;
+                }
+            }
+
+            if (groupStack.Count == 1) {
+                return groupStack.Peek().Text.ToString();
+            } else {
+                return null;
+            }
+        }
+
+        private static void ProcessRichTextCommand(Stack<RichTextParseResult> stack, string command, string argument) {
+            var currentStack = stack.Peek();
+            if (currentStack.IsVisible) {
+                switch (command) {
+                    case "rtf": //header
+                    case "plain": //reset format
+                    case "ansi": //character set
+                    case "mac": //character set
+                    case "pc": //character set
+                    case "pca": //character set
+                    case "ansicpg": //character set
+                    case "fcharset": //character set
+                    case "deff": //default font
+                    case "adeff": //default font
+                    case "deflang": //default language
+                    case "deflangfe": //default language
+                    case "adeflang": //default language
+                    case "fonttbl": //font table
+                    case "f": //font
+                    case "falt": //alternate font
+                    case "fnil": //font family
+                    case "froman": //font family
+                    case "fswiss": //font family
+                    case "fmodern": //font family
+                    case "fscript": //font family
+                    case "fdecor": //font family
+                    case "ftech": //font family
+                    case "fbidi": //font family
+                    case "fprq": //font pitch
+                    case "lang": //lanugage
+                    case "alang": //lanugage ID
+                    case "langfe": //lanugage formatting
+                    case "stshfdbch": //scripts
+                    case "stshfloch": //scripts
+                    case "stshfhich": //scripts
+                    case "stshfbi": //scripts
+                    case "uc": //unicode text
+                    case "u": //unicode character
+                    case "colortbl": //color table
+                    case "red": //red component
+                    case "green": //green component
+                    case "blue": //blue component
+                    case "fs": //Font size in half-points
+                    case "qc": //centered
+                    case "qj": //justified
+                    case "ql": //left-aligned(the default).
+                    case "qr": //right-aligned.
+                    case "qd": //distributed.
+                    case "qk": //percentage of line occupied by Kashida justification(0 – low, 10 – medium, 20 – high).
+                    case "qt": //for Thai distributed justification.
+                    case "rtlch": //right-to-left
+                    case "ltrch": //left-to-right
+                    case "par": //paragraph
+                    case "pard": //default paragraph
+                    case "defchp": //default character properties
+                    case "defpap": //default paragraph properties
+                    case "af": //font number
+                    case "afs": //font size
+                    case "stylesheet": //stylesheet
+                    case "styrsid": //stylesheet id
+                        //Debug.WriteLine("Known RichText command " + command);
+                        currentStack.Text.Append(@"\" + command + argument);
+                        break;
+
+                    //ignore these
+                    case "snext": //next stylesheet
+                    case "author": //author info
+                    case "ri": //right indent
+                    case "rin": //right indent
+                    case "sb": //space before
+                    case "lisb": //space before
+                    case "sa": //space after
+                    case "lisa": //space after
+                    case "slmult": //spacing multiple
+                    case "sl": //space between lines
+                    case "linex": //line number left distance
+                        break;
+
+                    default:
+                        currentStack.Text.Append(@"\" + command + argument);
+                        if (currentStack.Text.Length == 0) { //if first command is unknown, ignore the whole group
+                            currentStack.IsVisible = false;
+                            //Debug.WriteLine("Hidden RichText command " + command);
+                        } else {
+                            //Debug.WriteLine("Other RichText command " + command);
+                        }
+                        break;
+
+                }
+            }
+        }
+
+        private static void ProcessRichTextGroupPop(Stack<RichTextParseResult> stack) {
+            var child = stack.Pop();
+            var parent = stack.Peek();
+            if (child.IsVisible && parent.IsVisible) {
+                var childText = child.Text.ToString();
+                if (!string.IsNullOrEmpty(childText)) { parent.Text.Append("{" + childText + "}"); }
+            }
+        }
+
+        #endregion RichText
 
     }
 }

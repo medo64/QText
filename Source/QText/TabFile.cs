@@ -390,18 +390,11 @@ namespace QText {
                             this.TextBox.SelectedText = text;
                         }
                     } else {
-                        this.TextBox.Paste();
-                        this.TextBox.Update();
-
-                        var ss = this.TextBox.SelectionStart;
-                        var sl = this.TextBox.SelectionLength;
-                        try {
-                            this.TextBox.SelectAll();
-                            this.TextBox.ResetSelectionParagraphSpacing();
-                            this.TextBox.ResetSelectionParagraphIndent();
-                        } finally {
-                            this.TextBox.SelectionStart = ss;
-                            this.TextBox.SelectionLength = sl;
+                        var text = GetRichTextFromClipboard(out var isRich);
+                        if (isRich) {
+                            this.TextBox.SelectedRtf = text;
+                        } else {
+                            this.TextBox.SelectedText = text;
                         }
                     }
                 }
@@ -615,8 +608,30 @@ namespace QText {
         }
 
         private static string GetTextFromClipboard() {
-            var text = Clipboard.GetText(TextDataFormat.UnicodeText);
-            return (text != string.Empty) ? text : null;
+            if (Clipboard.ContainsText(TextDataFormat.UnicodeText)) {
+                return Clipboard.GetText(TextDataFormat.UnicodeText);
+            } else if (Clipboard.ContainsText(TextDataFormat.Text)) {
+                return Clipboard.GetText(TextDataFormat.Text);
+            }
+
+            return null;
+        }
+
+        private static string GetRichTextFromClipboard(out bool isRich) {
+            if (Clipboard.ContainsText(TextDataFormat.Rtf)) {
+                isRich = true;
+                var richText = Clipboard.GetText(TextDataFormat.Rtf);
+                return Helper.FilterRichText(richText) ?? GetTextFromClipboard();
+            } else if (Clipboard.ContainsText(TextDataFormat.UnicodeText)) {
+                isRich = false;
+                return Clipboard.GetText(TextDataFormat.UnicodeText);
+            } else if (Clipboard.ContainsText(TextDataFormat.Text)) {
+                isRich = false;
+                return Clipboard.GetText(TextDataFormat.Text);
+            }
+
+            isRich = false;
+            return null;
         }
 
         #endregion
