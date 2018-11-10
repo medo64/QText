@@ -37,6 +37,22 @@ namespace QText {
         public string Name { get; internal set; }
 
         /// <summary>
+        /// Gets a full name of a file - for internal use
+        /// </summary>
+        public string FullName {
+            get { return Path.Combine(this.Folder.FullPath, this.Name); }
+        }
+
+
+        /// <summary>
+        /// Returns true if file exists
+        /// </summary>
+        public bool Exists {
+            get { return File.Exists(this.FullName); }
+        }
+
+
+        /// <summary>
         /// Gets file's kind.
         /// </summary>
         public DocumentKind Kind { get; internal set; }

@@ -518,7 +518,9 @@ namespace QText {
                     tabFiles.SelectedTab = null;
                 } catch (Exception ex) {
                     Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot open file.\n\n{0}", ex.Message));
+                    var errorTab = tabFiles.SelectedTab;
                     tabFiles.SelectedTab = this._CurrSelectedTab;
+                    if (!errorTab.BaseFile.Exists) { tabFiles.TabPages.Remove(errorTab); }
                 }
                 if ((tabFiles.SelectedTab != null) && (tabFiles.SelectedTab.TextBox != null)) {
                     tabFiles.SelectedTab.TextBox.Select();
