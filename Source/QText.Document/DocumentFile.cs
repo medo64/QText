@@ -1,9 +1,9 @@
-using Medo.Security.Cryptography;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using Medo.Security.Cryptography;
 
 namespace QText {
     public class DocumentFile {
@@ -65,8 +65,10 @@ namespace QText {
             get {
                 switch (this.Kind) {
                     case DocumentKind.RichText:
-                    case DocumentKind.EncryptedRichText: return DocumentStyle.RichText;
-                    default: return DocumentStyle.PlainText;
+                    case DocumentKind.EncryptedRichText:
+                        return DocumentStyle.RichText;
+                    default:
+                        return DocumentStyle.PlainText;
                 }
             }
         }
@@ -90,11 +92,16 @@ namespace QText {
         public string Extension {
             get {
                 switch (this.Kind) {
-                    case DocumentKind.PlainText: return FileExtensions.PlainText;
-                    case DocumentKind.RichText: return FileExtensions.RichText;
-                    case DocumentKind.EncryptedPlainText: return FileExtensions.EncryptedPlainText;
-                    case DocumentKind.EncryptedRichText: return FileExtensions.EncryptedRichText;
-                    default: throw new InvalidOperationException("Cannot determine kind.");
+                    case DocumentKind.PlainText:
+                        return FileExtensions.PlainText;
+                    case DocumentKind.RichText:
+                        return FileExtensions.RichText;
+                    case DocumentKind.EncryptedPlainText:
+                        return FileExtensions.EncryptedPlainText;
+                    case DocumentKind.EncryptedRichText:
+                        return FileExtensions.EncryptedRichText;
+                    default:
+                        throw new InvalidOperationException("Cannot determine kind.");
                 }
             }
         }
@@ -155,11 +162,20 @@ namespace QText {
             newName = Helper.EncodeTitle(newTitle);
             newPath = Path.Combine(this.Folder.FullPath, newName);
             switch (this.Kind) {
-                case DocumentKind.PlainText: newPath += FileExtensions.PlainText; break;
-                case DocumentKind.RichText: newPath += FileExtensions.RichText; break;
-                case DocumentKind.EncryptedPlainText: newPath += FileExtensions.EncryptedPlainText; break;
-                case DocumentKind.EncryptedRichText: newPath += FileExtensions.EncryptedRichText; break;
-                default: throw new NotSupportedException("Unknown file kind.");
+                case DocumentKind.PlainText:
+                    newPath += FileExtensions.PlainText;
+                    break;
+                case DocumentKind.RichText:
+                    newPath += FileExtensions.RichText;
+                    break;
+                case DocumentKind.EncryptedPlainText:
+                    newPath += FileExtensions.EncryptedPlainText;
+                    break;
+                case DocumentKind.EncryptedRichText:
+                    newPath += FileExtensions.EncryptedRichText;
+                    break;
+                default:
+                    throw new NotSupportedException("Unknown file kind.");
             }
         }
 
@@ -247,9 +263,14 @@ namespace QText {
 
             DocumentKind newKind;
             switch (newStyle) {
-                case DocumentStyle.PlainText: newKind = this.IsEncrypted ? DocumentKind.EncryptedPlainText : DocumentKind.PlainText; break;
-                case DocumentStyle.RichText: newKind = this.IsEncrypted ? DocumentKind.EncryptedRichText : DocumentKind.RichText; break;
-                default: throw new NotSupportedException("Unknown file style.");
+                case DocumentStyle.PlainText:
+                    newKind = this.IsEncrypted ? DocumentKind.EncryptedPlainText : DocumentKind.PlainText;
+                    break;
+                case DocumentStyle.RichText:
+                    newKind = this.IsEncrypted ? DocumentKind.EncryptedRichText : DocumentKind.RichText;
+                    break;
+                default:
+                    throw new NotSupportedException("Unknown file style.");
             }
 
             Debug.WriteLine("File.ChangeStyle: " + this.Name + " (" + this.Style.ToString() + " -> " + newStyle.ToString() + ")");
