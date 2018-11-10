@@ -444,6 +444,8 @@ namespace QText {
                     case "slmult": //spacing multiple
                     case "sl": //space between lines
                     case "linex": //line number left distance
+                    case "cb": //background color
+                    case "highlight": //highlight color
                         break;
 
                     default:
