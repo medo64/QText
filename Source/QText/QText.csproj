@@ -76,19 +76,19 @@
     <Compile Include="%28Medo%29\Config [005].cs" />
     <Compile Include="%28Medo%29\EntryAssembly [003].cs" />
     <Compile Include="%28Medo%29\ErrorReport [019].cs" />
-    <Compile Include="%28Medo%29\History [001].cs" />
+    <Compile Include="%28Medo%29\History [002].cs" />
     <Compile Include="%28Medo%29\ManifestResources [002].cs" />
     <Compile Include="%28Medo%29\MessageBox [007].cs" />
     <Compile Include="%28Medo%29\PrintPreviewDialog [005].cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="%28Medo%29\Restart [001].cs" />
-    <Compile Include="%28Medo%29\RunOnStartup [004].cs" />
+    <Compile Include="%28Medo%29\RunOnStartup [003].cs" />
     <Compile Include="%28Medo%29\Settings [012].cs" />
     <Compile Include="%28Medo%29\SingleInstance [010].cs" />
     <Compile Include="%28Medo%29\State [016].cs" />
     <Compile Include="%28Medo%29\UnhandledCatch [008].cs" />
-    <Compile Include="%28Medo%29\Hotkey [001].cs" />
+    <Compile Include="%28Medo%29\Hotkey [002].cs" />
     <Compile Include="%28Medo%29\Upgrade [004].cs" />
     <Compile Include="App.cs" />
     <Compile Include="ChangePasswordForm.cs">

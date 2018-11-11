@@ -1,32 +1,32 @@
-//Copyright (c) 2008 Josip Medved <jmedved@jmedved.com>
+//Josip Medved <jmedved@jmedved.com>   www.medo64.com
 
-//2008-01-07: First version.
-//2008-01-15: Added overloads for SaveToTemp and ShowDialog.
-//2008-01-17: SendToWeb returns false instead of throwing WebException.
-//2008-01-27: Changed Version format.
-//2008-03-01: Added Product and Time.
-//2008-03-30: Added SaveToEventLog.
-//            Fixed mixed English and Croatian messages.
-//2008-04-11: Cleaned code to match FxCop 1.36 beta 2 (NormalizeStringsToUppercase, SpecifyStringComparison).
-//2008-12-17: Changed SendToWeb to PostToWeb.
-//2009-03-30: Refactoring.
-//            Added user confirmation form in PostToWeb.
-//2009-04-07: Success check is done with status code.
-//2009-06-26: Added Version and removed EntryAssembly from arguments.
-//            Obsoleted PostToWeb, ShowDialog took over functionality.
-//            Deleted old obsoleted methods.
+//2012-09-16: Added retry upon send failure.
+//2010-11-06: Graphical update.
+//2010-10-30: Fixed bug with sending error report.
+//2010-03-07: Changed Math.* to System.Math.*.
+//2010-03-02: Line wrapping at 72nd character.
+//2010-02-13: Added TopMost.
+//2010-02-13: Send button is disabled if there is neither exception nor message.
+//            Log file is now ErrorReport "[{application}].log" and "ErrorReport [{application}] {time}.log".
 //2009-12-09: Changed source to use only preallocated buffers for writing to log file.
 //            Log file name is now ErrorReport.{application}.log (does not contain version info).
 //            NameValueCollection is no longer used for passing custom parameters. String array is used instead.
 //            If sending of message does not succeed whole message is saved in temp as ErrorReport.{application}.{time}.log.
-//2010-02-13: Send button is disabled if there is neither exception nor message.
-//            Log file is now ErrorReport "[{application}].log" and "ErrorReport [{application}] {time}.log".
-//2010-02-13: Added TopMost.
-//2010-03-02: Line wrapping at 72nd character.
-//2010-03-07: Changed Math.* to System.Math.*.
-//2010-10-30: Fixed bug with sending error report.
-//2010-11-06: Graphical update.
-//2012-09-16: Added retry upon send failure.
+//2009-06-26: Added Version and removed EntryAssembly from arguments.
+//            Obsoleted PostToWeb, ShowDialog took over functionality.
+//            Deleted old obsoleted methods.
+//2009-04-07: Success check is done with status code.
+//2009-03-30: Refactoring.
+//            Added user confirmation form in PostToWeb.
+//2008-12-17: Changed SendToWeb to PostToWeb.
+//2008-04-11: Cleaned code to match FxCop 1.36 beta 2 (NormalizeStringsToUppercase, SpecifyStringComparison).
+//2008-03-30: Added SaveToEventLog.
+//            Fixed mixed English and Croatian messages.
+//2008-03-01: Added Product and Time.
+//2008-01-27: Changed Version format.
+//2008-01-17: SendToWeb returns false instead of throwing WebException.
+//2008-01-15: Added overloads for SaveToTemp and ShowDialog.
+//2008-01-07: First version.
 
 
 using System;
@@ -140,8 +140,7 @@ namespace Medo.Diagnostics {
 
                         if (exception != null) {
                             if (ShowDialogInform(owner, address) == DialogResult.OK) {
-                                string message, email, displayName;
-                                if (ShowDialogCollect(owner, exception, out message, out email, out displayName) == DialogResult.OK) {
+                                if (ShowDialogCollect(owner, exception, out var message, out var email, out var displayName) == DialogResult.OK) {
                                     string fullMessage = LogBufferGetStringWithUserInformation(message, displayName, email);
                                     while (true) {
                                         var result = ShowDialogSend(owner, address, fullMessage, email, displayName);
@@ -152,8 +151,7 @@ namespace Medo.Diagnostics {
                                 }
                             }
                         } else {
-                            string message, email, displayName;
-                            if (ShowDialogCollect(owner, exception, out message, out email, out displayName) == DialogResult.OK) {
+                            if (ShowDialogCollect(owner, exception, out var message, out var email, out var displayName) == DialogResult.OK) {
                                 string fullMessage = LogBufferGetStringWithUserInformation(message, displayName, email);
                                 while (true) {
                                     var result = ShowDialogSend(owner, address, fullMessage, email, displayName);
@@ -527,18 +525,15 @@ namespace Medo.Diagnostics {
         }
 
         private static void textMessage_TextChanged(object sender, EventArgs e) {
-            var senderTextBox = sender as TextBox;
-            if (senderTextBox != null) {
-                var button = senderTextBox.Tag as Button;
-                if (button != null) {
+            if (sender is TextBox senderTextBox) {
+                if (senderTextBox.Tag is Button button) {
                     button.Enabled = senderTextBox.Text.Length > 0;
                 }
             }
         }
 
         private static void text_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) {
-            var senderTextBox = sender as TextBox;
-            if (senderTextBox != null) {
+            if (sender is TextBox senderTextBox) {
                 if (e.KeyData == (Keys.Control | Keys.A)) {
                     senderTextBox.SelectAll();
                     e.IsInputKey = false;
@@ -602,10 +597,11 @@ namespace Medo.Diagnostics {
                 form.Controls.Add(label);
                 form.Controls.Add(progressBar);
 
-                var allFormParameters = new NameValueCollection();
-                allFormParameters.Add("Product", _infoProductTitle);
-                allFormParameters.Add("Version", _infoProductVersion);
-                allFormParameters.Add("Message", message);
+                var allFormParameters = new NameValueCollection {
+                    { "Product", _infoProductTitle },
+                    { "Version", _infoProductVersion },
+                    { "Message", message }
+                };
                 if (!string.IsNullOrEmpty(email)) { allFormParameters.Add("Email", email); }
                 if (!string.IsNullOrEmpty(displayName)) { allFormParameters.Add("DisplayName", displayName); }
 

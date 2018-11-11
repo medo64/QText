@@ -19,16 +19,16 @@ namespace QText {
 
         public MainForm() {
             InitializeComponent();
-            this.Font = SystemFonts.MessageBoxFont;
+            Font = SystemFonts.MessageBoxFont;
 
             tmrQuickSave.Interval = Settings.Current.QuickSaveInterval;
 
             if (Settings.Current.DisplayMinimizeMaximizeButtons) {
-                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+                FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
             } else {
-                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+                FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             }
-            this.ShowInTaskbar = Settings.Current.DisplayShowInTaskbar;
+            ShowInTaskbar = Settings.Current.DisplayShowInTaskbar;
             mnu.Renderer = Helper.ToolstripRenderer;
             Helper.ScaleToolstrip(mnu, mnxTab, mnxText);
 
@@ -42,7 +42,7 @@ namespace QText {
 
         protected override bool ProcessDialogKey(Keys keyData) {
             Debug.WriteLine("MainForm_ProcessDialogKey: " + keyData.ToString());
-            if (((keyData & Keys.Alt) == Keys.Alt) && (keyData != (Keys.Alt | Keys.Menu))) { this.SuppressMenuKey = true; }
+            if (((keyData & Keys.Alt) == Keys.Alt) && (keyData != (Keys.Alt | Keys.Menu))) { SuppressMenuKey = true; }
 
             switch (keyData) {
 
@@ -107,7 +107,7 @@ namespace QText {
                     return true;
 
                 case Keys.Escape:
-                    this.Close();
+                    Close();
                     return true;
 
 
@@ -315,7 +315,7 @@ namespace QText {
             tmrQuickSave.Enabled = false;
 
             if ((e != null) && (e.KeyData == Keys.Menu)) {
-                if (this.SuppressMenuKey) { this.SuppressMenuKey = false; return; }
+                if (SuppressMenuKey) { SuppressMenuKey = false; return; }
                 ToggleMenu();
                 e.Handled = true;
                 e.SuppressKeyPress = true;
@@ -329,8 +329,8 @@ namespace QText {
         private void Form_Load(object sender, EventArgs e) {
             Medo.Windows.Forms.State.Load(this);
 
-            this.TopMost = Settings.Current.DisplayAlwaysOnTop;
-            mnuAlwaysOnTop.Checked = this.TopMost;
+            TopMost = Settings.Current.DisplayAlwaysOnTop;
+            mnuAlwaysOnTop.Checked = TopMost;
 
             //get plugin buttons
             ToolStripItem lastPluginItem = new ToolStripSeparator();
@@ -349,14 +349,14 @@ namespace QText {
             RefreshAll(null, null);
             Form_Resize(null, null);
 
-            App.Document.FileExternallyChanged += this.Document_FileExternallyChanged;
+            App.Document.FileExternallyChanged += Document_FileExternallyChanged;
         }
 
         private void Form_FormClosing(object sender, FormClosingEventArgs e) {
 #if !DEBUG
             if (e.CloseReason == CloseReason.UserClosing) {
                 e.Cancel = true;
-                this.Hide();
+                Hide();
                 App.TrayContext.ShowBalloonOnMinimize();
             }
 #endif
@@ -409,7 +409,7 @@ namespace QText {
 
 
         private void Form_Activated(object sender, EventArgs e) {
-            this.tmrUpdateToolbar.Enabled = Settings.Current.ShowToolbar;
+            tmrUpdateToolbar.Enabled = Settings.Current.ShowToolbar;
             if (tabFiles == null) { return; }
 
             if ((tabFiles.SelectedTab != null) && (tabFiles.SelectedTab.IsOpened)) {
@@ -418,7 +418,7 @@ namespace QText {
         }
 
         private void Form_Deactivate(object sender, EventArgs e) {
-            this.tmrUpdateToolbar.Enabled = false;
+            tmrUpdateToolbar.Enabled = false;
             tmrQuickSave_Tick(null, null);
         }
 
@@ -441,7 +441,7 @@ namespace QText {
         }
 
         private void Form_Move(object sender, EventArgs e) {
-            if (this.Visible && (this.WindowState == FormWindowState.Normal)) { Medo.Windows.Forms.State.Save(this); }
+            if (Visible && (WindowState == FormWindowState.Normal)) { Medo.Windows.Forms.State.Save(this); }
         }
 
         private bool _form_ResizeReentry = false;
@@ -449,19 +449,19 @@ namespace QText {
             if (_form_ResizeReentry) { return; }
             _form_ResizeReentry = true;
 
-            if (this.WindowState != FormWindowState.Minimized) {
-                if (this.Visible) { Medo.Windows.Forms.State.Save(this); }
+            if (WindowState != FormWindowState.Minimized) {
+                if (Visible) { Medo.Windows.Forms.State.Save(this); }
                 mnu.Visible = Settings.Current.ShowToolbar;
             } else if (Settings.Current.TrayOnMinimize) {
-                this.Visible = false;
-                this.Close();
+                Visible = false;
+                Close();
             }
 
             _form_ResizeReentry = false;
         }
 
         private void Form_VisibleChanged(object sender, EventArgs e) {
-            var isVisible = this.Visible;
+            var isVisible = Visible;
 
             tmrQuickSave.Enabled = isVisible;
             tmrUpdateToolbar.Enabled = isVisible;
@@ -495,10 +495,10 @@ namespace QText {
 
                 try {
                     if (tabFiles.SelectedTab.BaseFile.NeedsPassword) {
-                        this.Focus();
-                        if (this.Visible == false) { return; }
+                        Focus();
+                        if (Visible == false) { return; }
                         using (var frm = new PasswordForm(tabFiles.SelectedTab.Title)) {
-                            frm.TopMost = this.TopMost;
+                            frm.TopMost = TopMost;
                             if (frm.ShowDialog(this) == DialogResult.OK) {
                                 tabFiles.SelectedTab.BaseFile.Password = frm.Password;
                                 tabFiles.SelectedTab.Open();
@@ -519,7 +519,7 @@ namespace QText {
                 } catch (Exception ex) {
                     Medo.MessageBox.ShowWarning(this, string.Format(CultureInfo.CurrentUICulture, "Cannot open file.\n\n{0}", ex.Message));
                     var errorTab = tabFiles.SelectedTab;
-                    tabFiles.SelectedTab = this._CurrSelectedTab;
+                    tabFiles.SelectedTab = _CurrSelectedTab;
                     if (!errorTab.BaseFile.Exists) { tabFiles.TabPages.Remove(errorTab); }
                 }
                 if ((tabFiles.SelectedTab != null) && (tabFiles.SelectedTab.TextBox != null)) {
@@ -535,7 +535,7 @@ namespace QText {
         private void mnuNew_Click(object sender, EventArgs e) {
             tmrQuickSave.Enabled = false;
             using (var frm = new FileNewForm(tabFiles.CurrentFolder)) {
-                frm.TopMost = this.TopMost;
+                frm.TopMost = TopMost;
                 if (frm.ShowDialog(this) == DialogResult.OK) {
                     try {
                         tabFiles.AddTab(frm.Title, frm.IsRichText);
@@ -564,7 +564,7 @@ namespace QText {
             if (tabFiles.SelectedTab != null) {
                 tmrQuickSave.Enabled = false;
                 using (var frm = new FileRenameForm(tabFiles.SelectedTab.BaseFile)) {
-                    frm.TopMost = this.TopMost;
+                    frm.TopMost = TopMost;
                     try {
                         if (frm.ShowDialog(this) == DialogResult.OK) {
                             tabFiles.SelectedTab.Rename(frm.NewTitle);
@@ -811,7 +811,7 @@ namespace QText {
         private void mnuFindFindNext_Click(object sender, EventArgs e) {
             if (!string.IsNullOrEmpty(SearchStatus.Text)) {
                 SaveAllChanged();
-                Search.FindNext(this, this.tabFiles, this.tabFiles.SelectedTab);
+                Search.FindNext(this, tabFiles, tabFiles.SelectedTab);
             }
         }
 
@@ -824,7 +824,7 @@ namespace QText {
 
             SaveAllChanged();
             using (var frm = new GotoForm(hasText)) {
-                frm.TopMost = this.TopMost;
+                frm.TopMost = TopMost;
                 if (frm.ShowDialog(this) == DialogResult.OK) {
                     var destination = frm.SelectedItem;
                     if (destination.IsLineNumber) {
@@ -843,7 +843,7 @@ namespace QText {
                             var oldFolder = tabFiles.CurrentFolder;
                             var newFolder = destination.Folder;
                             FolderChange(oldFolder, newFolder);
-                            foreach (TabFile tab in this.tabFiles.TabPages) {
+                            foreach (TabFile tab in tabFiles.TabPages) {
                                 if (string.Equals(tab.Title, destination.File.Title)) {
                                     tabFiles.SelectedTab = tab;
                                     break;
@@ -866,7 +866,7 @@ namespace QText {
         private void mnuAlwaysOnTop_Click(object sender, EventArgs e) {
             mnuAlwaysOnTop.Checked = !mnuAlwaysOnTop.Checked;
             Settings.Current.DisplayAlwaysOnTop = mnuAlwaysOnTop.Checked;
-            this.TopMost = Settings.Current.DisplayAlwaysOnTop;
+            TopMost = Settings.Current.DisplayAlwaysOnTop;
         }
 
 
@@ -874,15 +874,15 @@ namespace QText {
             mnuFolder.DropDownItems.Clear();
 
             foreach (var folder in App.Document.GetFolders()) {
-                var item = new ToolStripMenuItem(folder.Title, null, this.mnuFolder_Click) { Tag = folder };
+                var item = new ToolStripMenuItem(folder.Title, null, mnuFolder_Click) { Tag = folder };
                 item.Enabled = !folder.Equals(tabFiles.CurrentFolder);
                 mnuFolder.DropDownItems.Add(item);
             }
 
             mnuFolder.DropDownItems.Add(new ToolStripSeparator());
 
-            mnuFolder.DropDownItems.Add(new ToolStripMenuItem("Edit folders", null, this.mnuFolderEdit_Click));
-            mnuFolder.DropDownItems.Add(new ToolStripMenuItem("Edit files", null, this.mnuFilesEdit_Click));
+            mnuFolder.DropDownItems.Add(new ToolStripMenuItem("Edit folders", null, mnuFolderEdit_Click));
+            mnuFolder.DropDownItems.Add(new ToolStripMenuItem("Edit files", null, mnuFilesEdit_Click));
         }
 
         private void mnuFolder_Click(object sender, EventArgs e) {
@@ -898,7 +898,7 @@ namespace QText {
             tabFiles.Enabled = false;
             tabFiles.FolderSave();
             using (var frm = new FolderEditForm(tabFiles.CurrentFolder)) {
-                frm.TopMost = this.TopMost;
+                frm.TopMost = TopMost;
                 frm.ShowDialog(this);
                 if (!tabFiles.CurrentFolder.Equals(frm.CurrentFolder)) {
                     tabFiles.Enabled = true;
@@ -917,7 +917,7 @@ namespace QText {
             tabFiles.Enabled = false;
             tabFiles.FolderSave();
             using (var frm = new FilesEditForm(tabFiles)) {
-                frm.TopMost = this.TopMost;
+                frm.TopMost = TopMost;
                 frm.ShowDialog(this);
             }
             tabFiles.FolderSave();
@@ -930,22 +930,22 @@ namespace QText {
         private void mnuAppOptions_Click(object sender, EventArgs e) {
             tmrQuickSave.Enabled = false;
             using (var frm = new OptionsForm()) {
-                frm.TopMost = this.TopMost;
+                frm.TopMost = TopMost;
                 SaveAllChanged();
-                this.tmrUpdateToolbar.Enabled = false;
+                tmrUpdateToolbar.Enabled = false;
                 RefreshAll(null, null);
                 if (frm.ShowDialog(this) == DialogResult.OK) {
                     if (Settings.Current.DisplayMinimizeMaximizeButtons) {
-                        this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+                        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
                     } else {
-                        this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+                        FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
                     }
-                    this.ShowInTaskbar = Settings.Current.DisplayShowInTaskbar;
+                    ShowInTaskbar = Settings.Current.DisplayShowInTaskbar;
                     tabFiles.Multiline = Settings.Current.MultilineTabs;
-                    this.TopMost = Settings.Current.DisplayAlwaysOnTop;
+                    TopMost = Settings.Current.DisplayAlwaysOnTop;
                     RefreshAll(null, null);
                     Form_Resize(null, null);
-                    this.tmrUpdateToolbar.Enabled = Settings.Current.ShowToolbar;
+                    tmrUpdateToolbar.Enabled = Settings.Current.ShowToolbar;
                     tmrQuickSave.Interval = Settings.Current.QuickSaveInterval;
 
                     App.Document.CarbonCopyRootPath = Settings.Current.CarbonCopyUse ? Settings.Current.CarbonCopyDirectory : null;
@@ -963,7 +963,7 @@ namespace QText {
 
         private void mnuAppFeedback_Click(object sender, EventArgs e) {
             tmrQuickSave.Enabled = false;
-            Medo.Diagnostics.ErrorReport.TopMost = this.TopMost;
+            Medo.Diagnostics.ErrorReport.TopMost = TopMost;
             Medo.Diagnostics.ErrorReport.ShowDialog(this, null, new Uri("https://medo64.com/feedback/"));
             tmrQuickSave.Enabled = true;
         }
@@ -1050,7 +1050,7 @@ namespace QText {
             mnxTabMoveTo.DropDownItems.Clear();
 
             foreach (var folder in App.Document.GetFolders()) {
-                var item = new ToolStripMenuItem(folder.Title, null, this.mnxTabMoveTo_Click) { Tag = folder };
+                var item = new ToolStripMenuItem(folder.Title, null, mnxTabMoveTo_Click) { Tag = folder };
                 item.AutoToolTip = false;
                 item.Enabled = !folder.Equals(tabFiles.CurrentFolder) && tabFiles.SelectedTab.BaseFile.CanMove(folder);
                 if (!item.Enabled) {
@@ -1095,8 +1095,8 @@ namespace QText {
 
         private void mnxTabEncrypt_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
-                using (var frm = new ChangePasswordForm(this.Text)) {
-                    frm.TopMost = this.TopMost;
+                using (var frm = new ChangePasswordForm(Text)) {
+                    frm.TopMost = TopMost;
                     if (frm.ShowDialog(this) == DialogResult.OK) {
                         tabFiles.SelectedTab.Encrypt(frm.Password);
                     }
@@ -1106,8 +1106,8 @@ namespace QText {
 
         private void mnxTabChangePassword_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
-                using (var frm = new ChangePasswordForm(this.Text)) {
-                    frm.TopMost = this.TopMost;
+                using (var frm = new ChangePasswordForm(Text)) {
+                    frm.TopMost = TopMost;
                     if (frm.ShowDialog(this) == DialogResult.OK) {
                         tabFiles.SelectedTab.BaseFile.Password = frm.Password;
                         tabFiles.SelectedTab.Save();
@@ -1298,12 +1298,12 @@ namespace QText {
         private void mnxTextSelectionSpelling_Click(object sender, EventArgs e) {
             if (tabFiles.SelectedTab != null) {
                 using (var frm = new SpellingForm(tabFiles.SelectedTab.TextBox.SelectedText.Replace('\n', ' '))) {
-                    frm.TopMost = this.TopMost;
+                    frm.TopMost = TopMost;
                     frm.ShowDialog(this);
                 }
             } else {
                 using (var frm = new SpellingForm()) {
-                    frm.TopMost = this.TopMost;
+                    frm.TopMost = TopMost;
                     frm.ShowDialog(this);
                 }
             }
@@ -1439,14 +1439,14 @@ namespace QText {
         }
 
         private void SetSelectedTab(TabFile tabPage) {
-            this._PrevSelectedTab = this._CurrSelectedTab;
-            this._CurrSelectedTab = tabPage;
+            _PrevSelectedTab = _CurrSelectedTab;
+            _CurrSelectedTab = tabPage;
         }
 
         private TabFile GetPreviousSelectedTab() {
-            if ((this._PrevSelectedTab != null) && (!this._PrevSelectedTab.Equals(this._CurrSelectedTab))) {
-                if (tabFiles.TabPages.Contains(this._PrevSelectedTab)) {
-                    return this._PrevSelectedTab;
+            if ((_PrevSelectedTab != null) && (!_PrevSelectedTab.Equals(_CurrSelectedTab))) {
+                if (tabFiles.TabPages.Contains(_PrevSelectedTab)) {
+                    return _PrevSelectedTab;
                 }
             }
             return null;
@@ -1550,7 +1550,7 @@ namespace QText {
 
                 if (preview) {
                     using (var frm = new Medo.Windows.Forms.PrintPreviewDialog(printDocument)) {
-                        frm.TopMost = this.TopMost;
+                        frm.TopMost = TopMost;
                         frm.ShowDialog(this);
                     }
                 } else {
@@ -1636,7 +1636,7 @@ namespace QText {
             if (tabFiles.Enabled == false) { return; }
 
             try {
-                this.Invoke((MethodInvoker)delegate () {
+                Invoke((MethodInvoker)delegate () {
                     foreach (TabFile tab in tabFiles.TabPages) {
                         if (tab.BaseFile.Equals(e.File)) {
                             if (!tab.IsChanged) { //don't reopen tabs that were changed
@@ -1659,8 +1659,8 @@ namespace QText {
 
 
         private void FindFirst() {
-            using (var frm = new FindForm(this.tabFiles)) {
-                frm.TopMost = this.TopMost;
+            using (var frm = new FindForm(tabFiles)) {
+                frm.TopMost = TopMost;
                 frm.ShowDialog(this);
             }
         }
@@ -1718,8 +1718,8 @@ namespace QText {
                 Helper.ScaleToolstripItem(mnuApp, "mnuAppUpgrade");
                 mnuAppUpgrade.Text = "Upgrade is available";
 
-                var locationButton = this.PointToScreen(new Point(mnu.Left + mnuApp.Bounds.Left, mnu.Top + mnuApp.Bounds.Top));
-                var locationForm = this.Location;
+                var locationButton = PointToScreen(new Point(mnu.Left + mnuApp.Bounds.Left, mnu.Top + mnuApp.Bounds.Top));
+                var locationForm = Location;
                 var tipX = locationButton.X - locationForm.X + mnuApp.Bounds.Width / 2;
                 var tipY = locationButton.Y - locationForm.Y + mnuApp.Bounds.Height - SystemInformation.Border3DSize.Height;
 

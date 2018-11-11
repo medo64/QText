@@ -1,7 +1,7 @@
-//Copyright (c) 2008 Josip Medved <jmedved@jmedved.com>
+//Josip Medved <jmedved@jmedved.com>   www.medo64.com
 
-//2008-11-04: First version.
 //2012-11-24: Validating arguments.
+//2008-11-04: First version.
 
 
 using System;
@@ -239,13 +239,11 @@ namespace Medo.Application {
             if (value != null) {
                 if (value.Length == 0) { return true; }
 
-                int valueInt;
-                if (int.TryParse(value, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out valueInt)) {
+                if (int.TryParse(value, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var valueInt)) {
                     return valueInt != 0;
                 }
 
-                bool valueBool;
-                if (bool.TryParse(value, out valueBool)) {
+                if (bool.TryParse(value, out var valueBool)) {
                     return valueBool;
                 }
 
@@ -263,8 +261,7 @@ namespace Medo.Application {
         public int GetValue(string key, int defaultValue) {
             string value = GetValue(key);
             if (value != null) {
-                int valueInt;
-                if (int.TryParse(value, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out valueInt)) {
+                if (int.TryParse(value, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var valueInt)) {
                     return valueInt;
                 }
             }
@@ -281,8 +278,7 @@ namespace Medo.Application {
         public double GetValue(string key, double defaultValue) {
             string value = GetValue(key);
             if (value != null) {
-                double valueX;
-                if (double.TryParse(value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out valueX)) {
+                if (double.TryParse(value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var valueX)) {
                     return valueX;
                 }
             }

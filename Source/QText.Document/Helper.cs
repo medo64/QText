@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Globalization;
 
 namespace QText {
 
@@ -12,7 +12,7 @@ namespace QText {
 
         #region Encode/decode file name
 
-        private static readonly char[] InvalidTitleChars = new char[] { '\u0000', '\u0001', '\u0002', '\u0003', '\u0004', '\u0005', '\u0006', '\u0007', 
+        private static readonly char[] InvalidTitleChars = new char[] { '\u0000', '\u0001', '\u0002', '\u0003', '\u0004', '\u0005', '\u0006', '\u0007',
                                                                         '\u0008', '\u0009', '\u000A', '\u000B', '\u000C', '\u000D', '\u000E', '\u000F',
                                                                         '\u0010', '\u0011', '\u0012', '\u0013', '\u0014', '\u0015', '\u0016', '\u0017',
                                                                         '\u0018', '\u0019', '\u001A', '\u001B', '\u001C', '\u001D', '\u001E', '\u001F',
@@ -165,9 +165,9 @@ namespace QText {
         internal class FileSystemToggler : IDisposable {
 
             public FileSystemToggler(FileSystemWatcher watcher) {
-                this.Watcher = watcher;
-                this.WasEnabled = watcher.EnableRaisingEvents;
-                this.Watcher.EnableRaisingEvents = false;
+                Watcher = watcher;
+                WasEnabled = watcher.EnableRaisingEvents;
+                Watcher.EnableRaisingEvents = false;
             }
 
             private readonly FileSystemWatcher Watcher;
@@ -175,7 +175,7 @@ namespace QText {
 
 
             void IDisposable.Dispose() {
-                this.Watcher.EnableRaisingEvents = this.WasEnabled;
+                Watcher.EnableRaisingEvents = WasEnabled;
             }
         }
 

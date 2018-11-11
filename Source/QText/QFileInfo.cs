@@ -7,40 +7,40 @@ namespace QText {
     internal class QFileInfo {
 
         public QFileInfo(string fileName) {
-            this.FullName = Path.GetFullPath(fileName);
+            FullName = Path.GetFullPath(fileName);
         }
 
         public string FullName { get; private set; }
 
-        public string DirectoryName { get { return Path.GetDirectoryName(this.FullName); } }
-        public string Name { get { return Path.GetFileName(this.FullName); } }
-        public string Extension { get { return GetExtension(this.FullName); } }
+        public string DirectoryName { get { return Path.GetDirectoryName(FullName); } }
+        public string Name { get { return Path.GetFileName(FullName); } }
+        public string Extension { get { return GetExtension(FullName); } }
 
-        public string NameWithoutExtension { get { return GetFileNameWithoutExtension(this.FullName); } }
+        public string NameWithoutExtension { get { return GetFileNameWithoutExtension(FullName); } }
 
-        public bool Exists { get { return File.Exists(this.FullName); } }
+        public bool Exists { get { return File.Exists(FullName); } }
 
         public FileAttributes Attributes {
-            get { return File.GetAttributes(this.FullName); }
-            set { File.SetAttributes(this.FullName, value); }
+            get { return File.GetAttributes(FullName); }
+            set { File.SetAttributes(FullName, value); }
         }
-        public DateTime LastWriteTimeUtc { get { return File.GetLastWriteTimeUtc(this.FullName); } }
+        public DateTime LastWriteTimeUtc { get { return File.GetLastWriteTimeUtc(FullName); } }
 
 
         public void Create() {
-            File.Create(this.FullName);
+            File.Create(FullName);
         }
 
         public QFileInfo ChangeName(string newName) {
-            return new QFileInfo(Path.Combine(this.DirectoryName, newName + this.Extension));
+            return new QFileInfo(Path.Combine(DirectoryName, newName + Extension));
         }
 
-        public bool IsEncrypted { get { return this.FullName.EndsWith(Extensions.PlainEncrypted, StringComparison.OrdinalIgnoreCase) || this.FullName.EndsWith(Extensions.RichEncrypted, StringComparison.OrdinalIgnoreCase); } }
-        public bool IsRich { get { return IsFileRich(this.FullName); } }
+        public bool IsEncrypted { get { return FullName.EndsWith(Extensions.PlainEncrypted, StringComparison.OrdinalIgnoreCase) || FullName.EndsWith(Extensions.RichEncrypted, StringComparison.OrdinalIgnoreCase); } }
+        public bool IsRich { get { return IsFileRich(FullName); } }
 
         public QFileInfo ChangeExtension(string newExtension) {
             if (!newExtension.StartsWith(".", StringComparison.OrdinalIgnoreCase)) { newExtension = "." + newExtension; }
-            return new QFileInfo(Path.Combine(this.DirectoryName, this.NameWithoutExtension + newExtension));
+            return new QFileInfo(Path.Combine(DirectoryName, NameWithoutExtension + newExtension));
         }
 
         public void Refresh() { }
@@ -86,18 +86,18 @@ namespace QText {
 
 
         public override bool Equals(object obj) {
-            if (obj is QFileInfo other) { return string.Equals(this.FullName, other.FullName, StringComparison.OrdinalIgnoreCase); }
-            if (obj is FileInfo otherFileInfo) { return string.Equals(this.FullName, otherFileInfo.FullName, StringComparison.OrdinalIgnoreCase); }
-            if (obj is string otherString) { return string.Equals(this.FullName, otherString, StringComparison.OrdinalIgnoreCase); }
+            if (obj is QFileInfo other) { return string.Equals(FullName, other.FullName, StringComparison.OrdinalIgnoreCase); }
+            if (obj is FileInfo otherFileInfo) { return string.Equals(FullName, otherFileInfo.FullName, StringComparison.OrdinalIgnoreCase); }
+            if (obj is string otherString) { return string.Equals(FullName, otherString, StringComparison.OrdinalIgnoreCase); }
             return false;
         }
 
         public override int GetHashCode() {
-            return this.FullName.GetHashCode();
+            return FullName.GetHashCode();
         }
 
         public override string ToString() {
-            return this.FullName;
+            return FullName;
         }
 
 

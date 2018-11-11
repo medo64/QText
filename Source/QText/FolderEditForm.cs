@@ -9,11 +9,11 @@ namespace QText {
 
         public FolderEditForm(DocumentFolder currentFolder) {
             InitializeComponent();
-            this.Font = SystemFonts.MessageBoxFont;
+            Font = SystemFonts.MessageBoxFont;
             mnu.Renderer = Helper.ToolstripRenderer;
             Helper.ScaleToolstrip(mnu);
 
-            this.CurrentFolder = currentFolder;
+            CurrentFolder = currentFolder;
 
             Medo.Windows.Forms.State.SetupOnLoadAndClose(this);
         }
@@ -23,7 +23,7 @@ namespace QText {
 
         protected override bool ProcessDialogKey(Keys keyData) {
             Debug.WriteLine("FolderEditForm_ProcessDialogKey: " + keyData.ToString());
-            if (((keyData & Keys.Alt) == Keys.Alt) && (keyData != (Keys.Alt | Keys.Menu))) { this.SuppressMenuKey = true; }
+            if (((keyData & Keys.Alt) == Keys.Alt) && (keyData != (Keys.Alt | Keys.Menu))) { SuppressMenuKey = true; }
 
             switch (keyData) {
                 case Keys.F10:
@@ -44,7 +44,7 @@ namespace QText {
                     return true;
 
                 case Keys.Escape:
-                    this.Close();
+                    Close();
                     return true;
 
                 default: return base.ProcessDialogKey(keyData);
@@ -54,7 +54,7 @@ namespace QText {
         protected override void OnKeyUp(KeyEventArgs e) {
             Debug.WriteLine("FolderEditForm_OnKeyUp: " + e.KeyData.ToString());
             if ((e != null) && (e.KeyData == Keys.Menu)) {
-                if (this.SuppressMenuKey) { this.SuppressMenuKey = false; return; }
+                if (SuppressMenuKey) { SuppressMenuKey = false; return; }
                 ToggleMenu();
                 e.Handled = true;
                 e.SuppressKeyPress = true;
@@ -73,7 +73,7 @@ namespace QText {
             }
             foreach (ListViewItem item in lsv.Items) {
                 var folder = (DocumentFolder)item.Tag;
-                if (this.CurrentFolder.Equals(folder)) {
+                if (CurrentFolder.Equals(folder)) {
                     item.Focused = true;
                     item.Selected = true;
                     break;
@@ -101,8 +101,8 @@ namespace QText {
 
         private void lsv_ItemActivate(object sender, System.EventArgs e) {
             if (lsv.SelectedItems.Count == 1) {
-                this.CurrentFolder = (DocumentFolder)lsv.SelectedItems[0].Tag;
-                this.DialogResult = DialogResult.OK;
+                CurrentFolder = (DocumentFolder)lsv.SelectedItems[0].Tag;
+                DialogResult = DialogResult.OK;
             }
         }
 
@@ -155,8 +155,8 @@ namespace QText {
                         folder.Delete();
                         lsv.Items.RemoveAt(lsv.SelectedItems[0].Index);
                         if (lsv.FocusedItem != null) { lsv.FocusedItem.Selected = true; }
-                        if (this.CurrentFolder.Equals(folder)) {
-                            this.CurrentFolder = App.Document.RootFolder;
+                        if (CurrentFolder.Equals(folder)) {
+                            CurrentFolder = App.Document.RootFolder;
                         }
                     } catch (InvalidOperationException ex) {
                         Medo.MessageBox.ShowError(this, string.Format(CultureInfo.CurrentUICulture, "Cannot delete folder.\n\n{0}", ex.Message));

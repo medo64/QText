@@ -11,9 +11,9 @@ namespace QText {
 
         public FindForm(TabFiles tabFiles) {
             InitializeComponent();
-            this.Font = SystemFonts.MessageBoxFont;
+            Font = SystemFonts.MessageBoxFont;
 
-            this._tabFiles = tabFiles;
+            _tabFiles = tabFiles;
         }
 
 
@@ -67,9 +67,9 @@ namespace QText {
             try {
                 Cursor.Current = Cursors.WaitCursor;
 
-                if (Search.FindNext(this, this._tabFiles, this._tabFiles.SelectedTab)) {
-                    var selRect = this._tabFiles.SelectedTab.GetSelectedRectangle();
-                    var thisRect = this.Bounds;
+                if (Search.FindNext(this, _tabFiles, _tabFiles.SelectedTab)) {
+                    var selRect = _tabFiles.SelectedTab.GetSelectedRectangle();
+                    var thisRect = Bounds;
                     if ((thisRect.IntersectsWith(selRect))) {
                         var screenRect = Screen.GetWorkingArea(selRect.Location);
                         var rightSpace = screenRect.Right - selRect.Right;
@@ -78,13 +78,13 @@ namespace QText {
                         var bottomSpace = screenRect.Bottom - selRect.Bottom;
 
                         if ((bottomSpace >= thisRect.Height)) {
-                            this.Location = new Point(thisRect.Left, selRect.Bottom);
+                            Location = new Point(thisRect.Left, selRect.Bottom);
                         } else if ((topSpace >= thisRect.Height)) {
-                            this.Location = new Point(thisRect.Left, selRect.Top - thisRect.Height);
+                            Location = new Point(thisRect.Left, selRect.Top - thisRect.Height);
                         } else if ((rightSpace >= thisRect.Width)) {
-                            this.Location = new Point(selRect.Right, thisRect.Top);
+                            Location = new Point(selRect.Right, thisRect.Top);
                         } else if ((leftSpace >= thisRect.Width)) {
-                            this.Location = new Point(selRect.Left - thisRect.Width, thisRect.Top);
+                            Location = new Point(selRect.Left - thisRect.Width, thisRect.Top);
                         }
                     }
                 }
@@ -92,12 +92,12 @@ namespace QText {
                 Cursor.Current = Cursors.Default;
             }
 
-            this.History.Prepend(cmbText.Text);
+            History.Prepend(cmbText.Text);
             LoadTextHistory();
         }
 
         private void btnClose_Click(object sender, EventArgs e) {
-            this.Close();
+            Close();
         }
 
 
@@ -108,7 +108,7 @@ namespace QText {
 
         private void LoadTextHistory() {
             cmbText.Items.Clear();
-            foreach (var item in this.History.Items) {
+            foreach (var item in History.Items) {
                 cmbText.Items.Add(item);
             }
         }

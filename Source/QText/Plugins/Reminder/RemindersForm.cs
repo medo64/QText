@@ -8,7 +8,7 @@ namespace QText.Plugins.Reminder {
     internal partial class RemindersForm : Form {
         public RemindersForm() {
             InitializeComponent();
-            this.Font = SystemFonts.MessageBoxFont;
+            Font = SystemFonts.MessageBoxFont;
             lsvReminders.Font = SystemFonts.MessageBoxFont;
 
             Medo.Windows.Forms.State.SetupOnLoadAndClose(this, lsvReminders);

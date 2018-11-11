@@ -1,17 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
-using System.Globalization;
 
 namespace QText {
     internal partial class OptionsForm : Form {
         public OptionsForm() {
             InitializeComponent();
-            this.Font = SystemFonts.MessageBoxFont;
+            Font = SystemFonts.MessageBoxFont;
             cmbSelectionDelimiters.Font = new Font("Courier New", SystemFonts.MessageBoxFont.SizeInPoints);
         }
 
@@ -57,7 +54,7 @@ namespace QText {
         }
 
         private void OptionsForm_FormClosing(object sender, FormClosingEventArgs e) {
-            if (this.DialogResult == DialogResult.OK) {
+            if (DialogResult == DialogResult.OK) {
                 if (Settings.Current.ActivationHotkey != App.Hotkey.Key) {
                     if (App.Hotkey.IsRegistered) {
                         App.Hotkey.Unregister();
@@ -175,7 +172,7 @@ namespace QText {
                         }
 
                         Medo.MessageBox.ShowInformation(this, "Data location transfer succeeded.");
-                        this.DialogResult = DialogResult.OK;
+                        DialogResult = DialogResult.OK;
 
                     } catch (InvalidOperationException ex) {
                         Medo.MessageBox.ShowError(this, ex.Message);

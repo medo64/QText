@@ -7,9 +7,8 @@ namespace QText {
     public class DocumentFolder {
 
         public DocumentFolder(Document document, string name) {
-            this.Document = document;
-
-            this.Name = name;
+            Document = document;
+            Name = name;
         }
 
 
@@ -26,43 +25,43 @@ namespace QText {
         /// Gets full directory path.
         /// </summary>
         internal string FullPath {
-            get { return string.IsNullOrEmpty(this.Name) ? this.Document.RootPath : Path.Combine(this.Document.RootPath, this.Name); }
+            get { return string.IsNullOrEmpty(Name) ? Document.RootPath : Path.Combine(Document.RootPath, Name); }
         }
 
         /// <summary>
         /// Gets title to display to user.
         /// </summary>
         public string Title {
-            get { return string.IsNullOrEmpty(this.Name) ? "(Default)" : Helper.DecodeTitle(this.Name); }
+            get { return string.IsNullOrEmpty(Name) ? "(Default)" : Helper.DecodeTitle(Name); }
         }
 
         /// <summary>
         /// Gets if given folder is root.
         /// </summary>
-        public bool IsRoot { get { return string.IsNullOrEmpty(this.Name); } }
+        public bool IsRoot { get { return string.IsNullOrEmpty(Name); } }
 
 
         #region Operations
 
         public void Rename(string newTitle) {
-            if (this.IsRoot) { throw new IOException("Cannot rename root folder."); }
+            if (IsRoot) { throw new IOException("Cannot rename root folder."); }
             newTitle = newTitle.Trim();
             if (string.IsNullOrEmpty(newTitle)) { throw new IOException("Folder name cannot be empty."); }
             var newName = Helper.EncodeTitle(newTitle);
 
-            Debug.WriteLine("Folder.Rename: " + this.Name + " -> " + newName);
+            Debug.WriteLine("Folder.Rename: " + Name + " -> " + newName);
             try {
-                using (var watcher = new Helper.FileSystemToggler(this.Document.Watcher)) {
-                    var oldPath = this.FullPath;
-                    var newPath = Path.Combine(Directory.GetParent(this.FullPath).FullName, newName);
+                using (var watcher = new Helper.FileSystemToggler(Document.Watcher)) {
+                    var oldPath = FullPath;
+                    var newPath = Path.Combine(Directory.GetParent(FullPath).FullName, newName);
 
                     Helper.MovePath(oldPath, newPath);
 
-                    this.Name = newName;
-                    this.Document.SortFolders();
-                    this.Document.WriteOrder();
+                    Name = newName;
+                    Document.SortFolders();
+                    Document.WriteOrder();
                 }
-                this.Document.OnFolderChanged(new DocumentFolderEventArgs(this));
+                Document.OnFolderChanged(new DocumentFolderEventArgs(this));
             } catch (Exception ex) {
                 throw new InvalidOperationException(ex.Message, ex);
             }
@@ -70,7 +69,7 @@ namespace QText {
 
         public bool IsEmpty {
             get {
-                foreach (var file in this.GetFiles()) {
+                foreach (var file in GetFiles()) {
                     return false;
                 }
                 return true;
@@ -78,17 +77,17 @@ namespace QText {
         }
 
         public void Delete() {
-            Debug.WriteLine("Folder.Delete: " + this.Name);
+            Debug.WriteLine("Folder.Delete: " + Name);
             try {
-                using (var watcher = new Helper.FileSystemToggler(this.Document.Watcher)) {
-                    if (this.Document.DeleteToRecycleBin) {
-                        SHFile.DeleteDirectory(this.FullPath);
+                using (var watcher = new Helper.FileSystemToggler(Document.Watcher)) {
+                    if (Document.DeleteToRecycleBin) {
+                        SHFile.DeleteDirectory(FullPath);
                     } else {
-                        Directory.Delete(this.FullPath, true);
+                        Directory.Delete(FullPath, true);
                     }
-                    this.Document.ProcessDelete(this.FullPath);
+                    Document.ProcessDelete(FullPath);
                 }
-                this.Document.OnChanged(new EventArgs());
+                Document.OnChanged(new EventArgs());
             } catch (Exception ex) {
                 throw new InvalidOperationException(ex.Message, ex);
             }
@@ -96,14 +95,14 @@ namespace QText {
 
 
         public void OpenInExplorer() {
-            var exe = new ProcessStartInfo("explorer.exe", "\"" + this.FullPath + "\"");
+            var exe = new ProcessStartInfo("explorer.exe", "\"" + FullPath + "\"");
             Process.Start(exe);
         }
 
 
         public void Sort() {
-            this.Document.SortFiles(this);
-            this.Document.WriteOrder();
+            Document.SortFiles(this);
+            Document.WriteOrder();
         }
 
         #endregion
@@ -112,11 +111,11 @@ namespace QText {
         #region Enumerate
 
         public IEnumerable<DocumentFile> GetFiles() {
-            return this.Document.GetFiles(this);
+            return Document.GetFiles(this);
         }
 
         public DocumentFile GetFileByName(string name) {
-            foreach (var file in this.GetFiles()) {
+            foreach (var file in GetFiles()) {
                 if (file.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) {
                     return file;
                 }
@@ -125,7 +124,7 @@ namespace QText {
         }
 
         public DocumentFile GetFileByTitle(string title) {
-            foreach (var file in this.GetFiles()) {
+            foreach (var file in GetFiles()) {
                 if (file.Title.Equals(title, StringComparison.OrdinalIgnoreCase)) {
                     return file;
                 }
@@ -139,7 +138,7 @@ namespace QText {
         public DocumentFile SelectedFile {
             get {
                 DocumentFile firstFile = null;
-                foreach (var file in this.GetFiles()) {
+                foreach (var file in GetFiles()) {
                     if (file.Selected) { return file; }
                     if (firstFile == null) { firstFile = file; }
                 }
@@ -158,7 +157,7 @@ namespace QText {
         /// </summary>
         /// <param name="title">File title.</param>
         public bool CanNewFile(string title) {
-            return this.Document.CanNewFile(this, title);
+            return Document.CanNewFile(this, title);
         }
 
         /// <summary>
@@ -168,7 +167,7 @@ namespace QText {
         /// <param name="kind">File kind.</param>
         /// <returns></returns>
         public DocumentFile NewFile(string title, DocumentKind kind) {
-            return this.Document.NewFile(this, title, kind);
+            return Document.NewFile(this, title, kind);
         }
 
         #endregion
@@ -177,16 +176,15 @@ namespace QText {
         #region Overrides
 
         public override bool Equals(object obj) {
-            var other = obj as DocumentFolder;
-            return (other != null) && (this.FullPath.Equals(other.FullPath, StringComparison.OrdinalIgnoreCase));
+            return (obj is DocumentFolder other) && (FullPath.Equals(other.FullPath, StringComparison.OrdinalIgnoreCase));
         }
 
         public override int GetHashCode() {
-            return this.Name.GetHashCode();
+            return Name.GetHashCode();
         }
 
         public override string ToString() {
-            return this.Title;
+            return Title;
         }
 
         #endregion

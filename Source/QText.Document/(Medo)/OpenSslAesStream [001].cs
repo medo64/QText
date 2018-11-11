@@ -1,4 +1,4 @@
-//Copyright (c) 2012 Josip Medved <jmedved@jmedved.com>
+//Josip Medved <jmedved@jmedved.com>   www.medo64.com
 
 //2012-05-15: Initial version.
 
@@ -24,7 +24,7 @@ namespace Medo.Security.Cryptography {
         /// <exception cref="System.ArgumentNullException">Stream cannot be null. -or- Password cannot be null.</exception>
         /// <exception cref="System.ArgumentException">Stream mode must be either Read or Write. -or- Stream is not readable. -or- Stream is not writable.</exception>
         /// <exception cref="System.IO.InvalidDataException">Unexpected end of stream. -or- Salted stream expected.</exception>
-        public OpenSslAesStream(Stream stream, String password, CryptoStreamMode streamMode)
+        public OpenSslAesStream(Stream stream, string password, CryptoStreamMode streamMode)
             : this(stream, UTF8Encoding.UTF8.GetBytes(password), streamMode, 256, CipherMode.CBC) {
         }
 
@@ -37,7 +37,7 @@ namespace Medo.Security.Cryptography {
         /// <exception cref="System.ArgumentNullException">Stream cannot be null. -or- Password cannot be null.</exception>
         /// <exception cref="System.ArgumentException">Stream mode must be either Read or Write. -or- Stream is not readable. -or- Stream is not writable.</exception>
         /// <exception cref="System.IO.InvalidDataException">Unexpected end of stream. -or- Salted stream expected.</exception>
-        public OpenSslAesStream(Stream stream, Byte[] password, CryptoStreamMode streamMode)
+        public OpenSslAesStream(Stream stream, byte[] password, CryptoStreamMode streamMode)
             : this(stream, password, streamMode, 256, CipherMode.CBC) {
         }
 
@@ -52,7 +52,7 @@ namespace Medo.Security.Cryptography {
         /// <exception cref="System.ArgumentNullException">Stream cannot be null. -or- Password cannot be null.</exception>
         /// <exception cref="System.ArgumentException">Stream mode must be either Read or Write. -or- Stream is not readable. -or- Stream is not writable. -or- Key size mode must be either 128, 192 or 256 bits. -or- Cipher mode must be either CBC or OFB.</exception>
         /// <exception cref="System.IO.InvalidDataException">Unexpected end of stream. -or- Salted stream expected.</exception>
-        public OpenSslAesStream(Stream stream, String password, CryptoStreamMode streamMode, Int32 keySize, CipherMode cipherMode)
+        public OpenSslAesStream(Stream stream, string password, CryptoStreamMode streamMode, int keySize, CipherMode cipherMode)
             : this(stream, UTF8Encoding.UTF8.GetBytes(password), streamMode, keySize, cipherMode) {
         }
 
@@ -67,7 +67,7 @@ namespace Medo.Security.Cryptography {
         /// <exception cref="System.ArgumentNullException">Stream cannot be null. -or- Password cannot be null.</exception>
         /// <exception cref="System.ArgumentException">Stream mode must be either Read or Write. -or- Stream is not readable. -or- Stream is not writable. -or- Key size mode must be either 128, 192 or 256 bits. -or- Cipher mode must be either CBC or OFB.</exception>
         /// <exception cref="System.IO.InvalidDataException">Unexpected end of stream. -or- Salted stream expected.</exception>
-        public OpenSslAesStream(Stream stream, Byte[] password, CryptoStreamMode streamMode, Int32 keySize, CipherMode cipherMode) {
+        public OpenSslAesStream(Stream stream, byte[] password, CryptoStreamMode streamMode, int keySize, CipherMode cipherMode) {
             if (stream == null) { throw new ArgumentNullException("stream", "Stream cannot be null."); }
             if (password == null) { throw new ArgumentNullException("password", "Password cannot be null."); }
             if ((streamMode != CryptoStreamMode.Read) && (streamMode != CryptoStreamMode.Write)) { throw new ArgumentException("Stream mode must be either Read or Write.", "streamMode"); }
@@ -86,15 +86,14 @@ namespace Medo.Security.Cryptography {
                 var salt = new byte[8];
                 Buffer.BlockCopy(buffer, 8, salt, 0, 8);
 
-                byte[] key, iv;
-                GenerateKeyAndIV(password, salt, keySize, 128, out key, out iv);
+                GenerateKeyAndIV(password, salt, keySize, 128, out var key, out var iv);
                 using (var aes = new RijndaelManaged()) {
                     aes.BlockSize = 128;
                     aes.KeySize = keySize;
                     aes.Mode = cipherMode;
                     aes.Padding = PaddingMode.PKCS7;
-                    this.Transform = aes.CreateDecryptor(key, iv);
-                    this.Stream = new CryptoStream(stream, this.Transform, CryptoStreamMode.Read);
+                    Transform = aes.CreateDecryptor(key, iv);
+                    Stream = new CryptoStream(stream, Transform, CryptoStreamMode.Read);
                 }
             } else {
                 var salt = new byte[8];
@@ -102,15 +101,14 @@ namespace Medo.Security.Cryptography {
                 stream.Write(SaltedTextCache, 0, 8);
                 stream.Write(salt, 0, 8);
 
-                byte[] key, iv;
-                GenerateKeyAndIV(password, salt, keySize, 128, out key, out iv);
+                GenerateKeyAndIV(password, salt, keySize, 128, out var key, out var iv);
                 using (var aes = new RijndaelManaged()) {
                     aes.BlockSize = 128;
                     aes.KeySize = keySize;
                     aes.Mode = cipherMode;
                     aes.Padding = PaddingMode.PKCS7;
-                    this.Transform = aes.CreateEncryptor(key, iv);
-                    this.Stream = new CryptoStream(stream, this.Transform, CryptoStreamMode.Write);
+                    Transform = aes.CreateEncryptor(key, iv);
+                    Stream = new CryptoStream(stream, Transform, CryptoStreamMode.Write);
                 }
             }
         }
@@ -120,7 +118,7 @@ namespace Medo.Security.Cryptography {
         private readonly ICryptoTransform Transform;
 
         private static readonly RandomNumberGenerator Rnd = RandomNumberGenerator.Create();
-        private static Byte[] SaltedTextCache = new Byte[] { 0x53, 0x61, 0x6c, 0x74, 0x65, 0x64, 0x5f, 0x5f }; //Salted__
+        private static byte[] SaltedTextCache = new byte[] { 0x53, 0x61, 0x6c, 0x74, 0x65, 0x64, 0x5f, 0x5f }; //Salted__
 
 
         /// <summary>
@@ -128,7 +126,7 @@ namespace Medo.Security.Cryptography {
         /// </summary>
         /// <value>True if the current stream is readable; otherwise, false.</value>
         public override bool CanRead {
-            get { return this.Stream.CanRead; }
+            get { return Stream.CanRead; }
         }
 
         /// <summary>
@@ -136,7 +134,7 @@ namespace Medo.Security.Cryptography {
         /// </summary>
         /// <value>Always false.</value>
         public override bool CanSeek {
-            get { return this.Stream.CanSeek; }
+            get { return Stream.CanSeek; }
         }
 
         /// <summary>
@@ -144,15 +142,15 @@ namespace Medo.Security.Cryptography {
         /// </summary>
         /// <value>True if the current stream is writable; otherwise, false.</value>
         public override bool CanWrite {
-            get { return this.Stream.CanWrite; }
+            get { return Stream.CanWrite; }
         }
 
         /// <summary>
         /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
         /// </summary>
         public override void Flush() {
-            this.Stream.FlushFinalBlock();
-            this.Stream.Flush();
+            Stream.FlushFinalBlock();
+            Stream.Flush();
         }
 
         /// <summary>
@@ -161,7 +159,7 @@ namespace Medo.Security.Cryptography {
         /// <value>This property is not supported.</value>
         /// <exception cref="System.NotSupportedException">This property is not supported.</exception>
         public override long Length {
-            get { return this.Stream.Length; }
+            get { return Stream.Length; }
         }
 
         /// <summary>
@@ -170,8 +168,8 @@ namespace Medo.Security.Cryptography {
         /// <value>This property is not supported.</value>
         /// <exception cref="System.NotSupportedException">This property is not supported.</exception>
         public override long Position {
-            get { return this.Stream.Position; }
-            set { this.Stream.Position = value; }
+            get { return Stream.Position; }
+            set { Stream.Position = value; }
         }
 
         /// <summary>
@@ -185,7 +183,7 @@ namespace Medo.Security.Cryptography {
         /// <exception cref="System.ArgumentOutOfRangeException">The offset parameter is less than zero.-or- The count parameter is less than zero.</exception>
         /// <exception cref="System.ArgumentException">The sum of the count and offset parameters is longer than the length of the buffer.</exception>
         public override int Read(byte[] buffer, int offset, int count) {
-            return this.Stream.Read(buffer, offset, count);
+            return Stream.Read(buffer, offset, count);
         }
 
         /// <summary>
@@ -196,7 +194,7 @@ namespace Medo.Security.Cryptography {
         /// <returns>This method is not supported.</returns>
         /// <exception cref="System.NotSupportedException">This method is not supported.</exception>
         public override long Seek(long offset, SeekOrigin origin) {
-            return this.Stream.Seek(offset, origin);
+            return Stream.Seek(offset, origin);
         }
 
         /// <summary>
@@ -205,7 +203,7 @@ namespace Medo.Security.Cryptography {
         /// <param name="value">The desired length of the current stream in bytes.</param>
         /// <exception cref="System.NotSupportedException">This property exists only to support inheritance from System.IO.Stream, and cannot be used.</exception>
         public override void SetLength(long value) {
-            this.Stream.SetLength(value);
+            Stream.SetLength(value);
         }
 
         /// <summary>
@@ -218,7 +216,7 @@ namespace Medo.Security.Cryptography {
         /// <exception cref="System.ArgumentOutOfRangeException">The offset parameter is less than zero.-or- The count parameter is less than zero.</exception>
         /// <exception cref="System.ArgumentException">The sum of the count and offset parameters is longer than the length of the buffer.</exception>
         public override void Write(byte[] buffer, int offset, int count) {
-            this.Stream.Write(buffer, offset, count);
+            Stream.Write(buffer, offset, count);
         }
 
 
@@ -230,8 +228,8 @@ namespace Medo.Security.Cryptography {
         /// <param name="disposing">True to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing) {
             if (disposing) {
-                this.Stream.Dispose();
-                this.Transform.Dispose();
+                Stream.Dispose();
+                Transform.Dispose();
             }
             base.Dispose(disposing);
         }

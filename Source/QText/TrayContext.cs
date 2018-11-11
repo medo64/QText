@@ -12,10 +12,10 @@ namespace QText {
         private static readonly object SyncRoot = new object();
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", Justification = "This program is not intended to be localized.")]
         public TrayContext(MainForm form) : base() {
-            this.Form = form;
+            Form = form;
 
-            this.Form.CreateControl();
-            this.Form.Handle.GetType();
+            Form.CreateControl();
+            Form.Handle.GetType();
 
             if ((Environment.OSVersion.Platform == PlatformID.Win32NT) && (Environment.OSVersion.Version.Major >= 10)) {
                 notMain.Icon = QText.Properties.Resources.TrayIcon_White;
@@ -26,12 +26,12 @@ namespace QText {
 
             notMain.MouseClick += delegate (object sender, MouseEventArgs e) {
                 if ((e.Button == MouseButtons.Left) && (Settings.Current.TrayOneClickActivation)) {
-                    this.ShowForm();
+                    ShowForm();
                 }
             };
             notMain.MouseDoubleClick += delegate (object sender, MouseEventArgs e) {
                 if (e.Button == MouseButtons.Left) {
-                    this.ShowForm();
+                    ShowForm();
                 }
             };
 
@@ -40,17 +40,17 @@ namespace QText {
                 var showItem = new MenuItem("&Show") { DefaultItem = true };
                 if (App.Hotkey.IsRegistered) { showItem.Text += "\t" + Helper.GetKeyString(App.Hotkey.Key); }
                 showItem.Click += delegate (object sender2, EventArgs e2) {
-                    this.ShowForm();
+                    ShowForm();
                 };
 
                 var showOnPrimaryItem = new MenuItem("Show on primary screen");
                 showItem.Click += delegate (object sender2, EventArgs e2) {
-                    this.ShowForm(true);
+                    ShowForm(true);
                 };
 
                 var exitItem = new MenuItem("E&xit");
                 exitItem.Click += delegate (object sender2, EventArgs e2) {
-                    this.HideIcon();
+                    HideIcon();
                     Application.Exit();
                 };
 
@@ -78,9 +78,9 @@ namespace QText {
 
         public void ShowForm(bool showOnPrimary = false) {
             try {
-                if (this.Form.InvokeRequired) {
+                if (Form.InvokeRequired) {
                     var method = new ShowFormProcDelegate(ShowFormProc);
-                    this.Form.Invoke(method, showOnPrimary);
+                    Form.Invoke(method, showOnPrimary);
                 } else {
                     ShowFormProc(showOnPrimary);
                 }
@@ -88,70 +88,70 @@ namespace QText {
         }
 
         private void ShowFormProc(bool showOnPrimary) {
-            this.ShowIcon();
+            ShowIcon();
 
             lock (TrayContext.SyncRoot) {
-                if (this.Form.IsHandleCreated == false) {
-                    this.Form.CreateControl();
-                    this.Form.Handle.GetType();
+                if (Form.IsHandleCreated == false) {
+                    Form.CreateControl();
+                    Form.Handle.GetType();
                 }
 
-                this.Form.Show();
-                if (this.Form.WindowState == FormWindowState.Minimized) { this.Form.WindowState = FormWindowState.Normal; }
+                Form.Show();
+                if (Form.WindowState == FormWindowState.Minimized) { Form.WindowState = FormWindowState.Normal; }
 
                 if (showOnPrimary) {
                     var priBounds = Screen.PrimaryScreen.WorkingArea;
-                    var currBounds = this.Form.Bounds;
+                    var currBounds = Form.Bounds;
                     var normalBounds = default(Rectangle);
-                    if ((this.Form.WindowState == FormWindowState.Normal)) {
-                        normalBounds = this.Form.Bounds;
+                    if ((Form.WindowState == FormWindowState.Normal)) {
+                        normalBounds = Form.Bounds;
                     } else {
-                        normalBounds = this.Form.RestoreBounds;
+                        normalBounds = Form.RestoreBounds;
                     }
 
                     if (!((currBounds.Left >= priBounds.Left) && (currBounds.Right <= priBounds.Right) && (currBounds.Top >= priBounds.Top) && (currBounds.Bottom <= priBounds.Bottom))) {
-                        var oldState = this.Form.WindowState;
+                        var oldState = Form.WindowState;
 
                         if (oldState != FormWindowState.Normal) {
-                            this.Form.WindowState = FormWindowState.Normal;
+                            Form.WindowState = FormWindowState.Normal;
                         }
 
                         if ((normalBounds.Width > priBounds.Width)) {
-                            this.Form.Width = priBounds.Width;
+                            Form.Width = priBounds.Width;
                         }
                         if ((normalBounds.Left < priBounds.Left)) {
-                            this.Form.Left = priBounds.Left;
+                            Form.Left = priBounds.Left;
                         }
                         if ((normalBounds.Right > priBounds.Right)) {
-                            this.Form.Left = priBounds.Right - normalBounds.Width;
+                            Form.Left = priBounds.Right - normalBounds.Width;
                         }
 
                         if ((normalBounds.Height > priBounds.Height)) {
-                            this.Form.Height = priBounds.Height;
+                            Form.Height = priBounds.Height;
                         }
                         if ((normalBounds.Top < priBounds.Top)) {
-                            this.Form.Top = priBounds.Top;
+                            Form.Top = priBounds.Top;
                         }
                         if ((normalBounds.Bottom > priBounds.Bottom)) {
-                            this.Form.Top = priBounds.Bottom - normalBounds.Height;
+                            Form.Top = priBounds.Bottom - normalBounds.Height;
                         }
 
-                        this.Form.WindowState = oldState;
+                        Form.WindowState = oldState;
                     }
                 }
 
-                this.Form.Activate();
+                Form.Activate();
             }
         }
 
 
         public void HideForm(bool showOnPrimary = false) {
             try {
-                if (this.Form.InvokeRequired) {
-                    var method = new HideFormProcDelegate(this.HideFormProc);
-                    this.Form.Invoke(method, showOnPrimary);
+                if (Form.InvokeRequired) {
+                    var method = new HideFormProcDelegate(HideFormProc);
+                    Form.Invoke(method, showOnPrimary);
                 } else {
-                    this.HideFormProc();
+                    HideFormProc();
                 }
             } catch (Exception) { }
         }
@@ -159,15 +159,15 @@ namespace QText {
         private delegate void HideFormProcDelegate();
 
         private void HideFormProc() {
-            this.ShowIcon();
+            ShowIcon();
 
             lock (TrayContext.SyncRoot) {
-                if (this.Form.IsHandleCreated == false) { return; } //ignore if handle is not created
-                if (System.Windows.Forms.Form.ActiveForm != this.Form) { return; } //ignore if form is not active
+                if (Form.IsHandleCreated == false) { return; } //ignore if handle is not created
+                if (System.Windows.Forms.Form.ActiveForm != Form) { return; } //ignore if form is not active
 
-                this.Form.Close();
+                Form.Close();
             }
-       }
+        }
 
         #endregion
 
@@ -190,7 +190,7 @@ namespace QText {
 
 
         protected override void ExitThreadCore() {
-            this.HideIcon();
+            HideIcon();
             base.ExitThreadCore();
         }
 

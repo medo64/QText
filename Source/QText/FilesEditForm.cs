@@ -9,9 +9,9 @@ namespace QText {
 
         public FilesEditForm(TabFiles tabFiles) {
             InitializeComponent();
-            this.Font = SystemFonts.MessageBoxFont;
+            Font = SystemFonts.MessageBoxFont;
 
-            this.TabFiles = tabFiles;
+            TabFiles = tabFiles;
             mnu.Renderer = Helper.ToolstripRenderer;
             Helper.ScaleToolstrip(mnu);
 
@@ -23,7 +23,7 @@ namespace QText {
 
         protected override bool ProcessDialogKey(Keys keyData) {
             Debug.WriteLine("FilesEditForm_ProcessDialogKey: " + keyData.ToString());
-            if (((keyData & Keys.Alt) == Keys.Alt) && (keyData != (Keys.Alt | Keys.Menu))) { this.SuppressMenuKey = true; }
+            if (((keyData & Keys.Alt) == Keys.Alt) && (keyData != (Keys.Alt | Keys.Menu))) { SuppressMenuKey = true; }
 
             switch (keyData) {
                 case Keys.F10:
@@ -40,7 +40,7 @@ namespace QText {
                     return true;
 
                 case Keys.Escape:
-                    this.Close();
+                    Close();
                     return true;
 
                 default: return base.ProcessDialogKey(keyData);
@@ -50,7 +50,7 @@ namespace QText {
         protected override void OnKeyUp(KeyEventArgs e) {
             Debug.WriteLine("FilesEditForm_OnKeyUp: " + e.KeyData.ToString());
             if ((e != null) && (e.KeyData == Keys.Menu)) {
-                if (this.SuppressMenuKey) { this.SuppressMenuKey = false; return; }
+                if (SuppressMenuKey) { SuppressMenuKey = false; return; }
                 ToggleMenu();
                 e.Handled = true;
                 e.SuppressKeyPress = true;
@@ -64,13 +64,13 @@ namespace QText {
 
 
         private void Form_Load(object sender, System.EventArgs e) {
-            foreach (var page in this.TabFiles.TabPages) {
+            foreach (var page in TabFiles.TabPages) {
                 var file = (TabFile)page;
                 lsv.Items.Add(new ListViewItem(file.Text) { Tag = file });
             }
             foreach (ListViewItem item in lsv.Items) {
-                if (this.TabFiles.SelectedTab != null) {
-                    if (string.Equals(item.Text, this.TabFiles.SelectedTab.Text, StringComparison.Ordinal)) {
+                if (TabFiles.SelectedTab != null) {
+                    if (string.Equals(item.Text, TabFiles.SelectedTab.Text, StringComparison.Ordinal)) {
                         item.Focused = true;
                         item.Selected = true;
                         break;
@@ -103,8 +103,8 @@ namespace QText {
 
         private void lsv_ItemActivate(object sender, System.EventArgs e) {
             if (lsv.SelectedItems.Count == 1) {
-                this.TabFiles.SelectedTab = (TabFile)lsv.SelectedItems[0].Tag;
-                this.DialogResult = DialogResult.OK;
+                TabFiles.SelectedTab = (TabFile)lsv.SelectedItems[0].Tag;
+                DialogResult = DialogResult.OK;
             }
         }
 
@@ -134,16 +134,16 @@ namespace QText {
         private void mnuDelete_Click(object sender, System.EventArgs e) {
             if (lsv.SelectedItems.Count == 1) {
                 var tabFile = (TabFile)lsv.SelectedItems[0].Tag;
-                if (Helper.DeleteTabFile(this, this.TabFiles, tabFile)) {
+                if (Helper.DeleteTabFile(this, TabFiles, tabFile)) {
                     lsv.Items.Remove(lsv.SelectedItems[0]);
                 }
             }
         }
 
         private void mnuSort_Click(object sender, EventArgs e) {
-            this.TabFiles.CurrentFolder.Sort();
-            this.TabFiles.FolderOpen(this.TabFiles.CurrentFolder, saveBeforeOpen: false);
-            this.DialogResult = DialogResult.OK;
+            TabFiles.CurrentFolder.Sort();
+            TabFiles.FolderOpen(TabFiles.CurrentFolder, saveBeforeOpen: false);
+            DialogResult = DialogResult.OK;
         }
 
         #endregion

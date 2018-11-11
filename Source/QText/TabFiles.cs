@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.IO;
 using System.Windows.Forms;
 
 namespace QText {
@@ -10,11 +8,11 @@ namespace QText {
 
         public TabFiles()
             : base() {
-            this.SetStyle(ControlStyles.DoubleBuffer, true);
-            this.SetStyle(ControlStyles.ResizeRedraw, true);
-            this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-            this.Appearance = TabAppearance.Normal;
-            this.DrawMode = TabDrawMode.Normal;
+            SetStyle(ControlStyles.DoubleBuffer, true);
+            SetStyle(ControlStyles.ResizeRedraw, true);
+            SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+            Appearance = TabAppearance.Normal;
+            DrawMode = TabDrawMode.Normal;
         }
 
         protected override void OnPaint(PaintEventArgs e) {
@@ -27,7 +25,7 @@ namespace QText {
             if (e == null) { return; }
             base.OnDrawItem(e);
 
-            var tab = (TabFile)this.TabPages[e.Index];
+            var tab = (TabFile)TabPages[e.Index];
             var x = e.Bounds.Left;
             var y = e.Bounds.Top + e.Bounds.Height / 2;
 
@@ -43,15 +41,15 @@ namespace QText {
                 y += SystemInformation.Border3DSize.Height;
             }
             if (tab.BaseFile.IsEncrypted) {
-                e.Graphics.DrawString(tab.Text, this.Font, Brushes.DarkGreen, x, y, this.StringFormat);
+                e.Graphics.DrawString(tab.Text, Font, Brushes.DarkGreen, x, y, StringFormat);
             } else {
-                e.Graphics.DrawString(tab.Text, this.Font, SystemBrushes.ControlText, x, y, this.StringFormat);
+                e.Graphics.DrawString(tab.Text, Font, SystemBrushes.ControlText, x, y, StringFormat);
             }
         }
 
         protected override void OnGotFocus(EventArgs e) {
             base.OnGotFocus(e);
-            if (this.SelectedTab != null) { this.SelectedTab.Select(); }
+            if (SelectedTab != null) { SelectedTab.Select(); }
         }
 
         protected override void OnSelected(TabControlEventArgs e) {
@@ -65,58 +63,57 @@ namespace QText {
 
 
         public void FolderOpen(DocumentFolder folder, bool saveBeforeOpen = true) {
-            if (folder == null) { throw new ArgumentNullException("folder", "Folder cannot be null."); }
-            if ((this.CurrentFolder != null) && (saveBeforeOpen)) { FolderSave(); }
+            if ((CurrentFolder != null) && (saveBeforeOpen)) { FolderSave(); }
 
-            var initialVisibility = this.Visible;
-            this.Visible = false;
-            this.SelectedTab = null;
-            this.TabPages.Clear();
-            this.CurrentFolder = folder;
+            var initialVisibility = Visible;
+            Visible = false;
+            SelectedTab = null;
+            TabPages.Clear();
+            CurrentFolder = folder ?? throw new ArgumentNullException("folder", "Folder cannot be null.");
 
-            foreach (var tab in Helper.GetTabs(this.CurrentFolder.GetFiles(), this.TabContextMenuStrip)) {
-                this.TabPages.Add(tab);
+            foreach (var tab in Helper.GetTabs(CurrentFolder.GetFiles(), TabContextMenuStrip)) {
+                TabPages.Add(tab);
             }
 
-            var selectedTab = (this.TabCount > 0) ? (TabFile)this.TabPages[0] : null;
-            foreach (TabFile tab in this.TabPages) {
+            var selectedTab = (TabCount > 0) ? (TabFile)TabPages[0] : null;
+            foreach (TabFile tab in TabPages) {
                 if (tab.BaseFile.Equals(folder.SelectedFile)) {
                     selectedTab = tab;
                 }
             }
 
             SelectNextTab(selectedTab);
-            if (this.SelectedTab != null) {
-                this.SelectedTab.Select();
-                this.OnSelectedIndexChanged(new EventArgs());
+            if (SelectedTab != null) {
+                SelectedTab.Select();
+                OnSelectedIndexChanged(new EventArgs());
             }
 
-            this.Visible = initialVisibility;
-            if (this.SelectedTab != null) {
-                this.SelectedTab.Select();
-                this.OnSelectedIndexChanged(new EventArgs());
+            Visible = initialVisibility;
+            if (SelectedTab != null) {
+                SelectedTab.Select();
+                OnSelectedIndexChanged(new EventArgs());
             }
         }
 
         public void SelectNextTab(TabFile preferredTab) {
             if (preferredTab == null) { return; }
             if (preferredTab.BaseFile.IsEncrypted) {
-                var currIndex = this.TabPages.IndexOf(preferredTab);
+                var currIndex = TabPages.IndexOf(preferredTab);
                 preferredTab = null; //remove it in case that no unencrypted tab is found
-                for (var i = 0; i < this.TabPages.Count; i++) {
-                    var nextIndex = (currIndex + i) % this.TabPages.Count;
-                    var nextTab = (TabFile)this.TabPages[nextIndex];
+                for (var i = 0; i < TabPages.Count; i++) {
+                    var nextIndex = (currIndex + i) % TabPages.Count;
+                    var nextTab = (TabFile)TabPages[nextIndex];
                     if (nextTab.BaseFile.IsEncrypted == false) {
                         preferredTab = nextTab;
                         break;
                     }
                 }
             }
-            this.SelectedTab = preferredTab;
+            SelectedTab = preferredTab;
         }
 
         public void FolderSave() {
-            foreach (TabFile file in this.TabPages) {
+            foreach (TabFile file in TabPages) {
                 if (file.IsChanged) { file.Save(); }
             }
         }
@@ -149,14 +146,14 @@ namespace QText {
         #region File operations
 
         public void AddTab(string title, bool isRichText) {
-            var t = TabFile.Create(this.CurrentFolder, title, isRichText ? DocumentKind.RichText : DocumentKind.PlainText);
-            t.ContextMenuStrip = this.TabContextMenuStrip;
-            if (this.SelectedTab != null) {
-                this.TabPages.Insert(this.TabPages.IndexOf(this.SelectedTab) + 1, t);
+            var t = TabFile.Create(CurrentFolder, title, isRichText ? DocumentKind.RichText : DocumentKind.PlainText);
+            t.ContextMenuStrip = TabContextMenuStrip;
+            if (SelectedTab != null) {
+                TabPages.Insert(TabPages.IndexOf(SelectedTab) + 1, t);
             } else {
-                this.TabPages.Add(t);
+                TabPages.Add(t);
             }
-            this.SelectedTab = t;
+            SelectedTab = t;
         }
 
         public void DeleteTab(TabFile tab) {
@@ -165,10 +162,10 @@ namespace QText {
         }
 
         public void RemoveTab(TabFile tab) {
-            this.SelectedTab = GetNextTab();
-            this.TabPages.Remove(tab);
-            if (this.SelectedTab != null) {
-                this.SelectedTab.Open();
+            SelectedTab = GetNextTab();
+            TabPages.Remove(tab);
+            if (SelectedTab != null) {
+                SelectedTab.Open();
             }
         }
 
@@ -180,57 +177,57 @@ namespace QText {
 
         protected override void OnMouseDown(MouseEventArgs e) {
             if ((e != null) && (e.Button == MouseButtons.Left) && (base.SelectedTab != null) && (!base.GetTabRect(base.SelectedIndex).IsEmpty)) {
-                this._dragTabPage = base.SelectedTab;
+                _dragTabPage = base.SelectedTab;
             }
             base.OnMouseDown(e);
         }
 
         protected override void OnMouseMove(MouseEventArgs e) {
-            if ((e != null) && (e.Button == MouseButtons.Left) && (this._dragTabPage != null)) {
+            if ((e != null) && (e.Button == MouseButtons.Left) && (_dragTabPage != null)) {
                 var currTabPage = GetTabPageFromXY(e.X, e.Y);
                 if ((currTabPage != null)) {
                     var currRect = base.GetTabRect(base.TabPages.IndexOf(currTabPage));
-                    if ((base.TabPages.IndexOf(currTabPage) < base.TabPages.IndexOf(this._dragTabPage))) {
+                    if ((base.TabPages.IndexOf(currTabPage) < base.TabPages.IndexOf(_dragTabPage))) {
                         base.Cursor = Cursors.PanWest;
-                    } else if ((base.TabPages.IndexOf(currTabPage) > base.TabPages.IndexOf(this._dragTabPage))) {
+                    } else if ((base.TabPages.IndexOf(currTabPage) > base.TabPages.IndexOf(_dragTabPage))) {
                         base.Cursor = Cursors.PanEast;
                     } else {
                         base.Cursor = Cursors.Default;
                     }
                 } else {
-                    this.Cursor = Cursors.No;
+                    Cursor = Cursors.No;
                 }
             } else {
-                this.Cursor = Cursors.Default;
+                Cursor = Cursors.Default;
             }
             base.OnMouseMove(e);
         }
 
         protected override void OnMouseUp(MouseEventArgs e) {
-            if ((e != null) && (e.Button == MouseButtons.Left) && (this._dragTabPage != null)) {
+            if ((e != null) && (e.Button == MouseButtons.Left) && (_dragTabPage != null)) {
                 var currTabPage = GetTabPageFromXY(e.X, e.Y);
-                if ((currTabPage != null) && (!currTabPage.Equals(this._dragTabPage))) {
+                if ((currTabPage != null) && (!currTabPage.Equals(_dragTabPage))) {
                     var currRect = base.GetTabRect(base.TabPages.IndexOf(currTabPage));
                     base.Enabled = false;
-                    if ((base.TabPages.IndexOf(currTabPage) < base.TabPages.IndexOf(this._dragTabPage))) {
-                        base.TabPages.Remove(this._dragTabPage);
-                        base.TabPages.Insert(base.TabPages.IndexOf(currTabPage), this._dragTabPage);
-                        base.SelectedTab = this._dragTabPage;
+                    if ((base.TabPages.IndexOf(currTabPage) < base.TabPages.IndexOf(_dragTabPage))) {
+                        base.TabPages.Remove(_dragTabPage);
+                        base.TabPages.Insert(base.TabPages.IndexOf(currTabPage), _dragTabPage);
+                        base.SelectedTab = _dragTabPage;
                         var pivotTab = currTabPage as TabFile;
-                        var movedTab = this._dragTabPage as TabFile;
+                        var movedTab = _dragTabPage as TabFile;
                         movedTab.BaseFile.OrderBefore(pivotTab.BaseFile);
-                    } else if ((base.TabPages.IndexOf(currTabPage) > base.TabPages.IndexOf(this._dragTabPage))) {
-                        base.TabPages.Remove(this._dragTabPage);
-                        base.TabPages.Insert(base.TabPages.IndexOf(currTabPage) + 1, this._dragTabPage);
-                        base.SelectedTab = this._dragTabPage;
+                    } else if ((base.TabPages.IndexOf(currTabPage) > base.TabPages.IndexOf(_dragTabPage))) {
+                        base.TabPages.Remove(_dragTabPage);
+                        base.TabPages.Insert(base.TabPages.IndexOf(currTabPage) + 1, _dragTabPage);
+                        base.SelectedTab = _dragTabPage;
                         var pivotTab = currTabPage as TabFile;
-                        var movedTab = this._dragTabPage as TabFile;
+                        var movedTab = _dragTabPage as TabFile;
                         movedTab.BaseFile.OrderAfter(pivotTab.BaseFile);
                     }
                     base.Enabled = true;
                 }
             }
-            this._dragTabPage = null;
+            _dragTabPage = null;
             base.Cursor = Cursors.Default;
             base.OnMouseUp(e);
         }
@@ -239,12 +236,12 @@ namespace QText {
 
 
         private TabFile GetNextTab() {
-            var tindex = this.TabPages.IndexOf(this.SelectedTab) + 1; //select next tab
-            if (tindex >= this.TabPages.Count) {
+            var tindex = TabPages.IndexOf(SelectedTab) + 1; //select next tab
+            if (tindex >= TabPages.Count) {
                 tindex -= 2; //go to one in front of it
             }
-            if ((tindex > 0) && (tindex < this.TabPages.Count)) {
-                return (TabFile)this.TabPages[tindex];
+            if ((tindex > 0) && (tindex < TabPages.Count)) {
+                return (TabFile)TabPages[tindex];
             }
             return null;
         }

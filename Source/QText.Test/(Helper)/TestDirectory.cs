@@ -5,9 +5,9 @@ namespace QTextTest {
     internal class TestDirectory : IDisposable {
 
         public TestDirectory(bool dontCreate = false) {
-            this.Directory = new DirectoryInfo(Path.Combine(Path.GetTempPath(), "QText.Test " + Guid.NewGuid().ToString()));
+            Directory = new DirectoryInfo(Path.Combine(Path.GetTempPath(), "QText.Test " + Guid.NewGuid().ToString()));
             if (!dontCreate) {
-                this.Directory.Create();
+                Directory.Create();
             }
         }
 
@@ -20,14 +20,14 @@ namespace QTextTest {
 
 
         public void CreateRawFile(string fileName) {
-            var file = new FileInfo(Path.Combine(this.Directory.FullName, fileName));
+            var file = new FileInfo(Path.Combine(Directory.FullName, fileName));
             if (!file.Directory.Exists) { file.Directory.Create(); }
             file.Create().Close();
         }
 
 
         void IDisposable.Dispose() {
-            if (this.Directory.Exists) { this.Directory.Delete(true); }
+            if (Directory.Exists) { Directory.Delete(true); }
             GC.SuppressFinalize(this);
         }
 

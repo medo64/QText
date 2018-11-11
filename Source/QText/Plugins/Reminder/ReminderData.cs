@@ -5,9 +5,9 @@ namespace QText.Plugins.Reminder {
     internal class ReminderData {
 
         public ReminderData(bool enabled, TimeSpan time, string description) {
-            this.Enabled = enabled;
-            this.Time = time;
-            this.Description = description;
+            Enabled = enabled;
+            Time = time;
+            Description = description;
         }
 
 
@@ -15,17 +15,17 @@ namespace QText.Plugins.Reminder {
 
         private TimeSpan _time;
         public TimeSpan Time {
-            get { return this._time; }
+            get { return _time; }
             set {
                 if ((value.TotalDays < 0) || (value.TotalDays >= 1)) { throw new ArgumentOutOfRangeException(nameof(value), "Value must be within a day."); }
-                this._time = new TimeSpan(value.Hours, value.Minutes, 0);
+                _time = new TimeSpan(value.Hours, value.Minutes, 0);
             }
         }
 
         private string _description;
         public string Description {
-            get { return this._description; }
-            set { this._description = (value ?? ""); }
+            get { return _description; }
+            set { _description = (value ?? ""); }
         }
 
 
@@ -47,7 +47,7 @@ namespace QText.Plugins.Reminder {
         }
 
         public override string ToString() {
-            return (this.Enabled ? "" : "-") + this.Time.ToString(ReminderData.TimeSpanFormat, CultureInfo.InvariantCulture) + " " + this.Description;
+            return (Enabled ? "" : "-") + Time.ToString(ReminderData.TimeSpanFormat, CultureInfo.InvariantCulture) + " " + Description;
         }
 
 

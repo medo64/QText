@@ -50,10 +50,10 @@ namespace QText {
         public string CarbonCopyDirectory {
             get { return Config.Read("CarbonCopy.Directory", Medo.Configuration.Settings.Read("CarbonCopyFolder", "")); }
             set {
-                if (this.FilesLocation == null) { return; }
-                if ((string.Compare(value.Trim(), this.FilesLocation.Trim(), true) == 0)) { return; }
+                if (FilesLocation == null) { return; }
+                if ((string.Compare(value.Trim(), FilesLocation.Trim(), true) == 0)) { return; }
                 Config.Write("CarbonCopy.Directory", value);
-                if (string.IsNullOrEmpty(value)) { this.CarbonCopyUse = false; }
+                if (string.IsNullOrEmpty(value)) { CarbonCopyUse = false; }
             }
         }
 
@@ -73,7 +73,7 @@ namespace QText {
         public bool CarbonCopyUse {
             get { return Config.Read("CarbonCopy.Active", Medo.Configuration.Settings.Read("CarbonCopyUse", false)); }
             set {
-                if (string.IsNullOrEmpty(this.CarbonCopyDirectory)) { return; }
+                if (string.IsNullOrEmpty(CarbonCopyDirectory)) { return; }
                 Config.Write("CarbonCopy.Active", value);
             }
         }
@@ -115,7 +115,7 @@ namespace QText {
             get {
                 var tmpFamilyName = Config.Read("Font.Name", Medo.Configuration.Settings.Read("DisplayFont_FamilyName", SystemFonts.MessageBoxFont.Name));
                 var tmpSize = Config.Read("Font.Size", Medo.Configuration.Settings.Read("DisplayFont_Size", SystemFonts.MessageBoxFont.Size));
-                var tmpStyle = Config.Read("Font.Style", Medo.Configuration.Settings.Read("DisplayFont_Style", (Int32)SystemFonts.MessageBoxFont.Style));
+                var tmpStyle = Config.Read("Font.Style", Medo.Configuration.Settings.Read("DisplayFont_Style", (int)SystemFonts.MessageBoxFont.Style));
                 try {
                     return new Font(tmpFamilyName, Convert.ToSingle(tmpSize), (FontStyle)tmpStyle);
                 } catch (Exception) {
@@ -125,7 +125,7 @@ namespace QText {
             set {
                 Config.Write("Font.Name", value.Name);
                 Config.Write("Font.Size", value.Size);
-                Config.Write("Font.Style", (Int32)value.Style);
+                Config.Write("Font.Style", (int)value.Style);
             }
         }
 
@@ -219,7 +219,7 @@ namespace QText {
 
         [Browsable(false)]
         public bool DisplayWordWrap {
-            get { return (this.ScrollBars == ScrollBars.Vertical); }
+            get { return (ScrollBars == ScrollBars.Vertical); }
         }
 
         [Category("Storage")]
@@ -417,7 +417,7 @@ namespace QText {
         [DisplayName("Show balloon")]
         [Description("If true, information balloon is shown upon next movement to tray.")]
         [DefaultValue(false)]
-        public Boolean ShowBalloonOnNextMinimize {
+        public bool ShowBalloonOnNextMinimize {
             get { return Config.Read("ShowBalloonOnNextTray", Medo.Configuration.Settings.Read("ShowBalloonOnNextMinimize", true)) && !Settings.Current.NoRegistryWrites; }
             set { Config.Write("ShowBalloonOnNextTray", value); }
         }
@@ -441,7 +441,7 @@ namespace QText {
         }
 
         [Browsable(false)]
-        public Boolean SearchCaseSensitive {
+        public bool SearchCaseSensitive {
             get { return Config.Read("Search.CaseSensitive", Medo.Configuration.Settings.Read("SearchCaseSensitive", false)); }
             set { Config.Write("Search.CaseSensitive", value); }
         }
@@ -512,10 +512,10 @@ namespace QText {
         public bool UseSpellCheck {
             get {
                 if ((Environment.OSVersion.Version.Major < 6) || ((Environment.OSVersion.Version.Major == 6) && (Environment.OSVersion.Version.Minor < 2))) { return false; } //not supported below Windows 8
-                return Config.Read("UseSpellCheck", Medo.Configuration.Settings.Read("UseSpellCheck", true)) && this.UseRichText50;
+                return Config.Read("UseSpellCheck", Medo.Configuration.Settings.Read("UseSpellCheck", true)) && UseRichText50;
             }
             set {
-                if (value) { this.UseRichText50 = true; }
+                if (value) { UseRichText50 = true; }
                 Config.Write("UseSpellCheck", value);
             }
         }

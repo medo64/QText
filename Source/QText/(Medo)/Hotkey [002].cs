@@ -1,5 +1,6 @@
-﻿//Josip Medved <jmedved@jmedved.com> http://www.jmedved.com
+//Josip Medved <jmedved@jmedved.com>   www.medo64.com
 
+//2012-11-24: Suppressing bogus CA5122 warning (http://connect.microsoft.com/VisualStudio/feedback/details/729254/bogus-ca5122-warning-about-p-invoke-declarations-should-not-be-safe-critical).
 //2008-06-24: First version.
 
 
@@ -8,33 +9,29 @@ using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Windows.Forms;
 
-namespace Medo.Windows.Forms
-{
+namespace Medo.Windows.Forms {
 
     /// <summary>
     /// Intercepting of windows hot key.
     /// </summary>
-    public class Hotkey : IDisposable
-    {
+    public class Hotkey : IDisposable {
 
         private HotkeyWindow _window;
         static internal int _commonID;
-        private int _id;
+        private readonly int _id;
         private readonly object _syncRoot = new object();
 
 
         /// <summary>
         /// Creates new instance.
         /// </summary>
-        public Hotkey()
-        {
-            lock (_syncRoot)
-            {
+        public Hotkey() {
+            lock (_syncRoot) {
                 _id = _commonID; //An application must specify an unique id value in the range 0x0000 through 0xBFFF
                 _commonID += 1;
             }
-            this.Key = Keys.None;
-            this.IsRegistered = false;
+            Key = Keys.None;
+            IsRegistered = false;
         }
 
 
@@ -43,59 +40,50 @@ namespace Medo.Windows.Forms
         /// </summary>
         public event EventHandler<System.EventArgs> HotkeyActivated;
 
-
         /// <summary>
         /// Registers hotkey.
         /// </summary>
         /// <param name="key">Key to register as hotkey.</param>
         /// <exception cref="System.InvalidOperationException">Already registered. -or - Registration failed.</exception>
-        public void Register(Keys key)
-        {
-            if (this.IsRegistered) { throw new System.InvalidOperationException("Already registered."); }
-
+        public void Register(Keys key) {
+            if (IsRegistered) { throw new System.InvalidOperationException("Already registered."); }
 
             Keys keyAlt = (key & Keys.Alt);
             Keys keyControl = (key & Keys.Control);
             Keys keyShift = (key & Keys.Shift);
 
             uint modValue = 0;
-            if ((keyAlt == Keys.Alt))
-                modValue += NativeMethods.MOD_ALT;
-            if ((keyControl == Keys.Control))
-                modValue += NativeMethods.MOD_CONTROL;
-            if ((keyShift == Keys.Shift))
-                modValue += NativeMethods.MOD_SHIFT;
+            if ((keyAlt == Keys.Alt)) { modValue += NativeMethods.MOD_ALT; }
+
+            if ((keyControl == Keys.Control)) { modValue += NativeMethods.MOD_CONTROL; }
+            if ((keyShift == Keys.Shift)) { modValue += NativeMethods.MOD_SHIFT; }
             uint keyValue = (uint)key - (uint)keyAlt - (uint)keyControl - (uint)keyShift;
 
-            this._window = new HotkeyWindow();
-            this._window.CreateHandle(new CreateParams());
-            this._window.HotkeyMessage += Window_HotkeyMessage;
+            _window = new HotkeyWindow();
+            _window.CreateHandle(new CreateParams());
+            _window.HotkeyMessage += Window_HotkeyMessage;
 
-            this.IsRegistered = !(NativeMethods.RegisterHotKey(this._window.Handle, _id, modValue, keyValue) == 0);
-            if (!this.IsRegistered)
-            {
-                this._window.DestroyHandle();
-                this._window = null;
+            IsRegistered = !(NativeMethods.RegisterHotKey(_window.Handle, _id, modValue, keyValue) == 0);
+            if (!IsRegistered) {
+                _window.DestroyHandle();
+                _window = null;
                 throw new System.InvalidOperationException("Registration failed.");
             }
-            this.Key = key;
+            Key = key;
         }
-
 
         /// <summary>
         /// Removes hotkey registration.
         /// </summary>
         /// <exception cref="System.InvalidOperationException">No registered hotkey.</exception>
-        public void Unregister()
-        {
-            if (!this.IsRegistered) { throw new System.InvalidOperationException("No registered hotkey."); }
+        public void Unregister() {
+            if (!IsRegistered) { throw new System.InvalidOperationException("No registered hotkey."); }
 
-            this.IsRegistered = (NativeMethods.UnregisterHotKey(this._window.Handle, _id) == 0);
-            if (this.IsRegistered == false)
-            {
-                this._window.DestroyHandle();
-                this._window = null;
-                this.Key = Keys.None;
+            IsRegistered = (NativeMethods.UnregisterHotKey(_window.Handle, _id) == 0);
+            if (IsRegistered == false) {
+                _window.DestroyHandle();
+                _window = null;
+                Key = Keys.None;
             }
         }
 
@@ -109,25 +97,18 @@ namespace Medo.Windows.Forms
         /// </summary>
         public Keys Key { get; private set; }
 
-
         /// <summary>
         /// Invoked when a HotkeyActivated routed event occurs.
         /// </summary>
         /// <param name="e">Event data</param>
         [SecurityPermission(SecurityAction.InheritanceDemand, UnmanagedCode = true)]
-        protected void OnHotkeyActivated(EventArgs e)
-        {
-            if (HotkeyActivated != null)
-            {
-                HotkeyActivated(this, e);
-            }
+        protected void OnHotkeyActivated(EventArgs e) {
+            HotkeyActivated?.Invoke(this, e);
         }
 
-        private void Window_HotkeyMessage(object sender, System.EventArgs e)
-        {
-            this.OnHotkeyActivated(new EventArgs());
+        private void Window_HotkeyMessage(object sender, System.EventArgs e) {
+            OnHotkeyActivated(new EventArgs());
         }
-
 
         #region "IDisposable Support"
 
@@ -136,19 +117,16 @@ namespace Medo.Windows.Forms
         /// </summary>
         /// <param name="disposing">True to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
         [SecurityPermission(SecurityAction.InheritanceDemand, UnmanagedCode = true)]
-        protected virtual void Dispose(bool disposing)
-        {
-            if (this.IsRegistered )
-            {
-                this.Unregister();
+        protected virtual void Dispose(bool disposing) {
+            if (IsRegistered) {
+                Unregister();
             }
         }
 
         /// <summary>
         /// Releases all resources.
         /// </summary>
-        public void Dispose()
-        {
+        public void Dispose() {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
@@ -156,21 +134,14 @@ namespace Medo.Windows.Forms
         #endregion
 
 
-        private class HotkeyWindow : NativeWindow
-        {
+        private class HotkeyWindow : NativeWindow {
 
             internal event EventHandler<System.EventArgs> HotkeyMessage;
 
-
-            protected override void WndProc(ref Message m)
-            {
-                switch (m.Msg)
-                {
+            protected override void WndProc(ref Message m) {
+                switch (m.Msg) {
                     case NativeMethods.WM_HOTKEY:
-                        if (HotkeyMessage != null)
-                        {
-                            HotkeyMessage(this, new System.EventArgs());
-                        }
+                        HotkeyMessage?.Invoke(this, new System.EventArgs());
                         break;
                 }
                 base.WndProc(ref m);
@@ -179,8 +150,7 @@ namespace Medo.Windows.Forms
         }
 
 
-        private static class NativeMethods
-        {
+        private static class NativeMethods {
 
             internal const uint MOD_ALT = 1;
             internal const uint MOD_CONTROL = 2;
@@ -188,12 +158,12 @@ namespace Medo.Windows.Forms
             internal const uint MOD_WIN = 8;
             internal const int WM_HOTKEY = 786;
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")] //http://connect.microsoft.com/VisualStudio/feedback/details/729254/bogus-ca5122-warning-about-p-invoke-declarations-should-not-be-safe-critical
             [DllImport("user32.dll")]
-            [SecurityPermission(SecurityAction.LinkDemand, UnmanagedCode = true)]
             internal static extern int RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")] //http://connect.microsoft.com/VisualStudio/feedback/details/729254/bogus-ca5122-warning-about-p-invoke-declarations-should-not-be-safe-critical
             [DllImport("user32.dll")]
-            [SecurityPermission(SecurityAction.LinkDemand, UnmanagedCode = true)]
             internal static extern int UnregisterHotKey(IntPtr hWnd, int id);
 
         }

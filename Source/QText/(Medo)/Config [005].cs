@@ -482,7 +482,7 @@ namespace Medo.Configuration {
             private readonly List<LineData> Lines = new List<LineData>();
 
             public PropertiesFile(string fileName, bool isOverride = false) {
-                this.FileName = fileName;
+                FileName = fileName;
 
                 string fileContent = null;
                 try {
@@ -520,11 +520,11 @@ namespace Medo.Configuration {
                         }
                         prevChar = ch;
                     }
-                    this.FileExists = true;
+                    FileExists = true;
 
                     processLine(currLine);
                 }
-                this.LineEnding = lineEnding ?? Environment.NewLine;
+                LineEnding = lineEnding ?? Environment.NewLine;
 
                 void processLine(StringBuilder line) {
                     var lineText = line.ToString();
@@ -710,11 +710,11 @@ namespace Medo.Configuration {
                         prevState = state;
                     }
 
-                    this.Lines.Add(new LineData(sbKey.ToString(), separatorPrefix, valueSeparator, separatorSuffix, sbValue.ToString(), commentPrefix, sbComment.ToString()));
+                    Lines.Add(new LineData(sbKey.ToString(), separatorPrefix, valueSeparator, separatorSuffix, sbValue.ToString(), commentPrefix, sbComment.ToString()));
                 }
 
 #if DEBUG
-                foreach (var line in this.Lines) {
+                foreach (var line in Lines) {
                     if (!string.IsNullOrEmpty(line.Key)) {
                         Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, "[Settings] {0}{2}: {1}", line.Key, line.Value, (isOverride ? "*" : "")));
                     }
@@ -725,9 +725,9 @@ namespace Medo.Configuration {
             public bool FileExists { get; } //false if there was an error during load
 
             public bool Save() {
-                string fileContent = string.Join(this.LineEnding, this.Lines);
+                string fileContent = string.Join(LineEnding, Lines);
                 try {
-                    var directoryPath = Path.GetDirectoryName(this.FileName);
+                    var directoryPath = Path.GetDirectoryName(FileName);
                     if (!Directory.Exists(directoryPath)) {
                         var directoryStack = new Stack<string>();
                         do {
@@ -746,7 +746,7 @@ namespace Medo.Configuration {
                         }
                     }
 
-                    File.WriteAllText(this.FileName, fileContent, Utf8);
+                    File.WriteAllText(FileName, fileContent, Utf8);
                     return true;
                 } catch (IOException) {
                     return false;
@@ -787,20 +787,20 @@ namespace Medo.Configuration {
                         var totalLengthWithoutSuffix = key.Length + (template.SeparatorPrefix?.Length ?? 0) + 1;
                         var maxSuffixLength = firstKeyTotalLength - totalLengthWithoutSuffix;
                         if (maxSuffixLength < 1) { maxSuffixLength = 1; } //leave at least one space
-                        if (this.SeparatorSuffix.Length > maxSuffixLength) {
-                            this.SeparatorSuffix = this.SeparatorSuffix.Substring(0, maxSuffixLength);
+                        if (SeparatorSuffix.Length > maxSuffixLength) {
+                            SeparatorSuffix = SeparatorSuffix.Substring(0, maxSuffixLength);
                         }
                     }
                 }
 
                 public LineData(string key, string separatorPrefix, char? separator, string separatorSuffix, string value, string commentPrefix, string comment) {
-                    this.Key = key;
-                    this.SeparatorPrefix = separatorPrefix;
-                    this.Separator = separator ?? ':';
-                    this.SeparatorSuffix = separatorSuffix;
-                    this.Value = value;
-                    this.CommentPrefix = commentPrefix;
-                    this.Comment = comment;
+                    Key = key;
+                    SeparatorPrefix = separatorPrefix;
+                    Separator = separator ?? ':';
+                    SeparatorSuffix = separatorSuffix;
+                    Value = value;
+                    CommentPrefix = commentPrefix;
+                    Comment = comment;
                 }
 
                 public string Key { get; set; }
@@ -813,21 +813,21 @@ namespace Medo.Configuration {
 
                 public override string ToString() {
                     var sb = new StringBuilder();
-                    if (!string.IsNullOrEmpty(this.Key)) {
-                        EscapeIntoStringBuilder(sb, this.Key, isKey: true);
+                    if (!string.IsNullOrEmpty(Key)) {
+                        EscapeIntoStringBuilder(sb, Key, isKey: true);
 
-                        if (!string.IsNullOrEmpty(this.Value)) {
-                            if ((this.Separator == ':') || (this.Separator == '=')) {
-                                sb.Append(this.SeparatorPrefix);
-                                sb.Append(this.Separator);
-                                sb.Append(this.SeparatorSuffix);
+                        if (!string.IsNullOrEmpty(Value)) {
+                            if ((Separator == ':') || (Separator == '=')) {
+                                sb.Append(SeparatorPrefix);
+                                sb.Append(Separator);
+                                sb.Append(SeparatorSuffix);
                             } else {
-                                sb.Append(string.IsNullOrEmpty(this.SeparatorSuffix) ? " " : this.SeparatorSuffix);
+                                sb.Append(string.IsNullOrEmpty(SeparatorSuffix) ? " " : SeparatorSuffix);
                             }
-                            EscapeIntoStringBuilder(sb, this.Value ?? "");
+                            EscapeIntoStringBuilder(sb, Value ?? "");
                         } else { //try to preserve formatting in case of spaces (thus omitted)
-                            sb.Append(this.SeparatorPrefix);
-                            switch (this.Separator) {
+                            sb.Append(SeparatorPrefix);
+                            switch (Separator) {
                                 case ':':
                                     sb.Append(":");
                                     break;
@@ -835,13 +835,13 @@ namespace Medo.Configuration {
                                     sb.Append("=");
                                     break;
                             }
-                            sb.Append(this.SeparatorSuffix);
+                            sb.Append(SeparatorSuffix);
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(this.Comment)) {
-                        if (!string.IsNullOrEmpty(this.CommentPrefix)) { sb.Append(this.CommentPrefix); }
-                        sb.Append(this.Comment);
+                    if (!string.IsNullOrEmpty(Comment)) {
+                        if (!string.IsNullOrEmpty(CommentPrefix)) { sb.Append(CommentPrefix); }
+                        sb.Append(Comment);
                     }
 
                     return sb.ToString();
@@ -912,21 +912,21 @@ namespace Medo.Configuration {
                     }
                 }
 
-                public bool IsEmpty => string.IsNullOrEmpty(this.Key) && string.IsNullOrEmpty(this.Value) && string.IsNullOrEmpty(this.CommentPrefix) && string.IsNullOrEmpty(this.Comment);
+                public bool IsEmpty => string.IsNullOrEmpty(Key) && string.IsNullOrEmpty(Value) && string.IsNullOrEmpty(CommentPrefix) && string.IsNullOrEmpty(Comment);
 
             }
 
 
             private Dictionary<string, int> CachedEntries;
             private void FillCache() {
-                this.CachedEntries = new Dictionary<string, int>(KeyComparer);
-                for (var i = 0; i < this.Lines.Count; i++) {
-                    var line = this.Lines[i];
+                CachedEntries = new Dictionary<string, int>(KeyComparer);
+                for (var i = 0; i < Lines.Count; i++) {
+                    var line = Lines[i];
                     if (!line.IsEmpty) {
-                        if (this.CachedEntries.ContainsKey(line.Key)) {
-                            this.CachedEntries[line.Key] = i; //last key takes precedence
+                        if (CachedEntries.ContainsKey(line.Key)) {
+                            CachedEntries[line.Key] = i; //last key takes precedence
                         } else {
-                            this.CachedEntries.Add(line.Key, i);
+                            CachedEntries.Add(line.Key, i);
                         }
                     }
                 }
@@ -934,15 +934,15 @@ namespace Medo.Configuration {
 
 
             public string ReadOne(string key) {
-                if (this.CachedEntries == null) { FillCache(); }
+                if (CachedEntries == null) { FillCache(); }
 
-                return this.CachedEntries.TryGetValue(key, out var lineNumber) ? this.Lines[lineNumber].Value : null;
+                return CachedEntries.TryGetValue(key, out var lineNumber) ? Lines[lineNumber].Value : null;
             }
 
             public IEnumerable<string> ReadMany(string key) {
-                if (this.CachedEntries == null) { FillCache(); }
+                if (CachedEntries == null) { FillCache(); }
 
-                foreach (var line in this.Lines) {
+                foreach (var line in Lines) {
                     if (string.Equals(key, line.Key, KeyComparison)) {
                         yield return line.Value;
                     }
@@ -951,37 +951,37 @@ namespace Medo.Configuration {
 
 
             public void WriteOne(string key, string value) {
-                if (this.CachedEntries == null) { FillCache(); }
+                if (CachedEntries == null) { FillCache(); }
 
-                if (this.CachedEntries.TryGetValue(key, out var lineIndex)) {
-                    var data = this.Lines[lineIndex];
+                if (CachedEntries.TryGetValue(key, out var lineIndex)) {
+                    var data = Lines[lineIndex];
                     data.Key = key;
                     data.Value = value;
                 } else {
-                    var hasLines = (this.Lines.Count > 0);
-                    var newData = new LineData(hasLines ? this.Lines[0] : null, key, value);
+                    var hasLines = (Lines.Count > 0);
+                    var newData = new LineData(hasLines ? Lines[0] : null, key, value);
                     if (!hasLines) {
-                        this.CachedEntries.Add(key, this.Lines.Count);
-                        this.Lines.Add(newData);
-                        this.Lines.Add(new LineData());
-                    } else if (!this.Lines[this.Lines.Count - 1].IsEmpty) {
-                        this.CachedEntries.Add(key, this.Lines.Count);
-                        this.Lines.Add(newData);
+                        CachedEntries.Add(key, Lines.Count);
+                        Lines.Add(newData);
+                        Lines.Add(new LineData());
+                    } else if (!Lines[Lines.Count - 1].IsEmpty) {
+                        CachedEntries.Add(key, Lines.Count);
+                        Lines.Add(newData);
                     } else {
-                        this.CachedEntries.Add(key, this.Lines.Count - 1);
-                        this.Lines.Insert(this.Lines.Count - 1, newData);
+                        CachedEntries.Add(key, Lines.Count - 1);
+                        Lines.Insert(Lines.Count - 1, newData);
                     }
                 }
             }
 
             public void WriteMany(string key, IEnumerable<string> values) {
-                if (this.CachedEntries == null) { FillCache(); }
+                if (CachedEntries == null) { FillCache(); }
 
-                if (this.CachedEntries.TryGetValue(key, out var lineIndex)) {
+                if (CachedEntries.TryGetValue(key, out var lineIndex)) {
                     int lastIndex = 0;
                     LineData lastLine = null;
-                    for (var i = this.Lines.Count - 1; i >= 0; i--) { //find insertion point
-                        var line = this.Lines[i];
+                    for (var i = Lines.Count - 1; i >= 0; i--) { //find insertion point
+                        var line = Lines[i];
                         if (string.Equals(key, line.Key, KeyComparison)) {
                             if (lastLine == null) {
                                 lastLine = line;
@@ -989,34 +989,34 @@ namespace Medo.Configuration {
                             } else {
                                 lastIndex--;
                             }
-                            this.Lines.RemoveAt(i);
+                            Lines.RemoveAt(i);
                         }
                     }
 
-                    var hasLines = (this.Lines.Count > 0);
+                    var hasLines = (Lines.Count > 0);
                     foreach (var value in values) {
-                        this.Lines.Insert(lastIndex, new LineData(lastLine ?? (hasLines ? this.Lines[0] : null), key, value));
+                        Lines.Insert(lastIndex, new LineData(lastLine ?? (hasLines ? Lines[0] : null), key, value));
                         lastIndex++;
                     }
 
                     FillCache();
                 } else {
-                    var hasLines = (this.Lines.Count > 0);
+                    var hasLines = (Lines.Count > 0);
                     if (!hasLines) {
                         foreach (var value in values) {
-                            this.CachedEntries[key] = this.Lines.Count;
-                            this.Lines.Add(new LineData(null, key, value));
+                            CachedEntries[key] = Lines.Count;
+                            Lines.Add(new LineData(null, key, value));
                         }
-                        this.Lines.Add(new LineData());
-                    } else if (!this.Lines[this.Lines.Count - 1].IsEmpty) {
+                        Lines.Add(new LineData());
+                    } else if (!Lines[Lines.Count - 1].IsEmpty) {
                         foreach (var value in values) {
-                            this.CachedEntries[key] = this.Lines.Count;
-                            this.Lines.Add(new LineData(this.Lines[0], key, value));
+                            CachedEntries[key] = Lines.Count;
+                            Lines.Add(new LineData(Lines[0], key, value));
                         }
                     } else {
                         foreach (var value in values) {
-                            this.CachedEntries[key] = this.Lines.Count - 1;
-                            this.Lines.Insert(this.Lines.Count - 1, new LineData(this.Lines[0], key, value));
+                            CachedEntries[key] = Lines.Count - 1;
+                            Lines.Insert(Lines.Count - 1, new LineData(Lines[0], key, value));
                         }
                     }
                 }
@@ -1024,20 +1024,20 @@ namespace Medo.Configuration {
 
 
             public void Delete(string key) {
-                if (this.CachedEntries == null) { FillCache(); }
+                if (CachedEntries == null) { FillCache(); }
 
-                this.CachedEntries.Remove(key);
-                for (var i = this.Lines.Count - 1; i >= 0; i--) {
-                    var line = this.Lines[i];
+                CachedEntries.Remove(key);
+                for (var i = Lines.Count - 1; i >= 0; i--) {
+                    var line = Lines[i];
                     if (string.Equals(key, line.Key, KeyComparison)) {
-                        this.Lines.RemoveAt(i);
+                        Lines.RemoveAt(i);
                     }
                 }
             }
 
             public void DeleteAll() {
-                this.Lines.Clear();
-                this.FillCache();
+                Lines.Clear();
+                FillCache();
             }
 
         }

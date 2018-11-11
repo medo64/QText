@@ -15,17 +15,17 @@ namespace QText.Plugins.Reminder {
 
 
         public void Initialize(TrayContext trayContext) {
-            this.TrayContext = trayContext;
+            TrayContext = trayContext;
 
-            this.Worker = new BackgroundWorker() {
+            Worker = new BackgroundWorker() {
                 WorkerReportsProgress = true,
                 WorkerSupportsCancellation = true
             };
-            this.Worker.RunWorkerAsync();
+            Worker.RunWorkerAsync();
 
-            this.Worker.DoWork += delegate {
+            Worker.DoWork += delegate {
                 var minuteDigit = DateTime.Now.Minute;
-                while (!this.Worker.CancellationPending) {
+                while (!Worker.CancellationPending) {
                     var time = DateTime.Now;
                     if (minuteDigit != time.Minute) {
                         minuteDigit = time.Minute;
@@ -50,24 +50,24 @@ namespace QText.Plugins.Reminder {
                                 time.TimeOfDay.ToString (ReminderData.TimeSpanFormat,CultureInfo.CurrentCulture),
                                 text.ToString()
                             };
-                            this.Worker.ReportProgress(0, state);
+                            Worker.ReportProgress(0, state);
                         }
                     }
                     Thread.Sleep((60 - DateTime.Now.Second) * 1000); //wait until next minute
                 }
             };
 
-            this.Worker.ProgressChanged += delegate (object sender, ProgressChangedEventArgs e) {
+            Worker.ProgressChanged += delegate (object sender, ProgressChangedEventArgs e) {
                 var state = e.UserState as string[];
                 var title = state[0];
                 var text = state[1];
-                this.TrayContext.ShowBalloon(title, text);
+                TrayContext.ShowBalloon(title, text);
                 SystemSounds.Asterisk.Play();
             };
         }
 
         public void Terminate() {
-            this.Worker.CancelAsync();
+            Worker.CancelAsync();
         }
 
 
@@ -81,7 +81,7 @@ namespace QText.Plugins.Reminder {
             };
             button.Click += delegate {
                 using (var frm = new RemindersForm()) {
-                    frm.ShowDialog(this.TrayContext.Form);
+                    frm.ShowDialog(TrayContext.Form);
                 }
             };
 

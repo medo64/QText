@@ -1,5 +1,6 @@
-//Copyright (c) 2014 Josip Medved <jmedved@jmedved.com>
+//Josip Medved <jmedved@jmedved.com>   www.medo64.com
 
+//2014-12-12: Bug fixing.
 //2014-01-12: Initial version.
 
 
@@ -74,13 +75,13 @@ namespace Medo.Configuration {
             if (!string.IsNullOrEmpty(company)) { basePath += "\\" + company; }
             if (!string.IsNullOrEmpty(product)) { basePath += "\\" + product; }
 
-            this.Subkey = basePath + "\\History";
+            Subkey = basePath + "\\History";
 
-            this.MaximumCount = maximumCount;
+            MaximumCount = maximumCount;
             if (string.IsNullOrEmpty(groupName)) {
-                this.GroupName = null;
+                GroupName = null;
             } else {
-                this.GroupName = groupName;
+                GroupName = groupName;
             }
         }
 
@@ -112,10 +113,9 @@ namespace Medo.Configuration {
         /// Gets/sets the comparer that is used to determine equality of keys for the dictionary.
         /// </summary>
         public StringComparer Comparer {
-            get { return this._comparer; }
+            get { return _comparer; }
             set {
-                if (value == null) { throw new ArgumentNullException("value", "Value cannot be null."); }
-                this._comparer = value;
+                _comparer = value ?? throw new ArgumentNullException("value", "Value cannot be null.");
             }
         }
 
@@ -125,7 +125,7 @@ namespace Medo.Configuration {
         /// </summary>
         public IEnumerable<string> Items {
             get {
-                foreach (var item in this.Load()) {
+                foreach (var item in Load()) {
                     yield return item;
                 }
             }
@@ -136,7 +136,7 @@ namespace Medo.Configuration {
         /// Removes all items.
         /// </summary>
         public void Clear() {
-            this.Save(new List<string>());
+            Save(new List<string>());
         }
 
         /// <summary>
@@ -145,9 +145,9 @@ namespace Medo.Configuration {
         /// </summary>
         /// <param name="item">Item.</param>
         public void Prepend(string item) {
-            var items = this.Load(item);
+            var items = Load(item);
             items.Insert(0, item);
-            if (items.Count > this.MaximumCount) { items.RemoveAt(this.MaximumCount); }
+            if (items.Count > MaximumCount) { items.RemoveAt(MaximumCount); }
             Save(items);
         }
 
@@ -157,9 +157,9 @@ namespace Medo.Configuration {
         /// </summary>
         /// <param name="item">Item.</param>
         public void Append(string item) {
-            var items = this.Load(item);
+            var items = Load(item);
             items.Add(item);
-            if (items.Count > this.MaximumCount) { items.RemoveAt(0); }
+            if (items.Count > MaximumCount) { items.RemoveAt(0); }
             Save(items);
         }
 
@@ -169,33 +169,41 @@ namespace Medo.Configuration {
         /// </summary>
         /// <param name="item">Item.</param>
         public void Remove(string item) {
-            var items = this.Load(item);
+            var items = Load(item);
             Save(items);
         }
 
 
         #region Helper
 
-        private IList<string> Load(string itemToSkip = null) {
+        private IList<string> Load(string itemToRemove = null) {
             try {
-                using (var rk = Registry.CurrentUser.OpenSubKey(this.Subkey, false)) {
+                using (var rk = Registry.CurrentUser.OpenSubKey(Subkey, false)) {
                     if (rk != null) {
-                        var valueCU = rk.GetValue(this.GroupName, null);
+                        var valueCU = rk.GetValue(GroupName, null);
                         if (valueCU != null) {
                             var valueKind = RegistryValueKind.MultiString;
-                            if (!History.IsRunningOnMono) { valueKind = rk.GetValueKind(this.GroupName); }
+                            if (!History.IsRunningOnMono) { valueKind = rk.GetValueKind(GroupName); }
                             if (valueKind == RegistryValueKind.MultiString) {
-                                var array = valueCU as string[];
-                                if (array != null) {
-                                    var dict = new Dictionary<string, object>(this.Comparer);
+                                if (valueCU is string[] array) {
+                                    var dict = new Dictionary<string, object>(Comparer);
                                     var items = new List<string>();
                                     foreach (var item in array) {
                                         if (!dict.ContainsKey(item)) {
-                                            if ((itemToSkip != null) && this.Comparer.Equals(item, itemToSkip)) { continue; }
+                                            if ((itemToRemove != null) && Comparer.Equals(item, itemToRemove)) { continue; }
                                             items.Add(item);
-                                            dict.Add(item, null);
-                                            if (items.Count == this.MaximumCount) { break; }
+                                            if (items.Count == MaximumCount) { break; }
                                         }
+                                    }
+                                    if (itemToRemove != null) {
+                                        for (int i = items.Count - 1; i >= 0; i--) {
+                                            if (Comparer.Equals(items[i], itemToRemove)) {
+                                                items.RemoveAt(i);
+                                            }
+                                        }
+                                    }
+                                    if (items.Count > MaximumCount) {
+                                        items.RemoveRange(MaximumCount, items.Count - MaximumCount);
                                     }
                                     return items;
                                 }
@@ -216,8 +224,8 @@ namespace Medo.Configuration {
             var array = new string[items.Count];
             items.CopyTo(array, 0);
             if (History.NoRegistryWrites == false) {
-                using (RegistryKey rk = Registry.CurrentUser.CreateSubKey(this.Subkey)) {
-                    rk.SetValue(this.GroupName, array, RegistryValueKind.MultiString);
+                using (RegistryKey rk = Registry.CurrentUser.CreateSubKey(Subkey)) {
+                    rk.SetValue(GroupName, array, RegistryValueKind.MultiString);
                 }
             }
         }
@@ -232,5 +240,4 @@ namespace Medo.Configuration {
         #endregion
 
     }
-
 }

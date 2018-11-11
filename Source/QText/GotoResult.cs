@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 
 namespace QText {
     internal class GotoResult {
@@ -21,7 +20,7 @@ namespace QText {
 
                 var list = new List<GotoResult>(GetSuggestionsRaw(suggestion, allowLineNumbers));
 
-                list.Sort(delegate(GotoResult item1, GotoResult item2) {
+                list.Sort(delegate (GotoResult item1, GotoResult item2) {
                     int initialCompare;
                     if (!Settings.Current.GotoSortPreferFolders || (item1.IsFolder == item2.IsFolder)) {
                         initialCompare = 0;
@@ -81,23 +80,23 @@ namespace QText {
         }
 
         private GotoResult(int? lineNumber, DocumentFolder folder, DocumentFile file) {
-            this.LineNumber = lineNumber;
-            this.Folder = folder;
-            this.File = file;
+            LineNumber = lineNumber;
+            Folder = folder;
+            File = file;
         }
 
 
-        public Int32? LineNumber { get; private set; }
+        public int? LineNumber { get; private set; }
         public DocumentFolder Folder { get; private set; }
         public DocumentFile File { get; private set; }
 
 
         public int ImageIndex {
             get {
-                if (this.LineNumber.HasValue) {
+                if (LineNumber.HasValue) {
                     return -1;
                 } else {
-                    if (this.File == null) {
+                    if (File == null) {
                         return 0;
                     } else {
                         return 1;
@@ -107,25 +106,25 @@ namespace QText {
         }
 
         public bool IsLineNumber {
-            get { return this.LineNumber.HasValue; }
+            get { return LineNumber.HasValue; }
         }
 
         public bool IsFile {
-            get { return !this.IsLineNumber && (this.File != null); }
+            get { return !IsLineNumber && (File != null); }
         }
 
         public bool IsFolder {
-            get { return !this.IsLineNumber && !this.IsFile && (this.Folder != null); }
+            get { return !IsLineNumber && !IsFile && (Folder != null); }
         }
 
         public override string ToString() {
-            if (this.LineNumber.HasValue) {
-                return "Line " + this.LineNumber.Value.ToString() + " in current file";
+            if (LineNumber.HasValue) {
+                return "Line " + LineNumber.Value.ToString() + " in current file";
             } else {
-                if (this.File == null) {
-                    return this.Folder.Title;
+                if (File == null) {
+                    return Folder.Title;
                 } else {
-                    return this.Folder.IsRoot ? this.File.Title : this.File.Title + " (in " + this.Folder.Title + ")";
+                    return Folder.IsRoot ? File.Title : File.Title + " (in " + Folder.Title + ")";
                 }
             }
         }

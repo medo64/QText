@@ -1,21 +1,20 @@
-using System;
 using System.Globalization;
 
 namespace QText {
     internal class TextSelection {
 
         private TextSelection(int start, int length) {
-            this.Start = start;
-            this.Length = length;
+            Start = start;
+            Length = length;
         }
 
 
-        public Int32 Start { get; private set; }
-        public Int32 Length { get; private set; }
-        public Int32 End { get { return (this.Start >= 0) ? this.Start + this.Length : -1; } }
+        public int Start { get; private set; }
+        public int Length { get; private set; }
+        public int End { get { return (Start >= 0) ? Start + Length : -1; } }
 
-        public Boolean IsEmpty { get { return (this.Start < 0); } }
-        public Boolean IsNotEmpty { get { return !this.IsEmpty; } }
+        public bool IsEmpty { get { return (Start < 0); } }
+        public bool IsNotEmpty { get { return !IsEmpty; } }
         private static readonly TextSelection Empty = new TextSelection(-1, 0);
 
 

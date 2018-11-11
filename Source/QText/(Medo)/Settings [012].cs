@@ -383,8 +383,7 @@ namespace Medo.Configuration {
                         if (string.IsNullOrEmpty(valueCL)) { //if only /debug is specified than it is set.
                             retValue = true;
                         } else {
-                            int intValue;
-                            if (int.TryParse(valueCL, NumberStyles.Integer, CultureInfo.InvariantCulture, out intValue)) {
+                            if (int.TryParse(valueCL, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue)) {
                                 retValue = intValue != 0;
                             } else {
                                 retValue = bool.Parse(valueCL);
@@ -397,8 +396,7 @@ namespace Medo.Configuration {
                     if (AppConfig.ContainsKey(currKey)) {
                         string valueAC = AppConfig[currKey];
                         if (valueAC != null) {
-                            int intValue;
-                            if (int.TryParse(valueAC, NumberStyles.Integer, CultureInfo.InvariantCulture, out intValue)) {
+                            if (int.TryParse(valueAC, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue)) {
                                 retValue = intValue != 0;
                             } else {
                                 retValue = bool.Parse(valueAC);
@@ -464,8 +462,7 @@ namespace Medo.Configuration {
                     //Defaults
                     if ((Settings.Defaults != null) && (Settings.Defaults.ContainsKey(currKey))) {
                         string strValue = Settings.Defaults[currKey];
-                        int intValue;
-                        if (int.TryParse(strValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out intValue)) {
+                        if (int.TryParse(strValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue)) {
                             retValue = intValue != 0;
                         } else {
                             retValue = bool.Parse(strValue as string);

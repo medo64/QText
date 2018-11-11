@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Windows.Forms;
 
 namespace QText {
@@ -7,11 +6,11 @@ namespace QText {
 
         public FileNewForm(DocumentFolder folder) {
             InitializeComponent();
-            this.Font = System.Drawing.SystemFonts.MessageBoxFont;
+            Font = System.Drawing.SystemFonts.MessageBoxFont;
             erp.SetIconAlignment(txtTitle, ErrorIconAlignment.MiddleLeft);
             erp.SetIconPadding(txtTitle, 2);
 
-            this.Folder = folder;
+            Folder = folder;
 
             if (Settings.Current.IsRichTextFileDefault) {
                 radRichText.Checked = true;
@@ -26,7 +25,7 @@ namespace QText {
 
         private void txtTitle_TextChanged(object sender, EventArgs e) {
             var newFileTitle = txtTitle.Text.Trim();
-            var canCreate = this.Folder.CanNewFile(newFileTitle);
+            var canCreate = Folder.CanNewFile(newFileTitle);
             if (canCreate) {
                 erp.SetError(txtTitle, null);
             } else {
@@ -37,8 +36,8 @@ namespace QText {
 
 
         private void btnOK_Click(object sender, EventArgs e) {
-            this.Title = txtTitle.Text.Trim();
-            this.IsRichText = radRichText.Checked;
+            Title = txtTitle.Text.Trim();
+            IsRichText = radRichText.Checked;
             Settings.Current.IsRichTextFileDefault = radRichText.Checked;
         }
 

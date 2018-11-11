@@ -14,29 +14,29 @@ namespace QText {
         public TabFile(DocumentFile file)
             : base() {
 
-            this.BaseFile = file;
-            this.Padding = new Padding(0, SystemInformation.Border3DSize.Height, 0, 0);
+            BaseFile = file;
+            Padding = new Padding(0, SystemInformation.Border3DSize.Height, 0, 0);
 
-            base.Text = this.Title;
+            base.Text = Title;
 
-            this.GotFocus += this.txt_GotFocus;
+            GotFocus += txt_GotFocus;
 
-            if (Settings.Current.FilesPreload && (this.BaseFile.IsEncrypted == false)) {
-                this.Open();
+            if (Settings.Current.FilesPreload && (BaseFile.IsEncrypted == false)) {
+                Open();
             }
         }
 
         private void AddTextBox(RichTextBoxEx txt) {
-            if (this.TextBox != null) { throw new InvalidOperationException("TextBox already exists"); }
+            if (TextBox != null) { throw new InvalidOperationException("TextBox already exists"); }
 
-            this.TextBox = txt;
-            this.TextBox.ContextMenuStrip = this.ContextMenuStrip;
+            TextBox = txt;
+            TextBox.ContextMenuStrip = ContextMenuStrip;
 
-            this.TextBox.Enter += this.txt_GotFocus;
-            this.TextBox.TextChanged += this.txt_TextChanged;
-            this.TextBox.PreviewKeyDown += this.txt_PreviewKeyDown;
+            TextBox.Enter += txt_GotFocus;
+            TextBox.TextChanged += txt_TextChanged;
+            TextBox.PreviewKeyDown += txt_PreviewKeyDown;
 
-            base.Controls.Add(this.TextBox);
+            base.Controls.Add(TextBox);
         }
 
         private static RichTextBoxEx GetEmptyTextBox() {
@@ -74,17 +74,17 @@ namespace QText {
         private static readonly UTF8Encoding Utf8EncodingWithoutBom = new UTF8Encoding(false);
 
         public DocumentFile BaseFile { get; private set; }
-        public string Title { get { return this.BaseFile.Title; } }
+        public string Title { get { return BaseFile.Title; } }
 
         public bool IsOpened { get; private set; }
 
         private bool _isChanged;
         public bool IsChanged {
             get {
-                return this._isChanged && this.IsOpened; //only open file can be changed
+                return _isChanged && IsOpened; //only open file can be changed
             }
             private set {
-                this._isChanged = value;
+                _isChanged = value;
                 UpdateText();
             }
         }
@@ -94,11 +94,11 @@ namespace QText {
 
         private ContextMenuStrip _contextMenuStrip;
         public override ContextMenuStrip ContextMenuStrip {
-            get { return this._contextMenuStrip; }
+            get { return _contextMenuStrip; }
             set {
-                this._contextMenuStrip = value;
-                if (this.TextBox != null) {
-                    this.TextBox.ContextMenuStrip = value;
+                _contextMenuStrip = value;
+                if (TextBox != null) {
+                    TextBox.ContextMenuStrip = value;
                 }
             }
         }
@@ -126,74 +126,74 @@ namespace QText {
 
 
         public void Open() {
-            this.Reopen();
+            Reopen();
         }
 
         public void Close() {
-            if (this.IsOpened) {
-                if (this.TextBox != null) {
-                    this.Controls.Remove(this.TextBox);
-                    this.TextBox = null;
+            if (IsOpened) {
+                if (TextBox != null) {
+                    Controls.Remove(TextBox);
+                    TextBox = null;
                 }
-                this.BaseFile.Password = null;
-                this.IsOpened = false;
+                BaseFile.Password = null;
+                IsOpened = false;
             }
         }
 
         public void ConvertToPlainText() {
-            if (this.IsOpened == false) { throw new InvalidOperationException("File is not loaded."); }
-            if (this.BaseFile.IsPlainText) { throw new InvalidOperationException("File is already in plain text format."); }
+            if (IsOpened == false) { throw new InvalidOperationException("File is not loaded."); }
+            if (BaseFile.IsPlainText) { throw new InvalidOperationException("File is already in plain text format."); }
 
             SaveAsPlain();
-            this.BaseFile.ChangeStyle(DocumentStyle.PlainText);
-            this.Reopen();
+            BaseFile.ChangeStyle(DocumentStyle.PlainText);
+            Reopen();
         }
 
         public void ConvertToRichText() {
-            if (this.IsOpened == false) { throw new InvalidOperationException("File is not loaded."); }
-            if (this.BaseFile.IsRichText) { throw new InvalidOperationException("File is already in rich text format."); }
+            if (IsOpened == false) { throw new InvalidOperationException("File is not loaded."); }
+            if (BaseFile.IsRichText) { throw new InvalidOperationException("File is already in rich text format."); }
 
-            var text = this.TextBox.Text;
+            var text = TextBox.Text;
 
-            this.BaseFile.ChangeStyle(DocumentStyle.RichText);
-            this.SaveAsRich();
-            this.Reopen();
+            BaseFile.ChangeStyle(DocumentStyle.RichText);
+            SaveAsRich();
+            Reopen();
         }
 
 
         public void Encrypt(string password) {
-            if (this.IsOpened == false) { throw new InvalidOperationException("File is not loaded."); }
-            if (this.BaseFile.IsEncrypted) { throw new InvalidOperationException("File is already encrypted."); }
+            if (IsOpened == false) { throw new InvalidOperationException("File is not loaded."); }
+            if (BaseFile.IsEncrypted) { throw new InvalidOperationException("File is already encrypted."); }
 
-            var text = this.TextBox.Text;
+            var text = TextBox.Text;
 
-            this.BaseFile.Encrypt(password);
-            this.Reopen();
+            BaseFile.Encrypt(password);
+            Reopen();
         }
 
         public void Decrypt() {
-            if (this.IsOpened == false) { throw new InvalidOperationException("File is not loaded."); }
-            if (this.BaseFile.IsEncrypted == false) { throw new InvalidOperationException("File is already decrypted."); }
-            if (!this.BaseFile.HasPassword) { throw new InvalidOperationException("No decryption password found."); }
+            if (IsOpened == false) { throw new InvalidOperationException("File is not loaded."); }
+            if (BaseFile.IsEncrypted == false) { throw new InvalidOperationException("File is already decrypted."); }
+            if (!BaseFile.HasPassword) { throw new InvalidOperationException("No decryption password found."); }
 
-            var text = this.TextBox.Text;
+            var text = TextBox.Text;
 
-            this.BaseFile.Decrypt();
-            this.Save();
-            this.Reopen();
+            BaseFile.Decrypt();
+            Save();
+            Reopen();
         }
 
 
         public void Reopen() {
-            if (this.BaseFile.IsEncrypted && !this.BaseFile.HasPassword) { throw new InvalidOperationException("No password provided."); }
+            if (BaseFile.IsEncrypted && !BaseFile.HasPassword) { throw new InvalidOperationException("No password provided."); }
 
             try {
-                var txt = this.TextBox ?? GetEmptyTextBox();
+                var txt = TextBox ?? GetEmptyTextBox();
                 var oldSelStart = txt.SelectionStart;
                 var oldSelLength = txt.SelectionLength;
 
-                this.IsOpened = false;
-                if (this.BaseFile.IsRichText) {
+                IsOpened = false;
+                if (BaseFile.IsRichText) {
                     try {
                         OpenAsRich(txt);
                     } catch (ArgumentException) {
@@ -203,14 +203,14 @@ namespace QText {
                     OpenAsPlain(txt);
                 }
 
-                if (this.TextBox == null) { AddTextBox(txt); }
+                if (TextBox == null) { AddTextBox(txt); }
 
                 UpdateTabWidth();
-                this.TextBox.SelectionStart = oldSelStart;
-                this.TextBox.SelectionLength = oldSelLength;
-                this.TextBox.ClearUndo();
-                this.IsChanged = false;
-                this.IsOpened = true;
+                TextBox.SelectionStart = oldSelStart;
+                TextBox.SelectionLength = oldSelLength;
+                TextBox.ClearUndo();
+                IsChanged = false;
+                IsOpened = true;
             } catch (Exception ex) {
                 throw new InvalidOperationException(ex.Message, ex);
             }
@@ -218,7 +218,7 @@ namespace QText {
 
         public void QuickSaveWithoutException() {
             try {
-                this.Save();
+                Save();
             } catch (Exception) { }
         }
 
@@ -226,97 +226,97 @@ namespace QText {
 
         public void QuickSave() { //allow for three failed  attempts
             try {
-                this.Save();
-                this.QuickSaveFailedCounter = 0;
+                Save();
+                QuickSaveFailedCounter = 0;
             } catch (Exception) {
-                this.QuickSaveFailedCounter += 1;
-                if (this.QuickSaveFailedCounter == 4) {
+                QuickSaveFailedCounter += 1;
+                if (QuickSaveFailedCounter == 4) {
                     throw;
                 }
             }
         }
 
         public void Save() {
-            if (this.IsOpened == false) { return; }
+            if (IsOpened == false) { return; }
 
-            if (this.BaseFile.IsRichText) {
+            if (BaseFile.IsRichText) {
                 SaveAsRich();
             } else {
                 SaveAsPlain();
             }
 
-            this.IsChanged = false;
-            base.Text = this.Title;
+            IsChanged = false;
+            base.Text = Title;
         }
 
 
         public void Rename(string newTitle) {
             if (newTitle == null) { throw new ArgumentNullException("newTitle", "Title cannot be null."); }
-            this.BaseFile.Rename(newTitle);
+            BaseFile.Rename(newTitle);
             UpdateText();
         }
 
 
         #region txt
 
-        private void txt_GotFocus(System.Object sender, System.EventArgs e) {
-            if (this.TextBox != null) {
-                this.TextBox.Select();
+        private void txt_GotFocus(object sender, EventArgs e) {
+            if (TextBox != null) {
+                TextBox.Select();
             }
         }
 
-        private void txt_TextChanged(System.Object sender, System.EventArgs e) {
-            if (this.IsOpened && (this.IsChanged == false)) {
-                this.IsChanged = true;
+        private void txt_TextChanged(object sender, EventArgs e) {
+            if (IsOpened && (IsChanged == false)) {
+                IsChanged = true;
             }
         }
 
-        private void txt_PreviewKeyDown(System.Object sender, System.Windows.Forms.PreviewKeyDownEventArgs e) {
+        private void txt_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) {
             Debug.WriteLine("TabFile.PreviewKeyDown: " + e.KeyData.ToString());
             switch (e.KeyData) {
 
                 case Keys.Control | Keys.X:
-                    this.Cut(QText.Settings.Current.ForceTextCopyPaste);
+                    Cut(QText.Settings.Current.ForceTextCopyPaste);
                     e.IsInputKey = false;
                     break;
 
                 case Keys.Control | Keys.C:
-                    this.Copy(QText.Settings.Current.ForceTextCopyPaste);
+                    Copy(QText.Settings.Current.ForceTextCopyPaste);
                     e.IsInputKey = false;
                     break;
 
                 case Keys.Control | Keys.V:
-                    this.Paste(QText.Settings.Current.ForceTextCopyPaste);
+                    Paste(QText.Settings.Current.ForceTextCopyPaste);
                     e.IsInputKey = false;
                     break;
 
 
                 case Keys.Control | Keys.Shift | Keys.X:
                 case Keys.Shift | Keys.Delete:
-                    this.Cut(true);
+                    Cut(true);
                     e.IsInputKey = false;
                     break;
 
                 case Keys.Control | Keys.Shift | Keys.C:
                 case Keys.Control | Keys.Insert:
-                    this.Copy(true);
+                    Copy(true);
                     e.IsInputKey = false;
                     break;
 
                 case Keys.Control | Keys.Shift | Keys.V:
                 case Keys.Shift | Keys.Insert:
-                    this.Paste(true);
+                    Paste(true);
                     e.IsInputKey = false;
                     break;
 
 
                 case Keys.Control | Keys.Z:
-                    this.Undo();
+                    Undo();
                     e.IsInputKey = false;
                     break;
 
                 case Keys.Control | Keys.Y:
-                    this.Redo();
+                    Redo();
                     e.IsInputKey = false;
                     break;
 
@@ -325,7 +325,7 @@ namespace QText {
                     break;
 
                 case Keys.Control | Keys.A:
-                    this.TextBox.SelectAll();
+                    TextBox.SelectAll();
                     e.IsInputKey = false;
                     break;
             }
@@ -336,17 +336,17 @@ namespace QText {
         #region Cut/Copy/Paste/Undo/Redo
 
         public bool CanCut {
-            get { return (this.TextBox != null) && (this.TextBox.SelectionLength > 0); }
+            get { return (TextBox != null) && (TextBox.SelectionLength > 0); }
         }
 
         public void Cut(bool forceText) {
             try {
-                if (this.CanCopy) {
-                    if (this.BaseFile.IsPlainText || forceText) {
-                        CopyTextToClipboard(this.TextBox);
-                        this.TextBox.SelectedText = "";
+                if (CanCopy) {
+                    if (BaseFile.IsPlainText || forceText) {
+                        CopyTextToClipboard(TextBox);
+                        TextBox.SelectedText = "";
                     } else {
-                        this.TextBox.Cut();
+                        TextBox.Cut();
                     }
                 }
             } catch (ExternalException) {
@@ -354,16 +354,16 @@ namespace QText {
         }
 
         public bool CanCopy {
-            get { return (this.TextBox != null) && !this.TextBox.IsSelectionEmpty; }
+            get { return (TextBox != null) && !TextBox.IsSelectionEmpty; }
         }
 
         public void Copy(bool forceText) {
             try {
-                if (this.CanCopy) {
-                    if (this.BaseFile.IsPlainText || forceText) {
-                        CopyTextToClipboard(this.TextBox);
+                if (CanCopy) {
+                    if (BaseFile.IsPlainText || forceText) {
+                        CopyTextToClipboard(TextBox);
                     } else {
-                        this.TextBox.Copy();
+                        TextBox.Copy();
                     }
                 }
             } catch (ExternalException) { }
@@ -372,8 +372,8 @@ namespace QText {
         public bool CanPaste {
             get {
                 try {
-                    return (this.TextBox != null)
-                        && (Clipboard.ContainsText(TextDataFormat.UnicodeText) || (this.BaseFile.IsRichText && Settings.Current.FullRichTextClipboard));
+                    return (TextBox != null)
+                        && (Clipboard.ContainsText(TextDataFormat.UnicodeText) || (BaseFile.IsRichText && Settings.Current.FullRichTextClipboard));
                 } catch (ExternalException) {
                     return false;
                 }
@@ -382,19 +382,19 @@ namespace QText {
 
         public void Paste(bool forceText) {
             try {
-                if (this.CanPaste) {
-                    if (this.BaseFile.IsPlainText || forceText) {
+                if (CanPaste) {
+                    if (BaseFile.IsPlainText || forceText) {
                         var text = GetTextFromClipboard();
                         if (text != null) {
-                            this.TextBox.SelectionFont = Settings.Current.DisplayFont;
-                            this.TextBox.SelectedText = text;
+                            TextBox.SelectionFont = Settings.Current.DisplayFont;
+                            TextBox.SelectedText = text;
                         }
                     } else {
                         var text = GetRichTextFromClipboard(out var isRich);
                         if (isRich) {
-                            this.TextBox.SelectedRtf = text;
+                            TextBox.SelectedRtf = text;
                         } else {
-                            this.TextBox.SelectedText = text;
+                            TextBox.SelectedText = text;
                         }
                     }
                 }
@@ -403,22 +403,22 @@ namespace QText {
 
 
         public bool CanUndo {
-            get { return (this.TextBox != null) && this.TextBox.CanUndo; }
+            get { return (TextBox != null) && TextBox.CanUndo; }
         }
 
         public void Undo() {
-            if (this.CanUndo) {
-                this.TextBox.Undo();
+            if (CanUndo) {
+                TextBox.Undo();
             }
         }
 
         public bool CanRedo {
-            get { return (this.TextBox != null) && this.TextBox.CanRedo; }
+            get { return (TextBox != null) && TextBox.CanRedo; }
         }
 
         public void Redo() {
-            if (this.CanRedo) {
-                this.TextBox.Redo();
+            if (CanRedo) {
+                TextBox.Redo();
             }
         }
 
@@ -427,28 +427,28 @@ namespace QText {
         #region Font
 
         public bool IsTextBold {
-            get { return (this.TextBox != null) && (this.TextBox.SelectionFont != null) && (this.TextBox.SelectionFont.Bold); }
+            get { return (TextBox != null) && (TextBox.SelectionFont != null) && (TextBox.SelectionFont.Bold); }
         }
 
         public bool IsTextItalic {
-            get { return (this.TextBox != null) && (this.TextBox.SelectionFont != null) && (this.TextBox.SelectionFont.Italic); }
+            get { return (TextBox != null) && (TextBox.SelectionFont != null) && (TextBox.SelectionFont.Italic); }
         }
 
         public bool IsTextUnderline {
-            get { return (this.TextBox != null) && (this.TextBox.SelectionFont != null) && (this.TextBox.SelectionFont.Underline); }
+            get { return (TextBox != null) && (TextBox.SelectionFont != null) && (TextBox.SelectionFont.Underline); }
         }
 
         public bool IsTextStrikeout {
-            get { return (this.TextBox != null) && (this.TextBox.SelectionFont != null) && (this.TextBox.SelectionFont.Strikeout); }
+            get { return (TextBox != null) && (TextBox.SelectionFont != null) && (TextBox.SelectionFont.Strikeout); }
         }
 
 
         public bool IsTextBulleted {
-            get { return (this.TextBox != null) && this.TextBox.SelectionBullet; }
+            get { return (TextBox != null) && TextBox.SelectionBullet; }
         }
 
         public bool IsTextNumbered {
-            get { return (this.TextBox != null) && this.TextBox.SelectionNumbered; }
+            get { return (TextBox != null) && TextBox.SelectionNumbered; }
         }
 
         #endregion
@@ -463,18 +463,18 @@ namespace QText {
                 comparisionType = StringComparison.CurrentCultureIgnoreCase;
             }
 
-            if (!(this.IsOpened)) {
-                if (this.BaseFile.NeedsPassword && !this.BaseFile.HasPassword) { return false; }
-                this.Open();
+            if (!(IsOpened)) {
+                if (BaseFile.NeedsPassword && !BaseFile.HasPassword) { return false; }
+                Open();
             }
-            var index = this.TextBox.Text.IndexOf(text, this.TextBox.SelectionStart + this.TextBox.SelectionLength, comparisionType);
-            if ((index < 0) && (this.TextBox.SelectionStart + this.TextBox.SelectionLength > 0)) {
-                index = this.TextBox.Text.IndexOf(text, 0, comparisionType);
+            var index = TextBox.Text.IndexOf(text, TextBox.SelectionStart + TextBox.SelectionLength, comparisionType);
+            if ((index < 0) && (TextBox.SelectionStart + TextBox.SelectionLength > 0)) {
+                index = TextBox.Text.IndexOf(text, 0, comparisionType);
             }
 
             if (index >= 0) {
-                this.TextBox.SelectionStart = index;
-                this.TextBox.SelectionLength = text.Length;
+                TextBox.SelectionStart = index;
+                TextBox.SelectionLength = text.Length;
                 return true;
             } else {
                 return false;
@@ -489,15 +489,15 @@ namespace QText {
                 comparisionType = StringComparison.CurrentCultureIgnoreCase;
             }
 
-            if (!(this.IsOpened)) {
-                if (this.BaseFile.NeedsPassword && !this.BaseFile.HasPassword) { return false; }
-                this.Open();
+            if (!(IsOpened)) {
+                if (BaseFile.NeedsPassword && !BaseFile.HasPassword) { return false; }
+                Open();
             }
-            var index = this.TextBox.Text.IndexOf(text, startingIndex, comparisionType);
+            var index = TextBox.Text.IndexOf(text, startingIndex, comparisionType);
 
             if ((index >= 0) && (index < int.MaxValue)) {
-                this.TextBox.SelectionStart = index;
-                this.TextBox.SelectionLength = text.Length;
+                TextBox.SelectionStart = index;
+                TextBox.SelectionLength = text.Length;
                 return true;
             } else {
                 return false;
@@ -505,19 +505,19 @@ namespace QText {
         }
 
         public Rectangle GetSelectedRectangle() {
-            var pt1 = this.TextBox.PointToScreen(this.TextBox.GetPositionFromCharIndex(this.TextBox.SelectionStart));
+            var pt1 = TextBox.PointToScreen(TextBox.GetPositionFromCharIndex(TextBox.SelectionStart));
 
-            var ptEnd = this.TextBox.PointToScreen(this.TextBox.GetPositionFromCharIndex(this.TextBox.SelectionStart + this.TextBox.SelectionLength));
+            var ptEnd = TextBox.PointToScreen(TextBox.GetPositionFromCharIndex(TextBox.SelectionStart + TextBox.SelectionLength));
             var pt2 = default(Point);
-            using (var g = this.TextBox.CreateGraphics()) {
-                if ((this.TextBox != null) && (this.TextBox.SelectionFont != null)) {
-                    pt2 = new Point(ptEnd.X, ptEnd.Y + g.MeasureString("XXX", this.TextBox.SelectionFont).ToSize().Height);
+            using (var g = TextBox.CreateGraphics()) {
+                if ((TextBox != null) && (TextBox.SelectionFont != null)) {
+                    pt2 = new Point(ptEnd.X, ptEnd.Y + g.MeasureString("XXX", TextBox.SelectionFont).ToSize().Height);
                 } else {
-                    pt2 = new Point(ptEnd.X, ptEnd.Y + g.MeasureString("XXX", this.TextBox.Font).ToSize().Height);
+                    pt2 = new Point(ptEnd.X, ptEnd.Y + g.MeasureString("XXX", TextBox.Font).ToSize().Height);
                 }
             }
 
-            var thisRectangle = this.RectangleToScreen(this.Bounds);
+            var thisRectangle = RectangleToScreen(Bounds);
 
             var left = Math.Max(Math.Min(pt1.X, pt2.X), thisRectangle.Left) - 32;
             var top = Math.Max(Math.Min(pt1.Y, pt2.Y), thisRectangle.Top) - 32;
@@ -530,7 +530,7 @@ namespace QText {
         #endregion
 
         public void UpdateTabWidth() {
-            if (this.TextBox == null) { return; }
+            if (TextBox == null) { return; }
 
             var dotWidth = TextRenderer.MeasureText(".", Settings.Current.DisplayFont, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding).Width;
             var dotXWidth = TextRenderer.MeasureText("X.", Settings.Current.DisplayFont, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding).Width;
@@ -539,26 +539,26 @@ namespace QText {
             var tabs2 = new List<int>();
             for (var i = 1; i <= 32; i++) { tabs2.Add((i * charWidth) * Settings.Current.DisplayTabWidth); }
 
-            var ss = this.TextBox.SelectionStart;
-            var sl = this.TextBox.SelectionLength;
-            this.TextBox.SelectAll();
-            this.TextBox.SelectionTabs = tabs2.ToArray();
-            this.TextBox.SelectionStart = this.TextBox.TextLength;
-            this.TextBox.SelectionLength = 0;
-            this.TextBox.SelectionTabs = tabs2.ToArray();
-            this.TextBox.SelectionStart = ss;
-            this.TextBox.SelectionLength = sl;
+            var ss = TextBox.SelectionStart;
+            var sl = TextBox.SelectionLength;
+            TextBox.SelectAll();
+            TextBox.SelectionTabs = tabs2.ToArray();
+            TextBox.SelectionStart = TextBox.TextLength;
+            TextBox.SelectionLength = 0;
+            TextBox.SelectionTabs = tabs2.ToArray();
+            TextBox.SelectionStart = ss;
+            TextBox.SelectionLength = sl;
 
-            this.TextBox.Refresh();
+            TextBox.Refresh();
         }
 
         private void UpdateText() {
-            base.Text = this.IsChanged ? this.Title + "*" : this.Title;
+            base.Text = IsChanged ? Title + "*" : Title;
         }
 
 
         public override string ToString() {
-            return this.Title;
+            return Title;
         }
 
 
@@ -566,7 +566,7 @@ namespace QText {
 
         private void OpenAsPlain(RichTextBoxEx txt) {
             using (var stream = new MemoryStream()) {
-                this.BaseFile.Read(stream);
+                BaseFile.Read(stream);
                 using (var sr = new StreamReader(stream, Utf8EncodingWithoutBom)) {
                     var text = sr.ReadToEnd();
                     var lines = text.Split(new string[] { "\r\n", "\n", "\r" }, StringSplitOptions.None);
@@ -578,17 +578,17 @@ namespace QText {
 
         private void SaveAsPlain() {
             using (var stream = new MemoryStream()) {
-                var text = string.Join(Settings.Current.PlainLineEndsWithLf ? "\n" : Environment.NewLine, this.TextBox.Lines);
+                var text = string.Join(Settings.Current.PlainLineEndsWithLf ? "\n" : Environment.NewLine, TextBox.Lines);
                 var bytes = Utf8EncodingWithoutBom.GetBytes(text);
                 stream.Write(bytes, 0, bytes.Length);
-                this.BaseFile.Write(stream);
+                BaseFile.Write(stream);
             }
         }
 
 
         private void OpenAsRich(RichTextBoxEx txt) {
             using (var stream = new MemoryStream()) {
-                this.BaseFile.Read(stream);
+                BaseFile.Read(stream);
                 txt.LoadFile(stream, RichTextBoxStreamType.RichText);
             }
         }
@@ -596,8 +596,8 @@ namespace QText {
 
         private void SaveAsRich() {
             using (var stream = new MemoryStream()) {
-                this.TextBox.SaveFile(stream, RichTextBoxStreamType.RichText);
-                this.BaseFile.Write(stream);
+                TextBox.SaveFile(stream, RichTextBoxStreamType.RichText);
+                BaseFile.Write(stream);
             }
         }
 

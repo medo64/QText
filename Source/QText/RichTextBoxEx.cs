@@ -12,19 +12,19 @@ namespace QText {
 
         public RichTextBoxEx() {
             InitializeComponent();
-            this.ShortcutsEnabled = false;
+            ShortcutsEnabled = false;
         }
 
         private void InitializeComponent() {
-            this.prdText = new System.Drawing.Printing.PrintDocument();
-            this.SuspendLayout();
+            prdText = new System.Drawing.Printing.PrintDocument();
+            SuspendLayout();
             // 
             // prdText
             // 
-            this.prdText.DocumentName = "";
-            this.prdText.BeginPrint += new System.Drawing.Printing.PrintEventHandler(this.prdText_BeginPrint);
-            this.prdText.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.prdText_PrintPage);
-            this.ResumeLayout(false);
+            prdText.DocumentName = "";
+            prdText.BeginPrint += new System.Drawing.Printing.PrintEventHandler(prdText_BeginPrint);
+            prdText.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(prdText_PrintPage);
+            ResumeLayout(false);
         }
 
 
@@ -51,9 +51,9 @@ namespace QText {
         protected override void OnHandleCreated(EventArgs e) {
             base.OnHandleCreated(e);
             if (Settings.Current.UseSpellCheck) {
-                var opts = (int)NativeMethods.SendMessage(this.Handle, NativeMethods.EM_GETLANGOPTIONS, IntPtr.Zero, IntPtr.Zero);
+                var opts = (int)NativeMethods.SendMessage(Handle, NativeMethods.EM_GETLANGOPTIONS, IntPtr.Zero, IntPtr.Zero);
                 opts |= NativeMethods.IMF_SPELLCHECKING;
-                NativeMethods.SendMessage(this.Handle, NativeMethods.EM_SETLANGOPTIONS, IntPtr.Zero, new IntPtr(opts));
+                NativeMethods.SendMessage(Handle, NativeMethods.EM_SETLANGOPTIONS, IntPtr.Zero, new IntPtr(opts));
             }
         }
 
@@ -133,129 +133,129 @@ namespace QText {
                     return false;
 
                 case Keys.Control | Keys.Back: { //deletes word before cursor
-                        if (this.SelectionLength > 0) { //first delete selection
-                            this.SelectedText = "";
+                        if (SelectionLength > 0) { //first delete selection
+                            SelectedText = "";
                         } else {
-                            var selection = TextSelection.FindWordStart(this, this.SelectionStart);
+                            var selection = TextSelection.FindWordStart(this, SelectionStart);
                             if (selection.IsNotEmpty) {
-                                this.Select(selection.Start, this.SelectionStart - selection.Start);
-                                this.SelectedText = "";
+                                Select(selection.Start, SelectionStart - selection.Start);
+                                SelectedText = "";
                             }
                         }
                     }
                     return true;
 
                 case Keys.Control | Keys.Delete: { //delete word from cursor
-                        if (this.SelectionLength > 0) { //first delete selection
-                            this.SelectedText = "";
+                        if (SelectionLength > 0) { //first delete selection
+                            SelectedText = "";
                         } else {
-                            var selection = TextSelection.FindWordEnd(this, this.SelectionStart);
+                            var selection = TextSelection.FindWordEnd(this, SelectionStart);
                             if (selection.IsNotEmpty) {
-                                this.Select(this.SelectionStart, selection.Start - this.SelectionStart);
-                                this.SelectedText = "";
+                                Select(SelectionStart, selection.Start - SelectionStart);
+                                SelectedText = "";
                             }
                         }
                     }
                     return true;
 
                 case Keys.Control | Keys.Left: {
-                        var selection = TextSelection.FindWordStart(this, this.SelectionStart);
+                        var selection = TextSelection.FindWordStart(this, SelectionStart);
                         if (selection.IsNotEmpty) {
-                            this.Select(selection.Start, 0);
+                            Select(selection.Start, 0);
                         }
                     }
                     return true;
 
                 case Keys.Control | Keys.Shift | Keys.Left: {
                         TextSelection selection;
-                        if ((this.SelectionStart + this.SelectionLength) <= this.CaretPosition) {
-                            selection = TextSelection.FindWordStart(this, this.SelectionStart);
+                        if ((SelectionStart + SelectionLength) <= CaretPosition) {
+                            selection = TextSelection.FindWordStart(this, SelectionStart);
                         } else {
-                            selection = TextSelection.FindWordStart(this, this.SelectionStart + this.SelectionLength);
+                            selection = TextSelection.FindWordStart(this, SelectionStart + SelectionLength);
                         }
                         if (selection.IsNotEmpty) {
-                            NativeMethods.SendMessage(this.Handle, NativeMethods.EM_SETSEL, new IntPtr(this.CaretPosition), new IntPtr(selection.Start));
+                            NativeMethods.SendMessage(Handle, NativeMethods.EM_SETSEL, new IntPtr(CaretPosition), new IntPtr(selection.Start));
                         }
                     }
                     return true;
 
                 case Keys.Control | Keys.Right: {
-                        var selection = TextSelection.FindWordEnd(this, this.SelectionStart + this.SelectionLength);
+                        var selection = TextSelection.FindWordEnd(this, SelectionStart + SelectionLength);
                         if (selection.IsNotEmpty) {
-                            this.Select(selection.Start, 0);
+                            Select(selection.Start, 0);
                         }
                     }
                     return true;
 
                 case Keys.Control | Keys.Shift | Keys.Right: {
                         TextSelection selection;
-                        if (this.SelectionStart >= this.CaretPosition) {
-                            selection = TextSelection.FindWordEnd(this, this.SelectionStart + this.SelectionLength);
+                        if (SelectionStart >= CaretPosition) {
+                            selection = TextSelection.FindWordEnd(this, SelectionStart + SelectionLength);
                         } else {
-                            selection = TextSelection.FindWordEnd(this, this.SelectionStart);
+                            selection = TextSelection.FindWordEnd(this, SelectionStart);
                         }
                         if (selection.IsNotEmpty) {
-                            NativeMethods.SendMessage(this.Handle, NativeMethods.EM_SETSEL, new IntPtr(this.CaretPosition), new IntPtr(selection.End));
+                            NativeMethods.SendMessage(Handle, NativeMethods.EM_SETSEL, new IntPtr(CaretPosition), new IntPtr(selection.End));
                         }
                     }
                     return true;
 
                 case Keys.Control | Keys.A: {
-                        this.SelectAll();
+                        SelectAll();
                     }
                     return true;
 
                 case Keys.Tab: {
-                        var startLine = this.GetLineFromCharIndex(this.SelectionStart);
-                        var endLine = this.GetLineFromCharIndex(this.SelectionStart + this.SelectionLength - 1);
+                        var startLine = GetLineFromCharIndex(SelectionStart);
+                        var endLine = GetLineFromCharIndex(SelectionStart + SelectionLength - 1);
                         if (startLine >= endLine) { //single line tab
-                            this.SelectedText = "\t";
+                            SelectedText = "\t";
                         } else {
-                            var origStart = this.SelectionStart;
-                            var origLen = this.SelectionLength;
-                            var startIndex = this.GetFirstCharIndexFromLine(startLine);
-                            var endIndex = this.GetFirstCharIndexFromLine(endLine + 1) - 1;
-                            if (endIndex < 0) { endIndex = this.Text.Length - 1; }
-                            if (this.Text[endIndex] == '\n') { endIndex -= 1; } //if this is end of line
-                            var text = this.Text.Substring(startIndex, endIndex - startIndex);
+                            var origStart = SelectionStart;
+                            var origLen = SelectionLength;
+                            var startIndex = GetFirstCharIndexFromLine(startLine);
+                            var endIndex = GetFirstCharIndexFromLine(endLine + 1) - 1;
+                            if (endIndex < 0) { endIndex = Text.Length - 1; }
+                            if (Text[endIndex] == '\n') { endIndex -= 1; } //if this is end of line
+                            var text = Text.Substring(startIndex, endIndex - startIndex);
                             var lines = text.Split(new string[] { "\n" }, StringSplitOptions.None);
                             for (var i = 0; i < lines.Length; i++) {
                                 lines[i] = "\t" + lines[i];
                             }
-                            this.BeginUpdate();
-                            this.SelectionStart = startIndex;
-                            this.SelectionLength = endIndex - startIndex;
-                            this.SelectedText = string.Join("\n", lines);
-                            this.SelectionStart = (origStart == startIndex) ? origStart : origStart + 1;
-                            this.SelectionLength = (origStart == startIndex) ? origLen + lines.Length : origLen + lines.Length - 1;
-                            this.EndUpdate();
+                            BeginUpdate();
+                            SelectionStart = startIndex;
+                            SelectionLength = endIndex - startIndex;
+                            SelectedText = string.Join("\n", lines);
+                            SelectionStart = (origStart == startIndex) ? origStart : origStart + 1;
+                            SelectionLength = (origStart == startIndex) ? origLen + lines.Length : origLen + lines.Length - 1;
+                            EndUpdate();
                         }
                     }
                     return true;
 
                 case Keys.Shift | Keys.Tab: {
-                        var startLine = this.GetLineFromCharIndex(this.SelectionStart);
-                        var endLine = this.GetLineFromCharIndex(this.SelectionStart + this.SelectionLength - 1);
-                        var origStart = this.SelectionStart;
-                        var origLen = this.SelectionLength;
+                        var startLine = GetLineFromCharIndex(SelectionStart);
+                        var endLine = GetLineFromCharIndex(SelectionStart + SelectionLength - 1);
+                        var origStart = SelectionStart;
+                        var origLen = SelectionLength;
                         if (startLine >= endLine) { //single line tab
-                            if (this.SelectionStart > 0) {
-                                if (this.Text[this.SelectionStart - 1] == '\t') {
-                                    this.BeginUpdate();
-                                    this.SelectionStart -= 1;
-                                    this.SelectionLength = 1;
-                                    this.SelectedText = "";
-                                    this.SelectionStart = origStart - 1;
-                                    this.SelectionLength = origLen;
-                                    this.EndUpdate();
+                            if (SelectionStart > 0) {
+                                if (Text[SelectionStart - 1] == '\t') {
+                                    BeginUpdate();
+                                    SelectionStart -= 1;
+                                    SelectionLength = 1;
+                                    SelectedText = "";
+                                    SelectionStart = origStart - 1;
+                                    SelectionLength = origLen;
+                                    EndUpdate();
                                 }
                             }
                         } else {
-                            var startIndex = this.GetFirstCharIndexFromLine(startLine);
-                            var endIndex = this.GetFirstCharIndexFromLine(endLine + 1) - 1;
-                            if (endIndex < 0) { endIndex = this.Text.Length - 1; }
-                            if (this.Text[endIndex] == '\n') { endIndex -= 1; } //if this is end of line
-                            var text = this.Text.Substring(startIndex, endIndex - startIndex);
+                            var startIndex = GetFirstCharIndexFromLine(startLine);
+                            var endIndex = GetFirstCharIndexFromLine(endLine + 1) - 1;
+                            if (endIndex < 0) { endIndex = Text.Length - 1; }
+                            if (Text[endIndex] == '\n') { endIndex -= 1; } //if this is end of line
+                            var text = Text.Substring(startIndex, endIndex - startIndex);
                             var lines = text.Split(new string[] { "\n" }, StringSplitOptions.None);
                             var countRemoved = 0;
                             for (var i = 0; i < lines.Length; i++) {
@@ -265,13 +265,13 @@ namespace QText {
                                 }
                             }
                             if (countRemoved > 0) {
-                                this.BeginUpdate();
-                                this.SelectionStart = startIndex;
-                                this.SelectionLength = endIndex - startIndex;
-                                this.SelectedText = string.Join("\n", lines);
-                                this.SelectionStart = (origStart == startIndex) ? origStart : origStart - 1;
-                                this.SelectionLength = (origStart == startIndex) ? origLen - countRemoved : origLen - countRemoved + 1;
-                                this.EndUpdate();
+                                BeginUpdate();
+                                SelectionStart = startIndex;
+                                SelectionLength = endIndex - startIndex;
+                                SelectedText = string.Join("\n", lines);
+                                SelectionStart = (origStart == startIndex) ? origStart : origStart - 1;
+                                SelectionLength = (origStart == startIndex) ? origLen - countRemoved : origLen - countRemoved + 1;
+                                EndUpdate();
                             }
                         }
                     }
@@ -280,16 +280,16 @@ namespace QText {
 
                 case Keys.Control | Keys.Oemplus:
                 case Keys.Control | Keys.Add:
-                    this.ZoomIn();
+                    ZoomIn();
                     return true;
 
                 case Keys.Control | Keys.OemMinus:
                 case Keys.Control | Keys.Subtract:
-                    this.ZoomOut();
+                    ZoomOut();
                     return true;
 
                 case Keys.Control | Keys.D0:
-                    this.ZoomReset();
+                    ZoomReset();
                     return true;
 
             }
@@ -302,10 +302,10 @@ namespace QText {
         protected override void WndProc(ref Message m) {
             switch (m.Msg) {
                 case NativeMethods.WM_LBUTTONDBLCLK: {
-                        var selection = TextSelection.FindWord(this, this.SelectionStart);
+                        var selection = TextSelection.FindWord(this, SelectionStart);
                         if (selection.IsEmpty == false) {
-                            this.SelectionStart = selection.Start;
-                            this.SelectionLength = selection.Length;
+                            SelectionStart = selection.Start;
+                            SelectionLength = selection.Length;
                         }
                     }
                     return;
@@ -330,14 +330,14 @@ namespace QText {
         }
 
 
-        private Int32 CaretPosition; //used for selection
+        private int CaretPosition; //used for selection
         public bool IsSelectionEmpty;
 
         protected override void OnSelectionChanged(EventArgs e) {
             var range = new NativeMethods.CHARRANGE();
-            NativeMethods.SendMessage(this.Handle, NativeMethods.EM_EXGETSEL, IntPtr.Zero, ref range); //check directly so SelectedText is not internally called
-            this.IsSelectionEmpty = this.IsSelectionEmpty = (range.cpMin == range.cpMax);
-            if (this.IsSelectionEmpty) { this.CaretPosition = range.cpMin; }
+            NativeMethods.SendMessage(Handle, NativeMethods.EM_EXGETSEL, IntPtr.Zero, ref range); //check directly so SelectedText is not internally called
+            IsSelectionEmpty = IsSelectionEmpty = (range.cpMin == range.cpMax);
+            if (IsSelectionEmpty) { CaretPosition = range.cpMin; }
             base.OnSelectionChanged(e);
         }
 
@@ -358,33 +358,33 @@ namespace QText {
         private System.Drawing.Printing.PrintDocument prdText;
         private IntPtr _originalEventMask;
         public void BeginUpdate() {
-            this._beginUpdateCount += 1;
-            if (this._beginUpdateCount > 1) {
+            _beginUpdateCount += 1;
+            if (_beginUpdateCount > 1) {
                 return;
             }
 
-            _originalEventMask = NativeMethods.SendMessage(new HandleRef(this, this.Handle).Handle, NativeMethods.EM_SETEVENTMASK, 0, 0); // Prevent the control from raising any events.
-            NativeMethods.SendMessage(new HandleRef(this, this.Handle).Handle, NativeMethods.WM_SETREDRAW, 0, 0); //Prevent the control from redrawing itself.
+            _originalEventMask = NativeMethods.SendMessage(new HandleRef(this, Handle).Handle, NativeMethods.EM_SETEVENTMASK, 0, 0); // Prevent the control from raising any events.
+            NativeMethods.SendMessage(new HandleRef(this, Handle).Handle, NativeMethods.WM_SETREDRAW, 0, 0); //Prevent the control from redrawing itself.
         }
 
         public void EndUpdate() {
-            this._beginUpdateCount -= 1;
+            _beginUpdateCount -= 1;
             if (_beginUpdateCount > 0) { return; }
 
-            NativeMethods.SendMessage(new HandleRef(this, this.Handle).Handle, NativeMethods.WM_SETREDRAW, 1, 0); // Allow the control to redraw itself.
-            NativeMethods.SendMessage(new HandleRef(this, this.Handle).Handle, NativeMethods.EM_SETEVENTMASK, 0, _originalEventMask); // Allow the control to raise event messages.
+            NativeMethods.SendMessage(new HandleRef(this, Handle).Handle, NativeMethods.WM_SETREDRAW, 1, 0); // Allow the control to redraw itself.
+            NativeMethods.SendMessage(new HandleRef(this, Handle).Handle, NativeMethods.EM_SETEVENTMASK, 0, _originalEventMask); // Allow the control to raise event messages.
 
-            this.Refresh();
+            Refresh();
         }
 
         public void SelectLineBlock() {
-            var startLine = this.GetLineFromCharIndex(this.SelectionStart);
-            var endLine = this.GetLineFromCharIndex(this.SelectionStart + this.SelectionLength - 1);
-            var startIndex = this.GetFirstCharIndexFromLine(startLine);
-            var endIndex = this.GetFirstCharIndexFromLine(endLine + 1) - 1;
-            if (endIndex < 0) { endIndex = this.Text.Length; }
-            this.SelectionStart = startIndex;
-            this.SelectionLength = endIndex - startIndex + 1;
+            var startLine = GetLineFromCharIndex(SelectionStart);
+            var endLine = GetLineFromCharIndex(SelectionStart + SelectionLength - 1);
+            var startIndex = GetFirstCharIndexFromLine(startLine);
+            var endIndex = GetFirstCharIndexFromLine(endLine + 1) - 1;
+            if (endIndex < 0) { endIndex = Text.Length; }
+            SelectionStart = startIndex;
+            SelectionLength = endIndex - startIndex + 1;
         }
 
 
@@ -395,32 +395,32 @@ namespace QText {
         /// </summary>
         public void ResetSelectionFont() {
             try {
-                this.BeginUpdate();
+                BeginUpdate();
 
-                var selStart = this.SelectionStart;
-                var selLength = this.SelectionLength;
+                var selStart = SelectionStart;
+                var selLength = SelectionLength;
                 for (var i = selStart; i < selStart + selLength; i++) {
-                    this.SelectionStart = i;
-                    this.SelectionLength = 1;
+                    SelectionStart = i;
+                    SelectionLength = 1;
 
                     var style = FontStyle.Regular;
-                    if (this.SelectionFont.Bold) { style |= FontStyle.Bold; }
-                    if (this.SelectionFont.Italic) { style |= FontStyle.Italic; }
-                    if (this.SelectionFont.Underline) { style |= FontStyle.Underline; }
-                    if (this.SelectionFont.Strikeout) { style |= FontStyle.Strikeout; }
-                    this.SelectionFont = new Font(Settings.Current.DisplayFont, style); //to lazy to detect spans
+                    if (SelectionFont.Bold) { style |= FontStyle.Bold; }
+                    if (SelectionFont.Italic) { style |= FontStyle.Italic; }
+                    if (SelectionFont.Underline) { style |= FontStyle.Underline; }
+                    if (SelectionFont.Strikeout) { style |= FontStyle.Strikeout; }
+                    SelectionFont = new Font(Settings.Current.DisplayFont, style); //to lazy to detect spans
                 }
 
-                this.SelectionStart = selStart;
-                this.SelectionLength = selLength;
+                SelectionStart = selStart;
+                SelectionLength = selLength;
             } finally {
-                this.EndUpdate();
+                EndUpdate();
             }
         }
 
         public void ResetSelectionParagraphSpacing() {
             try {
-                this.BeginUpdate();
+                BeginUpdate();
 
                 var format = new NativeMethods.PARAFORMAT2() {
                     dwMask = NativeMethods.PFM_SPACEBEFORE | NativeMethods.PFM_SPACEAFTER,
@@ -430,15 +430,15 @@ namespace QText {
                 };
                 format.cbSize = Marshal.SizeOf(format);
 
-                NativeMethods.SendMessage(this.Handle, NativeMethods.EM_SETPARAFORMAT, IntPtr.Zero, ref format);
+                NativeMethods.SendMessage(Handle, NativeMethods.EM_SETPARAFORMAT, IntPtr.Zero, ref format);
             } finally {
-                this.EndUpdate();
+                EndUpdate();
             }
         }
 
         public void ResetSelectionParagraphIndent() {
             try {
-                this.BeginUpdate();
+                BeginUpdate();
 
                 var format = new NativeMethods.PARAFORMAT2() {
                     dwMask = NativeMethods.PFM_STARTINDENT,
@@ -447,9 +447,9 @@ namespace QText {
                 };
                 format.cbSize = Marshal.SizeOf(format);
 
-                NativeMethods.SendMessage(this.Handle, NativeMethods.EM_SETPARAFORMAT, IntPtr.Zero, ref format);
+                NativeMethods.SendMessage(Handle, NativeMethods.EM_SETPARAFORMAT, IntPtr.Zero, ref format);
             } finally {
-                this.EndUpdate();
+                EndUpdate();
             }
         }
 
@@ -458,7 +458,7 @@ namespace QText {
             get {
                 var format = new NativeMethods.PARAFORMAT2();
                 format.cbSize = Marshal.SizeOf(format);
-                NativeMethods.SendMessage(this.Handle, NativeMethods.EM_GETPARAFORMAT, IntPtr.Zero, ref format);
+                NativeMethods.SendMessage(Handle, NativeMethods.EM_GETPARAFORMAT, IntPtr.Zero, ref format);
                 return (format.wNumbering != 0) && (format.wNumbering != NativeMethods.PFN_BULLET);
             }
             set {
@@ -468,21 +468,21 @@ namespace QText {
                         wNumberingStart = 1,
                     };
                     formatFirst.cbSize = Marshal.SizeOf(formatFirst);
-                    NativeMethods.SendMessage(this.Handle, NativeMethods.EM_SETPARAFORMAT, IntPtr.Zero, ref formatFirst); //has to be a separate message otherwise multi-line selection would number all paragraphs as 1)
+                    NativeMethods.SendMessage(Handle, NativeMethods.EM_SETPARAFORMAT, IntPtr.Zero, ref formatFirst); //has to be a separate message otherwise multi-line selection would number all paragraphs as 1)
 
                     var formatAll = new NativeMethods.PARAFORMAT2() {
                         dwMask = NativeMethods.PFM_NUMBERING | NativeMethods.PFM_NUMBERINGSTYLE,
                         wNumbering = NativeMethods.PFN_ARABIC,
                     };
                     formatAll.cbSize = Marshal.SizeOf(formatAll);
-                    NativeMethods.SendMessage(this.Handle, NativeMethods.EM_SETPARAFORMAT, IntPtr.Zero, ref formatAll);
+                    NativeMethods.SendMessage(Handle, NativeMethods.EM_SETPARAFORMAT, IntPtr.Zero, ref formatAll);
                 } else {
                     var format = new NativeMethods.PARAFORMAT2() {
                         dwMask = NativeMethods.PFM_NUMBERING,
                         wNumbering = NativeMethods.PFN_NONE,
                     };
                     format.cbSize = Marshal.SizeOf(format);
-                    NativeMethods.SendMessage(this.Handle, NativeMethods.EM_SETPARAFORMAT, IntPtr.Zero, ref format);
+                    NativeMethods.SendMessage(Handle, NativeMethods.EM_SETPARAFORMAT, IntPtr.Zero, ref format);
                 }
             }
         }
@@ -492,21 +492,21 @@ namespace QText {
 
         #region Zooming
 
-        public Boolean HasZoom {
-            get { return (this.ZoomFactor != 0); }
+        public bool HasZoom {
+            get { return (ZoomFactor != 0); }
         }
 
         public void ZoomIn() {
-            this.ZoomFactor = (float)Math.Round(Math.Min(5.0f, this.ZoomFactor + 0.1f), 1);
+            ZoomFactor = (float)Math.Round(Math.Min(5.0f, ZoomFactor + 0.1f), 1);
         }
 
         public void ZoomOut() {
-            this.ZoomFactor = (float)Math.Round(Math.Max(0.1f, this.ZoomFactor - 0.1f), 1);
+            ZoomFactor = (float)Math.Round(Math.Max(0.1f, ZoomFactor - 0.1f), 1);
         }
 
         public void ZoomReset() {
-            this.ZoomFactor = 2.1f; //workaround for bug
-            this.ZoomFactor = 1.0f;
+            ZoomFactor = 2.1f; //workaround for bug
+            ZoomFactor = 1.0f;
         }
 
         #endregion
@@ -535,11 +535,11 @@ namespace QText {
             using (var pen = new Pen(brush, 1)) {
                 e.Graphics.DrawLine(pen, e.MarginBounds.Left, e.MarginBounds.Top - topPull, e.MarginBounds.Right, e.MarginBounds.Top - topPull);
                 e.Graphics.DrawString(currentPrintPage.ToString(), font, brush, e.MarginBounds.Right, e.MarginBounds.Top - topPull, sfTopRight);
-                e.Graphics.DrawString(this.PrintDocument.DocumentName, font, brush, e.MarginBounds.Left, e.MarginBounds.Top - topPull, sfTopLeft);
+                e.Graphics.DrawString(PrintDocument.DocumentName, font, brush, e.MarginBounds.Left, e.MarginBounds.Top - topPull, sfTopLeft);
             }
 
-            currentPrintLocation = PrintRtf(currentPrintLocation, this.TextLength, e);
-            e.HasMorePages = (currentPrintLocation < this.TextLength);
+            currentPrintLocation = PrintRtf(currentPrintLocation, TextLength, e);
+            e.HasMorePages = (currentPrintLocation < TextLength);
         }
 
 
@@ -553,7 +553,7 @@ namespace QText {
                 lParam = Marshal.AllocCoTaskMem(Marshal.SizeOf(fmtRange));
                 Marshal.StructureToPtr(fmtRange, lParam, false);
 
-                var res = NativeMethods.SendMessage(this.Handle, NativeMethods.EM_FORMATRANGE, new IntPtr(1), lParam);
+                var res = NativeMethods.SendMessage(Handle, NativeMethods.EM_FORMATRANGE, new IntPtr(1), lParam);
                 return res.ToInt32();
             } finally {
                 if (lParam != IntPtr.Zero) { Marshal.FreeCoTaskMem(lParam); }
@@ -586,27 +586,27 @@ namespace QText {
             internal const int EM_EXGETSEL = WM_USER + 52;
             internal const int EM_FORMATRANGE = WM_USER + 57;
 
-            internal const Int32 EM_GETPARAFORMAT = 1085;
-            internal const Int32 EM_SETPARAFORMAT = 1095;
-            internal const Int32 PFM_STARTINDENT = 0x0001;
-            internal const Int32 PFM_NUMBERING = 0x0020;
-            internal const Int32 PFM_SPACEBEFORE = 0x0040;
-            internal const Int32 PFM_SPACEAFTER = 0x0080;
-            internal const Int32 PFM_NUMBERINGSTYLE = 0x2000;
-            internal const Int32 PFM_NUMBERINGSTART = 0x8000;
-            internal const Int16 PFN_NONE = 0;
-            internal const Int16 PFN_BULLET = 1;
-            internal const Int16 PFN_ARABIC = 2;
-            internal const UInt16 PFNS_NEWNUMBER = 0x8000;
+            internal const int EM_GETPARAFORMAT = 1085;
+            internal const int EM_SETPARAFORMAT = 1095;
+            internal const int PFM_STARTINDENT = 0x0001;
+            internal const int PFM_NUMBERING = 0x0020;
+            internal const int PFM_SPACEBEFORE = 0x0040;
+            internal const int PFM_SPACEAFTER = 0x0080;
+            internal const int PFM_NUMBERINGSTYLE = 0x2000;
+            internal const int PFM_NUMBERINGSTART = 0x8000;
+            internal const short PFN_NONE = 0;
+            internal const short PFN_BULLET = 1;
+            internal const short PFN_ARABIC = 2;
+            internal const ushort PFNS_NEWNUMBER = 0x8000;
 
 
             [StructLayout(LayoutKind.Sequential)]
             internal struct RECT {
                 public RECT(Rectangle rectangleInHundredsOfAnInch) {
-                    this.Left = (int)(rectangleInHundredsOfAnInch.Left * 14.4);
-                    this.Top = (int)(rectangleInHundredsOfAnInch.Top * 14.4);
-                    this.Right = (int)(rectangleInHundredsOfAnInch.Right * 14.4);
-                    this.Bottom = (int)(rectangleInHundredsOfAnInch.Bottom * 14.4);
+                    Left = (int)(rectangleInHundredsOfAnInch.Left * 14.4);
+                    Top = (int)(rectangleInHundredsOfAnInch.Top * 14.4);
+                    Right = (int)(rectangleInHundredsOfAnInch.Right * 14.4);
+                    Bottom = (int)(rectangleInHundredsOfAnInch.Bottom * 14.4);
                 }
                 public int Left;
                 public int Top;
@@ -617,8 +617,8 @@ namespace QText {
             [StructLayout(LayoutKind.Sequential)]
             internal struct CHARRANGE {
                 internal CHARRANGE(int charFrom, int CharTo) {
-                    this.cpMin = charFrom;
-                    this.cpMax = CharTo;
+                    cpMin = charFrom;
+                    cpMax = CharTo;
                 }
                 public int cpMin;
                 public int cpMax;
@@ -628,10 +628,10 @@ namespace QText {
             internal struct FORMATRANGE {
                 public FORMATRANGE(IntPtr hdc, Rectangle pageRectangle, Rectangle drawingRectangle, int charFrom, int charTo) {
                     this.hdc = hdc;
-                    this.hdcTarget = hdc;
-                    this.rc = new RECT(drawingRectangle);
-                    this.rcPage = new RECT(pageRectangle);
-                    this.chrg = new CHARRANGE(charFrom, charTo);
+                    hdcTarget = hdc;
+                    rc = new RECT(drawingRectangle);
+                    rcPage = new RECT(pageRectangle);
+                    chrg = new CHARRANGE(charFrom, charTo);
                 }
                 public IntPtr hdc;             //Actual DC to draw on
                 public IntPtr hdcTarget;       //Target DC for determining text formatting
@@ -642,36 +642,36 @@ namespace QText {
 
             [StructLayout(LayoutKind.Sequential)]
             internal struct PARAFORMAT2 {
-                public Int32 cbSize;
-                public Int32 dwMask;
-                public Int16 wNumbering;
-                public Int16 wReserved;
-                public Int32 dxStartIndent;
-                public Int32 dxRightIndent;
-                public Int32 dxOffset;
-                public Int16 wAlignment;
-                public Int16 cTabCount;
+                public int cbSize;
+                public int dwMask;
+                public short wNumbering;
+                public short wReserved;
+                public int dxStartIndent;
+                public int dxRightIndent;
+                public int dxOffset;
+                public short wAlignment;
+                public short cTabCount;
                 [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
-                public Int32[] rgxTabs;
-                public Int32 dySpaceBefore;
-                public Int32 dySpaceAfter;
-                public Int32 dyLineSpacing;
-                public Int16 sStyle;
-                public Byte bLineSpacingRule;
-                public Byte bOutlineLevel;
-                public Int16 wShadingWeight;
-                public Int16 wShadingStyle;
-                public Int16 wNumberingStart;
-                public UInt16 wNumberingStyle;
-                public Int16 wNumberingTab;
-                public Int16 wBorderSpace;
-                public Int16 wBorderWidth;
-                public Int16 wBorders;
+                public int[] rgxTabs;
+                public int dySpaceBefore;
+                public int dySpaceAfter;
+                public int dyLineSpacing;
+                public short sStyle;
+                public byte bLineSpacingRule;
+                public byte bOutlineLevel;
+                public short wShadingWeight;
+                public short wShadingStyle;
+                public short wNumberingStart;
+                public ushort wNumberingStyle;
+                public short wNumberingTab;
+                public short wBorderSpace;
+                public short wBorderWidth;
+                public short wBorders;
             }
 
 
             [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-            internal static extern IntPtr LoadLibrary(String path);
+            internal static extern IntPtr LoadLibrary(string path);
 
 
             internal static IntPtr SendMessage(IntPtr hWnd, uint Msg, int wParam, IntPtr lParam) {
@@ -687,13 +687,13 @@ namespace QText {
             internal static extern IntPtr SendMessage([InAttribute()] IntPtr hWnd, uint Msg, IntPtr wParam, ref IntPtr lParam);
 
             [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-            internal static extern IntPtr SendMessage(IntPtr hWnd, Int32 msg, IntPtr wp, IntPtr lp);
+            internal static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
 
             [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-            internal static extern IntPtr SendMessage([InAttribute()] IntPtr hWnd, UInt32 Msg, IntPtr wParam, ref PARAFORMAT2 lParam);
+            internal static extern IntPtr SendMessage([InAttribute()] IntPtr hWnd, uint Msg, IntPtr wParam, ref PARAFORMAT2 lParam);
 
             [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-            internal static extern IntPtr SendMessage([InAttribute()] IntPtr hWnd, Int32 Msg, IntPtr wParam, ref CHARRANGE lParam);
+            internal static extern IntPtr SendMessage([InAttribute()] IntPtr hWnd, int Msg, IntPtr wParam, ref CHARRANGE lParam);
 
         }
 

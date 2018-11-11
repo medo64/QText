@@ -6,11 +6,11 @@ namespace QText {
     internal partial class ChangePasswordForm : Form {
         public ChangePasswordForm(string title) {
             InitializeComponent();
-            this.Font = SystemFonts.MessageBoxFont;
+            Font = SystemFonts.MessageBoxFont;
 
             erp.SetIconAlignment(txtVerify, ErrorIconAlignment.MiddleLeft);
 
-            this.Text = "QText: " + title;
+            Text = "QText: " + title;
         }
 
 
@@ -47,8 +47,8 @@ namespace QText {
 
 
         private void btnOK_Click(object sender, EventArgs e) {
-            this.Password = txtPassword.Text;
-            this.DialogResult = DialogResult.OK;
+            Password = txtPassword.Text;
+            DialogResult = DialogResult.OK;
         }
 
     }

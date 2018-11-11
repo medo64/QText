@@ -1,15 +1,15 @@
-//Copyright (c) 2007 Josip Medved <jmedved@jmedved.com>
+//Josip Medved <jmedved@jmedved.com>   www.medo64.com
 
-//2007-12-29: New version.
-//2008-01-03: Added Resources.
-//2008-01-06: System.Environment.Exit returns E_ABORT (0x80004004).
-//2008-01-08: Main method is now called Attach.
-//2008-01-26: AutoExit parameter changed to NoAutoExit
-//2008-04-10: NewInstanceEventArgs is not nested class anymore.
-//2008-04-11: Cleaned code to match FxCop 1.36 beta 2 (SpecifyMarshalingForPInvokeStringArguments, NestedTypesShouldNotBeVisible).
-//2008-11-14: Reworked code to use SafeHandle.
-//2010-10-07: Added IsOtherInstanceRunning method.
 //2012-11-24: Suppressing bogus CA5122 warning (http://connect.microsoft.com/VisualStudio/feedback/details/729254/bogus-ca5122-warning-about-p-invoke-declarations-should-not-be-safe-critical).
+//2010-10-07: Added IsOtherInstanceRunning method.
+//2008-11-14: Reworked code to use SafeHandle.
+//2008-04-11: Cleaned code to match FxCop 1.36 beta 2 (SpecifyMarshalingForPInvokeStringArguments, NestedTypesShouldNotBeVisible).
+//2008-04-10: NewInstanceEventArgs is not nested class anymore.
+//2008-01-26: AutoExit parameter changed to NoAutoExit
+//2008-01-08: Main method is now called Attach.
+//2008-01-06: System.Environment.Exit returns E_ABORT (0x80004004).
+//2008-01-03: Added Resources.
+//2007-12-29: New version.
 
 
 using System;
@@ -80,9 +80,10 @@ namespace Medo.Application {
 
                     } else {  //there is no application already running.
 
-                        _thread = new Thread(Run);
-                        _thread.Name = "Medo.Application.SingleInstance.0";
-                        _thread.IsBackground = true;
+                        _thread = new Thread(Run) {
+                            Name = "Medo.Application.SingleInstance.0",
+                            IsBackground = true
+                        };
                         _thread.Start();
 
                     }
@@ -137,7 +138,7 @@ namespace Medo.Application {
                 }
             }
         }
-        private static string NamedPipeName = @"\\.\pipe\" + MutexName;
+        private static readonly string NamedPipeName = @"\\.\pipe\" + MutexName;
 
         /// <summary>
         /// Gets whether there is another instance running.
@@ -149,8 +150,7 @@ namespace Medo.Application {
                     if (_mtxFirstInstance != null) {
                         return false; //no other instance is running
                     } else {
-                        bool isFirstInstance = false;
-                        var tempInstance = new Mutex(true, MutexName, out isFirstInstance);
+                        var tempInstance = new Mutex(true, MutexName, out var isFirstInstance);
                         tempInstance.Close();
                         return (isFirstInstance == false);
                     }
@@ -196,8 +196,8 @@ namespace Medo.Application {
                     }
 
                     using (System.IO.MemoryStream ms = new System.IO.MemoryStream(buffer)) {
-                        System.Runtime.Serialization.Formatters.Binary.BinaryFormatter bf = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                        if (NewInstanceDetected != null) { NewInstanceDetected(null, (NewInstanceEventArgs)bf.Deserialize(ms)); }
+                        var bf = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                        NewInstanceDetected?.Invoke(null, (NewInstanceEventArgs)bf.Deserialize(ms));
                     }
 
                 } catch (System.Exception ex) {
@@ -255,15 +255,15 @@ namespace Medo.Application {
 
 
                 public override bool IsInvalid {
-                    get { return (this.IsClosed) || (base.handle == minusOne); }
+                    get { return (IsClosed) || (base.handle == minusOne); }
                 }
 
                 protected override bool ReleaseHandle() {
-                    return CloseHandle(this.handle);
+                    return CloseHandle(handle);
                 }
 
                 public override string ToString() {
-                    return this.handle.ToString();
+                    return handle.ToString();
                 }
 
             }
@@ -327,26 +327,28 @@ namespace Medo.Application {
         /// <param name="commandLine">Command line.</param>
         /// <param name="commandLineArgs">String array containing the command line arguments.</param>
         public NewInstanceEventArgs(string commandLine, string[] commandLineArgs) {
-            this._commandLine = commandLine;
-            this._commandLineArgs = commandLineArgs;
+            _commandLine = commandLine;
+            _commandLineArgs = commandLineArgs;
         }
 
-        private string _commandLine;
+        private readonly string _commandLine;
         /// <summary>
         /// Gets the command line.
         /// </summary>
         public string CommandLine {
-            get { return this._commandLine; }
+            get {
+                return
+                  _commandLine;
+            }
         }
 
-        private string[] _commandLineArgs;
+        private readonly string[] _commandLineArgs;
         /// <summary>
         /// Returns a string array containing the command line arguments.
         /// </summary>
         public string[] GetCommandLineArgs() {
-            return this._commandLineArgs;
+            return _commandLineArgs;
         }
 
     }
-
 }

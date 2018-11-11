@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -6,9 +6,9 @@ namespace QText {
     internal partial class PasswordForm : Form {
         public PasswordForm(string title) {
             InitializeComponent();
-            this.Font = SystemFonts.MessageBoxFont;
+            Font = SystemFonts.MessageBoxFont;
 
-            this.Text = "QText: " + title;
+            Text = "QText: " + title;
         }
 
 
@@ -16,7 +16,7 @@ namespace QText {
 
 
         private void btnOK_Click(object sender, EventArgs e) {
-            this.Password = txtPassword.Text;
+            Password = txtPassword.Text;
         }
 
     }

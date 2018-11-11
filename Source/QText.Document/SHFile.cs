@@ -1,7 +1,7 @@
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.ComponentModel;
 
 namespace QText {
     internal static class SHFile {

@@ -14,28 +14,28 @@ namespace QText {
         /// <param name="destinationPath">Destination path.</param>
         /// <exception cref="InvalidOperationException">Cannot copy into the current storage directory tree. -or- Cannot create destination's root direcory.</exception>
         public DocumentCopier(Document document, string destinationPath) {
-            this.Document = document;
+            Document = document;
 
             var destinationRoot = Path.GetFullPath(destinationPath);
-            if (destinationRoot.StartsWith(this.Document.RootPath, StringComparison.OrdinalIgnoreCase)) {
+            if (destinationRoot.StartsWith(Document.RootPath, StringComparison.OrdinalIgnoreCase)) {
                 throw new InvalidOperationException("Cannot copy into the current storage directory tree.");
             }
-            if ((this.Document.CarbonCopyRootPath != null) && (destinationRoot.StartsWith(this.Document.CarbonCopyRootPath, StringComparison.OrdinalIgnoreCase))) {
+            if ((Document.CarbonCopyRootPath != null) && (destinationRoot.StartsWith(Document.CarbonCopyRootPath, StringComparison.OrdinalIgnoreCase))) {
                 throw new InvalidOperationException("Cannot copy into the carbon copy directory tree.");
             }
-            this.DestinationRootPath = destinationRoot;
+            DestinationRootPath = destinationRoot;
 
-            if (Directory.Exists(this.DestinationRootPath)) {
-                this.DestinationRootAlreadyExisted = true;
+            if (Directory.Exists(DestinationRootPath)) {
+                DestinationRootAlreadyExisted = true;
             } else {
                 try {
-                    Helper.CreatePath(this.DestinationRootPath);
+                    Helper.CreatePath(DestinationRootPath);
                 } catch (Exception ex) {
                     throw new InvalidOperationException("Cannot create destination's root direcory.", ex);
                 }
             }
 
-            this.DestinationRootWasEmpty = (Directory.GetDirectories(this.DestinationRootPath).Length == 0) && (Directory.GetFiles(this.DestinationRootPath).Length == 0);
+            DestinationRootWasEmpty = (Directory.GetDirectories(DestinationRootPath).Length == 0) && (Directory.GetFiles(DestinationRootPath).Length == 0);
         }
 
         private readonly Document Document;
@@ -56,7 +56,7 @@ namespace QText {
         /// Copies whole directory structure and returns true if copy was successful.
         /// </summary>
         public bool CopyAll() {
-            return this.CopyAll(false);
+            return CopyAll(false);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace QText {
         /// </summary>
         /// <param name="alwaysOverwrite">If true, files will be overwritten without raising the event.</param>
         public bool CopyAll(bool alwaysOverwrite) {
-            return CopyDirectory(this.Document.RootPath, this.DestinationRootPath, "", alwaysOverwrite, 0);
+            return CopyDirectory(Document.RootPath, DestinationRootPath, "", alwaysOverwrite, 0);
         }
 
 
@@ -80,7 +80,7 @@ namespace QText {
                     } else {
                         var relativeFilePath = string.IsNullOrEmpty(relativePath) ? fileName : relativePath + "\\" + fileName;
                         var e = new DocumentCopierOverwriteEventArgs(relativeFilePath);
-                        this.OnFileOverwrite(e);
+                        OnFileOverwrite(e);
                         if (e.Cancel) { return false; }
                         canOverwrite = e.Overwrite;
                     }
@@ -96,7 +96,7 @@ namespace QText {
                 var canOverwrite = true;
                 if (Directory.Exists(destinationDirectoryPath) && !alwaysOverwrite) {
                     var e = new DocumentCopierOverwriteEventArgs(relativeDirectoryPath);
-                    this.OnFolderOverwrite(e);
+                    OnFolderOverwrite(e);
                     if (e.Cancel) { return false; }
                     canOverwrite = !e.Overwrite;
                 }
@@ -115,7 +115,7 @@ namespace QText {
         /// Returns document that uses destination as root directory.
         /// </summary>
         public Document GetDestinationDocument() {
-            return new Document(this.DestinationRootPath);
+            return new Document(DestinationRootPath);
         }
 
 
@@ -131,7 +131,7 @@ namespace QText {
         /// </summary>
         /// <param name="e">Event arguments.</param>
         private void OnFolderOverwrite(DocumentCopierOverwriteEventArgs e) {
-            var eh = this.FolderOverwrite;
+            var eh = FolderOverwrite;
             if (eh != null) { eh.Invoke(this, e); }
         }
 
@@ -146,7 +146,7 @@ namespace QText {
         /// </summary>
         /// <param name="e">Event arguments.</param>
         private void OnFileOverwrite(DocumentCopierOverwriteEventArgs e) {
-            var eh = this.FileOverwrite;
+            var eh = FileOverwrite;
             if (eh != null) { eh.Invoke(this, e); }
         }
 

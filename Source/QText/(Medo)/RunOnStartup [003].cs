@@ -1,12 +1,13 @@
-//Josip Medved <jmedved@jmedved.com>  http://www.jmedved.com
+//Josip Medved <jmedved@jmedved.com>  https://www.medo64.com
 
 //2008-01-03: First version.
-//2008-01-03: Added Resources.
 //2008-04-11: Cleaned code to match FxCop 1.36 beta 2.
 //2010-12-18: Added Arguments property.
 
 
+using System;
 using System.Globalization;
+
 namespace Medo.Configuration {
 
     /// <summary>
@@ -16,7 +17,7 @@ namespace Medo.Configuration {
 
         private const string runSubkey = @"Software\Microsoft\Windows\CurrentVersion\Run";
 
-        private static RunOnStartup _current = new RunOnStartup();
+        private static readonly RunOnStartup _current = new RunOnStartup();
         /// <summary>
         /// Settings for current executable.
         /// </summary>
@@ -52,22 +53,22 @@ namespace Medo.Configuration {
                 System.Reflection.Assembly assembly = System.Reflection.Assembly.GetEntryAssembly();
                 object[] titleAttributes = assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyTitleAttribute), true);
                 if ((titleAttributes != null) && (titleAttributes.Length >= 1)) {
-                    this.Title = ((System.Reflection.AssemblyTitleAttribute)titleAttributes[titleAttributes.Length - 1]).Title;
+                    Title = ((System.Reflection.AssemblyTitleAttribute)titleAttributes[titleAttributes.Length - 1]).Title;
                 } else {
-                    this.Title = assembly.GetName().Name;
+                    Title = assembly.GetName().Name;
                 }
             } else {
                 if (title.Length == 0) { throw new System.ArgumentException(Resources.ExceptionTitleCannotBeEmpty); }
-                this.Title = title;
+                Title = title;
             }
 
             if (executablePath == null) {
-                this.ExecutablePath = System.Windows.Forms.Application.ExecutablePath;
+                ExecutablePath = System.Windows.Forms.Application.ExecutablePath;
             } else {
                 if (!System.IO.File.Exists(executablePath)) { throw new System.IO.FileNotFoundException(Resources.ExceptionExecutableCannotBeFound, executablePath); }
-                this.ExecutablePath = executablePath;
+                ExecutablePath = executablePath;
             }
-            this.Arguments = arguments;
+            Arguments = arguments;
         }
 
 
@@ -89,24 +90,24 @@ namespace Medo.Configuration {
 
         private string ExecutablePathWithQuotes {
             get {
-                return string.Format(CultureInfo.InvariantCulture, "\"{0}\"", this.ExecutablePath);
+                return string.Format(CultureInfo.InvariantCulture, "\"{0}\"", ExecutablePath);
             }
         }
 
         private string ExecutablePathWithQuotesAndArguments {
             get {
-                if (string.IsNullOrEmpty(this.Arguments)) {
-                    return this.ExecutablePathWithQuotes;
+                if (string.IsNullOrEmpty(Arguments)) {
+                    return ExecutablePathWithQuotes;
                 } else {
-                    return this.ExecutablePathWithQuotes + " " + this.Arguments;
+                    return ExecutablePathWithQuotes + " " + Arguments;
                 }
             }
         }
 
         private bool IsExecutableInside(string value) {
-            if ((string.Compare(this.ExecutablePath, value, System.StringComparison.OrdinalIgnoreCase) == 0) || (string.Compare(this.ExecutablePathWithQuotes, value, System.StringComparison.OrdinalIgnoreCase) == 0)) {
+            if ((string.Compare(ExecutablePath, value, StringComparison.OrdinalIgnoreCase) == 0) || (string.Compare(ExecutablePathWithQuotes, value, System.StringComparison.OrdinalIgnoreCase) == 0)) {
                 return true;
-            } else if (value.StartsWith(this.ExecutablePathWithQuotes + " ", System.StringComparison.OrdinalIgnoreCase)) {
+            } else if (value.StartsWith(ExecutablePathWithQuotes + " ", System.StringComparison.OrdinalIgnoreCase)) {
                 return true;
             }
             return false;
@@ -122,9 +123,9 @@ namespace Medo.Configuration {
             get {
                 using (Microsoft.Win32.RegistryKey rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(runSubkey, false)) {
                     if (rk != null) {
-                        object value = rk.GetValue(this.Title, null);
+                        object value = rk.GetValue(Title, null);
                         if (value != null) {
-                            if (rk.GetValueKind(this.Title) == Microsoft.Win32.RegistryValueKind.String) {
+                            if (rk.GetValueKind(Title) == Microsoft.Win32.RegistryValueKind.String) {
                                 return IsExecutableInside(value.ToString());
                             }
                         }
@@ -134,20 +135,20 @@ namespace Medo.Configuration {
             }
             set {
                 if (value == true) { //add it to registry.
-                    if (this.RunForCurrentUser == false) {
+                    if (RunForCurrentUser == false) {
                         using (Microsoft.Win32.RegistryKey rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(runSubkey, true)) {
                             if (rk != null) {
-                                rk.SetValue(this.Title, this.ExecutablePathWithQuotesAndArguments, Microsoft.Win32.RegistryValueKind.String);
+                                rk.SetValue(Title, ExecutablePathWithQuotesAndArguments, Microsoft.Win32.RegistryValueKind.String);
                             } else {
                                 throw new System.InvalidOperationException(Resources.ExceptionCannotOpenRegistryKey);
                             }
                         }
                     }
                 } else { //delete if from registry.
-                    if (this.RunForCurrentUser == true) {
+                    if (RunForCurrentUser == true) {
                         using (Microsoft.Win32.RegistryKey rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(runSubkey, true)) {
                             if (rk != null) {
-                                rk.DeleteValue(this.Title, false);
+                                rk.DeleteValue(Title, false);
                             } else {
                                 throw new System.InvalidOperationException(Resources.ExceptionCannotOpenRegistryKey);
                             }
@@ -166,9 +167,9 @@ namespace Medo.Configuration {
             get {
                 using (Microsoft.Win32.RegistryKey rk = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(runSubkey, false)) {
                     if (rk != null) {
-                        object value = rk.GetValue(this.Title, null);
+                        object value = rk.GetValue(Title, null);
                         if (value != null) {
-                            if (rk.GetValueKind(this.Title) == Microsoft.Win32.RegistryValueKind.String) {
+                            if (rk.GetValueKind(Title) == Microsoft.Win32.RegistryValueKind.String) {
                                 return IsExecutableInside(value.ToString());
                             }
                         }
@@ -178,20 +179,20 @@ namespace Medo.Configuration {
             }
             set {
                 if (value == true) { //add it to registry.
-                    if (this.RunForAllUsers == false) {
+                    if (RunForAllUsers == false) {
                         using (Microsoft.Win32.RegistryKey rk = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(runSubkey, true)) {
                             if (rk != null) {
-                                rk.SetValue(this.Title, this.ExecutablePathWithQuotesAndArguments, Microsoft.Win32.RegistryValueKind.String);
+                                rk.SetValue(Title, ExecutablePathWithQuotesAndArguments, Microsoft.Win32.RegistryValueKind.String);
                             } else {
                                 throw new System.InvalidOperationException(Resources.ExceptionCannotOpenRegistryKey);
                             }
                         }
                     }
                 } else { //delete if from registry.
-                    if (this.RunForAllUsers == true) {
+                    if (RunForAllUsers == true) {
                         using (Microsoft.Win32.RegistryKey rk = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(runSubkey, true)) {
                             if (rk != null) {
-                                rk.DeleteValue(this.Title, false);
+                                rk.DeleteValue(Title, false);
                             } else {
                                 throw new System.InvalidOperationException(Resources.ExceptionCannotOpenRegistryKey);
                             }
@@ -213,5 +214,4 @@ namespace Medo.Configuration {
         }
 
     }
-
 }

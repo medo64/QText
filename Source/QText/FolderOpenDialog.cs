@@ -37,15 +37,15 @@ namespace QText {
             frm.GetOptions(out var options);
             options |= NativeMethods.FOS_PICKFOLDERS | NativeMethods.FOS_FORCEFILESYSTEM | NativeMethods.FOS_NOVALIDATE | NativeMethods.FOS_NOTESTFILECREATE | NativeMethods.FOS_DONTADDTORECENT;
             frm.SetOptions(options);
-            if (this.InitialFolder != null) {
+            if (InitialFolder != null) {
                 var riid = new Guid("43826D1E-E718-42EE-BC55-A1E261C37BFE"); //IShellItem
-                if (NativeMethods.SHCreateItemFromParsingName(this.InitialFolder, IntPtr.Zero, ref riid, out var directoryShellItem) == NativeMethods.S_OK) {
+                if (NativeMethods.SHCreateItemFromParsingName(InitialFolder, IntPtr.Zero, ref riid, out var directoryShellItem) == NativeMethods.S_OK) {
                     frm.SetFolder(directoryShellItem);
                 }
             }
-            if (this.DefaultFolder != null) {
+            if (DefaultFolder != null) {
                 var riid = new Guid("43826D1E-E718-42EE-BC55-A1E261C37BFE"); //IShellItem
-                if (NativeMethods.SHCreateItemFromParsingName(this.DefaultFolder, IntPtr.Zero, ref riid, out var directoryShellItem) == NativeMethods.S_OK) {
+                if (NativeMethods.SHCreateItemFromParsingName(DefaultFolder, IntPtr.Zero, ref riid, out var directoryShellItem) == NativeMethods.S_OK) {
                     frm.SetDefaultFolder(directoryShellItem);
                 }
             }
@@ -55,7 +55,7 @@ namespace QText {
                     if (shellItem.GetDisplayName(NativeMethods.SIGDN_FILESYSPATH, out var pszString) == NativeMethods.S_OK) {
                         if (pszString != IntPtr.Zero) {
                             try {
-                                this.Folder = Marshal.PtrToStringAuto(pszString);
+                                Folder = Marshal.PtrToStringAuto(pszString);
                                 return DialogResult.OK;
                             } finally {
                                 Marshal.FreeCoTaskMem(pszString);
@@ -74,12 +74,12 @@ namespace QText {
                 frm.CreatePrompt = false;
                 frm.Filter = "|" + Guid.Empty.ToString();
                 frm.FileName = "any";
-                if (this.InitialFolder != null) { frm.InitialDirectory = this.InitialFolder; }
+                if (InitialFolder != null) { frm.InitialDirectory = InitialFolder; }
                 frm.OverwritePrompt = false;
                 frm.Title = "Select Folder";
                 frm.ValidateNames = false;
                 if (frm.ShowDialog(owner) == DialogResult.OK) {
-                    this.Folder = Path.GetDirectoryName(frm.FileName);
+                    Folder = Path.GetDirectoryName(frm.FileName);
                     return DialogResult.OK;
                 } else {
                     return DialogResult.Cancel;

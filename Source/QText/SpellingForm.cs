@@ -7,7 +7,7 @@ namespace QText {
     internal partial class SpellingForm : Form {
         public SpellingForm(string defaultText = "") {
             InitializeComponent();
-            this.Font = SystemFonts.MessageBoxFont;
+            Font = SystemFonts.MessageBoxFont;
 
             txtInput.Text = defaultText;
             txtInput.SelectionStart = txtInput.Text.Length;
@@ -38,7 +38,8 @@ namespace QText {
                         txtSpelling.SelectAll();
                         e.Handled = true;
                         e.SuppressKeyPress = true;
-                    } break;
+                    }
+                    break;
             }
         }
 

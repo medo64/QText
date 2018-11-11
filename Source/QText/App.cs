@@ -221,8 +221,9 @@ namespace QText {
 
         public static IEnumerable<IPlugin> GetEnabledPlugins() {
             if (App.AllPlugins == null) { //TODO: Dynamic loading whenever I have more plugins
-                var list = new List<IPlugin>();
-                list.Add(new Plugins.Reminder.ReminderPlugin());
+                var list = new List<IPlugin> {
+                    new Plugins.Reminder.ReminderPlugin()
+                };
                 App.AllPlugins = list.AsReadOnly();
             }
 

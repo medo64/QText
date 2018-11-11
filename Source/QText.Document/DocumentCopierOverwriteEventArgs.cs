@@ -11,9 +11,9 @@ namespace QText {
         /// </summary>
         /// <param name="relativePath">Relative path.</param>
         internal DocumentCopierOverwriteEventArgs(string relativePath) {
-            this.RelativePath = relativePath;
-            this.Overwrite = true;
-            this.Cancel = false;
+            RelativePath = relativePath;
+            Overwrite = true;
+            Cancel = false;
         }
 
 

@@ -6,15 +6,15 @@ namespace QText {
     internal partial class GotoForm : Form {
         public GotoForm(bool hasText) {
             InitializeComponent();
-            this.Font = SystemFonts.MessageBoxFont;
+            Font = SystemFonts.MessageBoxFont;
 
             Helper.ScaleGotoImageList(this, imlSuggestions);
 
-            this.HasText = hasText;
+            HasText = hasText;
             Medo.Windows.Forms.State.SetupOnLoadAndClose(this);
         }
 
-        private readonly Boolean HasText;
+        private readonly bool HasText;
 
 
         private void Form_Load(object sender, EventArgs e) {
@@ -59,7 +59,7 @@ namespace QText {
         private void txtWhere_TextChanged(object sender, EventArgs e) {
             lsvSuggestions.BeginUpdate();
             lsvSuggestions.Items.Clear();
-            foreach (var result in GotoResult.GetSuggestions(txtWhere.Text.Trim(), this.HasText)) {
+            foreach (var result in GotoResult.GetSuggestions(txtWhere.Text.Trim(), HasText)) {
                 lsvSuggestions.Items.Add(new ListViewItem(result.ToString()) { Tag = result, ImageIndex = result.ImageIndex });
             }
             lsvSuggestions.EndUpdate();
@@ -74,7 +74,7 @@ namespace QText {
 
 
         private void lsvSuggestions_ItemActivate(object sender, EventArgs e) {
-            if (btnGoto.Enabled) { this.AcceptButton.PerformClick(); }
+            if (btnGoto.Enabled) { AcceptButton.PerformClick(); }
         }
 
         private void lsvSuggestions_SelectedIndexChanged(object sender, EventArgs e) {
@@ -88,7 +88,7 @@ namespace QText {
 
         private void btnGoto_Click(object sender, EventArgs e) {
             if (lsvSuggestions.SelectedItems.Count > 0) {
-                this.SelectedItem = (GotoResult)(lsvSuggestions.SelectedItems[0].Tag);
+                SelectedItem = (GotoResult)(lsvSuggestions.SelectedItems[0].Tag);
             }
         }
 
