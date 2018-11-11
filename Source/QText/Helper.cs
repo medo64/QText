@@ -334,6 +334,10 @@ namespace QText {
                             sbArgument.Append(ch);
                             ProcessRichTextCommand(groupStack, sbCommand.ToString(), sbArgument.ToString());
                             state = RichTextParseState.Text;
+                        } else {
+                            ProcessRichTextCommand(groupStack, sbCommand.ToString(), sbArgument.ToString());
+                            groupStack.Peek().Text.Append(ch);
+                            state = RichTextParseState.Text;
                         }
 
                         break;
@@ -354,15 +358,23 @@ namespace QText {
                             sbArgument.Append(ch);
                             ProcessRichTextCommand(groupStack, sbCommand.ToString(), sbArgument.ToString());
                             state = RichTextParseState.Text;
-                        } else {
+                        } else if (char.IsDigit(ch)) {
                             sbArgument.Append(ch);
+                        } else {
+                            ProcessRichTextCommand(groupStack, sbCommand.ToString(), sbArgument.ToString());
+                            groupStack.Peek().Text.Append(ch);
+                            state = RichTextParseState.Text;
                         }
                         break;
                 }
             }
 
             if (groupStack.Count == 1) {
-                return groupStack.Peek().Text.ToString();
+                var newRichText = groupStack.Peek().Text.ToString();
+                //Debug.WriteLine(new string('=', 80));
+                //Debug.WriteLine(newRichText);
+                //Debug.WriteLine(new string('=', 80));
+                return newRichText;
             } else {
                 return null;
             }
