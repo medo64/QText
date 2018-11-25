@@ -1,5 +1,6 @@
 //Copyright 2017 by Josip Medved <jmedved@jmedved.com> (www.medo64.com) MIT License
 
+//2018-11-25: Refactored which file gets used if application is not installed.
 //2017-11-05: Suppress exception on UnauthorizedAccessException.
 //2017-10-09: Support for /opt installation on Linux.
 //2017-04-29: Added IsAssumedInstalled property.
@@ -16,7 +17,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Medo.Configuration {
@@ -258,24 +258,30 @@ namespace Medo.Configuration {
         private static readonly object SyncReadWrite = new object();
 
 
-        private static bool IsAssumedInstalledBacking;
+        private static bool _isAssumedInstalled;
         /// <summary>
-        /// Gets if application is assumed to be installed.
-        /// Application is considered installed if it is located in Program Files directory (or opt) or if file is already present in Application Data folder.
+        /// Gets/sets if application is assumed to be installed.
+        /// Application is considered installed if it is located in Program Files directory (or opt).
+        /// Setting value to true before loading files will force assumption of installation status.
         /// </summary>
         public static bool IsAssumedInstalled {
             get {
                 lock (SyncReadWrite) {
                     if (!IsInitialized) { Initialize(); }
-                    return IsAssumedInstalledBacking;
+                    return _isAssumedInstalled;
                 }
+            }
+            set {
+                if (IsInitialized) { throw new InvalidOperationException("Cannot set value once config has been loaded."); }
+                _isAssumedInstalled = value;
             }
         }
 
-        private static string FileNameBacking;
+        private static string _fileName;
         /// <summary>
         /// Gets/sets the name of the file used for settings.
-        /// If executable is located under Program Files, properties file will be under Application Data.
+        /// Settings are always written to this file but reading might be done from override file first
+        /// If executable is located under Program Files, properties file will be in Application Data.
         /// If executable is located in some other directory, a local file will be used.
         /// </summary>
         /// <exception cref="ArgumentNullException">Value cannot be null.</exception>
@@ -284,7 +290,7 @@ namespace Medo.Configuration {
             get {
                 lock (SyncReadWrite) {
                     if (!IsInitialized) { Initialize(); }
-                    return FileNameBacking;
+                    return _fileName;
                 }
             }
             set {
@@ -295,26 +301,27 @@ namespace Medo.Configuration {
                     } else if (value.IndexOfAny(Path.GetInvalidPathChars()) >= 0) {
                         throw new ArgumentOutOfRangeException(nameof(value), "Value is not a valid path.");
                     } else {
-                        FileNameBacking = value;
+                        _fileName = value;
                         IsLoaded = false; //force loading
                     }
                 }
             }
         }
 
-        private static string OverrideFileNameBacking;
+        private static string _overrideFileName;
         /// <summary>
         /// Gets/sets the name of the file used for settings override.
-        /// This file is not written to.
+        /// Settings stored in this file are always read first and never written.
         /// If executable is located under Program Files, override properties file will be in executable's directory.
         /// If executable is located in some other directory, no override file will be used.
+        /// If application is installed under /opt on Linux, override config file will be located under /etc/opt.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Value is not a valid path.</exception>
         public static string OverrideFileName {
             get {
                 lock (SyncReadWrite) {
                     if (!IsInitialized) { Initialize(); }
-                    return OverrideFileNameBacking;
+                    return _overrideFileName;
                 }
             }
             set {
@@ -323,7 +330,7 @@ namespace Medo.Configuration {
                     if ((value != null) && (value.IndexOfAny(Path.GetInvalidPathChars()) >= 0)) {
                         throw new ArgumentOutOfRangeException(nameof(value), "Value is not a valid path.");
                     } else {
-                        OverrideFileNameBacking = value;
+                        _overrideFileName = value;
                         IsLoaded = false;
                     }
                 }
@@ -358,6 +365,8 @@ namespace Medo.Configuration {
                     return DefaultPropertiesFile.FileExists;
                 }
             } finally {
+                Debug.WriteLine("[Settings] Primary: " + FileName);
+                Debug.WriteLine("[Settings] Override: " + OverrideFileName);
                 Debug.WriteLine("[Settings] Load completed in " + sw.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture) + " milliseconds.");
             }
         }
@@ -397,13 +406,14 @@ namespace Medo.Configuration {
         /// </summary>
         public static void Reset() {
             lock (SyncReadWrite) {
+                _isAssumedInstalled = false;
                 IsLoaded = false;
                 IsInitialized = false;
             }
         }
 
         /// <summary>
-        /// Gets/sets if setting is saved immediatelly.
+        /// Gets/sets if setting is saved immediately.
         /// </summary>
         public static bool ImmediateSave { get; set; } = true;
 
@@ -435,38 +445,75 @@ namespace Medo.Configuration {
                 ? application + ".cfg"
                 : "." + application.ToLowerInvariant();
 
-            var userFileLocation = IsOSWindows
+            var userFilePath = IsOSWindows
                 ? Path.Combine(Environment.GetEnvironmentVariable("AppData"), company, application, baseFileName)
                 : Path.Combine(Environment.GetEnvironmentVariable("HOME") ?? "~", baseFileName);
 
-            var priorityFileLocation = Path.Combine(Path.GetDirectoryName(executablePath), baseFileName);
+            var localFilePath = Path.Combine(Path.GetDirectoryName(executablePath), baseFileName);
 
-            bool isInProgramFiles;
             if (IsOSWindows) {
-                var isPF = executablePath.StartsWith(Environment.GetEnvironmentVariable("ProgramFiles") + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
-                var isPF32 = executablePath.StartsWith(Environment.GetEnvironmentVariable("ProgramFiles(x86)") + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
-                isInProgramFiles = isPF || isPF32;
-            } else {
+
+#if NETSTANDARD1_6
+                var isPF = executablePath.StartsWith(AddDirectorySuffixIfNeeded(Environment.GetEnvironmentVariable("ProgramFiles")), StringComparison.OrdinalIgnoreCase);
+                var isPF32 = executablePath.StartsWith(AddDirectorySuffixIfNeeded(Environment.GetEnvironmentVariable("ProgramFiles(x86)")), StringComparison.OrdinalIgnoreCase);
+                var isPF64 = executablePath.StartsWith(AddDirectorySuffixIfNeeded(Environment.GetEnvironmentVariable("ProgramW6432")), StringComparison.OrdinalIgnoreCase);
+                var isUserPF = executablePath.StartsWith(AddDirectorySuffixIfNeeded(Path.Combine(Environment.GetEnvironmentVariable("LOCALAPPDATA"), "Programs")), StringComparison.OrdinalIgnoreCase);
+#else
+                var isPF = executablePath.StartsWith(AddDirectorySuffixIfNeeded(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)), StringComparison.OrdinalIgnoreCase);
+                var isPF32 = executablePath.StartsWith(AddDirectorySuffixIfNeeded(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)), StringComparison.OrdinalIgnoreCase);
+                var isPF64 = executablePath.StartsWith(AddDirectorySuffixIfNeeded(Environment.GetEnvironmentVariable("ProgramW6432")), StringComparison.OrdinalIgnoreCase);
+                var isUserPF = executablePath.StartsWith(AddDirectorySuffixIfNeeded(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs")), StringComparison.OrdinalIgnoreCase);
+#endif
+                var isInstalled = isPF || isPF32 || isPF64 || isUserPF || _isAssumedInstalled;
+
+                if (isInstalled) { //if in program files, assume user config is first, use local file as override
+                    _isAssumedInstalled = true;
+                    _fileName = userFilePath;
+                    _overrideFileName = File.Exists(localFilePath) ? localFilePath : null;
+                } else { //if outside of program files, assume local file only
+                    _isAssumedInstalled = false;
+                    _fileName = localFilePath;
+                    _overrideFileName = null;
+                }
+
+            } else { //Linux
+
                 var isOpt = executablePath.StartsWith(Path.DirectorySeparatorChar + "opt" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
                 var isBin = executablePath.StartsWith(Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
                 var isUsrBin = executablePath.StartsWith(Path.DirectorySeparatorChar + "usr" + Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
-                isInProgramFiles = isOpt || isBin || isUsrBin;
-                if (isOpt) { //change priority file location to /etc/opt/<app>/<app>.cfg
-                    priorityFileLocation = Path.DirectorySeparatorChar + "etc" + Path.Combine(Path.GetDirectoryName(executablePath), application.ToLowerInvariant() + ".conf");
-                }
-            }
+                var isInstalled = isOpt || isBin || isUsrBin || _isAssumedInstalled;
 
-            IsAssumedInstalledBacking = File.Exists(userFileLocation) || isInProgramFiles;
-            FileNameBacking = IsAssumedInstalledBacking ? userFileLocation : priorityFileLocation;
-            OverrideFileNameBacking = IsAssumedInstalledBacking ? priorityFileLocation : null; //no priority file - one in current directory is the default one
+                if (isInstalled) {
+                    _isAssumedInstalled = true;
+                    _fileName = userFilePath;
+                    if (isOpt) { //change override file location to /etc/opt/<app>/<app>.cfg
+                        var globalFilePath = Path.DirectorySeparatorChar + "etc" + Path.Combine(Path.GetDirectoryName(executablePath), application.ToLowerInvariant() + ".conf");
+                        _overrideFileName = File.Exists(globalFilePath) ? globalFilePath : null;
+                    } else {
+                        _overrideFileName = File.Exists(localFilePath) ? localFilePath : null;
+                    }
+                } else { //if outside of program files, assume local file only
+                    _isAssumedInstalled = false;
+                    _fileName = localFilePath;
+                    _overrideFileName = null;
+                }
+
+            }
 
             IsInitialized = true;
         }
 
+        private static string AddDirectorySuffixIfNeeded(string path) {
+            if (string.IsNullOrEmpty(path)) { return ""; }
+            path = path.Trim();
+            if (path.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal)) { return path; }
+            return path + Path.DirectorySeparatorChar;
+        }
+
 #if NETSTANDARD2_0 || NETSTANDARD1_6
-        private static bool IsOSWindows => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        private static bool IsOSWindows => System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows);
 #else
-        private static bool IsOSWindows => (Type.GetType("Mono.Runtime") == null);
+        private static bool IsOSWindows => (Path.DirectorySeparatorChar == '\\'); //not fool-proof but good enough
 #endif
 
         #region PropertiesFile
