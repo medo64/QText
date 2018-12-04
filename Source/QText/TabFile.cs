@@ -372,11 +372,21 @@ namespace QText {
         public bool CanPaste {
             get {
                 try {
-                    return (TextBox != null)
-                        && (Clipboard.ContainsText(TextDataFormat.UnicodeText) || (BaseFile.IsRichText && Settings.Current.FullRichTextClipboard));
-                } catch (ExternalException) {
-                    return false;
-                }
+                    if (TextBox != null) {
+                        if (BaseFile.IsRichText) {
+                            if (Settings.Current.UnrestrictedRichTextClipboard) {
+                                return TextBox.CanPaste(DataFormats.GetFormat(DataFormats.Rtf))
+                                    || TextBox.CanPaste(DataFormats.GetFormat(DataFormats.Bitmap))
+                                    || TextBox.CanPaste(DataFormats.GetFormat(DataFormats.EnhancedMetafile));
+                            } else {
+                                return Clipboard.ContainsText(TextDataFormat.UnicodeText);
+                            }
+                        } else {
+                            return Clipboard.ContainsText(TextDataFormat.UnicodeText);
+                        }
+                    }
+                } catch (ExternalException) { }
+                return false;
             }
         }
 
@@ -391,10 +401,14 @@ namespace QText {
                         }
                     } else {
                         var text = GetRichTextFromClipboard(out var isRich);
-                        if (isRich) {
-                            TextBox.SelectedRtf = text;
-                        } else {
-                            TextBox.SelectedText = text;
+                        if (text != null) {
+                            if (isRich) {
+                                TextBox.SelectedRtf = text;
+                            } else {
+                                TextBox.SelectedText = text;
+                            }
+                        } else if (Settings.Current.UnrestrictedRichTextClipboard) { //maybe an image
+                            TextBox.Paste(); //just do raw paste
                         }
                     }
                 }

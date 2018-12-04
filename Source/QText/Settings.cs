@@ -490,7 +490,7 @@ namespace QText {
         [DisplayName("Unrestricted clipboard")]
         [Description("If true, RichText clipboard is not restricted to text.")]
         [DefaultValue(false)]
-        public bool FullRichTextClipboard {
+        public bool UnrestrictedRichTextClipboard {
             get { return Config.Read("UnrestrictedRichTextClipboard", Medo.Configuration.Settings.Read("FullRichTextClipboard", false)); }
             set { Config.Write("UnrestrictedRichTextClipboard", value); }
         }
