@@ -699,7 +699,6 @@ namespace QText {
             this.btnAdvanced.Text = "Advanced";
             this.tooltip.SetToolTip(this.btnAdvanced, "Allow save of settings in registry.");
             this.btnAdvanced.UseVisualStyleBackColor = true;
-            this.btnAdvanced.Visible = false;
             this.btnAdvanced.Click += new System.EventHandler(this.btnAdvanced_Click);
             // 
             // chbHotkeyTogglesVisibility
