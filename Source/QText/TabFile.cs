@@ -375,7 +375,9 @@ namespace QText {
                     if (TextBox != null) {
                         if (BaseFile.IsRichText) {
                             if (Settings.Current.UnrestrictedRichTextClipboard) {
-                                return TextBox.CanPaste(DataFormats.GetFormat(DataFormats.Rtf))
+                                return TextBox.CanPaste(DataFormats.GetFormat(DataFormats.UnicodeText))
+                                    || TextBox.CanPaste(DataFormats.GetFormat(DataFormats.Text))
+                                    || TextBox.CanPaste(DataFormats.GetFormat(DataFormats.Rtf))
                                     || TextBox.CanPaste(DataFormats.GetFormat(DataFormats.Bitmap))
                                     || TextBox.CanPaste(DataFormats.GetFormat(DataFormats.EnhancedMetafile));
                             } else {
