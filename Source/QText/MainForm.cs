@@ -1148,7 +1148,7 @@ namespace QText {
 
             mnxTextCut.Enabled = isTabSelected && tabFiles.SelectedTab.CanCopy;
             mnxTextCopy.Enabled = isTabSelected && tabFiles.SelectedTab.CanCopy;
-            mnxTextPaste.Enabled = isTabSelected && tabFiles.SelectedTab.CanPaste;
+            mnxTextPaste.Enabled = isTabSelected && tabFiles.SelectedTab.CanPaste();
 
             mnxTextCutPlain.Visible = isTabRichText && (Settings.Current.ForceTextCopyPaste == false);
             mnxTextCopyPlain.Visible = isTabRichText && (Settings.Current.ForceTextCopyPaste == false);
@@ -1156,7 +1156,7 @@ namespace QText {
             mnxTextBoxCutCopyPasteAsTextSeparator.Visible = isTabRichText && (Settings.Current.ForceTextCopyPaste == false);
             mnxTextCutPlain.Enabled = isTabSelected && tabFiles.SelectedTab.CanCopy;
             mnxTextCopyPlain.Enabled = isTabSelected && tabFiles.SelectedTab.CanCopy;
-            mnxTextPastePlain.Enabled = isTabSelected && tabFiles.SelectedTab.CanPaste;
+            mnxTextPastePlain.Enabled = isTabSelected && tabFiles.SelectedTab.CanPaste(forceText: true);
 
             mnxTextSelectAll.Enabled = isTabSelected && (tabFiles.SelectedTab.Text.Length > 0);
 
@@ -1603,7 +1603,7 @@ namespace QText {
 
             mnuCut.Enabled = isTabSelected && tabFiles.SelectedTab.CanCopy;
             mnuCopy.Enabled = isTabSelected && tabFiles.SelectedTab.CanCopy;
-            mnuPaste.Enabled = isTabSelected && tabFiles.SelectedTab.CanPaste;
+            mnuPaste.Enabled = isTabSelected && tabFiles.SelectedTab.CanPaste();
 
             mnuFont.Visible = isTabRichText;
             mnuBold.Visible = isTabRichText;

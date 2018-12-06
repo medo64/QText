@@ -369,32 +369,30 @@ namespace QText {
             } catch (ExternalException) { }
         }
 
-        public bool CanPaste {
-            get {
-                try {
-                    if (TextBox != null) {
-                        if (BaseFile.IsRichText) {
-                            if (Settings.Current.UnrestrictedRichTextClipboard) {
-                                return TextBox.CanPaste(DataFormats.GetFormat(DataFormats.UnicodeText))
-                                    || TextBox.CanPaste(DataFormats.GetFormat(DataFormats.Text))
-                                    || TextBox.CanPaste(DataFormats.GetFormat(DataFormats.Rtf))
-                                    || TextBox.CanPaste(DataFormats.GetFormat(DataFormats.Bitmap))
-                                    || TextBox.CanPaste(DataFormats.GetFormat(DataFormats.EnhancedMetafile));
-                            } else {
-                                return Clipboard.ContainsText(TextDataFormat.UnicodeText);
-                            }
+        public bool CanPaste(bool forceText = false) {
+            try {
+                if (TextBox != null) {
+                    if (BaseFile.IsRichText) {
+                        if (Settings.Current.UnrestrictedRichTextClipboard) {
+                            return TextBox.CanPaste(DataFormats.GetFormat(DataFormats.UnicodeText))
+                                || TextBox.CanPaste(DataFormats.GetFormat(DataFormats.Text))
+                                || (TextBox.CanPaste(DataFormats.GetFormat(DataFormats.Rtf)) && !forceText)
+                                || (TextBox.CanPaste(DataFormats.GetFormat(DataFormats.Bitmap)) && !forceText)
+                                || (TextBox.CanPaste(DataFormats.GetFormat(DataFormats.EnhancedMetafile)) && !forceText);
                         } else {
                             return Clipboard.ContainsText(TextDataFormat.UnicodeText);
                         }
+                    } else {
+                        return Clipboard.ContainsText(TextDataFormat.UnicodeText);
                     }
-                } catch (ExternalException) { }
-                return false;
-            }
+                }
+            } catch (ExternalException) { }
+            return false;
         }
 
         public void Paste(bool forceText) {
             try {
-                if (CanPaste) {
+                if (CanPaste(forceText)) {
                     if (BaseFile.IsPlainText || forceText) {
                         var text = GetTextFromClipboard();
                         if (text != null) {
