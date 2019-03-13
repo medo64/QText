@@ -1,9 +1,10 @@
-### QText ###
+[QText](https://medo64.com/qtext/)
+==================================
 
 Simple note taking program with multi-folder support, auto-save, and encryption support.
 
 
-#### Shortcut Keys ####
+## Shortcut Keys
 
   * `Esc`                     Close
   * `F2`                      Rename
@@ -56,7 +57,7 @@ Simple note taking program with multi-folder support, auto-save, and encryption 
   * `Alt+Shift+T`             Inserts current time into text.
 
 
-#### Encryption ####
+## Encryption
 
 All encrypted files are compatible with salted OpenSSL 256-bit AES CBC file
 encryption (as defined at http://www.openssl.org/docs/apps/enc.html). In order
@@ -73,7 +74,7 @@ worse than what OpenSSL normally does (it is equivalent actually) but beware
 that lot of security lies in well chosen password.
 
 
-#### Contributors ####
+## Contributors
 
 List of people that helped with the project (in alphabetic order):
 
