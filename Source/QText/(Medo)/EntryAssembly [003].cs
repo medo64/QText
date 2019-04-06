@@ -1,8 +1,8 @@
-//Josip Medved <jmedved@jmedved.com> http://www.jmedved.com
+/* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
 
-//2007-12-31: New version.
-//2008-05-22: Added Description.
 //2008-06-06: Added Copyright.
+//2008-05-22: Added Description.
+//2007-12-31: New version.
 
 
 using System.Reflection;

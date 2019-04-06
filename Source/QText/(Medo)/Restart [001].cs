@@ -1,4 +1,4 @@
-//Josip Medved <jmedved@jmedved.com>   www.medo64.com
+/* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
 
 //2013-12-27: First version.
 
@@ -74,20 +74,22 @@ namespace Medo.Application {
 
 
         private static class NativeMethods {
+#pragma warning disable IDE0049 // Simplify Names
 
             [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "This is bogus warning.")]
-            internal static extern uint RegisterApplicationRestart(string pwzCommandline, int dwFlags);
+            internal static extern UInt32 RegisterApplicationRestart(String pwzCommandline, Int32 dwFlags);
 
             [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "This is bogus warning.")]
-            internal static extern uint UnregisterApplicationRestart();
+            internal static extern UInt32 UnregisterApplicationRestart();
 
 
-            internal static bool IsHResultSuccess(uint hResult) {
+            internal static Boolean IsHResultSuccess(UInt32 hResult) {
                 return (hResult & 0x80000000) != 0x80000000;
             }
 
+#pragma warning restore IDE0049 // Simplify Names
         }
 
     }

@@ -11,7 +11,7 @@ namespace QText {
             Helper.ScaleGotoImageList(this, imlSuggestions);
 
             HasText = hasText;
-            Medo.Windows.Forms.State.SetupOnLoadAndClose(this);
+            Medo.Windows.Forms.State.Attach(this);
         }
 
         private readonly bool HasText;

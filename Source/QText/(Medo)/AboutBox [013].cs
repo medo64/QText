@@ -1,4 +1,4 @@
-//Josip Medved <jmedved@jmedved.com>   www.medo64.com
+/* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
 
 //2014-12-20: Added support for .text files.
 //2012-11-24: Suppressing bogus CA5122 warning (http://connect.microsoft.com/VisualStudio/feedback/details/729254/bogus-ca5122-warning-about-p-invoke-declarations-should-not-be-safe-critical).
@@ -120,18 +120,18 @@ namespace Medo.Windows.Forms {
                     form.Text = Resources.Caption;
 
 
-                    int imageHeight = 32;
-                    int maxRight = 320;
-                    int maxBottom = 80;
-                    using (Graphics graphics = form.CreateGraphics()) {
+                    var imageHeight = 32;
+                    var maxRight = 320;
+                    var maxBottom = 80;
+                    using (var graphics = form.CreateGraphics()) {
                         //icon
-                        Bitmap bitmap = NativeMethods.GetIconBitmap(applicationPath);
+                        var bitmap = NativeMethods.GetIconBitmap(applicationPath);
                         if (bitmap != null) {
                             _paintImage = new PaintItem(bitmap, new Point(7, 7));
                         }
 
                         //title
-                        int imageRight = 7;
+                        var imageRight = 7;
                         if (_paintImage != null) {
                             imageRight = _paintImage.Rectangle.Right + 7;
                         }
@@ -172,7 +172,7 @@ namespace Medo.Windows.Forms {
                         }
                     }
 
-                    int buttonMinRight = 7;
+                    var buttonMinRight = 7;
 
                     //Close button
                     buttonClose = new Button() { Padding = new Padding(3, 1, 3, 1) };
@@ -211,8 +211,8 @@ namespace Medo.Windows.Forms {
                     maxRight = System.Math.Max(maxRight, buttonMinRight);
 
 
-                    int borderX = (form.Width - form.ClientRectangle.Width);
-                    int borderY = (form.Height - form.ClientRectangle.Height);
+                    var borderX = (form.Width - form.ClientRectangle.Width);
+                    var borderY = (form.Height - form.ClientRectangle.Height);
                     form.Width = borderX + maxRight + 7;
                     form.Height = borderY + maxBottom + 11 + 11 + buttonClose.Size.Height + 7;
                     if (owner == null) {
@@ -222,7 +222,7 @@ namespace Medo.Windows.Forms {
                     }
 
 
-                    int buttonLeft = form.ClientRectangle.Left + 7;
+                    var buttonLeft = form.ClientRectangle.Left + 7;
 
                     if (buttonReadme != null) {
                         buttonReadme.Location = new Point(buttonLeft, form.ClientRectangle.Bottom - buttonClose.Height - 7);
@@ -313,14 +313,14 @@ namespace Medo.Windows.Forms {
         }
 
 
-        static void buttonWebPage_Click(object sender, EventArgs e) {
+        private static void buttonWebPage_Click(object sender, EventArgs e) {
             try {
                 var url = (string)((Control)sender).Tag;
                 Process.Start(url);
             } catch (Win32Exception) { }
         }
 
-        static void buttonReadme_Click(object sender, EventArgs e) {
+        private static void buttonReadme_Click(object sender, EventArgs e) {
             try {
                 var path = (string)((Control)sender).Tag;
                 if (path.EndsWith(".text", StringComparison.Ordinal) && !AboutBox.IsRunningOnMono) {
@@ -348,7 +348,7 @@ namespace Medo.Windows.Forms {
                 if (_paintImage != null) { _paintImage.Paint(e.Graphics); }
                 if (_paintProduct != null) { _paintProduct.Paint(e.Graphics); }
                 if (_infoLines != null) {
-                    for (int i = 0; i < _infoLines.Count; ++i) {
+                    for (var i = 0; i < _infoLines.Count; ++i) {
                         _infoLines[i].Paint(e.Graphics);
                     }
                 }
@@ -360,15 +360,15 @@ namespace Medo.Windows.Forms {
         private class PaintItem : IDisposable {
 
             public PaintItem(Image image, Point location) {
-                _image = image;
+                Image = image;
                 _location = location;
                 _rectangle = new Rectangle(location, image.Size);
             }
 
             public PaintItem(string title, Font font, int x, int y, int height, VerticalAlignment align, Graphics measurementGraphics) {
-                _text = title;
-                _font = font;
-                Size size = measurementGraphics.MeasureString(title, font, 600).ToSize();
+                Text = title;
+                Font = font;
+                var size = measurementGraphics.MeasureString(title, font, 600).ToSize();
                 switch (align) {
                     case VerticalAlignment.Top:
                         _location = new Point(x, y);
@@ -384,20 +384,11 @@ namespace Medo.Windows.Forms {
             }
 
 
-            private Image _image;
-            public Image Image {
-                get { return _image; }
-            }
+            public Image Image { get; private set; }
 
-            private readonly string _text;
-            public string Text {
-                get { return _text; }
-            }
+            public string Text { get; private set; }
 
-            private Font _font;
-            public Font Font {
-                get { return _font; }
-            }
+            public Font Font { get; private set; }
 
             private Point _location;
             public Point Location {
@@ -429,13 +420,13 @@ namespace Medo.Windows.Forms {
                 if (disposing) {
                     if (Image != null) {
                         Image.Dispose();
-                        _image = null;
+                        Image = null;
                     }
                     if (Font != null) {
                         if (!Font.IsSystemFont) {
                             Font.Dispose();
                         }
-                        _font = null;
+                        Font = null;
                     }
                 }
             }
@@ -500,25 +491,26 @@ namespace Medo.Windows.Forms {
 
 
         private static class NativeMethods {
+#pragma warning disable IDE0049 // Simplify Names
 
             #region API
 
-            private const int S_OK = 0;
-            private const int ASSOCF_NONE = 0;
-            private const int ASSOCSTR_EXECUTABLE = 2;
+            private const Int32 S_OK = 0;
+            private const Int32 ASSOCF_NONE = 0;
+            private const Int32 ASSOCSTR_EXECUTABLE = 2;
 
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")]
             [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-            private static extern IntPtr LoadIcon(IntPtr hInstance, string lpIconName);
+            private static extern IntPtr LoadIcon(IntPtr hInstance, String lpIconName);
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")]
             [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-            private static extern IntPtr LoadLibrary(string lpFileName);
+            private static extern IntPtr LoadLibrary(String lpFileName);
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")]
             [DllImport("Shlwapi.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-            private static extern int AssocQueryString(int flags, int str, string pszAssoc, string pszExtra, StringBuilder pszOutDWORD, ref int pcchOut);
+            private static extern Int32 AssocQueryString(Int32 flags, Int32 str, String pszAssoc, String pszExtra, StringBuilder pszOutDWORD, ref Int32 pcchOut);
 
             #endregion
 
@@ -547,6 +539,8 @@ namespace Medo.Windows.Forms {
                 }
                 return null;
             }
+#pragma warning restore IDE0049 // Simplify Names
         }
+
     }
 }

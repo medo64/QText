@@ -1,4 +1,4 @@
-//Josip Medved <jmedved@jmedved.com>   www.medo64.com
+/* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
 
 //2014-12-12: Bug fixing.
 //2014-01-12: Initial version.
@@ -53,17 +53,17 @@ namespace Medo.Configuration {
             if (assembly == null) { assembly = Assembly.GetCallingAssembly(); } //i.e. when running unit tests
 
             string company = null;
-            object[] companyAttributes = assembly.GetCustomAttributes(typeof(AssemblyCompanyAttribute), true);
+            var companyAttributes = assembly.GetCustomAttributes(typeof(AssemblyCompanyAttribute), true);
             if ((companyAttributes != null) && (companyAttributes.Length >= 1)) {
                 company = ((AssemblyCompanyAttribute)companyAttributes[companyAttributes.Length - 1]).Company;
             }
 
-            string product = null;
-            object[] productAttributes = assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), true);
+            string product;
+            var productAttributes = assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), true);
             if ((productAttributes != null) && (productAttributes.Length >= 1)) {
                 product = ((AssemblyProductAttribute)productAttributes[productAttributes.Length - 1]).Product;
             } else {
-                object[] titleAttributes = assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), true);
+                var titleAttributes = assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), true);
                 if ((titleAttributes != null) && (titleAttributes.Length >= 1)) {
                     product = ((AssemblyTitleAttribute)titleAttributes[titleAttributes.Length - 1]).Title;
                 } else {
@@ -196,7 +196,7 @@ namespace Medo.Configuration {
                                         }
                                     }
                                     if (itemToRemove != null) {
-                                        for (int i = items.Count - 1; i >= 0; i--) {
+                                        for (var i = items.Count - 1; i >= 0; i--) {
                                             if (Comparer.Equals(items[i], itemToRemove)) {
                                                 items.RemoveAt(i);
                                             }
@@ -224,7 +224,7 @@ namespace Medo.Configuration {
             var array = new string[items.Count];
             items.CopyTo(array, 0);
             if (History.NoRegistryWrites == false) {
-                using (RegistryKey rk = Registry.CurrentUser.CreateSubKey(Subkey)) {
+                using (var rk = Registry.CurrentUser.CreateSubKey(Subkey)) {
                     rk.SetValue(GroupName, array, RegistryValueKind.MultiString);
                 }
             }

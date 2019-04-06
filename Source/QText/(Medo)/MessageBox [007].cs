@@ -1,4 +1,4 @@
-//Copyright (c) 2007 Josip Medved <jmedved@jmedved.com>
+/* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
 
 //2007-12-31: New version.
 //2008-01-03: Added Resources.
@@ -648,30 +648,31 @@ namespace Medo {
 
 
         private static class NativeMethods {
+#pragma warning disable IDE0049 // Simplify Names
 
-            public const int WH_CBT = 0x5;
+            public const Int32 WH_CBT = 0x5;
 
-            public const int DLG_ID_OK = 0x01;
-            public const int DLG_ID_CANCEL = 0x02;
-            public const int DLG_ID_ABORT = 0x03;
-            public const int DLG_ID_RETRY = 0x04;
-            public const int DLG_ID_IGNORE = 0x05;
-            public const int DLG_ID_YES = 0x06;
-            public const int DLG_ID_NO = 0x07;
+            public const Int32 DLG_ID_OK = 0x01;
+            public const Int32 DLG_ID_CANCEL = 0x02;
+            public const Int32 DLG_ID_ABORT = 0x03;
+            public const Int32 DLG_ID_RETRY = 0x04;
+            public const Int32 DLG_ID_IGNORE = 0x05;
+            public const Int32 DLG_ID_YES = 0x06;
+            public const Int32 DLG_ID_NO = 0x07;
 
-            public const int HCBT_ACTIVATE = 0x5;
+            public const Int32 HCBT_ACTIVATE = 0x5;
 
-            public const int SWP_NOSIZE = 0x01;
-            public const int SWP_NOZORDER = 0x04;
-            public const int SWP_NOACTIVATE = 0x10;
+            public const Int32 SWP_NOSIZE = 0x01;
+            public const Int32 SWP_NOZORDER = 0x04;
+            public const Int32 SWP_NOACTIVATE = 0x10;
 
 
             [StructLayout(LayoutKind.Sequential)]
             public struct RECT {
-                public int left;
-                public int top;
-                public int right;
-                public int bottom;
+                public Int32 left;
+                public Int32 top;
+                public Int32 right;
+                public Int32 bottom;
             }
 
 
@@ -686,11 +687,11 @@ namespace Medo {
                 }
 
                 protected override bool ReleaseHandle() {
-                    return UnhookWindowsHookEx(handle);
+                    return UnhookWindowsHookEx(base.handle);
                 }
 
                 public override string ToString() {
-                    return handle.ToString();
+                    return base.handle.ToString();
                 }
 
             }
@@ -698,46 +699,47 @@ namespace Medo {
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")]
             [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-            public static extern IntPtr CallNextHookEx(WindowsHookSafeHandle idHook, int nCode, IntPtr wParam, IntPtr lParam);
+            public static extern IntPtr CallNextHookEx(WindowsHookSafeHandle idHook, Int32 nCode, IntPtr wParam, IntPtr lParam);
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")]
             [DllImport("kernel32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-            public static extern int GetCurrentThreadId();
+            public static extern Int32 GetCurrentThreadId();
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")]
             [DllImport("user32.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool GetWindowRect(IntPtr hWnd, ref RECT lpRect);
+            public static extern Boolean GetWindowRect(IntPtr hWnd, ref RECT lpRect);
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")]
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2205:UseManagedEquivalentsOfWin32Api", Justification = "Managed equivalent does not support all needed features.")]
             [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-            public static extern int MessageBox(IntPtr hWnd, string lpText, string lpCaption, uint uType);
+            public static extern Int32 MessageBox(IntPtr hWnd, String lpText, String lpCaption, UInt32 uType);
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")]
             [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool SetDlgItemText(IntPtr hWnd, int nIDDlgItem, string lpString);
+            public static extern Boolean SetDlgItemText(IntPtr hWnd, Int32 nIDDlgItem, String lpString);
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")]
             [DllImport("user32.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+            public static extern Boolean SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, Int32 X, Int32 Y, Int32 cx, Int32 cy, UInt32 uFlags);
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")]
             [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
             [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-            public static extern WindowsHookSafeHandle SetWindowsHookEx(int idHook, CbtHookProcDelegate lpfn, IntPtr hInstance, int threadId);
+            public static extern WindowsHookSafeHandle SetWindowsHookEx(Int32 idHook, CbtHookProcDelegate lpfn, IntPtr hInstance, Int32 threadId);
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")]
             [ReliabilityContract(Consistency.MayCorruptProcess, Cer.Success)]
             [DllImport("user32.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool UnhookWindowsHookEx(IntPtr idHook);
+            public static extern Boolean UnhookWindowsHookEx(IntPtr idHook);
 
 
-            public delegate IntPtr CbtHookProcDelegate(int nCode, IntPtr wParam, IntPtr lParam);
+            public delegate IntPtr CbtHookProcDelegate(Int32 nCode, IntPtr wParam, IntPtr lParam);
 
+#pragma warning restore IDE0049 // Simplify Names
         }
 
         #endregion

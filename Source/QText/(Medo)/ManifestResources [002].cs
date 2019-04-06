@@ -1,7 +1,7 @@
-//Josip Medved <jmedved@jmedved.com> http://www.jmedved.com
+/* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
 
-//2007-12-31: New version.
 //2008-03-29: Added static constructor in DEBUG configuration.
+//2007-12-31: New version.
 
 
 namespace Medo.Resources {

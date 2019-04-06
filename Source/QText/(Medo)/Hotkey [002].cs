@@ -1,4 +1,4 @@
-//Josip Medved <jmedved@jmedved.com>   www.medo64.com
+/* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
 
 //2012-11-24: Suppressing bogus CA5122 warning (http://connect.microsoft.com/VisualStudio/feedback/details/729254/bogus-ca5122-warning-about-p-invoke-declarations-should-not-be-safe-critical).
 //2008-06-24: First version.
@@ -151,21 +151,23 @@ namespace Medo.Windows.Forms {
 
 
         private static class NativeMethods {
+#pragma warning disable IDE0049 // Simplify Names
 
-            internal const uint MOD_ALT = 1;
-            internal const uint MOD_CONTROL = 2;
-            internal const uint MOD_SHIFT = 4;
-            internal const uint MOD_WIN = 8;
-            internal const int WM_HOTKEY = 786;
-
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")] //http://connect.microsoft.com/VisualStudio/feedback/details/729254/bogus-ca5122-warning-about-p-invoke-declarations-should-not-be-safe-critical
-            [DllImport("user32.dll")]
-            internal static extern int RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
+            internal const UInt32 MOD_ALT = 1;
+            internal const UInt32 MOD_CONTROL = 2;
+            internal const UInt32 MOD_SHIFT = 4;
+            internal const UInt32 MOD_WIN = 8;
+            internal const Int32 WM_HOTKEY = 786;
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")] //http://connect.microsoft.com/VisualStudio/feedback/details/729254/bogus-ca5122-warning-about-p-invoke-declarations-should-not-be-safe-critical
             [DllImport("user32.dll")]
-            internal static extern int UnregisterHotKey(IntPtr hWnd, int id);
+            internal static extern Int32 RegisterHotKey(IntPtr hWnd, Int32 id, UInt32 fsModifiers, UInt32 vk);
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5122:PInvokesShouldNotBeSafeCriticalFxCopRule", Justification = "Warning is bogus.")] //http://connect.microsoft.com/VisualStudio/feedback/details/729254/bogus-ca5122-warning-about-p-invoke-declarations-should-not-be-safe-critical
+            [DllImport("user32.dll")]
+            internal static extern Int32 UnregisterHotKey(IntPtr hWnd, Int32 id);
+
+#pragma warning restore IDE0049 // Simplify Names
         }
 
     }

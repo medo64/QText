@@ -15,7 +15,7 @@ namespace QText {
             mnu.Renderer = Helper.ToolstripRenderer;
             Helper.ScaleToolstrip(mnu);
 
-            Medo.Windows.Forms.State.SetupOnLoadAndClose(this);
+            Medo.Windows.Forms.State.Attach(this);
         }
 
 

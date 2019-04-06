@@ -11,7 +11,7 @@ namespace QText.Plugins.Reminder {
             Font = SystemFonts.MessageBoxFont;
             lsvReminders.Font = SystemFonts.MessageBoxFont;
 
-            Medo.Windows.Forms.State.SetupOnLoadAndClose(this, lsvReminders);
+            Medo.Windows.Forms.State.Attach(this, lsvReminders);
         }
 
         protected override bool ProcessDialogKey(Keys keyData) {

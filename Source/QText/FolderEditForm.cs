@@ -15,7 +15,7 @@ namespace QText {
 
             CurrentFolder = currentFolder;
 
-            Medo.Windows.Forms.State.SetupOnLoadAndClose(this);
+            Medo.Windows.Forms.State.Attach(this);
         }
 
 

@@ -1,4 +1,4 @@
-//Josip Medved <jmedved@jmedved.com>   www.medo64.com
+/* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
 
 //2010-11-22: Changed default exception mode to CatchException.
 //2010-11-07: Compatible with Mono (ignoring FailFast).

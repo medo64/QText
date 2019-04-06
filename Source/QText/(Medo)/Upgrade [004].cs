@@ -1,4 +1,4 @@
-//Josip Medved <jmedved@jmedved.com>   www.medo64.com
+/* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
 
 //2015-12-31: Allowing for 301 redirect.
 //2013-12-28: Message box adjustments.
@@ -95,7 +95,7 @@ namespace Medo.Services {
 
         private static UpgradeFile GetUpgradeFileFromURL(string url) {
             try {
-                HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
+                var request = (HttpWebRequest)HttpWebRequest.Create(url);
                 request.AllowAutoRedirect = false;
                 request.Method = "HEAD";
                 request.Proxy = HttpWebRequest.DefaultWebProxy;
@@ -126,11 +126,11 @@ namespace Medo.Services {
         }
 
         private static string GetProduct(Assembly assembly) {
-            object[] productAttributes = assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), true);
+            var productAttributes = assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), true);
             if ((productAttributes != null) && (productAttributes.Length >= 1)) {
                 return ((AssemblyProductAttribute)productAttributes[productAttributes.Length - 1]).Product;
             } else {
-                object[] titleAttributes = assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), true);
+                var titleAttributes = assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), true);
                 if ((titleAttributes != null) && (titleAttributes.Length >= 1)) {
                     return ((AssemblyTitleAttribute)titleAttributes[titleAttributes.Length - 1]).Title;
                 } else {
@@ -196,7 +196,7 @@ namespace Medo.Services {
             }
 
 
-            void Form_FormClosing(object sender, FormClosingEventArgs e) {
+            private void Form_FormClosing(object sender, FormClosingEventArgs e) {
                 prgProgress.Style = ProgressBarStyle.Continuous;
                 prgProgress.Value = 0;
                 lblStatus.Text = Resources.StatusCancelling;
@@ -207,24 +207,24 @@ namespace Medo.Services {
             }
 
 
-            ProgressBar prgProgress = new ProgressBar() { Height = (int)(SystemInformation.HorizontalScrollBarHeight * 1.5), Style = ProgressBarStyle.Marquee };
-            Label lblStatus = new Label() { AutoSize = true, Text = Resources.StatusChecking };
-            Button btnCancel = new Button() { AutoSize = true, DialogResult = DialogResult.Cancel, Padding = new Padding(3, 1, 3, 1), Text = Resources.Cancel };
-            Button btnUpgrade = new Button() { AutoSize = true, Padding = new Padding(3, 1, 3, 1), Text = Resources.Upgrade, Visible = false };
-            Button btnDownload = new Button() { AutoSize = true, Padding = new Padding(3, 1, 3, 1), Text = Resources.Download, Visible = false };
+            private readonly ProgressBar prgProgress = new ProgressBar() { Height = (int)(SystemInformation.HorizontalScrollBarHeight * 1.5), Style = ProgressBarStyle.Marquee };
+            private readonly Label lblStatus = new Label() { AutoSize = true, Text = Resources.StatusChecking };
+            private readonly Button btnCancel = new Button() { AutoSize = true, DialogResult = DialogResult.Cancel, Padding = new Padding(3, 1, 3, 1), Text = Resources.Cancel };
+            private readonly Button btnUpgrade = new Button() { AutoSize = true, Padding = new Padding(3, 1, 3, 1), Text = Resources.Upgrade, Visible = false };
+            private readonly Button btnDownload = new Button() { AutoSize = true, Padding = new Padding(3, 1, 3, 1), Text = Resources.Download, Visible = false };
 
-            BackgroundWorker bwCheck = new BackgroundWorker() { WorkerSupportsCancellation = true };
-            BackgroundWorker bwDownload = new BackgroundWorker() { WorkerSupportsCancellation = true, WorkerReportsProgress = true };
+            private readonly BackgroundWorker bwCheck = new BackgroundWorker() { WorkerSupportsCancellation = true };
+            private readonly BackgroundWorker bwDownload = new BackgroundWorker() { WorkerSupportsCancellation = true, WorkerReportsProgress = true };
 
-            UpgradeFile UpgradeFile = null;
+            private UpgradeFile UpgradeFile = null;
 
 
-            void bwCheck_DoWork(object sender, DoWorkEventArgs e) {
+            private void bwCheck_DoWork(object sender, DoWorkEventArgs e) {
                 e.Result = Medo.Services.Upgrade.GetUpgradeFile(ServiceUri, Assembly);
                 e.Cancel = bwCheck.CancellationPending;
             }
 
-            void bwCheck_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
+            private void bwCheck_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
                 if (e.Cancelled == false) {
                     if (e.Error == null) {
                         UpgradeFile = e.Result as UpgradeFile;
@@ -248,14 +248,14 @@ namespace Medo.Services {
                 }
             }
 
-            void btnUpgrade_Click(object sender, EventArgs e) {
+            private void btnUpgrade_Click(object sender, EventArgs e) {
                 lblStatus.Text = Resources.StatusDownloading;
                 btnUpgrade.Enabled = false;
                 btnDownload.Visible = false;
                 bwDownload.RunWorkerAsync();
             }
 
-            void btnDownload_Click(object sender, EventArgs e) {
+            private void btnDownload_Click(object sender, EventArgs e) {
                 lblStatus.Text = Resources.StatusDownloading;
                 btnUpgrade.Visible = false;
                 btnDownload.Enabled = false;
@@ -263,7 +263,7 @@ namespace Medo.Services {
             }
 
 
-            void bwDownload_DoWork(object sender, DoWorkEventArgs e) {
+            private void bwDownload_DoWork(object sender, DoWorkEventArgs e) {
                 var buffer = new byte[1024];
                 using (var stream = UpgradeFile.GetStream()) {
                     stream.ReadTimeout = 5000;
@@ -287,13 +287,13 @@ namespace Medo.Services {
                 }
             }
 
-            void bwDownload_ProgressChanged(object sender, ProgressChangedEventArgs e) {
+            private void bwDownload_ProgressChanged(object sender, ProgressChangedEventArgs e) {
                 prgProgress.Value = e.ProgressPercentage;
                 if (e.UserState is string text) { lblStatus.Text = text; }
             }
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "SaveFileDialog is disposed in using.")]
-            void bwDownload_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
+            private void bwDownload_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
                 if (e.Cancelled == false) {
                     if (e.Error == null) {
                         btnCancel.Enabled = false;

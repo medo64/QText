@@ -1,4 +1,4 @@
-//Josip Medved <jmedved@jmedved.com>   www.medo64.com
+/* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
 
 //2012-05-15: Initial version.
 
@@ -80,7 +80,7 @@ namespace Medo.Security.Cryptography {
                 var buffer = new byte[16];
                 var len = stream.Read(buffer, 0, 16);
                 if (len < 16) { throw new InvalidDataException("Unexpected end of stream."); }
-                for (int i = 0; i < 8; i++) {
+                for (var i = 0; i < 8; i++) {
                     if (buffer[i] != SaltedTextCache[i]) { throw new InvalidDataException("Salted stream expected."); }
                 }
                 var salt = new byte[8];
@@ -118,7 +118,7 @@ namespace Medo.Security.Cryptography {
         private readonly ICryptoTransform Transform;
 
         private static readonly RandomNumberGenerator Rnd = RandomNumberGenerator.Create();
-        private static byte[] SaltedTextCache = new byte[] { 0x53, 0x61, 0x6c, 0x74, 0x65, 0x64, 0x5f, 0x5f }; //Salted__
+        private static readonly byte[] SaltedTextCache = new byte[] { 0x53, 0x61, 0x6c, 0x74, 0x65, 0x64, 0x5f, 0x5f }; //Salted__
 
 
         /// <summary>
@@ -243,8 +243,8 @@ namespace Medo.Security.Cryptography {
             using (var md5 = MD5.Create()) {
                 using (var ms = new MemoryStream((keySize + blockSize) / 8)) {
                     var hash = new byte[] { };
-                    for (int i = 0; i < (keySize + blockSize); i += md5.HashSize) {
-                        byte[] step = new byte[hash.Length + password.Length + salt.Length];
+                    for (var i = 0; i < (keySize + blockSize); i += md5.HashSize) {
+                        var step = new byte[hash.Length + password.Length + salt.Length];
                         Buffer.BlockCopy(hash, 0, step, 0, hash.Length);
                         Buffer.BlockCopy(password, 0, step, hash.Length, password.Length);
                         Buffer.BlockCopy(salt, 0, step, hash.Length + password.Length, salt.Length);
