@@ -331,7 +331,7 @@ namespace QText {
 
 
         private int CaretPosition; //used for selection
-        public bool IsSelectionEmpty;
+        public bool IsSelectionEmpty { get; private set; } = true;
 
         protected override void OnSelectionChanged(EventArgs e) {
             var range = new NativeMethods.CHARRANGE();
