@@ -1,4 +1,4 @@
-﻿namespace QText {
+namespace QText {
     partial class PasswordForm {
         /// <summary>
         /// Required designer variable.

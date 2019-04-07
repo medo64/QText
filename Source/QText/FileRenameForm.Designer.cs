@@ -1,4 +1,4 @@
-﻿namespace QText {
+namespace QText {
     partial class FileRenameForm {
         /// <summary>
         /// Required designer variable.

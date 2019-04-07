@@ -1,4 +1,4 @@
-﻿namespace QText {
+namespace QText {
     partial class FindForm {
         /// <summary>
         /// Required designer variable.
