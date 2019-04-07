@@ -7,7 +7,7 @@ SET       FILES_EXECUTABLE="..\Binaries\QText.exe" "..\Binaries\QText.Document.d
 SET            FILES_OTHER="..\README.md" "..\LICENSE.md"
 
 SET              TOOLS_GIT="%PROGRAMFILES(X86)%\Git\mingw64\bin\git.exe" "%PROGRAMFILES%\Git\mingw64\bin\git.exe" "C:\Program Files\Git\mingw64\bin\git.exe"
-SET     TOOLS_VISUALSTUDIO="%PROGRAMFILES(X86)%\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe"
+SET     TOOLS_VISUALSTUDIO="%PROGRAMFILES(X86)%\Microsoft Visual Studio\2019\Community\Common7\IDE\devenv.exe"
 SET         TOOLS_SIGNTOOL="%PROGRAMFILES(X86)%\Microsoft SDKs\ClickOnce\SignTool\signtool.exe" "%PROGRAMFILES(X86)%\Windows Kits\10\App Certification Kit\signtool.exe" "%PROGRAMFILES(X86)%\Windows Kits\10\bin\x86\signtool.exe"
 SET        TOOLS_INNOSETUP="%PROGRAMFILES(X86)%\Inno Setup 5\iscc.exe"
 SET           TOOLS_WINRAR="%PROGRAMFILES(X86)%\WinRAR\WinRAR.exe" "%PROGRAMFILES%\WinRAR\WinRAR.exe" "C:\Program Files\WinRAR\WinRAR.exe"
@@ -151,7 +151,7 @@ IF NOT [%TOOL_INNOSETUP%]==[] (
     IF NOT [%TOOL_SIGNTOOL%]==[] IF NOT [%CERTIFICATE_THUMBPRINT%]==[] (
         ECHO --- SIGN SETUP
         ECHO:
-        
+
         IF [%SIGN_TIMESTAMPURL%]==[] (
             %TOOL_SIGNTOOL% sign /s "My" /sha1 %CERTIFICATE_THUMBPRINT% /v ".\Temp\!SETUPEXE!"
         ) ELSE (
@@ -174,7 +174,7 @@ IF NOT [%TOOL_INNOSETUP%]==[] (
 IF NOT [%TOOL_ILMERGE%]==[] (
     ECHO --- MERGE ASSEMBLIES
     ECHO:
-    
+
     %TOOL_ILMERGE% /targetplatform:v4 /keyfile:..\Source\QText\Properties\App.snk /out:..\Binaries\QTextPortable.exe %FILES_EXECUTABLE%
     IF ERRORLEVEL 1 PAUSE && EXIT /B %ERRORLEVEL%
 
@@ -183,7 +183,7 @@ IF NOT [%TOOL_ILMERGE%]==[] (
     ECHO:
     ECHO:
 
-    
+
     CERTUTIL -silent -verifystore -user My %CERTIFICATE_THUMBPRINT% > NUL
     IF %ERRORLEVEL%==0 (
         ECHO --- RESIGN SOLUTION
@@ -242,7 +242,7 @@ ECHO:
 
 ECHO --- DONE
 
-IF NOT [%WARNING%]==[] (    
+IF NOT [%WARNING%]==[] (
     ECHO:
     IF [%TOOL_GIT%]==[] ECHO Git executable not found.
     IF [%TOOL_SIGNTOOL%]==[] ECHO SignTool executable not found.
