@@ -6,8 +6,8 @@ using System.Windows.Forms;
 namespace QText {
     internal partial class FindForm : Form {
 
-        private TabFiles _tabFiles;
-        private Medo.Configuration.History History = new Medo.Configuration.History();
+        private readonly TabFiles _tabFiles;
+        private readonly Medo.Configuration.History History = new Medo.Configuration.History();
 
         public FindForm(TabFiles tabFiles) {
             InitializeComponent();

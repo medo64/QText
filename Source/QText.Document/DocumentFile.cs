@@ -180,7 +180,7 @@ namespace QText {
         }
 
         public bool CanRename(string newTitle) {
-            GatherRenameData(ref newTitle, out var newName, out var newPath);
+            GatherRenameData(ref newTitle, out _, out var newPath);
             return !File.Exists(newPath);
         }
 

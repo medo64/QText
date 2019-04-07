@@ -186,7 +186,7 @@ namespace QText {
             if ((e != null) && (e.Button == MouseButtons.Left) && (_dragTabPage != null)) {
                 var currTabPage = GetTabPageFromXY(e.X, e.Y);
                 if ((currTabPage != null)) {
-                    var currRect = base.GetTabRect(base.TabPages.IndexOf(currTabPage));
+                    _ = base.GetTabRect(base.TabPages.IndexOf(currTabPage));
                     if ((base.TabPages.IndexOf(currTabPage) < base.TabPages.IndexOf(_dragTabPage))) {
                         base.Cursor = Cursors.PanWest;
                     } else if ((base.TabPages.IndexOf(currTabPage) > base.TabPages.IndexOf(_dragTabPage))) {
@@ -207,7 +207,7 @@ namespace QText {
             if ((e != null) && (e.Button == MouseButtons.Left) && (_dragTabPage != null)) {
                 var currTabPage = GetTabPageFromXY(e.X, e.Y);
                 if ((currTabPage != null) && (!currTabPage.Equals(_dragTabPage))) {
-                    var currRect = base.GetTabRect(base.TabPages.IndexOf(currTabPage));
+                    _ = base.GetTabRect(base.TabPages.IndexOf(currTabPage));
                     base.Enabled = false;
                     if ((base.TabPages.IndexOf(currTabPage) < base.TabPages.IndexOf(_dragTabPage))) {
                         base.TabPages.Remove(_dragTabPage);

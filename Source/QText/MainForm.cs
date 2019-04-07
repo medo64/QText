@@ -302,7 +302,7 @@ namespace QText {
                             tabFiles.SelectedTab = (TabFile)tabFiles.TabPages[i];
                         }
                     }
-                    keyData = Keys.None;
+
                     return true;
 
             }
@@ -1138,10 +1138,8 @@ namespace QText {
         private void mnxText_Opening(object sender, CancelEventArgs e) {
             var isTabSelected = (tabFiles.SelectedTab != null);
             var isTabRichText = isTabSelected && tabFiles.SelectedTab.BaseFile.IsRichText;
-            var isTabPlainText = isTabSelected && (tabFiles.SelectedTab.BaseFile.IsRichText == false);
             var isTextSelected = isTabSelected && (tabFiles.SelectedTab.TextBox.SelectedText.Length > 0);
             var hasText = isTabSelected && (tabFiles.SelectedTab.TextBox.Text.Length > 0);
-            var isZoomResetable = isTabSelected && (tabFiles.SelectedTab.TextBox.ZoomFactor != 1);
 
             mnxTextUndo.Enabled = isTabSelected && tabFiles.SelectedTab.CanUndo;
             mnxTextRedo.Enabled = isTabSelected && tabFiles.SelectedTab.CanRedo;
@@ -1585,7 +1583,6 @@ namespace QText {
         private void tmrUpdateToolbar_Tick(object sender, EventArgs e) {
             var isTabSelected = (tabFiles.SelectedTab != null);
             var isTabRichText = isTabSelected && tabFiles.SelectedTab.BaseFile.IsRichText;
-            var isTabPlainText = isTabSelected && (tabFiles.SelectedTab.BaseFile.IsRichText == false);
 
             var hasPrinters = false;
             try {

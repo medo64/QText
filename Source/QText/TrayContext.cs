@@ -5,7 +5,7 @@ using System.Windows.Forms;
 namespace QText {
     internal class TrayContext : ApplicationContext {
 
-        private NotifyIcon notMain = new NotifyIcon();
+        private readonly NotifyIcon notMain = new NotifyIcon();
         public MainForm Form { get; private set; }
 
 

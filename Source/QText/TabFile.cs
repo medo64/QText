@@ -153,7 +153,7 @@ namespace QText {
             if (IsOpened == false) { throw new InvalidOperationException("File is not loaded."); }
             if (BaseFile.IsRichText) { throw new InvalidOperationException("File is already in rich text format."); }
 
-            var text = TextBox.Text;
+            _ = TextBox.Text;
 
             BaseFile.ChangeStyle(DocumentStyle.RichText);
             SaveAsRich();
@@ -165,7 +165,7 @@ namespace QText {
             if (IsOpened == false) { throw new InvalidOperationException("File is not loaded."); }
             if (BaseFile.IsEncrypted) { throw new InvalidOperationException("File is already encrypted."); }
 
-            var text = TextBox.Text;
+            _ = TextBox.Text;
 
             BaseFile.Encrypt(password);
             Reopen();
@@ -176,7 +176,7 @@ namespace QText {
             if (BaseFile.IsEncrypted == false) { throw new InvalidOperationException("File is already decrypted."); }
             if (!BaseFile.HasPassword) { throw new InvalidOperationException("No decryption password found."); }
 
-            var text = TextBox.Text;
+            _ = TextBox.Text;
 
             BaseFile.Decrypt();
             Save();
@@ -470,7 +470,7 @@ namespace QText {
         #region Search
 
         public bool Find(string text, bool caseSensitive) {
-            var comparisionType = default(StringComparison);
+            StringComparison comparisionType;
             if (caseSensitive) {
                 comparisionType = StringComparison.CurrentCulture;
             } else {
@@ -496,7 +496,7 @@ namespace QText {
         }
 
         public bool FindForward(string text, bool caseSensitive, int startingIndex) {
-            var comparisionType = default(StringComparison);
+            StringComparison comparisionType;
             if (caseSensitive) {
                 comparisionType = StringComparison.CurrentCulture;
             } else {

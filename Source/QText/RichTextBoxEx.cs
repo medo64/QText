@@ -16,14 +16,14 @@ namespace QText {
         }
 
         private void InitializeComponent() {
-            prdText = new System.Drawing.Printing.PrintDocument();
+            PrintDocument = new System.Drawing.Printing.PrintDocument();
             SuspendLayout();
             // 
             // prdText
             // 
-            prdText.DocumentName = "";
-            prdText.BeginPrint += new System.Drawing.Printing.PrintEventHandler(prdText_BeginPrint);
-            prdText.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(prdText_PrintPage);
+            PrintDocument.DocumentName = "";
+            PrintDocument.BeginPrint += new System.Drawing.Printing.PrintEventHandler(prdText_BeginPrint);
+            PrintDocument.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(prdText_PrintPage);
             ResumeLayout(false);
         }
 
@@ -355,7 +355,6 @@ namespace QText {
 
 
         private int _beginUpdateCount;
-        private System.Drawing.Printing.PrintDocument prdText;
         private IntPtr _originalEventMask;
         public void BeginUpdate() {
             _beginUpdateCount += 1;
@@ -514,7 +513,7 @@ namespace QText {
 
         #region Printing
 
-        internal PrintDocument PrintDocument { get { return prdText; } }
+        internal PrintDocument PrintDocument { get; private set; }
 
         private int currentPrintLocation;
         private int currentPrintPage;

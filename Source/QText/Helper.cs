@@ -107,19 +107,19 @@ namespace QText {
             if ((keyData & Keys.Control) == Keys.Control) {
                 if (sb.Length > 0) { sb.Append("+"); }
                 sb.Append("Ctrl");
-                keyData = keyData ^ Keys.Control;
+                keyData ^= Keys.Control;
             }
 
             if ((keyData & Keys.Alt) == Keys.Alt) {
                 if (sb.Length > 0) { sb.Append("+"); }
                 sb.Append("Alt");
-                keyData = keyData ^ Keys.Alt;
+                keyData ^= Keys.Alt;
             }
 
             if ((keyData & Keys.Shift) == Keys.Shift) {
                 if (sb.Length > 0) { sb.Append("+"); }
                 sb.Append("Shift");
-                keyData = keyData ^ Keys.Shift;
+                keyData ^= Keys.Shift;
             }
 
             switch (keyData) {
@@ -215,13 +215,14 @@ namespace QText {
             var set = sizeAndSet.Value;
 
             var resources = QText.Properties.Resources.ResourceManager;
-            var bitmap = resources.GetObject(name + set) as Bitmap;
             item.ImageScaling = ToolStripItemImageScaling.None;
+            if (resources.GetObject(name + set) is Bitmap bitmap) {
+                item.Image = new Bitmap(bitmap, size, size);
+            } else {
 #if DEBUG
-            item.Image = (bitmap != null) ? new Bitmap(bitmap, size, size) : new Bitmap(size, size, PixelFormat.Format8bppIndexed);
-#else
-            if (bitmap != null) { item.Image = new Bitmap(bitmap, size, size); }
+                item.Image = new Bitmap(size, size, PixelFormat.Format8bppIndexed);
 #endif
+            }
         }
 
         private static KeyValuePair<int, string> GetSizeAndSet(params Control[] controls) {

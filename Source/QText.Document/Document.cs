@@ -203,8 +203,7 @@ namespace QText {
             Watcher.EnableRaisingEvents = true;
         }
 
-
-        void Watcher_Changed(object sender, FileSystemEventArgs e) {
+        private void Watcher_Changed(object sender, FileSystemEventArgs e) {
             Debug.WriteLine("FileSystemWatcher.Changed: " + e.FullPath);
             var files = new List<DocumentFile>(Files); //copy existing collection first to avoid concurrency issues
             if (File.Exists(e.FullPath)) { //file - ignore directory changes
@@ -217,7 +216,7 @@ namespace QText {
             }
         }
 
-        void Watcher_Created(object sender, FileSystemEventArgs e) {
+        private void Watcher_Created(object sender, FileSystemEventArgs e) {
             Debug.WriteLine("FileSystemWatcher.Created: " + e.FullPath);
             if (Directory.Exists(e.FullPath)) { //directory
 
@@ -257,7 +256,7 @@ namespace QText {
             }
         }
 
-        void Watcher_Deleted(object sender, FileSystemEventArgs e) {
+        private void Watcher_Deleted(object sender, FileSystemEventArgs e) {
             Debug.WriteLine("FileSystemWatcher.Deleted: " + e.FullPath);
             ProcessDelete(e.FullPath);
             OnExternallyChanged(new EventArgs());
@@ -279,7 +278,7 @@ namespace QText {
             }
         }
 
-        void Watcher_Renamed(object sender, RenamedEventArgs e) {
+        private void Watcher_Renamed(object sender, RenamedEventArgs e) {
             Debug.WriteLine("FileSystemWatcher.Renamed: " + e.OldFullPath + " -> " + e.FullPath);
             if (Directory.Exists(e.FullPath)) { //directory
 
@@ -297,9 +296,9 @@ namespace QText {
 
                 for (var i = 0; i < Files.Count; i++) {
                     var file = Files[i];
-                    var oldName = file.Name;
-                    var oldKind = file.Style;
-                    var oldFolder = file.Folder;
+                    _ = file.Name;
+                    _ = file.Style;
+                    _ = file.Folder;
 
                     if (string.Equals(file.FullPath, e.OldFullPath, StringComparison.OrdinalIgnoreCase)) {
                         var newExtension = Path.GetExtension(e.Name);
