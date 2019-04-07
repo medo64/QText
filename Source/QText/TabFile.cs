@@ -380,10 +380,10 @@ namespace QText {
                                 || (TextBox.CanPaste(DataFormats.GetFormat(DataFormats.Bitmap)) && !forceText)
                                 || (TextBox.CanPaste(DataFormats.GetFormat(DataFormats.EnhancedMetafile)) && !forceText);
                         } else {
-                            return Clipboard.ContainsText(TextDataFormat.UnicodeText);
+                            return Clipboard.ContainsText(TextDataFormat.UnicodeText) || Clipboard.ContainsText(TextDataFormat.Text);
                         }
                     } else {
-                        return Clipboard.ContainsText(TextDataFormat.UnicodeText);
+                        return Clipboard.ContainsText(TextDataFormat.UnicodeText) || Clipboard.ContainsText(TextDataFormat.Text);
                     }
                 }
             } catch (ExternalException) { }
@@ -618,7 +618,10 @@ namespace QText {
 
         private static void CopyTextToClipboard(RichTextBoxEx textBox) {
             var text = textBox.SelectedText.Replace("\n", Environment.NewLine);
-            Clipboard.SetText(text, TextDataFormat.UnicodeText);
+            var data = new DataObject();
+            data.SetText(text, TextDataFormat.Text);
+            data.SetText(text, TextDataFormat.UnicodeText);
+            Clipboard.SetDataObject(data, copy: true, 5, 100);
         }
 
         private static string GetTextFromClipboard() {
