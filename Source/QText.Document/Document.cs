@@ -22,14 +22,16 @@ namespace QText {
                 SortFolders();
 
                 foreach (var folder in Folders) {
+                    var directory = new DirectoryInfo(folder.FullPath);
                     foreach (var extension in FileExtensions.All) {
-                        try {
-                            foreach (var fileName in Directory.GetFiles(folder.FullPath, "*" + extension, SearchOption.TopDirectoryOnly)) {
-                                if (fileName.EndsWith(extension, StringComparison.OrdinalIgnoreCase)) { //need this check because *.txt matches A.txt2 too.
-                                    Files.Add(new DocumentFile(folder, Path.GetFileName(fileName)));
-                                }
+                        foreach (var file in directory.GetFiles("*" + extension, SearchOption.TopDirectoryOnly)) {
+                            if (file.Attributes.HasFlag(FileAttributes.System) && file.Attributes.HasFlag(FileAttributes.Hidden)) {
+                                continue; //skip files with both system and hidden attribute set
                             }
-                        } catch (UnauthorizedAccessException) { } //ignore folders with access errors
+                            if (file.Extension.Equals(extension, StringComparison.OrdinalIgnoreCase)) { //need this check because *.txt matches A.txt2 too.
+                                Files.Add(new DocumentFile(folder, file.Name));
+                            }
+                        }
                     }
                 }
 
