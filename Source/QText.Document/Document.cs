@@ -20,11 +20,13 @@ namespace QText {
 
                 foreach (var folder in Folders) {
                     foreach (var extension in FileExtensions.All) {
-                        foreach (var fileName in Directory.GetFiles(folder.FullPath, "*" + extension, SearchOption.TopDirectoryOnly)) {
-                            if (fileName.EndsWith(extension, StringComparison.OrdinalIgnoreCase)) { //need this check because *.txt matches A.txt2 too.
-                                Files.Add(new DocumentFile(folder, Path.GetFileName(fileName)));
+                        try {
+                            foreach (var fileName in Directory.GetFiles(folder.FullPath, "*" + extension, SearchOption.TopDirectoryOnly)) {
+                                if (fileName.EndsWith(extension, StringComparison.OrdinalIgnoreCase)) { //need this check because *.txt matches A.txt2 too.
+                                    Files.Add(new DocumentFile(folder, Path.GetFileName(fileName)));
+                                }
                             }
-                        }
+                        } catch (UnauthorizedAccessException) { } //ignore folders with access errors
                     }
                 }
 
