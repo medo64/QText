@@ -13,8 +13,11 @@ namespace QText {
                 RootPath = Path.GetFullPath(path);
 
                 Folders.Add(new DocumentFolder(this, string.Empty));
-                foreach (var directory in Directory.GetDirectories(RootPath)) {
-                    Folders.Add(new DocumentFolder(this, Path.GetFileName(directory)));
+                foreach (var directory in new DirectoryInfo(RootPath).GetDirectories()) {
+                    if (directory.Attributes.HasFlag(FileAttributes.System) && directory.Attributes.HasFlag(FileAttributes.Hidden)) {
+                        continue; //skip directories with both system and hidden attribute set
+                    }
+                    Folders.Add(new DocumentFolder(this, Path.GetFileName(directory.Name)));
                 }
                 SortFolders();
 
