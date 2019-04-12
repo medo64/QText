@@ -40,7 +40,6 @@ namespace QText {
 
                 if (ArgSetup) {
                     Legacy.OrderedFiles.Upgrade();
-                    Legacy.HiddenFiles.Upgrade();
                 }
 
                 Medo.Application.UnhandledCatch.ThreadException += new System.EventHandler<ThreadExceptionEventArgs>(UnhandledException);

@@ -89,30 +89,4 @@ namespace QText.Legacy {
         }
 
     }
-
-
-    internal static class HiddenFiles {
-
-        public static void Upgrade() {
-            var filesAll = new List<string>();
-            filesAll.AddRange(Directory.GetFiles(QText.Settings.Current.FilesLocation, "*.txt"));
-            filesAll.AddRange(Directory.GetFiles(QText.Settings.Current.FilesLocation, "*.rtf"));
-
-            var newPath = Path.Combine(QText.Settings.Current.FilesLocation, "Hidden");
-            Helper.CreatePath(newPath);
-
-            foreach (var fileNameA in filesAll) {
-                var fi = new FileInfo(fileNameA);
-                if ((fi.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden) {
-                    try {
-                        fi.Attributes ^= FileAttributes.Hidden;
-                        fi.MoveTo(Path.Combine(newPath, fi.Name));
-                    } catch (Exception ex) {
-                        Medo.MessageBox.ShowWarning(null, string.Format("Hidden file {0} cannot be upgraded. It is still available in QText folder but it will not be available in tabs.\n\n{1}", fi.Name, ex.Message));
-                    }
-                }
-            }
-        }
-
-    }
 }
