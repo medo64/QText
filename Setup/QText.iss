@@ -59,8 +59,8 @@ Source: "QText.exe";           DestDir: "{app}";                            Flag
 Source: "QText.pdb";           DestDir: "{app}";                            Flags: ignoreversion;
 Source: "QText.Document.dll";  DestDir: "{app}";                            Flags: ignoreversion;
 Source: "QText.Document.pdb";  DestDir: "{app}";                            Flags: ignoreversion;
-Source: "..\README.md";        DestDir: "{app}";  DestName: "ReadMe.txt";   Flags: overwritereadonly uninsremovereadonly;  Attribs: readonly;
-Source: "..\LICENSE.md";       DestDir: "{app}";  DestName: "License.txt";  Flags: overwritereadonly uninsremovereadonly;  Attribs: readonly;
+Source: "..\README.md";        DestDir: "{app}";  DestName: "ReadMe.txt";   Flags: overwritereadonly uninsremovereadonly;  AfterInstall: AdjustTextFile;
+Source: "..\LICENSE.md";       DestDir: "{app}";  DestName: "License.txt";  Flags: overwritereadonly uninsremovereadonly;  AfterInstall: AdjustTextFile;
 
 [Icons]
 Name: "{userstartmenu}\QText";  Filename: "{app}\QText.exe"
@@ -75,6 +75,7 @@ Root: HKCU;  Subkey: "Software\Microsoft\Windows\CurrentVersion\Run";  ValueType
 [Run]
 Description: "Launch application now";  Filename: "{app}\QText.exe";   Parameters: "/setup";  Flags: postinstall nowait skipifsilent runasoriginaluser shellexec
 Description: "View ReadMe.txt";         Filename: "{app}\ReadMe.txt";                         Flags: postinstall nowait skipifsilent runasoriginaluser shellexec unchecked
+
 
 [Code]
 
@@ -136,4 +137,21 @@ begin
       end;
     end;
   end;
+end;
+
+
+function SetFileAttributes(lpFileName: string; dwFileAttributes: LongInt): Boolean;
+  external 'SetFileAttributesA@kernel32.dll stdcall';
+
+
+procedure AdjustTextFile();
+var
+  path : String;
+  data : String;
+begin
+  path := ExpandConstant(CurrentFileName)
+  LoadStringFromFile(path, data);
+  StringChangeEx(data, #10, #13#10, True);
+  SaveStringToFile(path, data, False);
+  SetFileAttributes(path, 1);
 end;
