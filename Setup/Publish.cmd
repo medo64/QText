@@ -4,7 +4,8 @@ SETLOCAL EnableDelayedExpansion
 SET        SOURCE_SOLUTION="..\Source\QText.sln"
 SET       SOURCE_INNOSETUP=".\QText.iss"
 SET       FILES_EXECUTABLE="..\Binaries\QText.exe" "..\Binaries\QText.Document.dll"
-SET            FILES_OTHER="..\README.md" "..\LICENSE.md"
+SET            FILE_README="..\README.md"
+SET           FILE_LICENSE="..\LICENSE.md"
 
 SET              TOOLS_GIT="%PROGRAMFILES(X86)%\Git\mingw64\bin\git.exe" "%PROGRAMFILES%\Git\mingw64\bin\git.exe" "C:\Program Files\Git\mingw64\bin\git.exe"
 SET     TOOLS_VISUALSTUDIO="%PROGRAMFILES(X86)%\Microsoft Visual Studio\2019\Community\Common7\IDE\devenv.exe"
@@ -98,6 +99,9 @@ ECHO:
 RMDIR /Q /S "..\Binaries" 2> NUL
 %TOOL_VISUALSTUDIO% /Build "Release" %SOURCE_SOLUTION%
 IF NOT ERRORLEVEL 0 ECHO Build failed^^! & GOTO Error
+
+TYPE %FILE_README% | MORE /P > ..\Binaries\README.txt
+TYPE %FILE_LICENSE% | MORE /P > ..\Binaries\LICENSE.txt
 
 ECHO Build successful.
 
@@ -206,7 +210,7 @@ IF NOT [%TOOL_ILMERGE%]==[] (
         ECHO:
 
         ECHO Zipping into !SETUPEXE:.exe=.zip!
-        %TOOL_WINRAR% a -afzip -ep -m5 ".\Temp\!SETUPEXE:.exe=.zip!" ..\Binaries\QTextPortable.exe %FILES_OTHER%
+        %TOOL_WINRAR% a -afzip -ep -m5 ".\Temp\!SETUPEXE:.exe=.zip!" ..\Binaries\QTextPortable.exe ..\Binaries\README.txt ..\Binaries\LICENSE.txt
         %TOOL_WINRAR% rn ".\Temp\!SETUPEXE:.exe=.zip!" QTextPortable.exe QText.exe
         %TOOL_WINRAR% rn ".\Temp\!SETUPEXE:.exe=.zip!" *.md *.txt
         IF NOT ERRORLEVEL 0 GOTO Error
