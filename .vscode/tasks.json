@@ -3,12 +3,9 @@
     "tasks": [
         {
             "label": "build",
-            "dependsOn": [
-                "clean"
-            ],
             "type": "process",
             "windows": {
-                "command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\MSBuild\\Current\\Bin\\amd64\\msbuild.exe",
+                "command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe",
                 "args": [
                     "-p:Configuration=Debug;DebugType=portable;PlatformTarget=x64",
                     "QText.sln"
@@ -18,16 +15,6 @@
                 "cwd": "${workspaceFolder}/Source/"
             },
             "group": "build"
-        },
-        {
-            "label": "clean",
-            "type": "shell",
-            "windows": {
-                "command": "DEL",
-                "args": [
-                    ".\\Binaries\\*"
-                ]
-            }
         }
     ]
 }
