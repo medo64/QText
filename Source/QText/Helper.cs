@@ -37,8 +37,8 @@ namespace QText {
         }
 
         public static void MovePath(string currentPath, string newPath) {
-            if (currentPath.StartsWith(@"\\?\", StringComparison.Ordinal) == false) { currentPath = @"\\?\" + currentPath; }
-            if (newPath.StartsWith(@"\\?\", StringComparison.Ordinal) == false) { newPath = @"\\?\" + newPath; }
+            if (!currentPath.StartsWith(@"\\", StringComparison.Ordinal)) { currentPath = @"\\?\" + currentPath; }
+            if (!newPath.StartsWith(@"\\", StringComparison.Ordinal)) { newPath = @"\\?\" + newPath; }
             if (NativeMethods.MoveFileExW(currentPath, newPath, NativeMethods.MOVEFILE_COPY_ALLOWED | NativeMethods.MOVEFILE_WRITE_THROUGH) == false) {
                 var ex = new Win32Exception();
                 throw new IOException(ex.Message, ex);
