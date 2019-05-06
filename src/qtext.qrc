@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/16x16/new.png</file>
+        <file>icons/24x24/new.png</file>
+        <file>icons/32x32/new.png</file>
+        <file>icons/48x48/new.png</file>
+        <file>icons/64x64/new.png</file>
+        <file>icons/16x16/qtext.png</file>
+        <file>icons/32x32/qtext.png</file>
+        <file>icons/48x48/qtext.png</file>
+        <file>icons/64x64/qtext.png</file>
+        <file>icons/16x16/save.png</file>
+        <file>icons/24x24/save.png</file>
+        <file>icons/32x32/save.png</file>
+        <file>icons/48x48/save.png</file>
+        <file>icons/64x64/save.png</file>
+    </qresource>
+</RCC>
