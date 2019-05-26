@@ -2,6 +2,8 @@
 #include <QColor>
 #include <QDir>
 #include <QEvent>
+#include <QObject>
+#include <QtDebug>
 #include <QTextStream>
 
 FileItem::FileItem(QString directoryPath, QString fileName)
@@ -24,9 +26,12 @@ FileItem::FileItem(QString directoryPath, QString fileName)
             document->setPlainText(content);
         }
         this->setDocument(document);
+
+        QObject::connect(document, SIGNAL(contentsChanged()), this, SLOT(onContentsChanged()));
     } else {
-        this->setText(file.errorString() + "\n" + path);
+        this->setReadOnly(true);
         this->setStyleSheet("QTextEdit { background-color: red; color: white; }");
+        this->setText(file.errorString() + "\n" + path);
     }
 }
 
@@ -50,4 +55,9 @@ bool FileItem::isPlain() {
 
 QString FileItem::getPath() {
     return QDir::cleanPath(_directoryPath + QDir::separator() + _fileName);
+}
+
+
+void FileItem::onContentsChanged() {
+    qDebug() << "change" << getPath();
 }

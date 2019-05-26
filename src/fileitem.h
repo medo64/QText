@@ -6,6 +6,7 @@
 #include <QTextEdit>
 
 class FileItem : public QTextEdit {
+    Q_OBJECT
 
     public:
         FileItem(QString directoryPath, QString fileName);
@@ -19,6 +20,9 @@ class FileItem : public QTextEdit {
         QString _fileName;
         QString getPath();
         QTextEdit* _editor = nullptr;
+
+    private slots:
+        void onContentsChanged();
 
 };
 
