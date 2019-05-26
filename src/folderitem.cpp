@@ -10,10 +10,10 @@ FolderItem::FolderItem(const QString directoryPath, const QString directoryName)
     QString path = getPath();
     QDir directory = path;
 
-    _files = std::make_shared<std::vector<std::shared_ptr<FileItem>>>();
+    _files = std::make_shared<std::vector<FileItem*>>();
     QStringList files = directory.entryList(QStringList() << "*.txt" << "*.html", QDir::Files);
     for(QString fileName : files) {
-        _files->push_back(std::make_shared<FileItem>(path, fileName));
+        _files->push_back(new FileItem(path, fileName));
     }
 }
 
@@ -26,7 +26,7 @@ size_t FolderItem::fileCount() {
     return _files->size();
 }
 
-std::shared_ptr<FileItem> FolderItem::getFile(size_t index) {
+FileItem* FolderItem::getFile(size_t index) {
     return _files->at(index);
 }
 

@@ -5,12 +5,12 @@
 #include <QString>
 #include <QTextEdit>
 
-class FileItem {
+class FileItem : public QTextEdit {
 
     public:
         FileItem(QString directoryPath, QString fileName);
+        ~FileItem();
         QString getTitle();
-        QTextEdit* getEditor();
         bool isPlain();
         bool isHtml();
 

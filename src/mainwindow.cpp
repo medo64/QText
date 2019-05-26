@@ -26,7 +26,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     auto folder = storage->getBaseFolder();
     for (size_t i = 0; i < folder->fileCount(); i++) {
         auto file = folder->getFile(i);
-        ui->tabWidget->addTab(file->getEditor(), file->getTitle());
+        ui->tabWidget->addTab(file, file->getTitle());
     }
 }
 

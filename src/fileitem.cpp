@@ -4,9 +4,33 @@
 #include <QEvent>
 #include <QTextStream>
 
-FileItem::FileItem(QString directoryPath, QString fileName) {
+FileItem::FileItem(QString directoryPath, QString fileName)
+    : QTextEdit(nullptr) {
     _directoryPath = directoryPath;
     _fileName = fileName;
+
+    this->setLineWrapMode(QTextEdit::WidgetWidth);
+    this->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+
+    QString path = getPath();
+    QFile file(path);
+    if(file.open(QIODevice::ReadOnly)) {
+        QTextStream in(&file);
+        QString content = in.readAll();
+        QTextDocument *document = new QTextDocument(this);
+        if (isHtml()) {
+            document->setHtml(content);
+        } else {
+            document->setPlainText(content);
+        }
+        this->setDocument(document);
+    } else {
+        this->setText(file.errorString() + "\n" + path);
+        this->setStyleSheet("QTextEdit { background-color: red; color: white; }");
+    }
+}
+
+FileItem::~FileItem() {
 }
 
 
@@ -21,32 +45,6 @@ bool FileItem::isHtml() {
 
 bool FileItem::isPlain() {
     return !isHtml();
-}
-
-QTextEdit* FileItem::getEditor() {
-    if (_editor == nullptr) {
-        _editor = new QTextEdit();
-        _editor->setLineWrapMode(QTextEdit::WidgetWidth);
-        _editor->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
-
-        QString path = getPath();
-        QFile file(path);
-        if(file.open(QIODevice::ReadOnly)) {
-            QTextStream in(&file);
-            QString content = in.readAll();
-            QTextDocument *document = new QTextDocument(_editor);
-            if (isHtml()) {
-                document->setHtml(content);
-            } else {
-                document->setPlainText(content);
-            }
-            _editor->setDocument(document);
-        } else {
-            _editor->setText(file.errorString() + "\n" + path);
-            _editor->setStyleSheet("QTextEdit { background-color: red; color: white; }");
-        }
-    }
-    return _editor;
 }
 
 
