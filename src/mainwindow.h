@@ -21,6 +21,7 @@ class MainWindow : public QMainWindow {
 
     private slots:
         void onUpdateTabTitle(FileItem* file);
+        void onSave();
 
 };
 

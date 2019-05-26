@@ -21,6 +21,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     saveIcon.addFile(":icons/48x48/save.png", QSize(48, 48));
     saveIcon.addFile(":icons/64x64/save.png", QSize(64, 64));
     ui->actionSave->setIcon(saveIcon);
+    QObject::connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(onSave()));
 
     ui->tabWidget->clear();
     auto folder = storage->getBaseFolder();
@@ -43,4 +44,9 @@ void MainWindow::onUpdateTabTitle(FileItem* file) {
     } else {
         ui->tabWidget->setTabText(tabIndex, file->getTitle());
     }
+}
+
+void MainWindow::onSave() {
+    auto file = (FileItem*)ui->tabWidget->currentWidget();
+    file->save();
 }
