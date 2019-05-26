@@ -57,13 +57,18 @@ bool FileItem::hasChanged() {
 }
 
 
+void FileItem::focusOutEvent(QFocusEvent* e) {
+    qDebug().nospace() << "focusOutEvent(" << QVariant::fromValue(e->reason()).toString() << ") " << getPath();
+}
+
+
 QString FileItem::getPath() {
     return QDir::cleanPath(_directoryPath + QDir::separator() + _fileName);
 }
 
 
 void FileItem::onContentsChanged() {
-    qDebug() << "onContentsChanged()";
+    qDebug() << "onContentsChanged()" << getPath();
     _hasChanged = true;
 
     if (_timer == nullptr) {
@@ -77,5 +82,5 @@ void FileItem::onContentsChanged() {
 }
 
 void FileItem::onAfterChangeTimeout() {
-    qDebug() << "onAfterChangeTimeout()";
+    qDebug() << "onAfterChangeTimeout()" << getPath();
 }

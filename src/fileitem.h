@@ -2,6 +2,7 @@
 #define FILEITEM_H
 
 #include <memory>
+#include <QFocusEvent>
 #include <QString>
 #include <QTextEdit>
 #include <QTimer>
@@ -16,6 +17,9 @@ class FileItem : public QTextEdit {
         bool isPlain();
         bool isHtml();
         bool hasChanged();
+
+    protected:
+        void focusOutEvent(QFocusEvent *event);
 
     private:
         QString _directoryPath;
