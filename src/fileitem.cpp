@@ -14,25 +14,8 @@ FileItem::FileItem(QString directoryPath, QString fileName)
     this->setLineWrapMode(QTextEdit::WidgetWidth);
     this->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
 
-    QString path = getPath();
-    QFile file(path);
-    if(file.open(QIODevice::ReadOnly)) {
-        QTextStream in(&file);
-        QString content = in.readAll();
-        QTextDocument *document = new QTextDocument(this);
-        if (isHtml()) {
-            document->setHtml(content);
-        } else {
-            document->setPlainText(content);
-        }
-        this->setDocument(document);
-
-        QObject::connect(document, SIGNAL(contentsChanged()), this, SLOT(onContentsChanged()));
-    } else {
-        this->setReadOnly(true);
-        this->setStyleSheet("QTextEdit { background-color: red; color: white; }");
-        this->setText(file.errorString() + "\n" + path);
-    }
+    load();
+    QObject::connect(this->document(), SIGNAL(contentsChanged()), this, SLOT(onContentsChanged()));
 }
 
 FileItem::~FileItem() {
@@ -56,9 +39,65 @@ bool FileItem::hasChanged() {
     return _hasChanged;
 }
 
+bool FileItem::load() {
+    qDebug() << "load()" << getPath();
+
+    if (_timerSavePending != nullptr) { _timerSavePending->stop(); }
+    this->blockSignals(true);
+
+    QString path = getPath();
+    QFile file(path);
+    if(file.open(QIODevice::ReadOnly)) {
+        QTextStream in(&file);
+        QString content = in.readAll();
+        QTextDocument *document = new QTextDocument(this);
+        if (isHtml()) {
+            document->setHtml(content);
+        } else {
+            document->setPlainText(content);
+        }
+        this->setDocument(document);
+        this->blockSignals(false);
+        return true;
+    } else {
+        this->setReadOnly(true);
+        this->setStyleSheet("QTextEdit { background-color: red; color: white; }");
+        this->setText(file.errorString() + "\n" + path);
+        qDebug() << "load()" << getPath() << "error:" << file.errorString();
+        return false;
+    }
+}
+
+bool FileItem::save() {
+    qDebug() << "save()" << getPath();
+
+    if (_timerSavePending != nullptr) { _timerSavePending->stop(); }
+
+    QString contents;
+    if (isHtml()) {
+        contents = this->document()->toHtml();
+    } else {
+        contents = this->document()->toPlainText();
+    }
+
+    QString path = getPath();
+    QFile file(path);
+    if(file.open(QIODevice::WriteOnly)) {
+        QTextStream out(&file);
+        out << contents;
+        file.close();
+        _hasChanged = false;
+        return true;
+    } else {
+        qDebug() << "save()" << getPath() << "error:" << file.errorString();
+        return false;
+    }
+}
+
 
 void FileItem::focusOutEvent(QFocusEvent* e) {
     qDebug().nospace() << "focusOutEvent(" << QVariant::fromValue(e->reason()).toString() << ") " << getPath();
+    if (_hasChanged) { save(); }
 }
 
 
@@ -71,16 +110,17 @@ void FileItem::onContentsChanged() {
     qDebug() << "onContentsChanged()" << getPath();
     _hasChanged = true;
 
-    if (_timer == nullptr) {
-        _timer = new QTimer(); //set timer to fire 3 seconds after the last key press
-        _timer->setInterval(3000);
-        _timer->setSingleShot(true);
-        QObject::connect(_timer, SIGNAL(timeout()), this, SLOT(onAfterChangeTimeout()));
+    if (_timerSavePending == nullptr) {
+        _timerSavePending = new QTimer(); //set timer to fire 3 seconds after the last key press
+        _timerSavePending->setInterval(3000);
+        _timerSavePending->setSingleShot(true);
+        QObject::connect(_timerSavePending, SIGNAL(timeout()), this, SLOT(onSavePendingTimeout()));
     }
-    _timer->stop();
-    _timer->start();
+    _timerSavePending->stop();
+    _timerSavePending->start();
 }
 
-void FileItem::onAfterChangeTimeout() {
-    qDebug() << "onAfterChangeTimeout()" << getPath();
+void FileItem::onSavePendingTimeout() {
+    qDebug() << "onSavePendingTimeout()" << getPath();
+    if (_hasChanged) { save(); }
 }

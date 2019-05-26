@@ -17,6 +17,8 @@ class FileItem : public QTextEdit {
         bool isPlain();
         bool isHtml();
         bool hasChanged();
+        bool load();
+        bool save();
 
     protected:
         void focusOutEvent(QFocusEvent *event);
@@ -26,12 +28,12 @@ class FileItem : public QTextEdit {
         QString _fileName;
         QString getPath();
         QTextEdit* _editor = nullptr;
-        QTimer* _timer = nullptr;
+        QTimer* _timerSavePending = nullptr;
         bool _hasChanged = false;
 
     private slots:
         void onContentsChanged();
-        void onAfterChangeTimeout();
+        void onSavePendingTimeout();
 
 };
 
