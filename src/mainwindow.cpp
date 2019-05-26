@@ -27,9 +27,20 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     for (size_t i = 0; i < folder->fileCount(); i++) {
         auto file = folder->getFile(i);
         ui->tabWidget->addTab(file, file->getTitle());
+        QObject::connect(file, SIGNAL(updateTabTitle(FileItem*)), this, SLOT(onUpdateTabTitle(FileItem*)));
     }
 }
 
 MainWindow::~MainWindow() {
     delete ui;
+}
+
+
+void MainWindow::onUpdateTabTitle(FileItem* file) {
+    auto tabIndex = ui->tabWidget->indexOf(file);
+    if (file->hasChanged()) {
+        ui->tabWidget->setTabText(tabIndex, file->getTitle() + "*");
+    } else {
+        ui->tabWidget->setTabText(tabIndex, file->getTitle());
+    }
 }

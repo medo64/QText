@@ -19,6 +19,9 @@ class MainWindow : public QMainWindow {
     private:
         Ui::MainWindow *ui;
 
+    private slots:
+        void onUpdateTabTitle(FileItem* file);
+
 };
 
 #endif // MAINWINDOW_H

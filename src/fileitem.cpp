@@ -58,6 +58,7 @@ bool FileItem::load() {
         }
         this->setDocument(document);
         this->blockSignals(false);
+        emit updateTabTitle(this);
         return true;
     } else {
         this->setReadOnly(true);
@@ -87,6 +88,7 @@ bool FileItem::save() {
         out << contents;
         file.close();
         _hasChanged = false;
+        emit updateTabTitle(this);
         return true;
     } else {
         qDebug() << "save()" << getPath() << "error:" << file.errorString();
@@ -108,7 +110,10 @@ QString FileItem::getPath() {
 
 void FileItem::onContentsChanged() {
     qDebug() << "onContentsChanged()" << getPath();
-    _hasChanged = true;
+    if (!_hasChanged) {
+        _hasChanged = true;
+        emit updateTabTitle(this);
+    }
 
     if (_timerSavePending == nullptr) {
         _timerSavePending = new QTimer(); //set timer to fire 3 seconds after the last key press

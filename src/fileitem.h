@@ -31,6 +31,9 @@ class FileItem : public QTextEdit {
         QTimer* _timerSavePending = nullptr;
         bool _hasChanged = false;
 
+    signals:
+        void updateTabTitle(FileItem* file);
+
     private slots:
         void onContentsChanged();
         void onSavePendingTimeout();
