@@ -4,6 +4,7 @@
 #include <memory>
 #include <QString>
 #include <QTextEdit>
+#include <QTimer>
 
 class FileItem : public QTextEdit {
     Q_OBJECT
@@ -14,15 +15,19 @@ class FileItem : public QTextEdit {
         QString getTitle();
         bool isPlain();
         bool isHtml();
+        bool hasChanged();
 
     private:
         QString _directoryPath;
         QString _fileName;
         QString getPath();
         QTextEdit* _editor = nullptr;
+        QTimer* _timer = nullptr;
+        bool _hasChanged = false;
 
     private slots:
         void onContentsChanged();
+        void onAfterChangeTimeout();
 
 };
 

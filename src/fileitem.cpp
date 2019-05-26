@@ -52,6 +52,10 @@ bool FileItem::isPlain() {
     return !isHtml();
 }
 
+bool FileItem::hasChanged() {
+    return _hasChanged;
+}
+
 
 QString FileItem::getPath() {
     return QDir::cleanPath(_directoryPath + QDir::separator() + _fileName);
@@ -59,5 +63,19 @@ QString FileItem::getPath() {
 
 
 void FileItem::onContentsChanged() {
-    qDebug() << "change" << getPath();
+    qDebug() << "onContentsChanged()";
+    _hasChanged = true;
+
+    if (_timer == nullptr) {
+        _timer = new QTimer(); //set timer to fire 3 seconds after the last key press
+        _timer->setInterval(3000);
+        _timer->setSingleShot(true);
+        QObject::connect(_timer, SIGNAL(timeout()), this, SLOT(onAfterChangeTimeout()));
+    }
+    _timer->stop();
+    _timer->start();
+}
+
+void FileItem::onAfterChangeTimeout() {
+    qDebug() << "onAfterChangeTimeout()";
 }
