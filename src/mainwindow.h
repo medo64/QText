@@ -30,6 +30,7 @@ class MainWindow : public QMainWindow {
         void onSave();
         void onRename();
         void onShowContainingDirectory();
+        void onShowContainingDirectoryOnly();
         void onTabMenuRequested(const QPoint&);
 
 };

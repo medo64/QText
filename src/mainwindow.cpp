@@ -37,6 +37,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     QObject::connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(onSave()));
     QObject::connect(ui->actionRename, SIGNAL(triggered()), this, SLOT(onRename()));
     QObject::connect(ui->actionShowContainingDirectory, SIGNAL(triggered()), this, SLOT(onShowContainingDirectory()));
+    QObject::connect(ui->actionShowContainingDirectoryOnly, SIGNAL(triggered()), this, SLOT(onShowContainingDirectoryOnly()));
 
     ui->tabWidget->clear();
     auto folder = storage->getBaseFolder();
@@ -48,6 +49,9 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         QObject::connect(file, SIGNAL(activated(FileItem*)), this, SLOT(onFileActivated(FileItem*)));
     }
     ui->actionSave->setDisabled(true);
+
+    ui->tabWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->tabWidget, SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(onTabMenuRequested(const QPoint&)));
 
     ui->tabWidget->tabBar()->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tabWidget->tabBar(), SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(onTabMenuRequested(const QPoint&)));
@@ -124,12 +128,7 @@ void MainWindow::onRename() {
     }
 }
 
-void MainWindow::onShowContainingDirectory() {
-    auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-
-    const QString filePath = (file != nullptr) ? file->getPath() : nullptr;
-    const QString directoryPath = _folder->getPath();
-
+void onShowContainingDirectory2(QString directoryPath, QString filePath) {
 #if defined(Q_OS_WIN)
     const QString explorerExe = "explorer.exe";
     QStringList params;
@@ -141,13 +140,26 @@ void MainWindow::onShowContainingDirectory() {
     QFile nautilus(nautilusPath);
     if (nautilus.exists()) {
         QStringList params;
-        params += "-s";
-        params += (filePath != nullptr) ? filePath : directoryPath;
+        if (filePath != nullptr) {
+            params += "-s";
+            params += filePath;
+        } else {
+            params += directoryPath;
+        }
         QProcess::startDetached(nautilusPath, params);
     } else {
         QDesktopServices::openUrl(QUrl::fromLocalFile(directoryPath));
     }
 #endif
+}
+
+void MainWindow::onShowContainingDirectory() {
+    auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+    onShowContainingDirectory2(_folder->getPath(), file->getPath());
+}
+
+void MainWindow::onShowContainingDirectoryOnly() {
+    onShowContainingDirectory2(_folder->getPath(), nullptr);
 }
 
 
@@ -170,9 +182,12 @@ void MainWindow::onTabMenuRequested(const QPoint &point) {
         menu.addAction(ui->actionSave);
         menu.addSeparator();
         menu.addAction(ui->actionRename);
+        menu.addSeparator();
+        menu.addAction(ui->actionShowContainingDirectory);
+    } else {
+        menu.addSeparator();
+        menu.addAction(ui->actionShowContainingDirectoryOnly);
     }
-    menu.addSeparator();
-    menu.addAction(ui->actionShowContainingDirectory);
 
     menu.exec(tabbar->mapToGlobal(point));
 }
