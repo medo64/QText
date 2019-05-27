@@ -1,5 +1,6 @@
 #include "fileitem.h"
 #include "folderitem.h"
+#include "helpers.h"
 #include <QDir>
 #include <QString>
 
@@ -19,7 +20,7 @@ FolderItem::FolderItem(const QString directoryPath, const QString directoryName)
 
 
 QString FolderItem::getTitle() {
-    return (_directoryName == nullptr) ? "(Default)" : _directoryName;
+    return (_directoryName == nullptr) ? "(Default)" : Helpers::getTitleFromFSName(_directoryName);
 }
 
 size_t FolderItem::fileCount() {
@@ -30,8 +31,8 @@ FileItem* FolderItem::getFile(size_t index) {
     return _files->at(index);
 }
 
-FileItem* FolderItem::newFile(QString fileName) {
-    return new FileItem(this->getPath(), fileName + ".txt");
+FileItem* FolderItem::newFile(QString title) {
+    return new FileItem(this->getPath(), Helpers::getFSNameFromTitle(title) + ".txt");
 }
 
 bool FolderItem::saveAll() {

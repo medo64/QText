@@ -1,4 +1,5 @@
 #include "fileitem.h"
+#include "helpers.h"
 #include <QColor>
 #include <QDir>
 #include <QEvent>
@@ -27,10 +28,11 @@ QString FileItem::getTitle() {
     for (int i = 0; i < extensions->length(); i++) {
         auto extension = extensions[i];
         if (_fileName.endsWith(extension, Qt::CaseInsensitive)) {
-            return _fileName.left(_fileName.length() - extension.length());
+            auto fileNameWithoutExtension = _fileName.left(_fileName.length() - extension.length());
+            return Helpers::getTitleFromFSName(fileNameWithoutExtension);
         }
     }
-    return _fileName; //should not happen
+    return Helpers::getTitleFromFSName(_fileName); //should not happen
 }
 
 void FileItem::setTitle(QString newTitle) {
@@ -38,7 +40,7 @@ void FileItem::setTitle(QString newTitle) {
     if (newTitle == getTitle()) { return; } //no change
 
     QString curPath = getPath();
-    QString newFileName = newTitle + (isHtml() ? ".html" : ".txt");
+    QString newFileName = Helpers::getFSNameFromTitle(newTitle) + (isHtml() ? ".html" : ".txt");
     QString newPath = QDir::cleanPath(_directoryPath + QDir::separator() + newFileName);
 
     QFile curFile(curPath);

@@ -14,7 +14,7 @@ class FolderItem {
         QString getTitle();
         size_t fileCount();
         FileItem* getFile(size_t index);
-        FileItem* newFile(QString fileName);
+        FileItem* newFile(QString title);
         bool saveAll();
 
     private:

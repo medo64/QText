@@ -13,6 +13,7 @@ SOURCES += \
         fileitem.cpp \
         filenamedialog.cpp \
         folderitem.cpp \
+        helpers.cpp \
         main.cpp \
         mainwindow.cpp \
         storage.cpp
@@ -21,6 +22,7 @@ HEADERS += \
         fileitem.h \
         filenamedialog.h \
         folderitem.h \
+        helpers.h \
         mainwindow.h \
         storage.h
 
