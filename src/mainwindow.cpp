@@ -7,6 +7,7 @@
 #include <QDesktopServices>
 #include <QFileInfo>
 #include <QMenu>
+#include <QProcess>
 #include <QTabBar>
 #include <QTextEdit>
 
@@ -124,9 +125,29 @@ void MainWindow::onRename() {
 }
 
 void MainWindow::onShowContainingDirectory() {
-    const QString path = _folder->getPath();
-    const QUrl url = QUrl::fromLocalFile(path);
-    QDesktopServices::openUrl(url);
+    auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+
+    const QString filePath = (file != nullptr) ? file->getPath() : nullptr;
+    const QString directoryPath = _folder->getPath();
+
+#if defined(Q_OS_WIN)
+    const QString explorerExe = "explorer.exe";
+    QStringList params;
+    params += "/select,";
+    params += QDir::toNativeSeparators((filePath != nullptr) ? filePath : directoryPath);
+    QProcess::startDetached(explorerExe, param);
+#else
+    QString nautilusPath = "/usr/bin/nautilus";
+    QFile nautilus(nautilusPath);
+    if (nautilus.exists()) {
+        QStringList params;
+        params += "-s";
+        params += (filePath != nullptr) ? filePath : directoryPath;
+        QProcess::startDetached(nautilusPath, params);
+    } else {
+        QDesktopServices::openUrl(QUrl::fromLocalFile(directoryPath));
+    }
+#endif
 }
 
 
