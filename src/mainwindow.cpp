@@ -27,6 +27,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     saveIcon.addFile(":icons/48x48/save.png", QSize(48, 48));
     saveIcon.addFile(":icons/64x64/save.png", QSize(64, 64));
     ui->actionSave->setIcon(saveIcon);
+
     QObject::connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(onNew()));
     QObject::connect(ui->actionReopen, SIGNAL(triggered()), this, SLOT(onReopen()));
     QObject::connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(onSave()));
@@ -37,8 +38,11 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     for (size_t i = 0; i < folder->fileCount(); i++) {
         auto file = folder->getFile(i);
         ui->tabWidget->addTab(file, file->getTitle());
-        QObject::connect(file, SIGNAL(updateTabTitle(FileItem*)), this, SLOT(onUpdateTabTitle(FileItem*)));
+        QObject::connect(file, SIGNAL(titleChanged(FileItem*)), this, SLOT(onFileTitleChanged(FileItem*)));
+        QObject::connect(file, SIGNAL(modificationChanged(FileItem*, bool)), this, SLOT(onFileModificationChanged(FileItem*, bool)));
+        QObject::connect(file, SIGNAL(activated(FileItem*)), this, SLOT(onFileActivated(FileItem*)));
     }
+    ui->actionSave->setDisabled(true);
 
     ui->tabWidget->tabBar()->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tabWidget->tabBar(), SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(onTabMenuRequested(const QPoint&)));
@@ -49,14 +53,25 @@ MainWindow::~MainWindow() {
 }
 
 
-void MainWindow::onUpdateTabTitle(FileItem* file) {
+void MainWindow::onFileModificationChanged(FileItem* file, bool isModified) {
     auto tabIndex = ui->tabWidget->indexOf(file);
-    if (file->hasChanged()) {
+    if (isModified) {
         ui->tabWidget->setTabText(tabIndex, file->getTitle() + "*");
+        ui->actionSave->setDisabled(false);
     } else {
         ui->tabWidget->setTabText(tabIndex, file->getTitle());
+        ui->actionSave->setDisabled(true);
     }
 }
+
+void MainWindow::onFileTitleChanged(FileItem* file) {
+    onFileModificationChanged(file, file->isModified());
+}
+
+void MainWindow::onFileActivated(FileItem* file) {
+    onFileModificationChanged(file, file->isModified());
+}
+
 
 void MainWindow::onNew() {
     auto dialog = std::make_shared<FileNameDialog>(this, nullptr);

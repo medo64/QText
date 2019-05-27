@@ -21,7 +21,9 @@ class MainWindow : public QMainWindow {
         std::shared_ptr<Storage> _storage;
 
     private slots:
-        void onUpdateTabTitle(FileItem* file);
+        void onFileActivated(FileItem* file);
+        void onFileTitleChanged(FileItem* file);
+        void onFileModificationChanged(FileItem* file, bool isModified);
         void onNew();
         void onReopen();
         void onSave();

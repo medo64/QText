@@ -17,11 +17,12 @@ class FileItem : public QTextEdit {
         void setTitle(QString newTitle);
         bool isPlain();
         bool isHtml();
-        bool hasChanged();
+        bool isModified();
         bool load();
         bool save();
 
     protected:
+        void focusInEvent(QFocusEvent *event);
         void focusOutEvent(QFocusEvent *event);
 
     private:
@@ -30,10 +31,12 @@ class FileItem : public QTextEdit {
         QString getPath();
         QTextEdit* _editor = nullptr;
         QTimer* _timerSavePending = nullptr;
-        bool _hasChanged = false;
+        void setIsModified(bool isModified);
 
     signals:
-        void updateTabTitle(FileItem* file);
+        void activated(FileItem* file);
+        void titleChanged(FileItem* file);
+        void modificationChanged(FileItem* file, bool isModified);
 
     private slots:
         void onModificationChanged(bool changed);

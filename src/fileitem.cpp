@@ -46,7 +46,7 @@ void FileItem::setTitle(QString newTitle) {
     if (!newFile.exists()) {
         curFile.rename(newPath);
         _fileName = newFileName;
-        emit updateTabTitle(this);
+        emit titleChanged(this);
     }
 }
 
@@ -59,8 +59,8 @@ bool FileItem::isPlain() {
     return !isHtml();
 }
 
-bool FileItem::hasChanged() {
-    return _hasChanged;
+bool FileItem::isModified() {
+    return this->document()->isModified();
 }
 
 bool FileItem::load() {
@@ -84,9 +84,8 @@ bool FileItem::load() {
             file.close();
             this->setDocument(document);
             this->document()->setModified(false);
-            _hasChanged = false;
             this->blockSignals(false);
-            emit updateTabTitle(this);
+            emit titleChanged(this);
             return true;
         } else {
             this->setReadOnly(true);
@@ -99,8 +98,7 @@ bool FileItem::load() {
         if(file.open(QIODevice::WriteOnly)) {
             file.close();
             this->document()->setModified(false);
-            _hasChanged = false;
-            emit updateTabTitle(this);
+            emit titleChanged(this);
             return true;
         } else {
             this->setReadOnly(true);
@@ -131,8 +129,6 @@ bool FileItem::save() {
         out << contents;
         file.close();
         this->document()->setModified(false);
-        _hasChanged = false;
-        emit updateTabTitle(this);
         return true;
     } else {
         qDebug() << "save()" << getPath() << "error:" << file.errorString();
@@ -141,9 +137,14 @@ bool FileItem::save() {
 }
 
 
+void FileItem::focusInEvent(QFocusEvent* e) {
+    qDebug().nospace() << "focusInEvent(" << QVariant::fromValue(e->reason()).toString() << ") " << getPath();
+    emit activated(this);
+}
+
 void FileItem::focusOutEvent(QFocusEvent* e) {
     qDebug().nospace() << "focusOutEvent(" << QVariant::fromValue(e->reason()).toString() << ") " << getPath();
-    if (_hasChanged) { save(); }
+    if (this->document()->isModified()) { save(); }
 }
 
 
@@ -155,10 +156,7 @@ QString FileItem::getPath() {
 void FileItem::onModificationChanged(bool changed) {
     qDebug().nospace() << "onModificationChanged(" << changed << ")" << getPath();
 
-    if (!_hasChanged) {
-        _hasChanged = true;
-        emit updateTabTitle(this);
-    }
+    emit modificationChanged(this, changed);
 
     if (_timerSavePending == nullptr) {
         _timerSavePending = new QTimer(); //set timer to fire 3 seconds after the last key press
@@ -172,5 +170,5 @@ void FileItem::onModificationChanged(bool changed) {
 
 void FileItem::onSavePendingTimeout() {
     qDebug() << "onSavePendingTimeout()" << getPath();
-    if (_hasChanged) { save(); }
+    if (this->document()->isModified()) { save(); }
 }
