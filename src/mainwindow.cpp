@@ -4,6 +4,8 @@
 #include "ui_mainwindow.h"
 #include "storage.h"
 #include <QDebug>
+#include <QDesktopServices>
+#include <QFileInfo>
 #include <QMenu>
 #include <QTabBar>
 #include <QTextEdit>
@@ -33,6 +35,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     QObject::connect(ui->actionReopen, SIGNAL(triggered()), this, SLOT(onReopen()));
     QObject::connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(onSave()));
     QObject::connect(ui->actionRename, SIGNAL(triggered()), this, SLOT(onRename()));
+    QObject::connect(ui->actionShowContainingDirectory, SIGNAL(triggered()), this, SLOT(onShowContainingDirectory()));
 
     ui->tabWidget->clear();
     auto folder = storage->getBaseFolder();
@@ -120,6 +123,12 @@ void MainWindow::onRename() {
     }
 }
 
+void MainWindow::onShowContainingDirectory() {
+    const QString path = _folder->getPath();
+    const QUrl url = QUrl::fromLocalFile(path);
+    QDesktopServices::openUrl(url);
+}
+
 
 void MainWindow::onTabMenuRequested(const QPoint &point) {
     if (point.isNull()) { return; }
@@ -141,5 +150,8 @@ void MainWindow::onTabMenuRequested(const QPoint &point) {
         menu.addSeparator();
         menu.addAction(ui->actionRename);
     }
+    menu.addSeparator();
+    menu.addAction(ui->actionShowContainingDirectory);
+
     menu.exec(tabbar->mapToGlobal(point));
 }

@@ -29,6 +29,7 @@ class MainWindow : public QMainWindow {
         void onReopen();
         void onSave();
         void onRename();
+        void onShowContainingDirectory();
         void onTabMenuRequested(const QPoint&);
 
 };

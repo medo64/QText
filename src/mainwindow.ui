@@ -130,6 +130,11 @@
     <string>F2</string>
    </property>
   </action>
+  <action name="actionShowContainingDirectory">
+   <property name="text">
+    <string>Show Containing &amp;Directory</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>

@@ -10,6 +10,7 @@ class FolderItem {
 
     public:
         FolderItem(const QString directoryBase, const QString directoryName);
+        QString getPath();
         QString getTitle();
         size_t fileCount();
         FileItem* getFile(size_t index);
@@ -18,7 +19,6 @@ class FolderItem {
     private:
         QString _directoryPath;
         QString _directoryName;
-        QString getPath();
         std::shared_ptr<std::vector<FileItem*>> _files = nullptr;
 
 };

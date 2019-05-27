@@ -13,6 +13,7 @@ class FileItem : public QTextEdit {
     public:
         FileItem(QString directoryPath, QString fileName);
         ~FileItem();
+        QString getPath();
         QString getTitle();
         void setTitle(QString newTitle);
         bool isPlain();
@@ -28,7 +29,6 @@ class FileItem : public QTextEdit {
     private:
         QString _directoryPath;
         QString _fileName;
-        QString getPath();
         QTextEdit* _editor = nullptr;
         QTimer* _timerSavePending = nullptr;
         void setIsModified(bool isModified);
