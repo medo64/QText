@@ -15,7 +15,7 @@ FileItem::FileItem(QString directoryPath, QString fileName)
     this->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
 
     load();
-    QObject::connect(this->document(), SIGNAL(contentsChanged()), this, SLOT(onContentsChanged()));
+    QObject::connect(this->document(), SIGNAL(modificationChanged(bool)), this, SLOT(onModificationChanged(bool)));
 }
 
 FileItem::~FileItem() {
@@ -49,14 +49,17 @@ bool FileItem::load() {
     QFile file(path);
     if(file.open(QIODevice::ReadOnly)) {
         QTextStream in(&file);
-        QString content = in.readAll();
+        QString contents = in.readAll();
         QTextDocument *document = new QTextDocument(this);
         if (isHtml()) {
-            document->setHtml(content);
+            document->setHtml(contents);
         } else {
-            document->setPlainText(content);
+            document->setPlainText(contents);
         }
+        file.close();
         this->setDocument(document);
+        this->document()->setModified(false);
+        _hasChanged = false;
         this->blockSignals(false);
         emit updateTabTitle(this);
         return true;
@@ -87,6 +90,7 @@ bool FileItem::save() {
         QTextStream out(&file);
         out << contents;
         file.close();
+        this->document()->setModified(false);
         _hasChanged = false;
         emit updateTabTitle(this);
         return true;
@@ -108,8 +112,8 @@ QString FileItem::getPath() {
 }
 
 
-void FileItem::onContentsChanged() {
-    qDebug() << "onContentsChanged()" << getPath();
+void FileItem::onModificationChanged(bool changed) {
+    qDebug().nospace() << "onModificationChanged(" << changed << ")" << getPath();
     if (!_hasChanged) {
         _hasChanged = true;
         emit updateTabTitle(this);

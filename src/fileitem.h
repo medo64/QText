@@ -35,7 +35,7 @@ class FileItem : public QTextEdit {
         void updateTabTitle(FileItem* file);
 
     private slots:
-        void onContentsChanged();
+        void onModificationChanged(bool changed);
         void onSavePendingTimeout();
 
 };
