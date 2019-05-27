@@ -13,6 +13,7 @@ class FolderItem {
         QString getTitle();
         size_t fileCount();
         FileItem* getFile(size_t index);
+        FileItem* newFile(QString fileName);
 
     private:
         QString _directoryPath;

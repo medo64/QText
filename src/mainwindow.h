@@ -18,9 +18,11 @@ class MainWindow : public QMainWindow {
 
     private:
         Ui::MainWindow *ui;
+        std::shared_ptr<Storage> _storage;
 
     private slots:
         void onUpdateTabTitle(FileItem* file);
+        void onNew();
         void onSave();
 
 };

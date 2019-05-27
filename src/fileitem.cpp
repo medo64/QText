@@ -47,28 +47,44 @@ bool FileItem::load() {
 
     QString path = getPath();
     QFile file(path);
-    if(file.open(QIODevice::ReadOnly)) {
-        QTextStream in(&file);
-        QString contents = in.readAll();
-        QTextDocument *document = new QTextDocument(this);
-        if (isHtml()) {
-            document->setHtml(contents);
+    if (file.exists()) {
+        if(file.open(QIODevice::ReadOnly)) {
+            QTextStream in(&file);
+            QString contents = in.readAll();
+            QTextDocument *document = new QTextDocument(this);
+            if (isHtml()) {
+                document->setHtml(contents);
+            } else {
+                document->setPlainText(contents);
+            }
+            file.close();
+            this->setDocument(document);
+            this->document()->setModified(false);
+            _hasChanged = false;
+            this->blockSignals(false);
+            emit updateTabTitle(this);
+            return true;
         } else {
-            document->setPlainText(contents);
+            this->setReadOnly(true);
+            this->setStyleSheet("QTextEdit { background-color: red; color: white; }");
+            this->setText(file.errorString() + "\n" + path);
+            qDebug() << "load()" << getPath() << "error:" << file.errorString();
+            return false;
         }
-        file.close();
-        this->setDocument(document);
-        this->document()->setModified(false);
-        _hasChanged = false;
-        this->blockSignals(false);
-        emit updateTabTitle(this);
-        return true;
-    } else {
-        this->setReadOnly(true);
-        this->setStyleSheet("QTextEdit { background-color: red; color: white; }");
-        this->setText(file.errorString() + "\n" + path);
-        qDebug() << "load()" << getPath() << "error:" << file.errorString();
-        return false;
+    } else { //create a new one
+        if(file.open(QIODevice::WriteOnly)) {
+            file.close();
+            this->document()->setModified(false);
+            _hasChanged = false;
+            emit updateTabTitle(this);
+            return true;
+        } else {
+            this->setReadOnly(true);
+            this->setStyleSheet("QTextEdit { background-color: red; color: white; }");
+            this->setText(file.errorString() + "\n" + path);
+            qDebug() << "new()" << getPath() << "error:" << file.errorString();
+            return false;
+        }
     }
 }
 

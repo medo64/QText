@@ -30,6 +30,10 @@ FileItem* FolderItem::getFile(size_t index) {
     return _files->at(index);
 }
 
+FileItem* FolderItem::newFile(QString fileName) {
+    return new FileItem(this->getPath(), fileName + ".txt");
+}
+
 
 QString FolderItem::getPath() {
     if (_directoryName == nullptr) {

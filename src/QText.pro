@@ -11,6 +11,7 @@ CONFIG += c++11
 
 SOURCES += \
         fileitem.cpp \
+        filenamedialog.cpp \
         folderitem.cpp \
         main.cpp \
         mainwindow.cpp \
@@ -18,11 +19,13 @@ SOURCES += \
 
 HEADERS += \
         fileitem.h \
+        filenamedialog.h \
         folderitem.h \
         mainwindow.h \
         storage.h
 
 FORMS += \
+        filenamedialog.ui \
         mainwindow.ui
 
 # Default rules for deployment.
