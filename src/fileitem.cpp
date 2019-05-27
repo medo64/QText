@@ -23,7 +23,14 @@ FileItem::~FileItem() {
 
 
 QString FileItem::getTitle() {
-    return _fileName;
+    QString extensions[] { ".txt", ".html" };
+    for (int i = 0; i < extensions->length(); i++) {
+        auto extension = extensions[i];
+        if (_fileName.endsWith(extension, Qt::CaseInsensitive)) {
+            return _fileName.left(_fileName.length() - extension.length());
+        }
+    }
+    return _fileName; //should not happen
 }
 
 bool FileItem::isHtml() {
@@ -130,6 +137,7 @@ QString FileItem::getPath() {
 
 void FileItem::onModificationChanged(bool changed) {
     qDebug().nospace() << "onModificationChanged(" << changed << ")" << getPath();
+
     if (!_hasChanged) {
         _hasChanged = true;
         emit updateTabTitle(this);
