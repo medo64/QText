@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>500</width>
     <height>300</height>
    </rect>
   </property>
@@ -65,6 +65,9 @@
      <height>16</height>
     </size>
    </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonIconOnly</enum>
+   </property>
    <property name="floatable">
     <bool>false</bool>
    </property>
@@ -85,6 +88,9 @@
    </property>
    <property name="text">
     <string>&amp;New</string>
+   </property>
+   <property name="iconText">
+    <string>New</string>
    </property>
    <property name="toolTip">
     <string>New file</string>

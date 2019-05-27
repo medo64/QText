@@ -32,23 +32,19 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     saveIcon.addFile(":icons/64x64/save.png", QSize(64, 64));
     ui->actionSave->setIcon(saveIcon);
 
+    QWidget* spacerWidget = new QWidget(this);
+    spacerWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    spacerWidget->setVisible(true);
+    ui->mainToolBar->addWidget(spacerWidget);
+
+    onFolderSelect(); //setup folder select menu button
+
     QObject::connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(onNew()));
     QObject::connect(ui->actionReopen, SIGNAL(triggered()), this, SLOT(onReopen()));
     QObject::connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(onSave()));
     QObject::connect(ui->actionRename, SIGNAL(triggered()), this, SLOT(onRename()));
     QObject::connect(ui->actionShowContainingDirectory, SIGNAL(triggered()), this, SLOT(onShowContainingDirectory()));
     QObject::connect(ui->actionShowContainingDirectoryOnly, SIGNAL(triggered()), this, SLOT(onShowContainingDirectoryOnly()));
-
-    ui->tabWidget->clear();
-    auto folder = storage->getBaseFolder();
-    for (size_t i = 0; i < folder->fileCount(); i++) {
-        auto file = folder->getFile(i);
-        ui->tabWidget->addTab(file, file->getTitle());
-        QObject::connect(file, SIGNAL(titleChanged(FileItem*)), this, SLOT(onFileTitleChanged(FileItem*)));
-        QObject::connect(file, SIGNAL(modificationChanged(FileItem*, bool)), this, SLOT(onFileModificationChanged(FileItem*, bool)));
-        QObject::connect(file, SIGNAL(activated(FileItem*)), this, SLOT(onFileActivated(FileItem*)));
-    }
-    ui->actionSave->setDisabled(true);
 
     ui->tabWidget->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tabWidget, SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(onTabMenuRequested(const QPoint&)));
@@ -126,6 +122,51 @@ void MainWindow::onRename() {
         default:
             break;
     }
+}
+
+void MainWindow::onFolderSelect() {
+    QAction *action = qobject_cast<QAction *>(sender());
+
+    if (action != nullptr) {
+        auto data = action->data();
+        auto path = action->data().value<QString>();
+        for (size_t i=0; i<_storage->folderCount(); i++) {
+            auto folder = _storage->getFolder(i);
+            if (folder->getPath().compare(path, Qt::CaseSensitive) == 0) {
+                _folder->saveAll(); //save all files in previous folder / just in case
+                _folder = folder;
+                break;
+            }
+        }
+    }
+
+    if (_folderButton == nullptr) {
+        _folderButton = new QToolButton();
+        _folderButton->setPopupMode(QToolButton::MenuButtonPopup);
+        _folderButton->setMenu(new QMenu());
+        ui->mainToolBar->addWidget(_folderButton);
+    }
+
+    _folderButton->setText(_folder->getTitle());
+    _folderButton->menu()->clear();
+    for(size_t i=0; i<_storage->folderCount(); i++) {
+        auto folder = _storage->getFolder(i);
+        QAction* folderAction = new QAction(folder->getTitle());
+        folderAction->setData(folder->getPath());
+        folderAction->setDisabled(folder == _folder);
+        connect(folderAction, SIGNAL(triggered()), this, SLOT(onFolderSelect()));
+        _folderButton->menu()->addAction(folderAction);
+    }
+
+    ui->tabWidget->clear();
+    for (size_t i = 0; i < _folder->fileCount(); i++) {
+        auto file = _folder->getFile(i);
+        ui->tabWidget->addTab(file, file->getTitle());
+        QObject::connect(file, SIGNAL(titleChanged(FileItem*)), this, SLOT(onFileTitleChanged(FileItem*)));
+        QObject::connect(file, SIGNAL(modificationChanged(FileItem*, bool)), this, SLOT(onFileModificationChanged(FileItem*, bool)));
+        QObject::connect(file, SIGNAL(activated(FileItem*)), this, SLOT(onFileActivated(FileItem*)));
+    }
+    ui->actionSave->setDisabled(true);
 }
 
 void onShowContainingDirectory2(QString directoryPath, QString filePath) {

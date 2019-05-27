@@ -15,6 +15,7 @@ class FolderItem {
         size_t fileCount();
         FileItem* getFile(size_t index);
         FileItem* newFile(QString fileName);
+        bool saveAll();
 
     private:
         QString _directoryPath;

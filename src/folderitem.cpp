@@ -34,6 +34,17 @@ FileItem* FolderItem::newFile(QString fileName) {
     return new FileItem(this->getPath(), fileName + ".txt");
 }
 
+bool FolderItem::saveAll() {
+    bool allSaved = true;
+    for (size_t i = 0; i < fileCount(); i++) {
+        auto file = getFile(i);
+        if (file->isModified()) {
+            allSaved &= file->save();
+        }
+    }
+    return allSaved;
+}
+
 
 QString FolderItem::getPath() {
     if (_directoryName == nullptr) {
