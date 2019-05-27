@@ -14,6 +14,7 @@ class FileItem : public QTextEdit {
         FileItem(QString directoryPath, QString fileName);
         ~FileItem();
         QString getTitle();
+        void setTitle(QString newTitle);
         bool isPlain();
         bool isHtml();
         bool hasChanged();

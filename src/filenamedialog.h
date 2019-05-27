@@ -12,7 +12,7 @@ class FileNameDialog : public QDialog {
     Q_OBJECT
 
     public:
-        explicit FileNameDialog(QWidget *parent = nullptr);
+        explicit FileNameDialog(QWidget *parent, QString fileName);
         ~FileNameDialog();
         QString getFileName();
 

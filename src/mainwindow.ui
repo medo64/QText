@@ -48,16 +48,9 @@
     </property>
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
-      <widget class="QWidget" name="tab">
-       <attribute name="title">
-        <string>Tab 1</string>
-       </attribute>
-      </widget>
-      <widget class="QWidget" name="tab_2">
-       <attribute name="title">
-        <string>Tab 2</string>
-       </attribute>
-      </widget>
+      <property name="contextMenuPolicy">
+       <enum>Qt::NoContextMenu</enum>
+      </property>
      </widget>
     </item>
    </layout>
@@ -91,7 +84,7 @@
      <normaloff>:/icons/16x16/new.png</normaloff>:/icons/16x16/new.png</iconset>
    </property>
    <property name="text">
-    <string>New</string>
+    <string>&amp;New</string>
    </property>
    <property name="toolTip">
     <string>New file</string>
@@ -106,10 +99,35 @@
      <normaloff>:/icons/16x16/save.png</normaloff>:/icons/16x16/save.png</iconset>
    </property>
    <property name="text">
-    <string>Save</string>
+    <string>&amp;Save</string>
    </property>
    <property name="toolTip">
     <string>Save file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionReopen">
+   <property name="text">
+    <string>Re&amp;open</string>
+   </property>
+   <property name="toolTip">
+    <string>Reload file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionRename">
+   <property name="text">
+    <string>&amp;Rename</string>
+   </property>
+   <property name="toolTip">
+    <string>Rename file</string>
+   </property>
+   <property name="shortcut">
+    <string>F2</string>
    </property>
   </action>
  </widget>

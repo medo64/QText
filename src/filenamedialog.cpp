@@ -1,10 +1,13 @@
 #include "filenamedialog.h"
 #include "ui_filenamedialog.h"
 
-FileNameDialog::FileNameDialog(QWidget *parent) : QDialog(parent), ui(new Ui::FileNameDialog) {
+FileNameDialog::FileNameDialog(QWidget *parent, QString fileName)
+    : QDialog(parent)
+    , ui(new Ui::FileNameDialog) {
     ui->setupUi(this);
 
     this->layout()->setSizeConstraint(QLayout::SetFixedSize);
+    if (fileName != nullptr) { ui->textFileName->setText(fileName); }
     ui->textFileName->setFocus();
 }
 

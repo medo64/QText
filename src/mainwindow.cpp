@@ -4,6 +4,8 @@
 #include "ui_mainwindow.h"
 #include "storage.h"
 #include <QDebug>
+#include <QMenu>
+#include <QTabBar>
 #include <QTextEdit>
 
 MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr), ui(new Ui::MainWindow) {
@@ -26,7 +28,9 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     saveIcon.addFile(":icons/64x64/save.png", QSize(64, 64));
     ui->actionSave->setIcon(saveIcon);
     QObject::connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(onNew()));
+    QObject::connect(ui->actionReopen, SIGNAL(triggered()), this, SLOT(onReopen()));
     QObject::connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(onSave()));
+    QObject::connect(ui->actionRename, SIGNAL(triggered()), this, SLOT(onRename()));
 
     ui->tabWidget->clear();
     auto folder = storage->getBaseFolder();
@@ -35,6 +39,9 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         ui->tabWidget->addTab(file, file->getTitle());
         QObject::connect(file, SIGNAL(updateTabTitle(FileItem*)), this, SLOT(onUpdateTabTitle(FileItem*)));
     }
+
+    ui->tabWidget->tabBar()->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->tabWidget->tabBar(), SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(onTabMenuRequested(const QPoint&)));
 }
 
 MainWindow::~MainWindow() {
@@ -52,12 +59,12 @@ void MainWindow::onUpdateTabTitle(FileItem* file) {
 }
 
 void MainWindow::onNew() {
-    auto dialog = std::make_shared<FileNameDialog>(this);
+    auto dialog = std::make_shared<FileNameDialog>(this, nullptr);
     switch (dialog->exec()) {
         case QDialog::Accepted:
             {
-                auto newFileName = dialog->getFileName();
-                auto file = _storage->getBaseFolder()->newFile(newFileName);
+                auto newTitle = dialog->getFileName();
+                auto file = _storage->getBaseFolder()->newFile(newTitle);
                 auto index = ui->tabWidget->addTab(file, file->getTitle());
                 ui->tabWidget->setCurrentIndex(index);
                 file->setFocus();
@@ -68,7 +75,55 @@ void MainWindow::onNew() {
     }
 }
 
+void MainWindow::onReopen() {
+    auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+    file->load();
+    file->setFocus();
+}
+
 void MainWindow::onSave() {
-    auto file = (FileItem*)ui->tabWidget->currentWidget();
+    auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
     file->save();
+    file->setFocus();
+}
+
+void MainWindow::onRename() {
+    auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+
+    auto dialog = std::make_shared<FileNameDialog>(this, file->getTitle());
+    switch (dialog->exec()) {
+        case QDialog::Accepted:
+            {
+                auto newTitle = dialog->getFileName();
+                file->setTitle(newTitle);
+                file->setFocus();
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+
+void MainWindow::onTabMenuRequested(const QPoint &point) {
+    if (point.isNull()) { return; }
+
+    auto tabbar = ui->tabWidget->tabBar();
+    auto tabIndex = tabbar->tabAt(point);
+    FileItem *file = nullptr;
+    if (tabIndex >= 0) {
+        ui->tabWidget->setCurrentIndex(tabIndex);
+        file = dynamic_cast<FileItem*>(ui->tabWidget->widget(tabIndex));
+    }
+
+    QMenu menu(this);
+    menu.addAction(ui->actionNew);
+    if (file != nullptr) {
+        menu.addSeparator();
+        menu.addAction(ui->actionReopen);
+        menu.addAction(ui->actionSave);
+        menu.addSeparator();
+        menu.addAction(ui->actionRename);
+    }
+    menu.exec(tabbar->mapToGlobal(point));
 }

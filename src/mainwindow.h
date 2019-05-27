@@ -23,7 +23,10 @@ class MainWindow : public QMainWindow {
     private slots:
         void onUpdateTabTitle(FileItem* file);
         void onNew();
+        void onReopen();
         void onSave();
+        void onRename();
+        void onTabMenuRequested(const QPoint&);
 
 };
 

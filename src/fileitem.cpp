@@ -33,6 +33,23 @@ QString FileItem::getTitle() {
     return _fileName; //should not happen
 }
 
+void FileItem::setTitle(QString newTitle) {
+    save();
+    if (newTitle == getTitle()) { return; } //no change
+
+    QString curPath = getPath();
+    QString newFileName = newTitle + (isHtml() ? ".html" : ".txt");
+    QString newPath = QDir::cleanPath(_directoryPath + QDir::separator() + newFileName);
+
+    QFile curFile(curPath);
+    QFile newFile(newPath);
+    if (!newFile.exists()) {
+        curFile.rename(newPath);
+        _fileName = newFileName;
+        emit updateTabTitle(this);
+    }
+}
+
 bool FileItem::isHtml() {
     QString path = getPath();
     return path.endsWith(".html", Qt::CaseInsensitive);
