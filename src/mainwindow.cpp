@@ -11,6 +11,7 @@
 MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr), ui(new Ui::MainWindow) {
     ui->setupUi(this);
     _storage = storage;
+    _folder = storage->getBaseFolder();
 
     QIcon newIcon;
     newIcon.addFile(":icons/16x16/new.png", QSize(16, 16));
@@ -74,12 +75,12 @@ void MainWindow::onFileActivated(FileItem* file) {
 
 
 void MainWindow::onNew() {
-    auto dialog = std::make_shared<FileNameDialog>(this, nullptr);
+    auto dialog = std::make_shared<FileNameDialog>(this, nullptr, _folder);
     switch (dialog->exec()) {
         case QDialog::Accepted:
             {
                 auto newTitle = dialog->getFileName();
-                auto file = _storage->getBaseFolder()->newFile(newTitle);
+                auto file = _folder->newFile(newTitle);
                 auto index = ui->tabWidget->addTab(file, file->getTitle());
                 ui->tabWidget->setCurrentIndex(index);
                 file->setFocus();
@@ -105,7 +106,7 @@ void MainWindow::onSave() {
 void MainWindow::onRename() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
 
-    auto dialog = std::make_shared<FileNameDialog>(this, file->getTitle());
+    auto dialog = std::make_shared<FileNameDialog>(this, file->getTitle(), _folder);
     switch (dialog->exec()) {
         case QDialog::Accepted:
             {

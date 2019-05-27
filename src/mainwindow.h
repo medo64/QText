@@ -19,6 +19,7 @@ class MainWindow : public QMainWindow {
     private:
         Ui::MainWindow *ui;
         std::shared_ptr<Storage> _storage;
+        std::shared_ptr<FolderItem> _folder;
 
     private slots:
         void onFileActivated(FileItem* file);
