@@ -16,7 +16,7 @@ FileItem::FileItem(QString directoryPath, QString fileName)
     this->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
 
     load();
-    QObject::connect(this->document(), SIGNAL(modificationChanged(bool)), this, SLOT(onModificationChanged(bool)));
+    connect(this->document(), SIGNAL(modificationChanged(bool)), this, SLOT(onModificationChanged(bool)));
 }
 
 FileItem::~FileItem() {

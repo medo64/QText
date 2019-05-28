@@ -3,6 +3,7 @@
 
 #include "storage.h"
 #include <memory>
+#include <QApplication>
 #include <QMainWindow>
 #include <QToolButton>
 
@@ -22,6 +23,7 @@ class MainWindow : public QMainWindow {
         std::shared_ptr<Storage> _storage;
         std::shared_ptr<FolderItem> _folder;
         QToolButton* _folderButton = nullptr;
+        QClipboard* _clipboard = QApplication::clipboard();
 
     private slots:
         void onFileActivated(FileItem* file);
@@ -31,10 +33,16 @@ class MainWindow : public QMainWindow {
         void onReopen();
         void onSave();
         void onRename();
+        void onCut();
+        void onCopy();
+        void onPaste();
+        void onUndo();
+        void onRedo();
         void onFolderSelect();
         void onShowContainingDirectory();
         void onShowContainingDirectoryOnly();
         void onTabMenuRequested(const QPoint&);
+        void onTextStateChanged();
 
 };
 

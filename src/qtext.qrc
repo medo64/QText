@@ -19,5 +19,30 @@
         <file>icons/32x32/rename.png</file>
         <file>icons/48x48/rename.png</file>
         <file>icons/64x64/rename.png</file>
+        <file>icons/16x16/copy.png</file>
+        <file>icons/16x16/cut.png</file>
+        <file>icons/16x16/paste.png</file>
+        <file>icons/16x16/redo.png</file>
+        <file>icons/16x16/undo.png</file>
+        <file>icons/24x24/copy.png</file>
+        <file>icons/24x24/cut.png</file>
+        <file>icons/24x24/paste.png</file>
+        <file>icons/24x24/redo.png</file>
+        <file>icons/24x24/undo.png</file>
+        <file>icons/32x32/copy.png</file>
+        <file>icons/32x32/cut.png</file>
+        <file>icons/32x32/paste.png</file>
+        <file>icons/32x32/redo.png</file>
+        <file>icons/32x32/undo.png</file>
+        <file>icons/48x48/copy.png</file>
+        <file>icons/48x48/cut.png</file>
+        <file>icons/48x48/paste.png</file>
+        <file>icons/48x48/redo.png</file>
+        <file>icons/48x48/undo.png</file>
+        <file>icons/64x64/copy.png</file>
+        <file>icons/64x64/cut.png</file>
+        <file>icons/64x64/paste.png</file>
+        <file>icons/64x64/redo.png</file>
+        <file>icons/64x64/undo.png</file>
     </qresource>
 </RCC>

@@ -87,6 +87,12 @@
    <addaction name="actionSave"/>
    <addaction name="actionRename"/>
    <addaction name="separator"/>
+   <addaction name="actionCut"/>
+   <addaction name="actionCopy"/>
+   <addaction name="actionPaste"/>
+   <addaction name="separator"/>
+   <addaction name="actionUndo"/>
+   <addaction name="actionRedo"/>
   </widget>
   <action name="actionNew">
    <property name="icon">
@@ -138,7 +144,7 @@
      <normaloff>:/icons/16x16/rename.png</normaloff>:/icons/16x16/rename.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Rename</string>
+    <string>R&amp;ename</string>
    </property>
    <property name="toolTip">
     <string>Rename file</string>
@@ -155,6 +161,81 @@
   <action name="actionShowContainingDirectoryOnly">
    <property name="text">
     <string>Show Containing &amp;Directory</string>
+   </property>
+  </action>
+  <action name="actionCut">
+   <property name="icon">
+    <iconset resource="qtext.qrc">
+     <normaloff>:/icons/16x16/cut.png</normaloff>:/icons/16x16/cut.png</iconset>
+   </property>
+   <property name="text">
+    <string>Cu&amp;t</string>
+   </property>
+   <property name="toolTip">
+    <string>Cut text</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="actionCopy">
+   <property name="icon">
+    <iconset resource="qtext.qrc">
+     <normaloff>:/icons/16x16/copy.png</normaloff>:/icons/16x16/copy.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Copy</string>
+   </property>
+   <property name="toolTip">
+    <string>Copy text</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionPaste">
+   <property name="icon">
+    <iconset resource="qtext.qrc">
+     <normaloff>:/icons/16x16/paste.png</normaloff>:/icons/16x16/paste.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Paste</string>
+   </property>
+   <property name="toolTip">
+    <string>Paste text</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="icon">
+    <iconset resource="qtext.qrc">
+     <normaloff>:/icons/16x16/undo.png</normaloff>:/icons/16x16/undo.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Undo</string>
+   </property>
+   <property name="toolTip">
+    <string>Undo action</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="icon">
+    <iconset resource="qtext.qrc">
+     <normaloff>:/icons/16x16/redo.png</normaloff>:/icons/16x16/redo.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Redo</string>
+   </property>
+   <property name="toolTip">
+    <string>Redo action</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
    </property>
   </action>
  </widget>
