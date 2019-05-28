@@ -14,5 +14,10 @@
         <file>icons/32x32/save.png</file>
         <file>icons/48x48/save.png</file>
         <file>icons/64x64/save.png</file>
+        <file>icons/16x16/rename.png</file>
+        <file>icons/24x24/rename.png</file>
+        <file>icons/32x32/rename.png</file>
+        <file>icons/48x48/rename.png</file>
+        <file>icons/64x64/rename.png</file>
     </qresource>
 </RCC>

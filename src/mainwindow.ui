@@ -79,6 +79,7 @@
    </attribute>
    <addaction name="actionNew"/>
    <addaction name="actionSave"/>
+   <addaction name="actionRename"/>
    <addaction name="separator"/>
   </widget>
   <action name="actionNew">
@@ -126,6 +127,10 @@
    </property>
   </action>
   <action name="actionRename">
+   <property name="icon">
+    <iconset resource="qtext.qrc">
+     <normaloff>:/icons/16x16/rename.png</normaloff>:/icons/16x16/rename.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Rename</string>
    </property>

@@ -32,6 +32,14 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     saveIcon.addFile(":icons/64x64/save.png", QSize(64, 64));
     ui->actionSave->setIcon(saveIcon);
 
+    QIcon renameIcon;
+    renameIcon.addFile(":icons/16x16/rename.png", QSize(16, 16));
+    renameIcon.addFile(":icons/24x24/rename.png", QSize(24, 24));
+    renameIcon.addFile(":icons/32x32/rename.png", QSize(32, 32));
+    renameIcon.addFile(":icons/48x48/rename.png", QSize(48, 48));
+    renameIcon.addFile(":icons/64x64/rename.png", QSize(64, 64));
+    ui->actionRename->setIcon(renameIcon);
+
     QWidget* spacerWidget = new QWidget(this);
     spacerWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     spacerWidget->setVisible(true);
@@ -167,6 +175,7 @@ void MainWindow::onFolderSelect() {
         QObject::connect(file, SIGNAL(activated(FileItem*)), this, SLOT(onFileActivated(FileItem*)));
     }
     ui->actionSave->setDisabled(true);
+    ui->actionRename->setDisabled(ui->tabWidget->count() == 0);
 }
 
 void onShowContainingDirectory2(QString directoryPath, QString filePath) {
