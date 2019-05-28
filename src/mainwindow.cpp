@@ -150,7 +150,7 @@ void MainWindow::onFolderSelect() {
 
     if (_folderButton == nullptr) {
         _folderButton = new QToolButton();
-        _folderButton->setPopupMode(QToolButton::MenuButtonPopup);
+        _folderButton->setPopupMode(QToolButton::InstantPopup);
         _folderButton->setMenu(new QMenu());
         ui->mainToolBar->addWidget(_folderButton);
     }
