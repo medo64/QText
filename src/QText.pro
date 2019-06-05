@@ -2,8 +2,6 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = qtext
-TEMPLATE = app
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
@@ -41,3 +39,22 @@ RESOURCES += \
 DISTFILES +=
 
 RC_ICONS = icons/qtext.ico
+
+
+Test {
+    QT += testlib
+    QT -= gui
+
+    CONFIG += qst console warn_on depend_includepath testcase
+    CONFIG -= app_bundle
+
+    TEMPLATE = app
+    TARGET = qtexttests
+
+    SOURCES -= main.cpp
+    SOURCES += test_helpers.cpp
+
+} else {
+    TEMPLATE = app
+    TARGET = qtext
+}
