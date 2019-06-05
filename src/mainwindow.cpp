@@ -151,6 +151,7 @@ void MainWindow::onNew() {
                 auto index = ui->tabWidget->addTab(file, file->getTitle());
                 ui->tabWidget->setCurrentIndex(index);
                 file->setFocus();
+                ui->actionRename->setDisabled(ui->tabWidget->count() == 0);
             }
             break;
         default:
