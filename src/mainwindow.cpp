@@ -100,7 +100,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     ui->mainToolBar->addWidget(spacerWidget);
 
     onFolderSelect(); //setup folder select menu button
-    onTextStateChanged(); //update toolbar
+    onTabChanged(); //update toolbar & focus
 
     connect(ui->actionReopen, SIGNAL(triggered()), this, SLOT(onReopen()));
     connect(ui->actionShowContainingDirectory, SIGNAL(triggered()), this, SLOT(onShowContainingDirectory()));
@@ -112,7 +112,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     ui->tabWidget->tabBar()->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tabWidget->tabBar(), SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(onTabMenuRequested(const QPoint&)));
 
-    connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(onTextStateChanged()));
+    connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(onTabChanged()));
     connect(_clipboard, SIGNAL(dataChanged()), SLOT(onTextStateChanged()));
 }
 
@@ -150,8 +150,6 @@ void MainWindow::onNew() {
                 auto file = _folder->newFile(newTitle);
                 auto index = ui->tabWidget->addTab(file, file->getTitle());
                 ui->tabWidget->setCurrentIndex(index);
-                file->setFocus();
-                ui->actionRename->setDisabled(ui->tabWidget->count() == 0);
             }
             break;
         default:
@@ -273,8 +271,7 @@ void MainWindow::onFolderSelect() {
         QObject::connect(file->document(), SIGNAL(undoAvailable(bool)), this, SLOT(onTextStateChanged()));
         QObject::connect(file->document(), SIGNAL(redoAvailable(bool)), this, SLOT(onTextStateChanged()));
     }
-    ui->actionSave->setDisabled(true);
-    ui->actionRename->setDisabled(ui->tabWidget->count() == 0);
+    onTabChanged();
 }
 
 void onShowContainingDirectory2(QString directoryPath, QString filePath) {
@@ -339,6 +336,18 @@ void MainWindow::onTabMenuRequested(const QPoint &point) {
     }
 
     menu.exec(tabbar->mapToGlobal(point));
+}
+
+void MainWindow::onTabChanged() {
+    auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+    bool exists = (file != nullptr);
+
+    ui->actionSave->setDisabled(!exists || file->isModified());
+    ui->actionRename->setDisabled(ui->tabWidget->count() == 0);
+
+    onTextStateChanged();
+
+    if (exists) { file->setFocus(); }
 }
 
 void MainWindow::onTextStateChanged() {
