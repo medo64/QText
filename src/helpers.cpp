@@ -20,7 +20,7 @@ QString Helpers::getFSNameFromTitle(QString title) {
         QChar ch = title.at(i);
         if (!isValidTitleChar(ch)) {
             name.append("~");
-            name.append(QString("%1").arg(ch.unicode(), 2, 16));
+            name.append(QString("%1").arg(ch.unicode(), 2, 16, QChar('0')));
             name.append("~");
         } else {
             name.append(ch);
