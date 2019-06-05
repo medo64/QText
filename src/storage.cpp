@@ -5,6 +5,10 @@
 
 Storage::Storage(const QString path) {
     QDir rootDirectory = path;
+    if (!rootDirectory.exists()) {
+        rootDirectory.mkpath(path);
+    }
+
     _path = rootDirectory.path();
 
     _folders = std::make_shared<std::vector<std::shared_ptr<FolderItem>>>();
