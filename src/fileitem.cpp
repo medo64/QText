@@ -141,11 +141,13 @@ bool FileItem::save() {
 
 void FileItem::focusInEvent(QFocusEvent* e) {
     qDebug().nospace() << "focusInEvent(" << QVariant::fromValue(e->reason()).toString() << ") " << getPath();
+    QTextEdit::focusInEvent(e);
     emit activated(this);
 }
 
 void FileItem::focusOutEvent(QFocusEvent* e) {
     qDebug().nospace() << "focusOutEvent(" << QVariant::fromValue(e->reason()).toString() << ") " << getPath();
+    QTextEdit::focusOutEvent(e);
     if (this->document()->isModified()) { save(); }
 }
 
