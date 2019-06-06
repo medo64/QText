@@ -17,7 +17,7 @@ class Storage {
 
     private:
         QString _path;
-        std::shared_ptr<std::vector<std::shared_ptr<FolderItem>>> _folders = nullptr;
+        std::vector<std::shared_ptr<FolderItem>> _folders;
 
 };
 
