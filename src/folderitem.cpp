@@ -32,7 +32,9 @@ FileItem* FolderItem::getFile(size_t index) {
 }
 
 FileItem* FolderItem::newFile(QString title) {
-    return new FileItem(this->getPath(), Helpers::getFSNameFromTitle(title) + ".txt");
+    auto file = new FileItem(this->getPath(), Helpers::getFSNameFromTitle(title) + ".txt");
+    _files->push_back(file);
+    return file;
 }
 
 bool FolderItem::saveAll() {
