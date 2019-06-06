@@ -16,11 +16,12 @@ class FolderItem {
         FileItem* getFile(size_t index);
         FileItem* newFile(QString title);
         bool saveAll();
+        bool fileExists(QString title);
 
     private:
         QString _directoryPath;
         QString _directoryName;
-        std::shared_ptr<std::vector<FileItem*>> _files = nullptr;
+        std::vector<FileItem*> _files;
 
 };
 

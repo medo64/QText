@@ -11,7 +11,20 @@ FileNameDialog::FileNameDialog(QWidget *parent, QString fileName, std::shared_pt
     _folder = folder;
 
     this->layout()->setSizeConstraint(QLayout::SetFixedSize);
-    ui->textFileName->setText((fileName != nullptr) ? fileName : "New file");
+    if (fileName != nullptr) {
+        ui->textFileName->setText(fileName);
+    } else {
+        fileName = "New file";
+        auto index = 1;
+        auto newFileName = fileName;
+        while (folder->fileExists(newFileName)) {
+            index++;
+            newFileName = fileName;
+            newFileName.append(QString(" (%1)").arg(index));
+        }
+        ui->textFileName->setText(newFileName);
+
+    }
     ui->textFileName->setFocus();
 
     connect(ui->textFileName, SIGNAL(textEdited(const QString&)), this, SLOT(onTextEdited(const QString&)));
