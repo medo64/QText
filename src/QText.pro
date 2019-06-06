@@ -14,6 +14,8 @@ SOURCES += \
         helpers.cpp \
         main.cpp \
         mainwindow.cpp \
+        qtabbarex.cpp \
+        qtabwidgetex.cpp \
         storage.cpp
 
 HEADERS += \
@@ -22,6 +24,8 @@ HEADERS += \
         folderitem.h \
         helpers.h \
         mainwindow.h \
+        qtabbarex.h \
+        qtabwidgetex.h \
         storage.h
 
 FORMS += \
