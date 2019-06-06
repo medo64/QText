@@ -7,6 +7,7 @@
 #include <QCursor>
 #include <QDebug>
 #include <QDesktopServices>
+#include <QDir>
 #include <QFileInfo>
 #include <QMenu>
 #include <QMimeData>
@@ -280,7 +281,7 @@ void onShowContainingDirectory2(QString directoryPath, QString filePath) {
     QStringList params;
     params += "/select,";
     params += QDir::toNativeSeparators((filePath != nullptr) ? filePath : directoryPath);
-    QProcess::startDetached(explorerExe, param);
+    QProcess::startDetached(explorerExe, params);
 #else
     QString nautilusPath = "/usr/bin/nautilus";
     QFile nautilus(nautilusPath);
