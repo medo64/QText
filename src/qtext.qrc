@@ -44,5 +44,10 @@
         <file>icons/64x64/paste.png</file>
         <file>icons/64x64/redo.png</file>
         <file>icons/64x64/undo.png</file>
+        <file>icons/16x16/delete.png</file>
+        <file>icons/32x32/delete.png</file>
+        <file>icons/24x24/delete.png</file>
+        <file>icons/48x48/delete.png</file>
+        <file>icons/64x64/delete.png</file>
     </qresource>
 </RCC>

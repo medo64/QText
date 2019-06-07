@@ -36,6 +36,19 @@ FileItem* FolderItem::newFile(QString title) {
     return file;
 }
 
+bool FolderItem::deleteFile(FileItem* file) {
+    for(auto item = _files.begin(); item != _files.end(); item++) {
+        FileItem* iFile = *item;
+        if (iFile->getPath().compare(file->getPath(), Qt::CaseSensitive) == 0) {
+            QFile::remove(iFile->getPath());
+            _files.erase(item);
+            return true;
+        }
+    }
+    return false;
+}
+
+
 bool FolderItem::fileExists(QString title) {
     for (auto file : _files) {
         if (file->getTitle().compare(title, Qt::CaseInsensitive) == 0) { return true; }

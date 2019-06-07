@@ -33,6 +33,7 @@ class MainWindow : public QMainWindow {
         void onReopen();
         void onSave();
         void onRename();
+        void onDelete();
         void onCut();
         void onCopy();
         void onPaste();

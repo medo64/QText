@@ -49,6 +49,15 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         ui->actionRename->setIcon(renameIcon);
         connect(ui->actionRename, SIGNAL(triggered()), this, SLOT(onRename()));
 
+        QIcon deleteIcon;
+        deleteIcon.addFile(":icons/16x16/delete.png", QSize(16, 16));
+        deleteIcon.addFile(":icons/24x24/delete.png", QSize(24, 24));
+        deleteIcon.addFile(":icons/32x32/delete.png", QSize(32, 32));
+        deleteIcon.addFile(":icons/48x48/delete.png", QSize(48, 48));
+        deleteIcon.addFile(":icons/64x64/delete.png", QSize(64, 64));
+        ui->actionDelete->setIcon(deleteIcon);
+        connect(ui->actionDelete, SIGNAL(triggered()), this, SLOT(onDelete()));
+
         QIcon cutIcon;
         cutIcon.addFile(":icons/16x16/cut.png", QSize(16, 16));
         cutIcon.addFile(":icons/24x24/cut.png", QSize(24, 24));
@@ -185,6 +194,14 @@ void MainWindow::onRename() {
         default:
             break;
     }
+}
+
+void MainWindow::onDelete() {
+    auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+    //auto tabIndex = ui->tabWidget->currentIndex();
+    file->deleteLater();
+    _folder->deleteFile(file);
+    //ui->tabWidget->tabBar()->removeTab(tabIndex);
 }
 
 void MainWindow::onCut() {
@@ -329,6 +346,7 @@ void MainWindow::onTabMenuRequested(const QPoint &point) {
         menu.addAction(ui->actionSave);
         menu.addSeparator();
         menu.addAction(ui->actionRename);
+        menu.addAction(ui->actionDelete);
         menu.addSeparator();
         menu.addAction(ui->actionShowContainingDirectory);
     } else {

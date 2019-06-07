@@ -50,7 +50,7 @@
      <number>0</number>
     </property>
     <item row="0" column="0">
-     <widget class="QTabWidgetEx" name="tabWidget">
+     <widget class="QTabWidgetEx" name="tabWidget" native="true">
       <property name="contextMenuPolicy">
        <enum>Qt::NoContextMenu</enum>
       </property>
@@ -238,8 +238,27 @@
     <string>Ctrl+Y</string>
    </property>
   </action>
+  <action name="actionDelete">
+   <property name="icon">
+    <iconset resource="qtext.qrc">
+     <normaloff>:/icons/16x16/delete.png</normaloff>:/icons/16x16/delete.png</iconset>
+   </property>
+   <property name="text">
+    <string>Delete</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete file</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QTabWidgetEx</class>
+   <extends>QWidget</extends>
+   <header>qtabwidgetex.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="qtext.qrc"/>
  </resources>

@@ -15,6 +15,7 @@ class FolderItem {
         size_t fileCount();
         FileItem* getFile(size_t index);
         FileItem* newFile(QString title);
+        bool deleteFile(FileItem* file);
         bool saveAll();
         bool fileExists(QString title);
 
