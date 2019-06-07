@@ -29,7 +29,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         newIcon.addFile(":icons/48x48/new.png", QSize(48, 48));
         newIcon.addFile(":icons/64x64/new.png", QSize(64, 64));
         ui->actionNew->setIcon(newIcon);
-        connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(onNew()));
+        connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(onFileNew()));
 
         QIcon saveIcon;
         saveIcon.addFile(":icons/16x16/save.png", QSize(16, 16));
@@ -38,7 +38,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         saveIcon.addFile(":icons/48x48/save.png", QSize(48, 48));
         saveIcon.addFile(":icons/64x64/save.png", QSize(64, 64));
         ui->actionSave->setIcon(saveIcon);
-        connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(onSave()));
+        connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(onFileSave()));
 
         QIcon renameIcon;
         renameIcon.addFile(":icons/16x16/rename.png", QSize(16, 16));
@@ -47,7 +47,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         renameIcon.addFile(":icons/48x48/rename.png", QSize(48, 48));
         renameIcon.addFile(":icons/64x64/rename.png", QSize(64, 64));
         ui->actionRename->setIcon(renameIcon);
-        connect(ui->actionRename, SIGNAL(triggered()), this, SLOT(onRename()));
+        connect(ui->actionRename, SIGNAL(triggered()), this, SLOT(onFileRename()));
 
         QIcon deleteIcon;
         deleteIcon.addFile(":icons/16x16/delete.png", QSize(16, 16));
@@ -56,7 +56,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         deleteIcon.addFile(":icons/48x48/delete.png", QSize(48, 48));
         deleteIcon.addFile(":icons/64x64/delete.png", QSize(64, 64));
         ui->actionDelete->setIcon(deleteIcon);
-        connect(ui->actionDelete, SIGNAL(triggered()), this, SLOT(onDelete()));
+        connect(ui->actionDelete, SIGNAL(triggered()), this, SLOT(onFileDelete()));
 
         QIcon cutIcon;
         cutIcon.addFile(":icons/16x16/cut.png", QSize(16, 16));
@@ -65,7 +65,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         cutIcon.addFile(":icons/48x48/cut.png", QSize(48, 48));
         cutIcon.addFile(":icons/64x64/cut.png", QSize(64, 64));
         ui->actionCut->setIcon(cutIcon);
-        connect(ui->actionCut, SIGNAL(triggered()), this, SLOT(onCut()));
+        connect(ui->actionCut, SIGNAL(triggered()), this, SLOT(onTextCut()));
 
         QIcon copyIcon;
         copyIcon.addFile(":icons/16x16/copy.png", QSize(16, 16));
@@ -74,7 +74,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         copyIcon.addFile(":icons/48x48/copy.png", QSize(48, 48));
         copyIcon.addFile(":icons/64x64/copy.png", QSize(64, 64));
         ui->actionCopy->setIcon(copyIcon);
-        connect(ui->actionCopy, SIGNAL(triggered()), this, SLOT(onCopy()));
+        connect(ui->actionCopy, SIGNAL(triggered()), this, SLOT(onTextCopy()));
 
         QIcon pasteIcon;
         pasteIcon.addFile(":icons/16x16/paste.png", QSize(16, 16));
@@ -83,7 +83,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         pasteIcon.addFile(":icons/48x48/paste.png", QSize(48, 48));
         pasteIcon.addFile(":icons/64x64/paste.png", QSize(64, 64));
         ui->actionPaste->setIcon(pasteIcon);
-        connect(ui->actionPaste, SIGNAL(triggered()), this, SLOT(onPaste()));
+        connect(ui->actionPaste, SIGNAL(triggered()), this, SLOT(onTextPaste()));
 
         QIcon undoIcon;
         undoIcon.addFile(":icons/16x16/undo.png", QSize(16, 16));
@@ -92,7 +92,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         undoIcon.addFile(":icons/48x48/undo.png", QSize(48, 48));
         undoIcon.addFile(":icons/64x64/undo.png", QSize(64, 64));
         ui->actionUndo->setIcon(undoIcon);
-        connect(ui->actionUndo, SIGNAL(triggered()), this, SLOT(onUndo()));
+        connect(ui->actionUndo, SIGNAL(triggered()), this, SLOT(onTextUndo()));
 
         QIcon redoIcon;
         redoIcon.addFile(":icons/16x16/redo.png", QSize(16, 16));
@@ -101,7 +101,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         redoIcon.addFile(":icons/48x48/redo.png", QSize(48, 48));
         redoIcon.addFile(":icons/64x64/redo.png", QSize(64, 64));
         ui->actionRedo->setIcon(redoIcon);
-        connect(ui->actionRedo, SIGNAL(triggered()), this, SLOT(onRedo()));
+        connect(ui->actionRedo, SIGNAL(triggered()), this, SLOT(onTextRedo()));
     }
 
     QWidget* spacerWidget = new QWidget(this);
@@ -112,7 +112,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     onFolderSelect(); //setup folder select menu button
     onTabChanged(); //update toolbar & focus
 
-    connect(ui->actionReopen, SIGNAL(triggered()), this, SLOT(onReopen()));
+    connect(ui->actionReopen, SIGNAL(triggered()), this, SLOT(onFileReopen()));
     connect(ui->actionShowContainingDirectory, SIGNAL(triggered()), this, SLOT(onShowContainingDirectory()));
     connect(ui->actionShowContainingDirectoryOnly, SIGNAL(triggered()), this, SLOT(onShowContainingDirectoryOnly()));
 
@@ -151,7 +151,7 @@ void MainWindow::onFileActivated(FileItem* file) {
 }
 
 
-void MainWindow::onNew() {
+void MainWindow::onFileNew() {
     auto dialog = std::make_shared<FileNameDialog>(this, nullptr, _folder);
     switch (dialog->exec()) {
         case QDialog::Accepted:
@@ -167,19 +167,19 @@ void MainWindow::onNew() {
     }
 }
 
-void MainWindow::onReopen() {
+void MainWindow::onFileReopen() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
     file->load();
     file->setFocus();
 }
 
-void MainWindow::onSave() {
+void MainWindow::onFileSave() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
     file->save();
     file->setFocus();
 }
 
-void MainWindow::onRename() {
+void MainWindow::onFileRename() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
 
     auto dialog = std::make_shared<FileNameDialog>(this, file->getTitle(), _folder);
@@ -196,7 +196,7 @@ void MainWindow::onRename() {
     }
 }
 
-void MainWindow::onDelete() {
+void MainWindow::onFileDelete() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
     //auto tabIndex = ui->tabWidget->currentIndex();
     file->deleteLater();
@@ -204,7 +204,7 @@ void MainWindow::onDelete() {
     //ui->tabWidget->tabBar()->removeTab(tabIndex);
 }
 
-void MainWindow::onCut() {
+void MainWindow::onTextCut() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
     auto cursor = file->textCursor();
     if (cursor.hasSelection()) {
@@ -214,7 +214,7 @@ void MainWindow::onCut() {
     }
 }
 
-void MainWindow::onCopy() {
+void MainWindow::onTextCopy() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
     auto cursor = file->textCursor();
     if (cursor.hasSelection()) {
@@ -223,7 +223,7 @@ void MainWindow::onCopy() {
     }
 }
 
-void MainWindow::onPaste() {
+void MainWindow::onTextPaste() {
     auto data = _clipboard->mimeData();
     if (data->hasText()) {
         auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
@@ -233,12 +233,12 @@ void MainWindow::onPaste() {
     }
 }
 
-void MainWindow::onUndo() {
+void MainWindow::onTextUndo() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
     file->document()->undo();
 }
 
-void MainWindow::onRedo() {
+void MainWindow::onTextRedo() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
     file->document()->redo();
 }
