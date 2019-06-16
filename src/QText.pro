@@ -56,7 +56,11 @@ Test {
     TARGET = qtexttests
 
     SOURCES -= main.cpp
-    SOURCES += test_helpers.cpp
+    SOURCES += \
+        test_helpers.cpp \
+        test_main.cpp
+
+    HEADERS += test_helpers.h
 
 } else {
     TEMPLATE = app
