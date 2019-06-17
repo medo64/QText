@@ -1,7 +1,7 @@
 #include "config.h"
 #include <QCoreApplication>
 #include <QDir>
-#include <QDebug>
+#include <QFileInfo>
 #include <QStandardPaths>
 
 QString Config::_configurationFile;
@@ -29,6 +29,16 @@ QString Config::getConfigurationFile() {
         _configurationFile = QDir::cleanPath(configFile);
     }
 
+    QFileInfo configFileInfo (_configurationFile);
+    QDir configFileDir = configFileInfo.dir();
+    if (!configFileDir.exists()) { configFileDir.mkpath("."); }
+
+    QFile configFile (_configurationFile);
+    if (!configFile.exists()) {
+        configFile.open(QIODevice::WriteOnly);
+        configFile.close();
+    }
+
     return _configurationFile;
 }
 
@@ -48,6 +58,9 @@ QString Config::getDataDirectory() {
 
         _dataDirectory = QDir::cleanPath(dataDir);
     }
+
+    QDir dataDir (_dataDirectory);
+    if (!dataDir.exists()) { dataDir.mkpath("."); }
 
     return _dataDirectory;
 }
