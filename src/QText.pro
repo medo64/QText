@@ -8,6 +8,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        config.cpp \
         fileitem.cpp \
         filenamedialog.cpp \
         folderitem.cpp \
@@ -19,6 +20,7 @@ SOURCES += \
         storage.cpp
 
 HEADERS += \
+        config.h \
         fileitem.h \
         filenamedialog.h \
         folderitem.h \
@@ -57,10 +59,13 @@ Test {
 
     SOURCES -= main.cpp
     SOURCES += \
-        test_helpers.cpp \
-        test_main.cpp
+            test_config.cpp \
+            test_helpers.cpp \
+            test_main.cpp
 
-    HEADERS += test_helpers.h
+    HEADERS += \
+            test_config.h \
+            test_helpers.h
 
 } else {
     TEMPLATE = app
