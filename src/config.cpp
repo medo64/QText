@@ -7,11 +7,18 @@
 QString Config::_configurationFile;
 QString Config::_dataDirectory;
 
+/*!
+ * \brief Forces recalculation of configuration file and data directory.
+ */
 void Config::reset() {
     _configurationFile = "";
     _dataDirectory = "";
 }
 
+/*!
+ * \brief Returns name of configuration file.
+ *        If file doesn't exist, it's created.
+ */
 QString Config::getConfigurationFile() {
     if (_configurationFile.length() == 0) {
         QString applicationName = QCoreApplication::applicationName();
@@ -42,6 +49,10 @@ QString Config::getConfigurationFile() {
     return _configurationFile;
 }
 
+/*!
+ * \brief Returns data directory.
+ *        If directory doesn't exist, it's created.
+ */
 QString Config::getDataDirectory() {
     if (_dataDirectory.length() == 0) {
         QString applicationName = QCoreApplication::applicationName();

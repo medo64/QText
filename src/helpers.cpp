@@ -1,5 +1,9 @@
 #include "helpers.h"
 
+/*!
+ * \brief Returns if character is considered a valid file name character.
+ * \param ch Character to check.
+ */
 bool Helpers::isValidTitleChar(QChar ch) {
     if (ch < QChar(' ')) { return false; }
     if (ch == QChar('"')) { return false; }
@@ -14,6 +18,10 @@ bool Helpers::isValidTitleChar(QChar ch) {
     return true;
 }
 
+/*!
+ * \brief Returns escaped file name from title
+ * \param title Title to convert.
+ */
 QString Helpers::getFSNameFromTitle(QString title) {
     QString name = "";
     for (int i = 0; i < title.size(); ++i) {
@@ -29,6 +37,10 @@ QString Helpers::getFSNameFromTitle(QString title) {
     return name;
 }
 
+/*!
+ * \brief Returns title based on escaped file name.
+ * \param name Name of file with escapes.
+ */
 QString Helpers::getTitleFromFSName(QString name) {
     QString title = "";
     QString sbDecode = "";
