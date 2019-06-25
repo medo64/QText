@@ -58,6 +58,52 @@ namespace QTextTest {
 
 
         [TestMethod()]
+        public void EncodeTitle_DotInMiddle() {
+            var actualFile = Helper.EncodeFileTitle("A.Z");
+            Assert.AreEqual("A.Z", actualFile);
+
+            var actualFolder = Helper.EncodeFolderTitle("A.Z");
+            Assert.AreEqual("A.Z", actualFolder);
+        }
+
+        [TestMethod()]
+        public void DecodeTitle_DotInMiddle() {
+            var actualFile = Helper.DecodeFileTitle(@"A.Z");
+            Assert.AreEqual("A.Z", actualFile);
+
+            var actualFolder = Helper.DecodeFolderTitle(@"A.Z");
+            Assert.AreEqual("A.Z", actualFolder);
+        }
+
+        [TestMethod()]
+        public void EncodeTitle_DotAtEnd() {
+            var actualFile = Helper.EncodeFileTitle(@"AZ.");
+            Assert.AreEqual("AZ.", actualFile);
+
+            var actualFolder = Helper.EncodeFolderTitle("AZ.");
+            Assert.AreEqual("AZ~2e~", actualFolder);
+        }
+
+        [TestMethod()]
+        public void DecodeTitle_DotAtEnd() {
+            var actualFile = Helper.DecodeFileTitle(@"AZ.");
+            Assert.AreEqual("AZ.", actualFile);
+
+            var actualFolder = Helper.DecodeFolderTitle(@"AZ~2e~");
+            Assert.AreEqual("AZ.", actualFolder);
+        }
+
+        [TestMethod()]
+        public void DecodeTitle_AccidentalDotAtEnd() {
+            var actualFile = Helper.DecodeFileTitle(@"AZ~2e~");
+            Assert.AreEqual("AZ.", actualFile);
+
+            var actualFolder = Helper.DecodeFolderTitle(@"AZ.");
+            Assert.AreEqual("AZ.", actualFolder);
+        }
+
+
+        [TestMethod()]
         public void DecodeTitle_Accidental1() {
             var actualFile = Helper.DecodeFileTitle("~");
             Assert.AreEqual("~", actualFile);

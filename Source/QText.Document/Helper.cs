@@ -27,7 +27,7 @@ namespace QText {
             return EncodeTitle(title, isFolder: true);
         }
 
-        private static string EncodeTitle(string title) {
+        private static string EncodeTitle(string title, bool isFolder) {
             var sb = new StringBuilder();
             foreach (var ch in title) {
                 if (Array.IndexOf(InvalidTitleChars, ch) >= 0) {
@@ -37,6 +37,12 @@ namespace QText {
                 } else {
                     sb.Append(ch);
                 }
+            }
+            if (isFolder && (sb.Length > 0) && (sb[sb.Length - 1] == '.')) { //special handling for folders ending in dot
+                sb.Remove(sb.Length - 1, 1);
+                sb.Append("~");
+                sb.Append(((byte)'.').ToString("x2"));
+                sb.Append("~");
             }
             return sb.ToString();
         }
@@ -59,7 +65,7 @@ namespace QText {
                         if (sbDecode.Length == 2) { //could be
                             if (int.TryParse(sbDecode.ToString(), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var value)) {
                                 var charValue = Convert.ToChar(value);
-                                if (Array.IndexOf(InvalidTitleChars, charValue) >= 0) {
+                                if ((Array.IndexOf(InvalidTitleChars, charValue) >= 0) || (charValue == '.')) {
                                     sb.Append(charValue);
                                     inEncoded = false;
                                 } else { //not a char to be decoded
