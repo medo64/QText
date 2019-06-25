@@ -102,6 +102,33 @@ namespace QTextTest {
             Assert.AreEqual("AZ.", actualFolder);
         }
 
+        [TestMethod()]
+        public void EncodeTitle_DoubleDotAtEnd() {
+            var actualFile = Helper.EncodeFileTitle(@"AZ..");
+            Assert.AreEqual("AZ..", actualFile);
+
+            var actualFolder = Helper.EncodeFolderTitle("AZ..");
+            Assert.AreEqual("AZ.~2e~", actualFolder);
+        }
+
+        [TestMethod()]
+        public void DecodeTitle_DoubleDotAtEnd() {
+            var actualFile = Helper.DecodeFileTitle(@"AZ..");
+            Assert.AreEqual("AZ..", actualFile);
+
+            var actualFolder = Helper.DecodeFolderTitle(@"AZ.~2e~");
+            Assert.AreEqual("AZ..", actualFolder);
+        }
+
+        [TestMethod()]
+        public void DecodeTitle_AccidentalDoubleDotAtEnd() {
+            var actualFile = Helper.DecodeFileTitle(@"AZ.~2e~");
+            Assert.AreEqual("AZ..", actualFile);
+
+            var actualFolder = Helper.DecodeFolderTitle(@"AZ..");
+            Assert.AreEqual("AZ..", actualFolder);
+        }
+
 
         [TestMethod()]
         public void DecodeTitle_Accidental1() {
