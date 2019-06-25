@@ -82,6 +82,30 @@ void Test_Helpers::decodeTitle_accidentalDotAtEnd() {
     QCOMPARE(actualFolder, QString("AZ."));
 }
 
+void Test_Helpers::encodeTitle_doubleDotAtEnd() {
+    auto actualFile = Helpers::getFileNameFromTitle("AZ..");
+    QCOMPARE(actualFile, QString("AZ.."));
+
+    auto actualFolder = Helpers::getFolderNameFromTitle("AZ..");
+    QCOMPARE(actualFolder, QString("AZ.~2e~"));
+}
+
+void Test_Helpers::decodeTitle_doubleDotAtEnd() {
+    auto actualFile = Helpers::getFileTitleFromName("AZ..");
+    QCOMPARE(actualFile, QString("AZ.."));
+
+    auto actualFolder = Helpers::getFolderTitleFromName("AZ.~2e~");
+    QCOMPARE(actualFolder, QString("AZ.."));
+}
+
+void Test_Helpers::decodeTitle_accidentalDoubleDotAtEnd() {
+    auto actualFile = Helpers::getFileTitleFromName("AZ.~2e~");
+    QCOMPARE(actualFile, QString("AZ.."));
+
+    auto actualFolder = Helpers::getFolderTitleFromName("AZ..");
+    QCOMPARE(actualFolder, QString("AZ.."));
+}
+
 
 void Test_Helpers::decodeTitle_accidental1() {
     auto actualFile = Helpers::getFileTitleFromName("~");

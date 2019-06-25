@@ -17,6 +17,9 @@ class Test_Helpers : public QObject {
         void encodeTitle_dotAtEnd();
         void decodeTitle_dotAtEnd();
         void decodeTitle_accidentalDotAtEnd();
+        void encodeTitle_doubleDotAtEnd();
+        void decodeTitle_doubleDotAtEnd();
+        void decodeTitle_accidentalDoubleDotAtEnd();
         void decodeTitle_accidental1();
         void decodeTitle_accidental2();
         void decodeTitle_accidental3();
