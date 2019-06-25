@@ -19,7 +19,7 @@ FolderItem::FolderItem(const QString directoryPath, const QString directoryName)
 
 
 QString FolderItem::getTitle() {
-    return (_directoryName == nullptr) ? "(Default)" : Helpers::getTitleFromFSName(_directoryName);
+    return (_directoryName == nullptr) ? "(Default)" : Helpers::getFolderTitleFromName(_directoryName);
 }
 
 size_t FolderItem::fileCount() {
@@ -31,7 +31,7 @@ FileItem* FolderItem::getFile(size_t index) {
 }
 
 FileItem* FolderItem::newFile(QString title) {
-    auto file = new FileItem(this->getPath(), Helpers::getFSNameFromTitle(title) + ".txt");
+    auto file = new FileItem(this->getPath(), Helpers::getFileNameFromTitle(title) + ".txt");
     _files.push_back(file);
     return file;
 }

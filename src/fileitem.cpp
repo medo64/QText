@@ -29,10 +29,10 @@ QString FileItem::getTitle() {
         auto extension = extensions[i];
         if (_fileName.endsWith(extension, Qt::CaseInsensitive)) {
             auto fileNameWithoutExtension = _fileName.left(_fileName.length() - extension.length());
-            return Helpers::getTitleFromFSName(fileNameWithoutExtension);
+            return Helpers::getFileTitleFromName(fileNameWithoutExtension);
         }
     }
-    return Helpers::getTitleFromFSName(_fileName); //should not happen
+    return Helpers::getFileTitleFromName(_fileName); //should not happen
 }
 
 void FileItem::setTitle(QString newTitle) {
@@ -40,7 +40,7 @@ void FileItem::setTitle(QString newTitle) {
     if (newTitle == getTitle()) { return; } //no change
 
     QString curPath = getPath();
-    QString newFileName = Helpers::getFSNameFromTitle(newTitle) + (isHtml() ? ".html" : ".txt");
+    QString newFileName = Helpers::getFileNameFromTitle(newTitle) + (isHtml() ? ".html" : ".txt");
     QString newPath = QDir::cleanPath(_directoryPath + QDir::separator() + newFileName);
 
     QFile curFile(curPath);

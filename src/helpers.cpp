@@ -1,7 +1,40 @@
 #include "helpers.h"
 
 /*!
- * \brief Returns if character is considered a valid file name character.
+ * \brief Returns escaped file name from title
+ * \param fileTitle Title to convert.
+ */
+QString Helpers::getFileNameFromTitle(QString fileTitle) {
+    return getFSNameFromTitle(fileTitle, false);
+}
+
+/*!
+ * \brief Returns title based on escaped file name.
+ * \param folderName Name of file with escapes.
+ */
+QString Helpers::getFileTitleFromName(QString fileName) {
+    return getFSTitleFromName(fileName);
+}
+
+/*!
+ * \brief Returns escaped folder name from title
+ * \param folderTitle Title to convert.
+ */
+QString Helpers::getFolderNameFromTitle(QString folderTitle) {
+    return getFSNameFromTitle(folderTitle, true);
+}
+
+/*!
+ * \brief Returns title based on escaped folder name.
+ * \param folderName Name of folder with escapes.
+ */
+QString Helpers::getFolderTitleFromName(QString folderName) {
+    return getFSTitleFromName(folderName);
+}
+
+
+/*!
+ * \brief Returns if character is considered a valid file system name character.
  * \param ch Character to check.
  */
 bool Helpers::isValidTitleChar(QChar ch) {
@@ -19,13 +52,14 @@ bool Helpers::isValidTitleChar(QChar ch) {
 }
 
 /*!
- * \brief Returns escaped file name from title
- * \param title Title to convert.
+ * \brief Returns escaped file system name from title
+ * \param fsTitle Title to convert.
+ * \param isFolder If true, folder rules are to be used (last dot is encoded)
  */
-QString Helpers::getFSNameFromTitle(QString title) {
+QString Helpers::getFSNameFromTitle(QString fsTitle, bool isFolder) {
     QString name = "";
-    for (int i = 0; i < title.size(); ++i) {
-        QChar ch = title.at(i);
+    for (int i = 0; i < fsTitle.size(); ++i) {
+        QChar ch = fsTitle.at(i);
         if (!isValidTitleChar(ch)) {
             name.append("~");
             name.append(QString("%1").arg(ch.unicode(), 2, 16, QChar('0')));
@@ -34,19 +68,26 @@ QString Helpers::getFSNameFromTitle(QString title) {
             name.append(ch);
         }
     }
+    if (isFolder && ((name.length() > 0) && name.endsWith(".", Qt::CaseSensitive))) {
+        name.remove(name.length() - 1, 1);
+        name.append("~");
+        name.append(QString("%1").arg(QChar('.').unicode(), 2, 16, QChar('0')));
+        name.append("~");
+        }
     return name;
 }
 
 /*!
- * \brief Returns title based on escaped file name.
- * \param name Name of file with escapes.
+ * \brief Returns title based on escaped file system name.
+ * \param fsName Name with escapes.
+ * \param isFolder If true, folder rules are to be used (last dot is encoded)
  */
-QString Helpers::getTitleFromFSName(QString name) {
+QString Helpers::getFSTitleFromName(QString fsName) {
     QString title = "";
     QString sbDecode = "";
     bool inEncoded = false;
-    for (int i = 0; i < name.size(); ++i) {
-        QChar ch = name.at(i);
+    for (int i = 0; i < fsName.size(); ++i) {
+        QChar ch = fsName.at(i);
 
         if (inEncoded) {
             if (ch == '~') { //end decode
@@ -55,7 +96,7 @@ QString Helpers::getTitleFromFSName(QString name) {
                     int value = sbDecode.toInt(&ok, 16);
                     if (ok) {
                         auto charValue = QChar(value);
-                        if (!isValidTitleChar(charValue)) { //decoded character was among invalid characters
+                        if (!isValidTitleChar(charValue) || (charValue == '.')) { //decoded character was among invalid characters
                             title.append(charValue);
                             inEncoded = false;
                         } else { //not a char to be decoded
