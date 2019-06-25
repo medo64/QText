@@ -38,12 +38,21 @@ namespace QText {
                     sb.Append(ch);
                 }
             }
-            if (isFolder && (sb.Length > 0) && (sb[sb.Length - 1] == '.')) { //special handling for folders ending in dot
+
+            var lastChar = (sb.Length > 0) ? sb[sb.Length - 1] : default(char?);
+            if (isFolder && ((lastChar == '.') || (lastChar == ' '))) { //special handling for folders ending in dot
                 sb.Remove(sb.Length - 1, 1);
                 sb.Append("~");
-                sb.Append(((byte)'.').ToString("x2"));
+                sb.Append(((byte)lastChar.Value).ToString("x2"));
                 sb.Append("~");
             }
+
+            var firstChar = (sb.Length > 0) ? sb[0] : default(char?);
+            if (firstChar == ' ') {
+                sb.Remove(0, 1);
+                sb.Insert(0, "~" + ((byte)firstChar.Value).ToString("x2") + "~");
+            }
+
             return sb.ToString();
         }
 
@@ -65,7 +74,7 @@ namespace QText {
                         if (sbDecode.Length == 2) { //could be
                             if (int.TryParse(sbDecode.ToString(), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var value)) {
                                 var charValue = Convert.ToChar(value);
-                                if ((Array.IndexOf(InvalidTitleChars, charValue) >= 0) || (charValue == '.')) {
+                                if ((Array.IndexOf(InvalidTitleChars, charValue) >= 0) || (charValue == '.') || (charValue == ' ')) {
                                     sb.Append(charValue);
                                     inEncoded = false;
                                 } else { //not a char to be decoded

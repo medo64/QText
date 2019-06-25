@@ -131,6 +131,115 @@ namespace QTextTest {
 
 
         [TestMethod()]
+        public void EncodeTitle_SpaceAtStart() {
+            var actualFile = Helper.EncodeFileTitle(" AZ");
+            Assert.AreEqual("~20~AZ", actualFile);
+
+            var actualFolder = Helper.EncodeFolderTitle(" AZ");
+            Assert.AreEqual("~20~AZ", actualFolder);
+        }
+
+        [TestMethod()]
+        public void DecodeTitle_SpaceAtStart() {
+            var actualFile = Helper.DecodeFileTitle("~20~AZ");
+            Assert.AreEqual(" AZ", actualFile);
+
+            var actualFolder = Helper.DecodeFolderTitle("~20~AZ");
+            Assert.AreEqual(" AZ", actualFolder);
+        }
+
+        [TestMethod()]
+        public void DecodeTitle_AccidentalSpaceAtStart() {
+            var actualFile = Helper.DecodeFileTitle(@" AZ");
+            Assert.AreEqual(" AZ", actualFile);
+
+            var actualFolder = Helper.DecodeFolderTitle(@" AZ");
+            Assert.AreEqual(" AZ", actualFolder);
+        }
+
+        [TestMethod()]
+        public void EncodeTitle_DoubleSpaceAtStart() {
+            var actualFile = Helper.EncodeFileTitle("  AZ");
+            Assert.AreEqual("~20~ AZ", actualFile);
+
+            var actualFolder = Helper.EncodeFolderTitle("  AZ");
+            Assert.AreEqual("~20~ AZ", actualFolder);
+        }
+
+        [TestMethod()]
+        public void DecodeTitle_DoubleSpaceAtStart() {
+            var actualFile = Helper.DecodeFileTitle("~20~ AZ");
+            Assert.AreEqual("  AZ", actualFile);
+
+            var actualFolder = Helper.DecodeFolderTitle("~20~ AZ");
+            Assert.AreEqual("  AZ", actualFolder);
+        }
+
+        [TestMethod()]
+        public void DecodeTitle_AccidentalDoubleSpaceAtStart() {
+            var actualFile = Helper.DecodeFileTitle(@"  AZ");
+            Assert.AreEqual("  AZ", actualFile);
+
+            var actualFolder = Helper.DecodeFolderTitle(@"  AZ");
+            Assert.AreEqual("  AZ", actualFolder);
+        }
+
+        [TestMethod()]
+        public void EncodeTitle_SpaceAtEnd() {
+            var actualFile = Helper.EncodeFileTitle("AZ ");
+            Assert.AreEqual("AZ ", actualFile);
+
+            var actualFolder = Helper.EncodeFolderTitle("AZ ");
+            Assert.AreEqual("AZ~20~", actualFolder);
+        }
+
+        [TestMethod()]
+        public void DecodeTitle_SpaceAtEnd() {
+            var actualFile = Helper.DecodeFileTitle("AZ ");
+            Assert.AreEqual("AZ ", actualFile);
+
+            var actualFolder = Helper.DecodeFolderTitle("AZ~20~");
+            Assert.AreEqual("AZ ", actualFolder);
+        }
+
+        [TestMethod()]
+        public void DecodeTitle_AccidentalSpaceAtEnd() {
+            var actualFile = Helper.DecodeFileTitle(@"AZ~20~");
+            Assert.AreEqual("AZ ", actualFile);
+
+            var actualFolder = Helper.DecodeFolderTitle(@"AZ ");
+            Assert.AreEqual("AZ ", actualFolder);
+        }
+
+        [TestMethod()]
+        public void EncodeTitle_DoubleSpaceAtEnd() {
+            var actualFile = Helper.EncodeFileTitle("AZ  ");
+            Assert.AreEqual("AZ  ", actualFile);
+
+            var actualFolder = Helper.EncodeFolderTitle("AZ  ");
+            Assert.AreEqual("AZ ~20~", actualFolder);
+        }
+
+        [TestMethod()]
+        public void DecodeTitle_DoubleSpaceAtEnd() {
+            var actualFile = Helper.DecodeFileTitle("AZ  ");
+            Assert.AreEqual("AZ  ", actualFile);
+
+            var actualFolder = Helper.DecodeFolderTitle("AZ ~20~");
+            Assert.AreEqual("AZ  ", actualFolder);
+        }
+
+        [TestMethod()]
+        public void DecodeTitle_AccidentalDoubleSpaceAtEnd() {
+            var actualFile = Helper.DecodeFileTitle(@"AZ ~20~");
+            Assert.AreEqual("AZ  ", actualFile);
+
+            var actualFolder = Helper.DecodeFolderTitle(@"AZ  ");
+            Assert.AreEqual("AZ  ", actualFolder);
+        }
+
+
+        [TestMethod()]
         public void DecodeTitle_Accidental1() {
             var actualFile = Helper.DecodeFileTitle("~");
             Assert.AreEqual("~", actualFile);
