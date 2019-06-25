@@ -68,12 +68,21 @@ QString Helpers::getFSNameFromTitle(QString fsTitle, bool isFolder) {
             name.append(ch);
         }
     }
-    if (isFolder && ((name.length() > 0) && name.endsWith(".", Qt::CaseSensitive))) {
+
+    QChar lastChar = QChar( (name.length() > 0) ? name.at(name.length() - 1) : '\0' );
+    if (isFolder && ((lastChar == '.') || (lastChar == ' '))) {
         name.remove(name.length() - 1, 1);
         name.append("~");
-        name.append(QString("%1").arg(QChar('.').unicode(), 2, 16, QChar('0')));
+        name.append(QString("%1").arg(lastChar.unicode(), 2, 16, QChar('0')));
         name.append("~");
-        }
+    }
+
+    QChar firstChar = (name.length() > 0) ? name.at(0) : '\0';
+    if (firstChar == ' ') {
+        name.remove(0, 1);
+        name.insert(0, "~" + QString("%1").arg(firstChar.unicode(), 2, 16, QChar('0')) + "~");
+    }
+
     return name;
 }
 
@@ -96,7 +105,7 @@ QString Helpers::getFSTitleFromName(QString fsName) {
                     int value = sbDecode.toInt(&ok, 16);
                     if (ok) {
                         auto charValue = QChar(value);
-                        if (!isValidTitleChar(charValue) || (charValue == '.')) { //decoded character was among invalid characters
+                        if (!isValidTitleChar(charValue) || (charValue == '.') || (charValue == ' ')) { //decoded character was among invalid characters
                             title.append(charValue);
                             inEncoded = false;
                         } else { //not a char to be decoded

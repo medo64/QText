@@ -20,6 +20,18 @@ class Test_Helpers : public QObject {
         void encodeTitle_doubleDotAtEnd();
         void decodeTitle_doubleDotAtEnd();
         void decodeTitle_accidentalDoubleDotAtEnd();
+        void encodeTitle_spaceAtStart();
+        void decodeTitle_spaceAtStart();
+        void decodeTitle_accidentalSpaceAtStart();
+        void encodeTitle_doubleSpaceAtStart();
+        void decodeTitle_doubleSpaceAtStart();
+        void decodeTitle_accidentalDoubleSpaceAtStart();
+        void encodeTitle_spaceAtEnd();
+        void decodeTitle_spaceAtEnd();
+        void decodeTitle_accidentalSpaceAtEnd();
+        void encodeTitle_doubleSpaceAtEnd();
+        void decodeTitle_doubleSpaceAtEnd();
+        void decodeTitle_accidentalDoubleSpaceAtEnd();
         void decodeTitle_accidental1();
         void decodeTitle_accidental2();
         void decodeTitle_accidental3();

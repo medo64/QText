@@ -107,6 +107,103 @@ void Test_Helpers::decodeTitle_accidentalDoubleDotAtEnd() {
 }
 
 
+void Test_Helpers::encodeTitle_spaceAtStart() {
+    auto actualFile = Helpers::getFileNameFromTitle(" AZ");
+    QCOMPARE(actualFile, QString("~20~AZ"));
+
+    auto actualFolder = Helpers::getFolderNameFromTitle(" AZ");
+    QCOMPARE(actualFolder, QString("~20~AZ"));
+}
+
+void Test_Helpers::decodeTitle_spaceAtStart() {
+    auto actualFile = Helpers::getFileTitleFromName("~20~AZ");
+    QCOMPARE(actualFile, QString(" AZ"));
+
+    auto actualFolder = Helpers::getFolderTitleFromName("~20~AZ");
+    QCOMPARE(actualFolder, QString(" AZ"));
+}
+
+void Test_Helpers::decodeTitle_accidentalSpaceAtStart() {
+    auto actualFile = Helpers::getFileTitleFromName(" AZ");
+    QCOMPARE(actualFile, QString(" AZ"));
+
+    auto actualFolder = Helpers::getFolderTitleFromName(" AZ");
+    QCOMPARE(actualFolder, QString(" AZ"));
+}
+
+void Test_Helpers::encodeTitle_doubleSpaceAtStart() {
+    auto actualFile = Helpers::getFileNameFromTitle("  AZ");
+    QCOMPARE(actualFile, QString("~20~ AZ"));
+
+    auto actualFolder = Helpers::getFolderNameFromTitle("  AZ");
+    QCOMPARE(actualFolder, QString("~20~ AZ"));
+}
+
+void Test_Helpers::decodeTitle_doubleSpaceAtStart() {
+    auto actualFile = Helpers::getFileTitleFromName("~20~ AZ");
+    QCOMPARE(actualFile, QString("  AZ"));
+
+    auto actualFolder = Helpers::getFolderTitleFromName("~20~ AZ");
+    QCOMPARE(actualFolder, QString("  AZ"));
+}
+
+void Test_Helpers::decodeTitle_accidentalDoubleSpaceAtStart() {
+    auto actualFile = Helpers::getFileTitleFromName("  AZ");
+    QCOMPARE(actualFile, QString("  AZ"));
+
+    auto actualFolder = Helpers::getFolderTitleFromName("  AZ");
+    QCOMPARE(actualFolder, QString("  AZ"));
+}
+
+void Test_Helpers::encodeTitle_spaceAtEnd() {
+    auto actualFile = Helpers::getFileNameFromTitle("AZ ");
+    QCOMPARE(actualFile, QString("AZ "));
+
+    auto actualFolder = Helpers::getFolderNameFromTitle("AZ ");
+    QCOMPARE(actualFolder, QString("AZ~20~"));
+}
+
+void Test_Helpers::decodeTitle_spaceAtEnd() {
+    auto actualFile = Helpers::getFileTitleFromName("AZ ");
+    QCOMPARE(actualFile, QString("AZ "));
+
+    auto actualFolder = Helpers::getFolderTitleFromName("AZ~20~");
+    QCOMPARE(actualFolder, QString("AZ "));
+}
+
+void Test_Helpers::decodeTitle_accidentalSpaceAtEnd() {
+    auto actualFile = Helpers::getFileTitleFromName("AZ~20~");
+    QCOMPARE(actualFile, QString("AZ "));
+
+    auto actualFolder = Helpers::getFolderTitleFromName("AZ ");
+    QCOMPARE(actualFolder, QString("AZ "));
+}
+
+void Test_Helpers::encodeTitle_doubleSpaceAtEnd() {
+    auto actualFile = Helpers::getFileNameFromTitle("AZ  ");
+    QCOMPARE(actualFile, QString("AZ  "));
+
+    auto actualFolder = Helpers::getFolderNameFromTitle("AZ  ");
+    QCOMPARE(actualFolder, QString("AZ ~20~"));
+}
+
+void Test_Helpers::decodeTitle_doubleSpaceAtEnd() {
+    auto actualFile = Helpers::getFileTitleFromName("AZ  ");
+    QCOMPARE(actualFile, QString("AZ  "));
+
+    auto actualFolder = Helpers::getFolderTitleFromName("AZ ~20~");
+    QCOMPARE(actualFolder, QString("AZ  "));
+}
+
+void Test_Helpers::decodeTitle_accidentalDoubleSpaceAtEnd() {
+    auto actualFile = Helpers::getFileTitleFromName("AZ ~20~");
+    QCOMPARE(actualFile, QString("AZ  "));
+
+    auto actualFolder = Helpers::getFolderTitleFromName("AZ  ");
+    QCOMPARE(actualFolder, QString("AZ  "));
+}
+
+
 void Test_Helpers::decodeTitle_accidental1() {
     auto actualFile = Helpers::getFileTitleFromName("~");
     QCOMPARE(actualFile, QString("~"));
