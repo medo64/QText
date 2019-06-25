@@ -481,11 +481,11 @@ namespace QText {
 
         public DocumentFolder CreateFolder() {
             try {
-                var newPath = Path.Combine(RootPath, Helper.EncodeTitle("New folder"));
+                var newPath = Path.Combine(RootPath, Helper.EncodeFolderTitle("New folder"));
                 var n = 1;
                 while (Directory.Exists(newPath)) {
                     var newTitle = string.Format(CultureInfo.CurrentUICulture, "New folder ({0})", n);
-                    newPath = Path.Combine(RootPath, Helper.EncodeTitle(newTitle));
+                    newPath = Path.Combine(RootPath, Helper.EncodeFolderTitle(newTitle));
                     n += 1;
                 }
 
@@ -508,7 +508,7 @@ namespace QText {
 
         public DocumentFolder CreateFolder(string title) {
             try {
-                var newPath = Path.Combine(RootPath, Helper.EncodeTitle(title));
+                var newPath = Path.Combine(RootPath, Helper.EncodeFolderTitle(title));
 
                 Debug.WriteLine("Create: " + Path.GetFileName(newPath));
 
@@ -536,7 +536,7 @@ namespace QText {
         }
 
         internal DocumentFile NewFile(DocumentFolder folder, string title, DocumentKind kind) {
-            var name = Helper.EncodeTitle(title);
+            var name = Helper.EncodeFileTitle(title);
 
             DocumentFile newFile;
             switch (kind) {

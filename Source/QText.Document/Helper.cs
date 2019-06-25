@@ -18,7 +18,16 @@ namespace QText {
                                                                         '\u0018', '\u0019', '\u001A', '\u001B', '\u001C', '\u001D', '\u001E', '\u001F',
                                                                         '\u0022', '\u002a', '\u002f', '\u003a', '\u003c', '\u003e', '\u003f', '\u005c', '\u007c' }; // " * / : < > ? \ |
 
-        public static string EncodeTitle(string title) {
+
+        public static string EncodeFileTitle(string title) {
+            return EncodeTitle(title, isFolder: false);
+        }
+
+        public static string EncodeFolderTitle(string title) {
+            return EncodeTitle(title, isFolder: true);
+        }
+
+        private static string EncodeTitle(string title) {
             var sb = new StringBuilder();
             foreach (var ch in title) {
                 if (Array.IndexOf(InvalidTitleChars, ch) >= 0) {
@@ -32,7 +41,15 @@ namespace QText {
             return sb.ToString();
         }
 
-        public static string DecodeTitle(string name) {
+        public static string DecodeFileTitle(string name) {
+            return DecodeTitle(name);
+        }
+
+        public static string DecodeFolderTitle(string name) {
+            return DecodeTitle(name);
+        }
+
+        private static string DecodeTitle(string name) {
             var sb = new StringBuilder();
             StringBuilder sbDecode = null;
             var inEncoded = false;

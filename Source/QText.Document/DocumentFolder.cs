@@ -32,7 +32,7 @@ namespace QText {
         /// Gets title to display to user.
         /// </summary>
         public string Title {
-            get { return string.IsNullOrEmpty(Name) ? "(Default)" : Helper.DecodeTitle(Name); }
+            get { return string.IsNullOrEmpty(Name) ? "(Default)" : Helper.DecodeFolderTitle(Name); }
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace QText {
             if (IsRoot) { throw new IOException("Cannot rename root folder."); }
             newTitle = newTitle.Trim();
             if (string.IsNullOrEmpty(newTitle)) { throw new IOException("Folder name cannot be empty."); }
-            var newName = Helper.EncodeTitle(newTitle);
+            var newName = Helper.EncodeFolderTitle(newTitle);
 
             Debug.WriteLine("Folder.Rename: " + Name + " -> " + newName);
             try {

@@ -110,7 +110,7 @@ namespace QText {
         /// Gets title to display to user.
         /// </summary>
         public string Title {
-            get { return Helper.DecodeTitle(Name); }
+            get { return Helper.DecodeFileTitle(Name); }
         }
 
 
@@ -159,7 +159,7 @@ namespace QText {
 
         private void GatherRenameData(ref string newTitle, out string newName, out string newPath) {
             newTitle = newTitle.Trim();
-            newName = Helper.EncodeTitle(newTitle);
+            newName = Helper.EncodeFileTitle(newTitle);
             newPath = Path.Combine(Folder.FullPath, newName);
             switch (Kind) {
                 case DocumentKind.PlainText:
