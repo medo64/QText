@@ -148,6 +148,16 @@ void MainWindow::closeEvent(QCloseEvent *event) {
     }
 }
 
+void MainWindow::keyPressEvent(QKeyEvent *event) {
+    switch(event->key()) {
+        case Qt::Key_Escape: {
+            this->hide();
+        } break;
+
+        default: QMainWindow::keyPressEvent(event);
+    }
+}
+
 
 void MainWindow::onFileModificationChanged(FileItem* file, bool isModified) {
     auto tabIndex = ui->tabWidget->indexOf(file);
