@@ -16,10 +16,18 @@
 #include <QTextDocumentFragment>
 #include <QTextEdit>
 
-MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr), ui(new Ui::MainWindow) {
+MainWindow::MainWindow(std::shared_ptr<Storage> storage, QSystemTrayIcon *tray) : QMainWindow(nullptr), ui(new Ui::MainWindow) {
     ui->setupUi(this);
+
     _storage = storage;
     _folder = storage->getBaseFolder();
+    _tray = tray;
+
+    { //tray
+        connect(tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(onTrayActivate(QSystemTrayIcon::ActivationReason)));
+        tray->setToolTip(QCoreApplication::applicationName());
+        tray->show();
+    }
 
     { //icon setup
         QIcon newIcon;
@@ -128,6 +136,16 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
 
 MainWindow::~MainWindow() {
     delete ui;
+}
+
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+    if (event->spontaneous()) {
+        if (event->type() == QEvent::Close) {
+            event->ignore();
+            this->hide();
+        }
+    }
 }
 
 
@@ -386,4 +404,36 @@ void MainWindow::onTextStateChanged() {
     ui->actionPaste->setDisabled(!isClipboardTextAvailable);
     ui->actionUndo->setDisabled(!isUndoAvailable);
     ui->actionRedo->setDisabled(!isRedoAvailable);
+}
+
+void MainWindow::onTrayActivate(QSystemTrayIcon::ActivationReason reason) {
+    switch (reason) {
+        case QSystemTrayIcon::Context: {
+            QMenu menu(this);
+            auto defaultAction = menu.addAction("&Show", this, SLOT(onTrayShow()));
+            menu.addSeparator();
+            menu.addAction("E&xit", this, SLOT(onTrayExit()));
+
+            auto font = defaultAction->font();
+            font.setBold(true);
+            defaultAction->setFont(font);
+
+            menu.exec(QCursor::pos());
+        } break;
+
+        case QSystemTrayIcon::DoubleClick: {
+            onTrayShow();
+        } break;
+
+        default: break;
+    }
+}
+
+void MainWindow::onTrayShow() {
+    this->show();
+}
+
+void MainWindow::onTrayExit() {
+    _tray->hide();
+    QCoreApplication::exit(0);
 }

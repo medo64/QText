@@ -6,6 +6,7 @@
 #include <QApplication>
 #include <QMainWindow>
 #include <QToolButton>
+#include <QSystemTrayIcon>
 
 namespace Ui {
     class MainWindow;
@@ -15,13 +16,17 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
     public:
-        explicit MainWindow(std::shared_ptr<Storage> storage);
+        explicit MainWindow(std::shared_ptr<Storage> storage, QSystemTrayIcon *tray);
         ~MainWindow();
+
+    protected:
+        void closeEvent(QCloseEvent *event);
 
     private:
         Ui::MainWindow *ui;
         std::shared_ptr<Storage> _storage;
         std::shared_ptr<FolderItem> _folder;
+        QSystemTrayIcon *_tray;
         QToolButton* _folderButton = nullptr;
         QClipboard* _clipboard = QApplication::clipboard();
 
@@ -45,6 +50,9 @@ class MainWindow : public QMainWindow {
         void onTabMenuRequested(const QPoint&);
         void onTabChanged();
         void onTextStateChanged();
+        void onTrayActivate(QSystemTrayIcon::ActivationReason reason);
+        void onTrayShow();
+        void onTrayExit();
 
 };
 
