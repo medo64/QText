@@ -24,6 +24,15 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage, QSystemTrayIcon *tray) 
     _folder = storage->getBaseFolder();
     _tray = tray;
 
+    { //application icon
+        QIcon appIcon;
+        appIcon.addFile(":icons/16x16/qtext.png", QSize(16, 16));
+        appIcon.addFile(":icons/32x32/qtext.png", QSize(32, 32));
+        appIcon.addFile(":icons/48x48/qtext.png", QSize(48, 48));
+        appIcon.addFile(":icons/64x64/qtext.png", QSize(64, 64));
+        this->setWindowIcon(appIcon);
+    }
+
     { //tray
         connect(tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(onTrayActivate(QSystemTrayIcon::ActivationReason)));
         tray->setToolTip(QCoreApplication::applicationName());
