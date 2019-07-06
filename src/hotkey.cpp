@@ -34,7 +34,11 @@ bool Hotkey::registerHotkey(QKeySequence keySequence) {
     auto modifiers = Qt::KeyboardModifiers(keySequence[0] & static_cast<int>(Qt::KeyboardModifierMask));
 
     bool successful = nativeRegisterHotkey(key, modifiers);
-    if (successful) { _isRegistered = true; }
+    if (successful) {
+        _isRegistered = true;
+    } else {
+        qDebug().nospace() << "Failed to register hotkey (" << keySequence.toString() <<  ")!";
+    }
     return successful;
 }
 
@@ -48,7 +52,11 @@ bool Hotkey::unregisterHotkey() {
     }
 
     bool successful = nativeUnregisterHotkey();
-    if (successful) { _isRegistered = false; }
+    if (successful) {
+        _isRegistered = false;
+    } else {
+        qDebug() << "Failed to deregister hotkey!";
+    }
     return successful;
 }
 
