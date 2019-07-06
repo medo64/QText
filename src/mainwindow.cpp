@@ -1,21 +1,15 @@
 #include "filenamedialog.h"
-#include "hotkey.h"
 #include "mainwindow.h"
+#include "storage.h"
 #include "ui_filenamedialog.h"
 #include "ui_mainwindow.h"
-#include "storage.h"
 #include <QClipboard>
-#include <QCursor>
-#include <QDebug>
 #include <QDesktopServices>
-#include <QDir>
-#include <QFileInfo>
 #include <QMenu>
 #include <QMimeData>
 #include <QProcess>
 #include <QTabBar>
 #include <QTextDocumentFragment>
-#include <QTextEdit>
 
 MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr), ui(new Ui::MainWindow) {
     ui->setupUi(this);

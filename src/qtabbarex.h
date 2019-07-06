@@ -1,6 +1,8 @@
 #ifndef QTABBAREX_H
 #define QTABBAREX_H
 
+#include <QMouseEvent>
+#include <QPoint>
 #include <QTabBar>
 
 class QTabBarEx : public QTabBar {

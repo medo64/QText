@@ -2,9 +2,9 @@
 #define FILENAMEDIALOG_H
 
 #include "folderitem.h"
-#include <memory>
 #include <QDialog>
 #include <QString>
+#include <QWidget>
 
 namespace Ui {
     class FileNameDialog;

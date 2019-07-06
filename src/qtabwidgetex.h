@@ -2,6 +2,7 @@
 #define QTABWIDGETEX_H
 
 #include <QTabWidget>
+#include <QWidget>
 
 class QTabWidgetEx : public QTabWidget {
 

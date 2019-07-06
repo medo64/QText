@@ -1,7 +1,4 @@
 #include "mainwindow.h"
-#include <QApplication>
-#include <QCoreApplication>
-#include <QSystemTrayIcon>
 
 static std::shared_ptr<Storage> storage;
 

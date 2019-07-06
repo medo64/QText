@@ -1,7 +1,6 @@
 #include "config.h"
 #include <QCoreApplication>
 #include <QDir>
-#include <QFileInfo>
 #include <QStandardPaths>
 
 QString Config::_configurationFile;

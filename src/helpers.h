@@ -2,7 +2,6 @@
 #define HELPERS_H
 
 #include <QString>
-#include <QStringLiteral>
 
 class Helpers {
 

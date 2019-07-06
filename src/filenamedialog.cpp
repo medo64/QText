@@ -1,7 +1,6 @@
 #include "filenamedialog.h"
 #include "ui_filenamedialog.h"
 #include <QPushButton>
-#include <QString>
 
 FileNameDialog::FileNameDialog(QWidget *parent, QString fileName, std::shared_ptr<FolderItem> folder)
     : QDialog(parent)

@@ -1,11 +1,7 @@
 #include "fileitem.h"
 #include "helpers.h"
-#include <QColor>
 #include <QDir>
-#include <QEvent>
-#include <QObject>
-#include <QtDebug>
-#include <QTextStream>
+#include <QDebug>
 
 FileItem::FileItem(QString directoryPath, QString fileName)
     : QTextEdit(nullptr) {

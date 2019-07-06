@@ -1,6 +1,6 @@
+#include "hotkey.h"
 #include <QCoreApplication>
 #include <QDebug>
-#include "hotkey.h"
 
 Hotkey::Hotkey(QObject *parent)
     : QObject(parent) {

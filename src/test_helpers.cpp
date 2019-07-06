@@ -1,4 +1,5 @@
 #include "test_helpers.h"
+
 #include "helpers.h"
 
 void Test_Helpers::encodeTitle_colon() {

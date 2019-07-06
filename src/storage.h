@@ -2,8 +2,6 @@
 #define STORAGE_H
 
 #include "folderitem.h"
-#include <memory>
-#include <vector>
 #include <QString>
 
 class Storage {

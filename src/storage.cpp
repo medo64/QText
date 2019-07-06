@@ -1,7 +1,6 @@
 #include "storage.h"
 #include "folderitem.h"
 #include <QDir>
-#include <QString>
 
 Storage::Storage(const QString path) {
     QDir rootDirectory = path;

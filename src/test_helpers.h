@@ -1,6 +1,7 @@
 #ifndef TEST_HELPERS_H
 #define TEST_HELPERS_H
 
+#include <QObject>
 #include <QtTest>
 
 class Test_Helpers : public QObject {

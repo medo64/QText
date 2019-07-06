@@ -2,8 +2,6 @@
 #define FOLDERITEM_H
 
 #include "fileitem.h"
-#include <memory>
-#include <vector>
 #include <QString>
 
 class FolderItem {
