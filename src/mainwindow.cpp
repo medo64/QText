@@ -1,6 +1,7 @@
 #include "filenamedialog.h"
-#include "ui_filenamedialog.h"
+#include "hotkey.h"
 #include "mainwindow.h"
+#include "ui_filenamedialog.h"
 #include "ui_mainwindow.h"
 #include "storage.h"
 #include <QClipboard>
@@ -27,6 +28,12 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage, QSystemTrayIcon *tray) 
         connect(tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(onTrayActivate(QSystemTrayIcon::ActivationReason)));
         tray->setToolTip(QCoreApplication::applicationName());
         tray->show();
+    }
+
+    { //hotkey
+        _hotkey = new Hotkey();
+        _hotkey->registerHotkey(QKeySequence { "Ctrl+Shift+Q" });
+        connect(_hotkey, SIGNAL(activated()), this, SLOT(onTrayShow()));
     }
 
     { //icon setup
@@ -441,6 +448,7 @@ void MainWindow::onTrayActivate(QSystemTrayIcon::ActivationReason reason) {
 
 void MainWindow::onTrayShow() {
     this->show();
+    this->activateWindow();
 }
 
 void MainWindow::onTrayExit() {

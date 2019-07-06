@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "hotkey.h"
 #include "storage.h"
 #include <memory>
 #include <QApplication>
@@ -30,6 +31,7 @@ class MainWindow : public QMainWindow {
         QSystemTrayIcon *_tray;
         QToolButton* _folderButton = nullptr;
         QClipboard* _clipboard = QApplication::clipboard();
+        Hotkey* _hotkey;
 
     private slots:
         void onFileActivated(FileItem* file);

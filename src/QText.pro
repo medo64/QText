@@ -13,6 +13,7 @@ SOURCES += \
         filenamedialog.cpp \
         folderitem.cpp \
         helpers.cpp \
+        hotkey.cpp \
         main.cpp \
         mainwindow.cpp \
         qtabbarex.cpp \
@@ -25,6 +26,7 @@ HEADERS += \
         filenamedialog.h \
         folderitem.h \
         helpers.h \
+        hotkey.h \
         mainwindow.h \
         qtabbarex.h \
         qtabwidgetex.h \
