@@ -1,4 +1,8 @@
 #include "helpers.h"
+#include <QDesktopServices>
+#include <QDir>
+#include <QProcess>
+#include <QUrl>
 
 /*!
  * \brief Returns escaped file name from title
@@ -147,4 +151,35 @@ QString Helpers::getFSTitleFromName(QString fsName) {
     }
 
     return title;
+}
+
+
+/*!
+ * \brief Shows directory or file in file manager. Returns true if successful.
+ * \param directoryPath Directory path.
+ * \param filePath File path. Can be nullptr.
+ */
+bool Helpers::showInFileManager(QString directoryPath, QString filePath) {
+#if defined(Q_OS_WIN)
+    const QString explorerExe = "explorer.exe";
+    QStringList params;
+    params += "/select,";
+    params += QDir::toNativeSeparators((filePath != nullptr) ? filePath : directoryPath);
+    if (QProcess::startDetached(explorerExe, params)) { return true; }
+#elif defined(Q_OS_LINUX)
+    QString nautilusPath = "/usr/bin/nautilus";
+    QFile nautilus(nautilusPath);
+    if (nautilus.exists()) {
+        QStringList params;
+        if (filePath != nullptr) {
+            params += "-s";
+            params += filePath;
+        } else {
+            params += directoryPath;
+        }
+        if (QProcess::startDetached(nautilusPath, params)) { return true; }
+    }
+#endif
+
+    return QDesktopServices::openUrl(QUrl::fromLocalFile(directoryPath)); //fall-back to showing just directory
 }

@@ -10,6 +10,7 @@ class Helpers {
         static QString getFileTitleFromName(QString fileName);
         static QString getFolderNameFromTitle(QString folderTitle);
         static QString getFolderTitleFromName(QString folderName);
+        static bool showInFileManager(QString directoryPath, QString filePath);
 
     private:
         static bool isValidTitleChar(QChar ch);

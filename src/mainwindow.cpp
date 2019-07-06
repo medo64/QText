@@ -1,13 +1,12 @@
 #include "filenamedialog.h"
+#include "helpers.h"
 #include "mainwindow.h"
 #include "storage.h"
 #include "ui_filenamedialog.h"
 #include "ui_mainwindow.h"
 #include <QClipboard>
-#include <QDesktopServices>
 #include <QMenu>
 #include <QMimeData>
-#include <QProcess>
 #include <QTabBar>
 #include <QTextDocumentFragment>
 
@@ -355,28 +354,7 @@ void MainWindow::onFolderSelect() {
 }
 
 void onShowContainingDirectory2(QString directoryPath, QString filePath) {
-#if defined(Q_OS_WIN)
-    const QString explorerExe = "explorer.exe";
-    QStringList params;
-    params += "/select,";
-    params += QDir::toNativeSeparators((filePath != nullptr) ? filePath : directoryPath);
-    QProcess::startDetached(explorerExe, params);
-#else
-    QString nautilusPath = "/usr/bin/nautilus";
-    QFile nautilus(nautilusPath);
-    if (nautilus.exists()) {
-        QStringList params;
-        if (filePath != nullptr) {
-            params += "-s";
-            params += filePath;
-        } else {
-            params += directoryPath;
-        }
-        QProcess::startDetached(nautilusPath, params);
-    } else {
-        QDesktopServices::openUrl(QUrl::fromLocalFile(directoryPath));
-    }
-#endif
+    Helpers::showInFileManager(directoryPath, filePath);
 }
 
 void MainWindow::onShowContainingDirectory() {
