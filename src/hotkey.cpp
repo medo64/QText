@@ -1,21 +1,16 @@
-#include "hotkey.h"
 #include <QCoreApplication>
 #include <QDebug>
+#include "hotkey.h"
 
 Hotkey::Hotkey(QObject *parent)
     : QObject(parent) {
 
-#if defined(Q_OS_WIN)
     nativeInit();
-#endif
-
     qApp->installNativeEventFilter(this);
 }
 
 Hotkey::~Hotkey() {
-    if (_isRegistered) {
-        unregisterHotkey();
-    }
+    if (_isRegistered) { unregisterHotkey(); }
     qApp->removeNativeEventFilter(this);
 }
 
@@ -38,12 +33,7 @@ bool Hotkey::registerHotkey(QKeySequence keySequence) {
     auto key = Qt::Key(keySequence[0] & static_cast<int>(~Qt::KeyboardModifierMask));
     auto modifiers = Qt::KeyboardModifiers(keySequence[0] & static_cast<int>(Qt::KeyboardModifierMask));
 
-#if defined(Q_OS_WIN)
     bool successful = nativeRegisterHotkey(key, modifiers);
-#else
-    return false;
-#endif
-
     if (successful) { _isRegistered = true; }
     return successful;
 }
@@ -52,12 +42,12 @@ bool Hotkey::registerHotkey(QKeySequence keySequence) {
  * \brief Disables currently registered hotkey.
  */
 bool Hotkey::unregisterHotkey() {
-#if defined(Q_OS_WIN)
-    bool successful = nativeUnregisterHotkey();
-#else
-    return false;
-#endif
+    if (!_isRegistered) {
+        qDebug() << "Hotkey not registered!";
+        return false;
+    }
 
+    bool successful = nativeUnregisterHotkey();
     if (successful) { _isRegistered = false; }
     return successful;
 }
@@ -117,6 +107,71 @@ bool Hotkey::nativeEventFilter(const QByteArray&, void* message, long*) {
     } else {
         return false;
     }
+}
+
+#elif defined(Q_OS_LINUX)
+
+void Hotkey::nativeInit() {
+}
+
+bool Hotkey::nativeRegisterHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers) {
+    uint16_t modValue = 0;
+    if (modifiers & Qt::AltModifier) { modValue |= (1<<3); }
+    if (modifiers & Qt::ControlModifier) { modValue |= (1<<2); }
+    if (modifiers & Qt::ShiftModifier) { modValue |= (1<<0); }
+    if (modifiers & ~(Qt::AltModifier | Qt::ControlModifier | Qt::ShiftModifier | Qt::MetaModifier)) {
+        qDebug().noquote().nospace() << "Unrecognized modifiers (" << modifiers << ")!";
+        return false;
+    }
+
+    KeySym keySymbol;
+    if (((key >= Qt::Key_A) && (key <= Qt::Key_Z)) || ((key >= Qt::Key_0) && (key <= Qt::Key_9))) {
+        keySymbol = key;
+    } else if ((key >= Qt::Key_F1) && (key <= Qt::Key_F35)) {
+        keySymbol = XK_F1 + (key - Qt::Key_F1);
+    } else {
+        qDebug().noquote().nospace() << "Unrecognized key (" << key << " in " << ")!";
+        return false;
+    }
+    xcb_keycode_t keyValue = XKeysymToKeycode(QX11Info::display(), keySymbol);
+
+    xcb_connection_t* connection = QX11Info::connection();
+    auto cookie = xcb_grab_key_checked(connection, 1, static_cast<xcb_window_t>(QX11Info::appRootWindow()), modValue, keyValue, XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC);
+    auto cookieError = xcb_request_check(connection, cookie);
+    if (cookieError == nullptr) {
+        _hotkeyMods = modValue;
+        _hotkeyKey = keyValue;
+        return true;
+    } else {
+        free(cookieError);
+        return false;
+    }
+}
+
+bool Hotkey::nativeUnregisterHotkey() {
+    xcb_connection_t* connection = QX11Info::connection(); // xcb_connect(nullptr, nullptr); // QX11Info::connection();
+    auto cookie = xcb_ungrab_key(connection, _hotkeyKey, static_cast<xcb_window_t>(QX11Info::appRootWindow()), _hotkeyMods);
+    auto cookieError = xcb_request_check(connection, cookie);
+    if (cookieError == nullptr) {
+        return true;
+    } else {
+        free(cookieError);
+        return false;
+    }
+}
+
+bool Hotkey::nativeEventFilter(const QByteArray&, void* message, long*) {
+    xcb_generic_event_t* e = static_cast<xcb_generic_event_t*>(message);
+    if ((e->response_type & ~0x80) == XCB_KEY_PRESS) {
+        xcb_key_press_event_t* ke = reinterpret_cast<xcb_key_press_event_t*>(e);
+        xcb_keycode_t keyValue = ke->detail;
+        uint16_t modValue = ke->state & (XCB_MOD_MASK_SHIFT|XCB_MOD_MASK_CONTROL|XCB_MOD_MASK_1); //xmodmap -pm (to see masks: default 1 Alt, 4 Super)
+        if ((_hotkeyMods == modValue) && (_hotkeyKey == keyValue)) {
+            emit activated();
+            return true;
+        }
+    }
+    return false;
 }
 
 #endif
