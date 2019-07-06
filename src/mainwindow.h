@@ -17,7 +17,7 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
     public:
-        explicit MainWindow(std::shared_ptr<Storage> storage, QSystemTrayIcon *tray);
+        explicit MainWindow(std::shared_ptr<Storage> storage);
         ~MainWindow();
 
     protected:

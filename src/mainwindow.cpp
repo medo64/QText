@@ -17,12 +17,11 @@
 #include <QTextDocumentFragment>
 #include <QTextEdit>
 
-MainWindow::MainWindow(std::shared_ptr<Storage> storage, QSystemTrayIcon *tray) : QMainWindow(nullptr), ui(new Ui::MainWindow) {
+MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr), ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
     _storage = storage;
     _folder = storage->getBaseFolder();
-    _tray = tray;
 
     { //application icon
         QIcon appIcon;
@@ -34,9 +33,34 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage, QSystemTrayIcon *tray) 
     }
 
     { //tray
-        connect(tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(onTrayActivate(QSystemTrayIcon::ActivationReason)));
-        tray->setToolTip(QCoreApplication::applicationName());
-        tray->show();
+        QIcon trayIcon;
+        if ((QSysInfo::kernelType() == "winnt") && (QSysInfo::productVersion() == "10")) {
+            trayIcon.addFile(":icons/16x16/tray-white.png", QSize(16, 16));
+            trayIcon.addFile(":icons/32x32/tray-white.png", QSize(32, 32));
+            trayIcon.addFile(":icons/48x48/tray-white.png", QSize(48, 48));
+            trayIcon.addFile(":icons/64x64/tray-white.png", QSize(64, 64));
+        } else {
+            trayIcon.addFile(":icons/16x16/tray-color.png", QSize(16, 16));
+            trayIcon.addFile(":icons/32x32/tray-color.png", QSize(32, 32));
+            trayIcon.addFile(":icons/48x48/tray-color.png", QSize(48, 48));
+            trayIcon.addFile(":icons/64x64/tray-color.png", QSize(64, 64));
+        }
+        _tray = new QSystemTrayIcon(this);
+        connect(_tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(onTrayActivate(QSystemTrayIcon::ActivationReason)));
+
+        QMenu* trayMenu = new QMenu(this);
+        auto defaultAction = trayMenu->addAction("&Show", this, SLOT(onTrayShow()));
+        trayMenu->addSeparator();
+        trayMenu->addAction("E&xit", this, SLOT(onTrayExit()));
+
+        auto font = defaultAction->font();
+        font.setBold(true);
+        defaultAction->setFont(font);
+        _tray->setContextMenu(trayMenu);
+
+        _tray->setIcon(trayIcon);
+        _tray->setToolTip(QCoreApplication::applicationName());
+        _tray->show();
     }
 
     { //hotkey
@@ -433,25 +457,8 @@ void MainWindow::onTextStateChanged() {
 }
 
 void MainWindow::onTrayActivate(QSystemTrayIcon::ActivationReason reason) {
-    switch (reason) {
-        case QSystemTrayIcon::Context: {
-            QMenu menu(this);
-            auto defaultAction = menu.addAction("&Show", this, SLOT(onTrayShow()));
-            menu.addSeparator();
-            menu.addAction("E&xit", this, SLOT(onTrayExit()));
-
-            auto font = defaultAction->font();
-            font.setBold(true);
-            defaultAction->setFont(font);
-
-            menu.exec(QCursor::pos());
-        } break;
-
-        case QSystemTrayIcon::DoubleClick: {
-            onTrayShow();
-        } break;
-
-        default: break;
+    if (reason == QSystemTrayIcon::DoubleClick) {
+        onTrayShow();
     }
 }
 
