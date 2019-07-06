@@ -24,6 +24,8 @@
     #undef None
     #undef Status
     #undef Unsorted
+#else
+    #error "Platform not supported!"
 #endif
 
 class Hotkey : public QObject, QAbstractNativeEventFilter {
