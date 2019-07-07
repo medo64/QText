@@ -22,6 +22,15 @@ SingleInstance& SingleInstance::instance() {
     return _instance;
 }
 
+SingleInstance::~SingleInstance() {
+    QMutexLocker locker(&_mutex);
+
+    if (_server != nullptr) {
+        _server->close();
+        delete _server;
+    }
+}
+
 
 bool SingleInstance::attach() {
     QMutexLocker locker(&_mutex);
@@ -34,11 +43,15 @@ bool SingleInstance::attach() {
     QString serverName = QString(QCryptographicHash::hash(serverNameSource.toUtf8(), QCryptographicHash::Sha256).toBase64());
 
     _server = new QLocalServer();
-    _server->setSocketOptions(QLocalServer::WorldAccessOption);
     bool serverListening = _server->listen(serverName);
     if (!serverListening && (_server->serverError() == QAbstractSocket::AddressInUseError)) {
-        QLocalServer::removeServer(serverName); //cleanup for Linux; can stay on Windows too
-        serverListening = _server->listen(serverName);
+        QLocalSocket* client = new QLocalSocket();
+        client->connectToServer(serverName);
+        if (!client->waitForConnected(250)) { //no answer - assume cleanup is needed
+            QLocalServer::removeServer(serverName);
+            serverListening = _server->listen(serverName);
+        }
+        delete client;
     }
 
     bool isFirstInstance = false;
@@ -59,6 +72,7 @@ bool SingleInstance::attach() {
         qDebug() << "Another instance is running.";
         QLocalSocket* client = new QLocalSocket();
         client->connectToServer(serverName);
+        delete client;
     }
 
     _isFirstInstance = isFirstInstance;

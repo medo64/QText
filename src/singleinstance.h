@@ -31,6 +31,7 @@ class SingleInstance : public QObject {
 
     private:
         explicit SingleInstance(QObject *parent = nullptr);
+        ~SingleInstance() override;
         SingleInstance(const SingleInstance&) = delete;
         SingleInstance& operator=(const SingleInstance&) = delete;
         static SingleInstance _instance;
