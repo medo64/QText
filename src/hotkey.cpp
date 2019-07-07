@@ -15,10 +15,6 @@ Hotkey::~Hotkey() {
 }
 
 
-/*!
- * \brief Registers hotkey.
- * \param keySequence Hotkey.
- */
 bool Hotkey::registerHotkey(QKeySequence keySequence) {
     if (_isRegistered) {
         qDebug() << "Hotkey already registered!";
@@ -42,9 +38,6 @@ bool Hotkey::registerHotkey(QKeySequence keySequence) {
     return successful;
 }
 
-/*!
- * \brief Disables currently registered hotkey.
- */
 bool Hotkey::unregisterHotkey() {
     if (!_isRegistered) {
         qDebug() << "Hotkey not registered!";
