@@ -20,7 +20,7 @@ class SingleInstance : public QObject {
         /*! Returns true if current application is the first instance. */
         static bool attach();
 
-        /*! * Returns true if there is another instance running. */
+        /*! Returns true if there is another instance running. */
         static bool isOtherInstanceRunning();
 
     signals:
@@ -30,7 +30,7 @@ class SingleInstance : public QObject {
 
 
     private:
-        explicit SingleInstance(QObject *parent = nullptr);
+        explicit SingleInstance();
         ~SingleInstance() override;
         SingleInstance(const SingleInstance&) = delete;
         SingleInstance& operator=(const SingleInstance&) = delete;

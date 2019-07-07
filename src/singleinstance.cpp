@@ -8,14 +8,14 @@
     #include <windows.h>
 #endif
 
-SingleInstance SingleInstance::_instance(nullptr);
+SingleInstance SingleInstance::_instance;
 QMutex SingleInstance::_mutex(QMutex::NonRecursive);
 QLocalServer* SingleInstance::_server(nullptr);
 bool SingleInstance::_isFirstInstance(false);
 
 
-SingleInstance::SingleInstance(QObject *parent)
-    : QObject(parent) {
+SingleInstance::SingleInstance()
+    : QObject(nullptr) {
 }
 
 SingleInstance& SingleInstance::instance() {
@@ -86,7 +86,8 @@ bool SingleInstance::isOtherInstanceRunning() {
 
 
 void SingleInstance::onNewConnection() {
-    QLocalSocket *client = _server->nextPendingConnection();
+    QLocalSocket* client = _server->nextPendingConnection();
     connect(client, &QLocalSocket::disconnected, client, &QLocalSocket::deleteLater);
+    delete client;
     emit newInstanceDetected();
 }
