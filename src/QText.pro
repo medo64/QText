@@ -1,4 +1,5 @@
 QT       += core gui widgets
+QT       += network  # QLocalServer/QLocalSocket
 
 unix:QT  += x11extras
 unix:LIBS += -lX11 -lxcb
@@ -19,6 +20,7 @@ SOURCES += \
         mainwindow.cpp \
         qtabbarex.cpp \
         qtabwidgetex.cpp \
+        singleinstance.cpp \
         storage.cpp
 
 HEADERS += \
@@ -31,6 +33,7 @@ HEADERS += \
         mainwindow.h \
         qtabbarex.h \
         qtabwidgetex.h \
+        singleinstance.h \
         storage.h
 
 FORMS += \
