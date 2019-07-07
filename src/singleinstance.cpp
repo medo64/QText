@@ -4,6 +4,9 @@
 #include <QDebug>
 #include <QDir>
 #include <QLocalSocket>
+#if defined(Q_OS_WIN)
+    #include <windows.h>
+#endif
 
 SingleInstance SingleInstance::_instance(nullptr);
 QMutex SingleInstance::_mutex(QMutex::NonRecursive);
@@ -44,13 +47,10 @@ bool SingleInstance::attach() {
         connect(_server, SIGNAL(newConnection()), &SingleInstance::instance(), SLOT(onNewConnection()));
 
 #if defined(Q_OS_WIN) //check if there is a server running - needed on Windows as two local servers can run there
-        _server->close(); //disable server to test client
-        QLocalSocket* client = new QLocalSocket();
-        client->connectToServer(serverName);
-        if (client->waitForConnected(100)) { //we're not the first - there is another server listening (max 100 ms delay - but generally an immediate response)
+        CreateMutexW(nullptr, true, reinterpret_cast<LPCWSTR>(serverName.utf16()));
+        if (GetLastError() == ERROR_ALREADY_EXISTS) { //someone has this Mutex
+            _server->close(); //disable server
             isFirstInstance = false;
-        } else {
-            isFirstInstance = _server->listen(serverName); //turn on server again
         }
 #endif
     }
