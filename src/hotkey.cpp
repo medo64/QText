@@ -2,7 +2,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 
-Hotkey::Hotkey(QObject *parent)
+Hotkey::Hotkey(QObject* parent)
     : QObject(parent) {
 
     nativeInit();
@@ -69,9 +69,9 @@ bool Hotkey::nativeRegisterHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers) 
     }
 
     uint modValue = 0;
-    if (modifiers &  Qt::AltModifier) { modValue += MOD_ALT; }
-    if (modifiers &  Qt::ControlModifier) { modValue += MOD_CONTROL; }
-    if (modifiers &  Qt::ShiftModifier) { modValue += MOD_SHIFT; }
+    if (modifiers & Qt::AltModifier)     { modValue += MOD_ALT; }
+    if (modifiers & Qt::ControlModifier) { modValue += MOD_CONTROL; }
+    if (modifiers & Qt::ShiftModifier)   { modValue += MOD_SHIFT; }
 
     if (modifiers & ~(Qt::AltModifier | Qt::ControlModifier | Qt::ShiftModifier)) {
         qDebug().noquote().nospace() << "Unrecognized modifiers (" << modifiers << ")!";
@@ -102,12 +102,9 @@ bool Hotkey::nativeEventFilter(const QByteArray&, void* message, long*) {
         if (msg->wParam == static_cast<WPARAM>(_hotkeyId)) {
             emit activated();
             return true;
-        } else {
-            return false;
         }
-    } else {
-        return false;
     }
+    return false;
 }
 
 #elif defined(Q_OS_LINUX)
@@ -117,9 +114,9 @@ void Hotkey::nativeInit() {
 
 bool Hotkey::nativeRegisterHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers) {
     uint16_t modValue = 0;
-    if (modifiers & Qt::AltModifier) { modValue |= (1<<3); }
-    if (modifiers & Qt::ControlModifier) { modValue |= (1<<2); }
-    if (modifiers & Qt::ShiftModifier) { modValue |= (1<<0); }
+    if (modifiers & Qt::AltModifier)     { modValue |= XCB_MOD_MASK_1; }
+    if (modifiers & Qt::ControlModifier) { modValue |= XCB_MOD_MASK_CONTROL; }
+    if (modifiers & Qt::ShiftModifier)   { modValue |= XCB_MOD_MASK_SHIFT; }
     if (modifiers & ~(Qt::AltModifier | Qt::ControlModifier | Qt::ShiftModifier | Qt::MetaModifier)) {
         qDebug().noquote().nospace() << "Unrecognized modifiers (" << modifiers << ")!";
         return false;
