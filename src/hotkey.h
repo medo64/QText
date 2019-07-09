@@ -29,7 +29,7 @@
     #undef Status
     #undef Unsorted
 #else
-    #error "Platform not supported!"
+    #error "Only Linux and Windows are supported!"
 #endif
 
 class Hotkey : public QObject, QAbstractNativeEventFilter {
