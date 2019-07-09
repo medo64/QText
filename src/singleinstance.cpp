@@ -40,7 +40,8 @@ bool SingleInstance::attach() {
     QString serverNameSource = QCoreApplication::applicationFilePath();
     serverNameSource += QDir::home().dirName(); //instead of user name
     serverNameSource += QSysInfo::machineHostName();
-    QString serverName = QString(QCryptographicHash::hash(serverNameSource.toUtf8(), QCryptographicHash::Sha256).toBase64());
+    QString serverName = QString(QCryptographicHash::hash(serverNameSource.toUtf8(), QCryptographicHash::Sha256)
+                                 .toBase64(QByteArray::Base64UrlEncoding | QByteArray::OmitTrailingEquals));
 
     _server = new QLocalServer();
     bool serverListening = _server->listen(serverName);
