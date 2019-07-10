@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "settings.h"
 #include "singleinstance.h"
 
 static std::shared_ptr<Storage> storage;
@@ -16,7 +17,7 @@ int main(int argc, char *argv[]) {
         return static_cast<int>(0x80004004); //exit immediately if another instance is running
     }
 
-    storage = std::make_shared<Storage>("/home/josip/.qtext");
+    storage = std::make_shared<Storage>(Settings::dataPath());
 
     MainWindow w { storage };
 

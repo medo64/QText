@@ -1,6 +1,7 @@
 #include "filenamedialog.h"
 #include "helpers.h"
 #include "mainwindow.h"
+#include "settings.h"
 #include "singleinstance.h"
 #include "storage.h"
 #include "ui_filenamedialog.h"
@@ -59,7 +60,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
 
     { //hotkey
         _hotkey = new Hotkey();
-        _hotkey->registerHotkey(QKeySequence { "Ctrl+Shift+Q" });
+        _hotkey->registerHotkey(Settings::hotkey());
         connect(_hotkey, SIGNAL(activated()), this, SLOT(onTrayShow()));
     }
 

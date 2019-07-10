@@ -20,6 +20,7 @@ SOURCES += \
         mainwindow.cpp \
         qtabbarex.cpp \
         qtabwidgetex.cpp \
+        settings.cpp \
         singleinstance.cpp \
         storage.cpp
 
@@ -33,6 +34,7 @@ HEADERS += \
         mainwindow.h \
         qtabbarex.h \
         qtabwidgetex.h \
+        settings.h \
         singleinstance.h \
         storage.h
 
