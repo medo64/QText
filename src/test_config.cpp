@@ -2,78 +2,163 @@
 #include <QDir>
 #include <QFile>
 
+//#define private public
 #include "config.h"
 
 void Test_Config::paths() {
-    Config::reset();
 #if defined(Q_OS_WIN)
-    QDir baseDir(QDir::homePath() + "/AppData/Roaming/Testing");
-    if (baseDir.exists()) { baseDir.removeRecursively(); }
-    QVERIFY(!baseDir.exists());
-#else
-    QDir dataDir(QDir::homePath() + "/.local/share/test");
-    if (dataDir.exists()) { dataDir.removeRecursively(); }
-    QVERIFY(!dataDir.exists());
+    QDir baseDirWhenInstalled(QDir::homePath() + "/AppData/Roaming/Testing");
+    if (baseDirWhenInstalled.exists()) { baseDirWhenInstalled.removeRecursively(); }
+    assert(!baseDirWhenInstalled.exists());
 
-    QFile configFile(QDir::homePath() + "/.config/test.conf");
-    if (configFile.exists()) { configFile.remove(); }
-    QVERIFY(!configFile.exists());
+    QFile configFileWhenPortable(QCoreApplication::applicationDirPath() + "/.testx.conf");
+    if (configFileWhenPortable.exists()) { configFileWhenPortable.remove(); }
+    assert(!configFileWhenPortable.exists());
+
+    QDir dataDirWhenPortable(QCoreApplication::applicationDirPath() + "/.testx.data");
+    if (dataDirWhenPortable.exists()) { dataDirWhenPortable.removeRecursively(); }
+    assert(!dataDirWhenPortable.exists());
+#elif defined(Q_OS_LINUX)
+    QFile configFileWhenInstalled(QDir::homePath() + "/.config/test.conf");
+    if (configFileWhenInstalled.exists()) { configFileWhenInstalled.remove(); }
+    assert(!configFileWhenInstalled.exists());
+
+    QDir dataDirWhenInstalled(QDir::homePath() + "/.local/share/test");
+    if (dataDirWhenInstalled.exists()) { dataDirWhenInstalled.removeRecursively(); }
+    assert(!dataDirWhenInstalled.exists());
+
+    QFile configFileWhenPortable(QCoreApplication::applicationDirPath() + "/.test.conf");
+    if (configFileWhenPortable.exists()) { configFileWhenPortable.remove(); }
+    assert(!configFileWhenPortable.exists());
+
+    QDir dataDirWhenPortable(QCoreApplication::applicationDirPath() + "/.test.data");
+    if (dataDirWhenPortable.exists()) { dataDirWhenPortable.removeRecursively(); }
+    assert(!dataDirWhenPortable.exists());
 #endif
 
     QCoreApplication::setApplicationName("Test");
     QCoreApplication::setOrganizationName("Testing");
 
 #if defined(Q_OS_WIN)
-    QString expectedConfigurationFile = QDir::homePath() + "/AppData/Roaming/Testing/Test/Test.cfg";
-    QString expectedDataDirectory = QDir::homePath() + "/AppData/Roaming/Testing/Test/Data";
-#else
-    QString expectedConfigurationFile = QDir::homePath() + "/.config/test.conf";
-    QString expectedDataDirectory = QDir::homePath() + "/.local/share/test";
+    QString expectedConfigurationFileWhenInstalled = QDir::homePath() + "/AppData/Roaming/Testing/Test/Test.cfg";
+    QString expectedDataDirectoryWhenInstalled = QDir::homePath() + "/AppData/Roaming/Testing/Test/Data";
+    QString expectedConfigurationFileWhenPortable = QCoreApplication::applicationDirPath() + "/Test.cfg";
+    QString expectedDataDirectoryWhenPortable = QCoreApplication::applicationDirPath() + "/Test.Data";
+#elif defined(Q_OS_LINUX)
+    QString expectedConfigurationFileWhenInstalled = QDir::homePath() + "/.config/test.conf";
+    QString expectedDataDirectoryWhenInstalled = QDir::homePath() + "/.local/share/test";
+    QString expectedConfigurationFileWhenPortable = QCoreApplication::applicationDirPath() + "/.test";
+    QString expectedDataDirectoryWhenPortable = QCoreApplication::applicationDirPath() + "/.test.data";
 #endif
 
-    QCOMPARE(Config::getConfigurationFile(), expectedConfigurationFile);
-    QCOMPARE(Config::getDataDirectory(), expectedDataDirectory);
+    {
+        Config::setPortable(false);
 
-    QFile finalConfigFile (expectedConfigurationFile);
-    QVERIFY(finalConfigFile.exists());
+        QCOMPARE(Config::configurationFile(), expectedConfigurationFileWhenInstalled);
+        QCOMPARE(Config::dataDirectory(), expectedDataDirectoryWhenInstalled);
+        QCOMPARE(Config::isPortable(), false);
 
-    QDir finalDataDir (expectedDataDirectory);
-    QVERIFY(finalDataDir.exists());
+        QFile finalConfigFile (expectedConfigurationFileWhenInstalled);
+        QVERIFY(finalConfigFile.exists());
+
+        QDir finalDataDir (expectedDataDirectoryWhenInstalled);
+        QVERIFY(finalDataDir.exists());
+
+        baseDirWhenInstalled.removeRecursively(); //cleanup
+    }
+
+    {
+        Config::setPortable(true);
+
+        QCOMPARE(Config::configurationFile(), expectedConfigurationFileWhenPortable);
+        QCOMPARE(Config::dataDirectory(), expectedDataDirectoryWhenPortable);
+        QCOMPARE(Config::isPortable(), true);
+
+        QFile finalConfigFile (expectedConfigurationFileWhenPortable);
+        QVERIFY(finalConfigFile.exists());
+        configFileWhenPortable.remove(); //cleanup
+
+        QDir finalDataDir (expectedDataDirectoryWhenPortable);
+        QVERIFY(finalDataDir.exists());
+        dataDirWhenPortable.removeRecursively(); //cleanup
+    }
 }
 
 void Test_Config::pathsWithSpaces() {
-    Config::reset();
 #if defined(Q_OS_WIN)
-    QDir baseDir(QDir::homePath() + "/AppData/Roaming/Testing");
-    if (baseDir.exists()) { baseDir.removeRecursively(); }
-    QVERIFY(!baseDir.exists());
-#else
-    QDir dataDir(QDir::homePath() + "/.local/share/testx");
-    if (dataDir.exists()) { dataDir.removeRecursively(); }
-    QVERIFY(!dataDir.exists());
+    QDir baseDirWhenInstalled(QDir::homePath() + "/AppData/Roaming/Testing");
+    if (baseDirWhenInstalled.exists()) { baseDirWhenInstalled.removeRecursively(); }
+    QVERIFY(!baseDirWhenInstalled.exists());
 
-    QFile configFile(QDir::homePath() + "/.config/testx.conf");
-    if (configFile.exists()) { configFile.remove(); }
-    QVERIFY(!configFile.exists());
+    QFile configFileWhenPortable(QCoreApplication::applicationDirPath() + "/.testx.conf");
+    if (configFileWhenPortable.exists()) { configFileWhenPortable.remove(); }
+    assert(!configFileWhenPortable.exists());
+
+    QDir dataDirWhenPortable(QCoreApplication::applicationDirPath() + "/.testx.data");
+    if (dataDirWhenPortable.exists()) { dataDirWhenPortable.removeRecursively(); }
+    assert(!dataDirWhenPortable.exists());
+#elif defined(Q_OS_LINUX)
+    QFile configFileWhenInstalled(QDir::homePath() + "/.config/testx.conf");
+    if (configFileWhenInstalled.exists()) { configFileWhenInstalled.remove(); }
+    assert(!configFileWhenInstalled.exists());
+
+    QDir dataDirWhenInstalled(QDir::homePath() + "/.local/share/testx");
+    if (dataDirWhenInstalled.exists()) { dataDirWhenInstalled.removeRecursively(); }
+    assert(!dataDirWhenInstalled.exists());
+
+    QFile configFileWhenPortable(QCoreApplication::applicationDirPath() + "/.testx.conf");
+    if (configFileWhenPortable.exists()) { configFileWhenPortable.remove(); }
+    assert(!configFileWhenPortable.exists());
+
+    QDir dataDirWhenPortable(QCoreApplication::applicationDirPath() + "/.testx.data");
+    if (dataDirWhenPortable.exists()) { dataDirWhenPortable.removeRecursively(); }
+    assert(!dataDirWhenPortable.exists());
 #endif
 
     QCoreApplication::setApplicationName("Test X");
     QCoreApplication::setOrganizationName("Testing");
 
 #if defined(Q_OS_WIN)
-    QString expectedConfigurationFile = QDir::homePath() + "/AppData/Roaming/Testing/Test X/Test X.cfg";
-    QString expectedDataDirectory = QDir::homePath() + "/AppData/Roaming/Testing/Test X/Data";
-#else
-    QString expectedConfigurationFile = QDir::homePath() + "/.config/testx.conf";
-    QString expectedDataDirectory = QDir::homePath() + "/.local/share/testx";
+    QString expectedConfigurationFileWhenInstalled = QDir::homePath() + "/AppData/Roaming/Testing/Test X/Test X.cfg";
+    QString expectedDataDirectoryWhenInstalled = QDir::homePath() + "/AppData/Roaming/Testing/Test X/Data";
+    QString expectedConfigurationFileWhenPortable = QCoreApplication::applicationDirPath() + "/Test X.cfg";
+    QString expectedDataDirectoryWhenPortable = QCoreApplication::applicationDirPath() + "/Test X.Data";
+#elif defined(Q_OS_LINUX)
+    QString expectedConfigurationFileWhenInstalled = QDir::homePath() + "/.config/testx.conf";
+    QString expectedDataDirectoryWhenInstalled = QDir::homePath() + "/.local/share/testx";
+    QString expectedConfigurationFileWhenPortable = QCoreApplication::applicationDirPath() + "/.testx";
+    QString expectedDataDirectoryWhenPortable = QCoreApplication::applicationDirPath() + "/.testx.data";
 #endif
 
-    QCOMPARE(Config::getConfigurationFile(), expectedConfigurationFile);
-    QCOMPARE(Config::getDataDirectory(), expectedDataDirectory);
+    {
+        Config::setPortable(true);
 
-    QFile finalConfigFile (expectedConfigurationFile);
-    QVERIFY(finalConfigFile.exists());
+        QCOMPARE(Config::dataDirectory(), expectedDataDirectoryWhenPortable);
+        QCOMPARE(Config::configurationFile(), expectedConfigurationFileWhenPortable);
+        QCOMPARE(Config::isPortable(), true);
 
-    QDir finalDataDir (expectedDataDirectory);
-    QVERIFY(finalDataDir.exists());
+        QFile finalConfigFile (expectedConfigurationFileWhenPortable);
+        QVERIFY(finalConfigFile.exists());
+        configFileWhenPortable.remove(); //cleanup
+
+        QDir finalDataDir (expectedDataDirectoryWhenPortable);
+        QVERIFY(finalDataDir.exists());
+        dataDirWhenPortable.removeRecursively(); //cleanup
+    }
+
+    {
+        Config::setPortable(false);
+
+        QCOMPARE(Config::dataDirectory(), expectedDataDirectoryWhenInstalled);
+        QCOMPARE(Config::configurationFile(), expectedConfigurationFileWhenInstalled);
+        QCOMPARE(Config::isPortable(), false);
+
+        QFile finalConfigFile (expectedConfigurationFileWhenInstalled);
+        QVERIFY(finalConfigFile.exists());
+
+        QDir finalDataDir (expectedDataDirectoryWhenInstalled);
+        QVERIFY(finalDataDir.exists());
+
+        baseDirWhenInstalled.removeRecursively(); //cleanup
+    }
 }
