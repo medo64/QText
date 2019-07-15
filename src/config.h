@@ -1,11 +1,24 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <QMap>
+#include <QMutex>
 #include <QString>
+#include <QVector>
 
 class Config {
 
     public:
+
+        /*! Resets configuration. This includes cached data. */
+        static void reset();
+
+        /*! Forces reload of config file. Returns true if file exists. */
+        static bool load();
+
+        /*! Forces immediate save of a config file. Returns true if operation was successful. */
+        static bool save();
+
 
         /*! Returns if application is considered portable. Initial value will be auto-detected.
         * Auto-detection:
@@ -16,6 +29,14 @@ class Config {
         /*! Sets if application will be considered portable. Invalidates configuration file and data directory path cache.
          * \param isPortable If true, application will be considered portable. */
         static void setPortable(bool portable);
+
+
+        /*! Returns if write to config will perform automatic save. Default is true. */
+        static bool immediateSave();
+
+        /*! Sets if write to config will perform automatic save.
+         * \param saveImmediately If true, any write will result in immediate save. */
+        static void setImmediateSave(bool saveImmediately);
 
 
         /*! Returns configuration file path. If file doesn't exist, it's created. Returned value is cached. */
@@ -44,36 +65,30 @@ class Config {
         static QString dataDirectoryPath();
 
 
-        /*! Returns all values for a given key or empty list if key doesn't exist.
+        /*! Returns value for a given key or null QString if one is not found.
          * /param key Key. */
-        static QStringList read(QString key);
-
-        /*! Writes values to a given key.
-         * /param key Key.
-         * /param values Values. */
-        static void write(QString key, QStringList values);
-
-
-        /*! Returns value for a given key or default value if one is not found.
-         * /param key Key.
-         * /param defaultValue Default value. */
-        static QString read(QString key, const char* defaultValue);
-
-        /*! Writes value to a given key.
-         * /param key Key.
-         * /param value Value. */
-        static void write(QString key, const char* value);
-
+        static QString read(QString key);
 
         /*! Returns value for a given key or default value if one is not found.
          * /param key Key.
          * /param defaultValue Default value. */
         static QString read(QString key, QString defaultValue);
 
+        /*! Returns value for a given key or default value if one is not found.
+         * /param key Key.
+         * /param defaultValue Default value. */
+        static QString read(QString key, const char* defaultValue);
+
+
         /*! Writes value to a given key.
          * /param key Key.
          * /param value Value. */
         static void write(QString key, QString value);
+
+        /*! Writes value to a given key.
+         * /param key Key.
+         * /param value Value. */
+        static void write(QString key, const char* value);
 
 
         /*! Returns value for a given key or default value if one is not found or cannot be converted to bool.
@@ -101,12 +116,12 @@ class Config {
         /*! Returns value for a given key or default value if one is not found or cannot be converted to long.
          * /param key Key.
          * /param defaultValue Default value. */
-        static long read(QString key, long defaultValue);
+        static long long read(QString key, long long defaultValue);
 
         /*! Writes value to a given key.
          * /param key Key.
          * /param value Value. */
-        static void write(QString key, long value);
+        static void write(QString key, long long value);
 
 
         /*! Returns value for a given key or default value if one is not found or cannot be converted to double.
@@ -120,6 +135,29 @@ class Config {
         static void write(QString key, double value);
 
 
+        /*! Returns all values for a given key or empty list if key doesn't exist.
+         * /param key Key. */
+        static QStringList readMany(QString key);
+
+        /*! Returns all values for a given key or default values if key doesn't exist.
+         * /param key Key.
+         * /param defaultValues Default values. */
+        static QStringList readMany(QString key, QStringList defaultValues);
+
+        /*! Writes values to a given key.
+         * /param key Key.
+         * /param values Values. */
+        static void writeMany(QString key, QStringList values);
+
+
+        /*! Remove all values of a given key.
+         * /param key Key. */
+        static void remove(QString key);
+
+        /*! Remove all values. */
+        static void removeAll();
+
+
     private:
         typedef enum {
            UNKNOWN  = -1,
@@ -128,13 +166,82 @@ class Config {
         } PortableStatus;
 
     private:
+        static QMutex _publicAccessMutex; //to ensure multi-threaded access works without conflict
         static QString _configurationFilePath;
         static QString _dataDirectoryPath;
         static PortableStatus _isPortable;
+        static bool _immediateSave;
         static QString configurationFilePathWhenPortable();
         static QString configurationFilePathWhenInstalled();
         static QString dataDirectoryPathWhenPortable();
         static QString dataDirectoryPathWhenInstalled();
+
+    private:
+        class ConfigFile {
+            public:
+                ConfigFile(QString filePath);
+                bool save();
+                QString readOne(QString key);
+                QStringList readMany(QString key);
+                void writeOne(QString key, QString value);
+                void writeMany(QString key, QStringList value);
+                void removeMany(QString key);
+                void removeAll();
+
+            private:
+                typedef enum {
+                    Default,
+                    Comment,
+                    Key,
+                    KeyEscape,
+                    KeyEscapeLong,
+                    SeparatorOrValue,
+                    ValueOrWhitespace,
+                    Value,
+                    ValueEscape,
+                    ValueEscapeLong,
+                    ValueOrComment,
+                } ProcessState;
+
+            private:
+                class LineData {
+
+                    public:
+                        LineData();
+                        LineData(LineData* lineTemplate, QString key, QString value);
+                        LineData(QString key, QString separatorPrefix, QString separator, QString separatorSuffix, QString value, QString commentPrefix, QString comment);
+
+                    public:
+                        QString getKey();
+                        QString getValue();
+                        void setValue(QString newValue);
+                        QString toString();
+                        static void escapeIntoStringBuilder(QString* sb, QString text, bool isKey = false);
+                        bool isEmpty();
+
+                    private:
+                        QString _key;
+                        QString _separatorPrefix;
+                        QString _separator;
+                        QString _separatorSuffix;
+                        QString _value;
+                        QString _commentPrefix;
+                        QString _comment;
+                };
+
+            private:
+                void processLine(QString line);
+                QVector<LineData> _lines;
+                bool _fileLoaded;
+                QString _filePath;
+                QString _lineEnding;
+
+        };
+
+    private:
+        static ConfigFile* getConfigFile();
+        static void resetConfigFile();
+        static ConfigFile* _configFile;
 
 };
 

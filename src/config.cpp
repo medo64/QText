@@ -1,13 +1,44 @@
 #include "config.h"
 #include <QCoreApplication>
+#include <QDebug>
 #include <QDir>
+#include <QSaveFile>
 #include <QStandardPaths>
+#include <QTextStream>
 
+QMutex Config::_publicAccessMutex(QMutex::Recursive);
 QString Config::_configurationFilePath;
 QString Config::_dataDirectoryPath;
 Config::PortableStatus Config::_isPortable(UNKNOWN);
+bool Config::_immediateSave(true);
+Config::ConfigFile* Config::_configFile(nullptr);
+
+void Config::reset() {
+    QMutexLocker locker(&_publicAccessMutex);
+
+    _configurationFilePath = QString();
+    _dataDirectoryPath = QString();
+    _isPortable = PortableStatus::UNKNOWN;
+    _immediateSave = true;
+    resetConfigFile();
+}
+
+bool Config::load() {
+    QMutexLocker locker(&_publicAccessMutex);
+    resetConfigFile();
+    QFile file(configurationFilePath());
+    return file.exists();
+}
+
+bool Config::save() {
+    QMutexLocker locker(&_publicAccessMutex);
+    return getConfigFile()->save();
+}
+
 
 bool Config::isPortable() {
+    QMutexLocker locker(&_publicAccessMutex);
+
     if (_isPortable == PortableStatus::UNKNOWN) {
         QString exePath = QCoreApplication::applicationFilePath();
 
@@ -50,13 +81,27 @@ bool Config::isPortable() {
 }
 
 void Config::setPortable(bool portable) {
+    QMutexLocker locker(&_publicAccessMutex);
+    reset();
     _isPortable = portable ? PortableStatus::TRUE : PortableStatus::FALSE;
-    _configurationFilePath = QString();
-    _dataDirectoryPath = QString();
+}
+
+
+bool Config::immediateSave() {
+    QMutexLocker locker(&_publicAccessMutex);
+    return _immediateSave;
+}
+
+void Config::setImmediateSave(bool saveImmediately) {
+    QMutexLocker locker(&_publicAccessMutex);
+    _immediateSave = saveImmediately;
+    if (_immediateSave) { save(); } //to ensure any pending writes are cleared
 }
 
 
 QString Config::configurationFile() {
+    QMutexLocker locker(&_publicAccessMutex);
+
     QString configPath = configurationFilePath();
 
     QFileInfo configFileInfo (configPath);
@@ -65,7 +110,7 @@ QString Config::configurationFile() {
 
     QFile configFile (configPath);
     if (!configFile.exists()) {
-        configFile.open(QIODevice::WriteOnly);
+        configFile.open(QFile::WriteOnly);
         configFile.close();
     }
 
@@ -73,6 +118,8 @@ QString Config::configurationFile() {
 }
 
 QString Config::configurationFilePath() {
+    QMutexLocker locker(&_publicAccessMutex);
+
     if (_configurationFilePath.isEmpty()) {
         _configurationFilePath = isPortable() ? configurationFilePathWhenPortable() : configurationFilePathWhenInstalled();
     }
@@ -118,6 +165,8 @@ QString Config::configurationFilePathWhenInstalled() {
 
 
 QString Config::dataDirectory() {
+    QMutexLocker locker(&_publicAccessMutex);
+
     QString dataPath = dataDirectoryPath();
 
     QDir dataDir (dataPath);
@@ -127,6 +176,8 @@ QString Config::dataDirectory() {
 }
 
 QString Config::dataDirectoryPath() {
+    QMutexLocker locker(&_publicAccessMutex);
+
     if (_dataDirectoryPath.isEmpty()) {
         _dataDirectoryPath = isPortable() ? dataDirectoryPathWhenPortable() : dataDirectoryPathWhenInstalled();
     }
@@ -170,21 +221,35 @@ QString Config::dataDirectoryPathWhenInstalled() {
 }
 
 
+QString Config::read(QString key) {
+    key = key.trimmed(); //get rid of spaces around key
+    if (key.isEmpty()) { return QString(); } //ignore empty keys; return null
+    QMutexLocker locker(&_publicAccessMutex);
+    QString value = getConfigFile()->readOne(key);
+    return value;
+}
+
 QString Config::read(QString key, QString defaultValue) {
-    return defaultValue;
+    key = key.trimmed(); //get rid of spaces around key
+    if (key.isEmpty()) { return QString(); } //ignore empty keys; return null
+    QString value = read(key);
+    return !value.isNull() ? value : defaultValue;
 }
-
-void Config::write(QString key, QString value) {
-
-}
-
 
 QString Config::read(QString key, const char* defaultValue) {
     return read(key, QString(defaultValue));
 }
 
+
+void Config::write(QString key, QString value) {
+    key = key.trimmed(); //get rid of spaces around key
+    if (key.isEmpty()) { return; } //ignore empty keys
+    QMutexLocker locker(&_publicAccessMutex);
+    getConfigFile()->writeOne(key, value);
+}
+
 void Config::write(QString key, const char* value) {
-    write (key, QString(value));
+    write(key, QString(value));
 }
 
 
@@ -220,23 +285,596 @@ void Config::write(QString key, int value) {
 }
 
 
-long Config::read(QString key, long defaultValue) {
+long long Config::read(QString key, long long defaultValue) {
     QString text = read(key, QString()).trimmed();
-    bool isOK; long value = text.toLong(&isOK);
+    bool isOK; long long value = text.toLongLong(&isOK);
     return isOK ? value : defaultValue;
 }
 
-void Config::write(QString key, long value) {
+void Config::write(QString key, long long value) {
     write(key, QString::number(value));
 }
 
 
 double Config::read(QString key, double defaultValue) {
     QString text = read(key, QString()).trimmed();
-    bool isOK; double value = text.toDouble(&isOK);
-    return isOK ? value : defaultValue;
+    if (text.compare("NAN", Qt::CaseInsensitive) == 0) { //compatibility with C#-based config
+        return std::numeric_limits<double>::quiet_NaN();
+    } else if (text.compare("Infinity", Qt::CaseInsensitive) == 0) { //compatibility with C#-based config
+        return std::numeric_limits<double>::infinity();
+    } else if (text.compare("-Infinity", Qt::CaseInsensitive) == 0) { //compatibility with C#-based config
+        return -std::numeric_limits<double>::infinity();
+    } else {
+        bool isOK; double value = text.toDouble(&isOK);
+        return isOK ? value : defaultValue;
+    }
 }
 
 void Config::write(QString key, double value) {
-    write(key, QString::number(value));
+    QString text = QString::number(value, 'G', 14);
+    if (text.compare("NAN", Qt::CaseInsensitive) == 0) {
+        write(key, "NaN"); //compatibility with C#-based config
+    } else if (text.compare("INF", Qt::CaseInsensitive) == 0) {
+        write(key, "Infinity"); //compatibility with C#-based config
+    } else if (text.compare("-INF", Qt::CaseInsensitive) == 0) {
+        write(key, "-Infinity"); //compatibility with C#-based config
+    } else {
+        write(key, text);
+    }
+}
+
+
+QStringList Config::readMany(QString key) {
+    key = key.trimmed(); //get rid of spaces around key
+    if (key.isEmpty()) { return QStringList(); } //ignore empty keys; return empty list
+    QMutexLocker locker(&_publicAccessMutex);
+    QStringList values = getConfigFile()->readMany(key);
+    return values;
+}
+
+QStringList Config::readMany(QString key, QStringList defaultValues) {
+    QStringList values = readMany(key);
+    return !(values.length() > 0)? values : defaultValues;
+}
+
+void Config::writeMany(QString key, QStringList values) {
+    key = key.trimmed(); //get rid of spaces around key
+    if (key.isEmpty()) { return; } //ignore empty keys
+    QMutexLocker locker(&_publicAccessMutex);
+    if (values.length() > 0) {
+        getConfigFile()->writeMany(key, values);
+    } else {
+        getConfigFile()->removeMany(key);
+    }
+}
+
+
+void Config::remove(QString key) {
+    key = key.trimmed(); //get rid of spaces around key
+    if (key.isEmpty()) { return; } //ignore empty keys
+    QMutexLocker locker(&_publicAccessMutex);
+    getConfigFile()->removeMany(key);
+}
+
+void Config::removeAll() {
+    QMutexLocker locker(&_publicAccessMutex);
+    getConfigFile()->removeAll();
+}
+
+
+Config::ConfigFile* Config::getConfigFile() {
+    if (_configFile == nullptr) {
+        _configFile = new ConfigFile(configurationFile());
+    }
+    return _configFile;
+}
+
+void Config::resetConfigFile() {
+    if (_configFile != nullptr) {
+        delete _configFile;
+        _configFile = nullptr;
+    }
+}
+
+
+Config::ConfigFile::ConfigFile(QString filePath) {
+    QString fileContent;
+    QString lineEnding = QString();
+    QFile file(filePath);
+    if (file.open(QFile::ReadOnly)) {
+        QTextStream in(&file);
+        in.setCodec("UTF-8");
+        fileContent = in.readAll(); //we'll handle new-line ourselves
+
+        if (!fileContent.isNull()) {
+            QString currLine = QString();
+            bool lineEndingDetermined = false;
+
+            QChar prevChar = '\0';
+            for (QChar ch: fileContent) {
+                if (ch == '\n') {
+                    if (prevChar == '\r') { //CRLF pair
+                        if (!lineEndingDetermined) {
+                            lineEnding = "\r\n";
+                            lineEndingDetermined = true;
+                        }
+                    } else {
+                        if (!lineEndingDetermined) {
+                            lineEnding = "\n";
+                            lineEndingDetermined = true;
+                        }
+                        processLine(currLine);
+                        currLine.clear();
+                    }
+                } else if (ch == '\r') {
+                    processLine(currLine);
+                    currLine.clear();
+                    if (!lineEndingDetermined) { lineEnding = "\r"; } //do not set as determined as there is possibility of trailing LF
+                } else {
+                    if (!lineEnding.isNull()) { lineEndingDetermined = true; } //if there was a line ending before, mark it as determined
+                    currLine.append(ch);
+                }
+                prevChar = ch;
+            }
+            _fileLoaded = true;
+
+            processLine(currLine);
+        }
+    }
+
+#ifdef Q_OS_WIN
+    _lineEnding = !lineEnding.isNull() ? lineEnding : "\r\n";
+#else
+    _lineEnding = !lineEnding.isNull() ? lineEnding : "\n";
+#endif
+
+#ifdef QT_DEBUG
+    for(LineData line: _lines) {
+        QString key = line.getKey();
+        QString value = line.getValue();
+        if (!key.isNull() && !key.isEmpty()) {
+            qDebug().nospace() << "[Settings] " << key << ": " << value;
+        }
+    }
+#endif
+
+    _filePath = filePath;
+}
+
+void Config::ConfigFile::processLine(QString lineText) {
+    QString valueSeparator = QString();
+
+    QString sbKey = QString();
+    QString sbValue = QString();
+    QString sbComment = QString();
+    QString sbWhitespace = QString();
+    QString sbEscapeLong = QString();
+    QString separatorPrefix = QString();
+    QString separatorSuffix = QString();
+    QString commentPrefix = QString();
+
+    ProcessState state = ProcessState::Default;
+    ProcessState prevState = ProcessState::Default;
+    for (QChar ch: lineText) {
+        switch (state) {
+            case ProcessState::Default:
+                if (ch.isSpace()) {
+                } else if (ch == '#') {
+                    sbComment.append(ch);
+                    state = ProcessState::Comment;
+                } else if (ch == '\\') {
+                    state = ProcessState::KeyEscape;
+                } else {
+                    sbKey.append(ch);
+                    state = ProcessState::Key;
+                }
+                break;
+
+            case ProcessState::Comment:
+                sbComment.append(ch);
+                break;
+
+            case ProcessState::Key:
+                if (ch.isSpace()) {
+                    valueSeparator = ch;
+                    state = ProcessState::SeparatorOrValue;
+                } else if ((ch == ':') || (ch == '=')) {
+                    valueSeparator = ch;
+                    state = ProcessState::ValueOrWhitespace;
+                } else if (ch == '#') {
+                    sbComment.append(ch);
+                    state = ProcessState::Comment;
+                } else if (ch == '\\') {
+                    state = ProcessState::KeyEscape;
+                } else {
+                    sbKey.append(ch);
+                }
+                break;
+
+            case ProcessState::SeparatorOrValue:
+                if (ch.isSpace()) {
+                } else if ((ch == ':') || (ch == '=')) {
+                    valueSeparator = ch;
+                    state = ProcessState::ValueOrWhitespace;
+                } else if (ch == '#') {
+                    sbComment.append(ch);
+                    state = ProcessState::Comment;
+                } else if (ch == '\\') {
+                    state = ProcessState::ValueEscape;
+                } else {
+                    sbValue.append(ch);
+                    state = ProcessState::Value;
+                }
+                break;
+
+            case ProcessState::ValueOrWhitespace:
+                if (ch.isSpace()) {
+                } else if (ch == '#') {
+                    sbComment.append(ch);
+                    state = ProcessState::Comment;
+                } else if (ch == '\\') {
+                    state = ProcessState::ValueEscape;
+                } else {
+                    sbValue.append(ch);
+                    state = ProcessState::Value;
+                }
+                break;
+
+            case ProcessState::Value:
+                if (ch.isSpace()) {
+                    state = ProcessState::ValueOrComment;
+                } else if (ch == '#') {
+                    sbComment.append(ch);
+                    state = ProcessState::Comment;
+                } else if (ch == '\\') {
+                    state = ProcessState::ValueEscape;
+                } else {
+                    sbValue.append(ch);
+                }
+                break;
+
+            case ProcessState::ValueOrComment:
+                if (ch.isSpace()) {
+                } else if (ch == '#') {
+                    sbComment.append(ch);
+                    state = ProcessState::Comment;
+                } else if (ch == '\\') {
+                    sbValue.append(sbWhitespace);
+                    state = ProcessState::ValueEscape;
+                } else {
+                    sbValue.append(sbWhitespace);
+                    sbValue.append(ch);
+                    state = ProcessState::Value;
+                }
+                break;
+
+            case ProcessState::KeyEscape:
+            case ProcessState::ValueEscape:
+                if (ch == 'u') {
+                    state = (state == ProcessState::KeyEscape) ? ProcessState::KeyEscapeLong : ProcessState::ValueEscapeLong;
+                } else {
+                    QChar newCh;
+                    switch (ch.unicode()) {
+                        case '0': newCh = '\000'; break;
+                        case 'b': newCh = '\b'; break;
+                        case 't': newCh = '\t'; break;
+                        case 'n': newCh = '\n'; break;
+                        case 'r': newCh = '\r'; break;
+                        case '_': newCh = ' '; break;
+                        default: newCh = ch; break;
+                    }
+                    if (state == ProcessState::KeyEscape) {
+                        sbKey.append(newCh);
+                    } else {
+                        sbValue.append(newCh);
+                    }
+                    state = (state == ProcessState::KeyEscape) ? ProcessState::Key : ProcessState::Value;
+                }
+                break;
+
+            case ProcessState::KeyEscapeLong:
+            case ProcessState::ValueEscapeLong:
+                sbEscapeLong.append(ch);
+                if (sbEscapeLong.length() == 4) {
+                    bool isOK;
+                    int chValue = sbEscapeLong.toInt(&isOK, 16);
+                    if (isOK) {
+                        if (state == ProcessState::KeyEscape) {
+                            sbKey.append(QChar(chValue));
+                        } else {
+                            sbValue.append(QChar(chValue));
+                        }
+                    }
+                    state = (state == ProcessState::KeyEscapeLong) ? ProcessState::Key : ProcessState::Value;
+                }
+                break;
+        }
+
+        if (ch.isSpace() && (prevState != ProcessState::KeyEscape) && (prevState != ProcessState::ValueEscape) && (prevState != ProcessState::KeyEscapeLong) && (prevState != ProcessState::ValueEscapeLong)) {
+            sbWhitespace.append(ch);
+        } else if (state != prevState) { //on state change, clean comment prefix
+            if ((state == ProcessState::ValueOrWhitespace) && (separatorPrefix.isNull())) {
+                separatorPrefix = sbWhitespace;
+                sbWhitespace.clear();
+            } else if ((state == ProcessState::Value) && (separatorSuffix.isNull())) {
+                separatorSuffix = sbWhitespace;
+                sbWhitespace.clear();
+            } else if ((state == ProcessState::Comment) && (commentPrefix.isNull())) {
+                commentPrefix = sbWhitespace;
+                sbWhitespace.clear();
+            } else if ((state == ProcessState::Key) || (state == ProcessState::ValueOrWhitespace) || (state == ProcessState::Value)) {
+                sbWhitespace.clear();
+            }
+        }
+
+        prevState = state;
+    }
+
+    LineData line = LineData(sbKey, separatorPrefix, valueSeparator, separatorSuffix, sbValue, commentPrefix, sbComment);
+    _lines.push_back(line);
+}
+
+
+bool Config::ConfigFile::save() {
+    QString content;
+    for(int i=0; i<_lines.length(); i++) {
+        if (i>0) { content += _lineEnding; }
+        content.append(_lines[i].toString());
+    }
+
+    QSaveFile file(_filePath);
+    if (file.open(QIODevice::WriteOnly)) {
+        QTextStream out(&file);
+        out.setCodec("UTF-8");
+        out << content;
+        return file.commit();
+    } else {
+        qDebug() << "Cannot write file: " << file.errorString();
+        return false;
+    }
+}
+
+QString Config::ConfigFile::readOne(QString key) {
+    int index = -1;
+    for(int i=0; i<_lines.length(); i++) {
+        LineData line = _lines[i];
+        if (key.compare(line.getKey(), Qt::CaseInsensitive) == 0) {
+            index = i; //last key takes precedence
+        }
+    }
+    return (index >= 0) ? _lines[index].getValue() : QString();
+}
+
+QStringList Config::ConfigFile::readMany(QString key) {
+    QStringList values = QStringList();
+    for(int i=0; i<_lines.length(); i++) {
+        LineData line = _lines[i];
+        if (key.compare(line.getKey(), Qt::CaseInsensitive) == 0) {
+            values.push_back(line.getValue());
+        }
+    }
+    return values;
+}
+
+void Config::ConfigFile::writeOne(QString key, QString value) {
+    int index = -1;
+    for(int i=0; i<_lines.length(); i++) {
+        LineData line = _lines[i];
+        if (key.compare(line.getKey(), Qt::CaseInsensitive) == 0) {
+            index = i; //last key takes precedence
+        }
+    }
+
+    if (index >= 0) {
+        _lines[index].setValue(value);
+    } else {
+        LineData* templateLine;
+        if (_lines.length() > 0) {
+            templateLine = &_lines[0];
+        } else {
+            templateLine = nullptr;
+        }
+        LineData newData = LineData(templateLine, key, value);
+
+        if (_lines.length() == 0) {
+            _lines.push_back(newData);
+            _lines.push_back(LineData());
+        } else if (!_lines[_lines.length() - 1].isEmpty()) {
+            _lines.push_back(newData);
+        } else {
+            _lines.insert(_lines.length() - 1, newData);
+        }
+    }
+
+    if (_immediateSave) { save(); }
+}
+
+void Config::ConfigFile::writeMany(QString key, QStringList values) {
+    int lastIndex = -1;
+    LineData lastLine;
+    for (int i = _lines.length() - 1; i>=0; i--) { //find insertion point
+        LineData line = _lines[i];
+        if (key.compare(line.getKey(), Qt::CaseInsensitive) == 0) {
+            if (lastLine.isEmpty()) {
+                lastLine = line;
+                lastIndex = i;
+            } else {
+                lastIndex--;
+            }
+            _lines.removeAt(i);
+        }
+    }
+
+    if (lastIndex >= 0) {
+        bool hasLines = (_lines.length() > 0);
+        for(QString value: values) {
+            LineData* templateLine;
+            if (!lastLine.isEmpty()) {
+                templateLine = &lastLine;
+            } else if (hasLines) {
+                templateLine = &_lines[0];
+            } else {
+                templateLine = nullptr;
+            }
+            _lines.insert(lastIndex, LineData(templateLine, key, value));
+            lastIndex++;
+        }
+    } else {
+        bool hasLines = (_lines.length() > 0);
+        if (!hasLines) {
+            for(QString value: values) {
+                _lines.push_back(LineData(nullptr, key, value));
+            }
+            _lines.push_back(LineData());
+        } else if (!_lines[_lines.length() - 1].isEmpty()) {
+            for(QString value: values) {
+                _lines.push_back(LineData(&_lines[0], key, value));
+            }
+        } else {
+            for(QString value: values) {
+                _lines.insert(_lines.length() - 1, LineData(&_lines[0], key, value));
+            }
+        }
+    }
+
+    if (_immediateSave) { save(); }
+}
+
+void Config::ConfigFile::removeMany(QString key) {
+    for(int i=_lines.length() -1; i>=0; i--) {
+        LineData line = _lines[i];
+        if (key.compare(line.getKey(), Qt::CaseInsensitive) == 0) {
+            _lines.removeAt(i);
+        }
+    }
+    if (_immediateSave) { save(); }
+}
+
+void Config::ConfigFile::removeAll() {
+    _lines.clear();
+    if (_immediateSave) { save(); }
+}
+
+
+Config::ConfigFile::LineData::LineData() {
+}
+
+Config::ConfigFile::LineData::LineData(LineData* lineTemplate, QString key, QString value)
+    : LineData(key, QString(), QString(), QString(), value, QString(), QString()) {
+    if (lineTemplate != nullptr) {
+        _separatorPrefix = lineTemplate->_separatorPrefix;
+        _separator = lineTemplate->_separator;
+        _separatorSuffix = lineTemplate->_separatorSuffix;
+
+        int firstKeyTotalLength = (lineTemplate->_key.length()) + lineTemplate->_separatorPrefix.length() + 1 + lineTemplate->_separatorSuffix.length();
+        int totalLengthWithoutSuffix = key.length() + lineTemplate->_separatorPrefix.length() + 1;
+        int maxSuffixLength = firstKeyTotalLength - totalLengthWithoutSuffix;
+        if (maxSuffixLength < 1) { maxSuffixLength = 1; } //leave at least one space
+        if (_separatorSuffix.length() > maxSuffixLength) {
+            _separatorSuffix = _separatorSuffix.left(maxSuffixLength);
+        }
+    }
+
+    if (_separatorPrefix.isNull()) { _separatorPrefix = ""; }
+    if (_separator.isNull()) { _separator = ":"; }
+    if (_separatorSuffix.isNull()) { _separatorSuffix = " "; }
+}
+
+Config::ConfigFile::LineData::LineData(QString key, QString separatorPrefix, QString separator, QString separatorSuffix, QString value, QString commentPrefix, QString comment) {
+    _key = key;
+    _separatorPrefix = separatorPrefix;
+    _separator = separator;
+    _separatorSuffix = separatorSuffix;
+    _value = value;
+    _commentPrefix = commentPrefix;
+    _comment = comment;
+}
+
+
+QString Config::ConfigFile::LineData::getKey() {
+    return _key;
+}
+
+QString Config::ConfigFile::LineData::getValue() {
+    return _value;
+}
+
+void Config::ConfigFile::LineData::setValue(QString newValue) {
+    _value = newValue;
+}
+
+bool Config::ConfigFile::LineData::isEmpty() {
+    return _key.isEmpty() && _value.isEmpty() && _commentPrefix.isEmpty() && _comment.isEmpty();
+}
+
+QString Config::ConfigFile::LineData::toString() {
+    QString sb = QString();
+    if (!_key.isEmpty()) {
+        escapeIntoStringBuilder(&sb, _key, true);
+
+        if (!_value.isEmpty()) {
+            if ((_separator == ':') || (_separator == '=')) {
+                sb.append(_separatorPrefix);
+                sb.append(_separator);
+                sb.append(_separatorSuffix);
+            } else {
+                sb.append(_separatorSuffix.isEmpty() ? " " : _separatorSuffix);
+            }
+            escapeIntoStringBuilder(&sb, _value);
+        } else { //try to preserve formatting in case of spaces (thus omitted)
+            sb.append(_separatorPrefix);
+            if (_separator == ':') {
+                sb.append(":");
+            } else if (_separator == '=') {
+                sb.append("=");
+            }
+            sb.append(_separatorSuffix);
+        }
+    }
+
+    if (!_comment.isEmpty()) {
+        if (!_commentPrefix.isEmpty()) { sb.append(_commentPrefix); }
+        sb.append(_comment);
+    }
+
+    return sb;
+}
+
+void Config::ConfigFile::LineData::escapeIntoStringBuilder(QString* sb, QString text, bool isKey) {
+    for (int i=0; i < text.length(); i++) {
+        QChar ch = text[i];
+        switch (ch.unicode()) {
+            case '\\': sb->append("\\\\"); break;
+            case '\0': sb->append("\\0"); break;
+            case '\b': sb->append("\\b"); break;
+            case '\t': sb->append("\\t"); break;
+            case '\r': sb->append("\\r"); break;
+            case '\n': sb->append("\\n"); break;
+            case '#': sb->append("\\#"); break;
+            default:
+                if (!ch.isPrint()) {
+                    sb->append(QString("%1").arg(ch.unicode(), 4, 16, QChar('0')));
+                } else if (ch == ' ') {
+                    if ((i == 0) || (i == (text.length() - 1)) || isKey) {
+                        sb->append("\\_");
+                    } else {
+                        sb->append(ch);
+                    }
+                } else if (ch.isSpace()) {
+                    switch (ch.unicode()) {
+                        case '\0': sb->append("\\0"); break;
+                        case '\b': sb->append("\\b"); break;
+                        case '\t': sb->append("\\t"); break;
+                        case '\n': sb->append("\\n"); break;
+                        case '\r': sb->append("\\r"); break;
+                        default: sb->append(QString("%1").arg(ch.unicode(), 4, 16, QChar('0'))); break;
+                    }
+                } else if (ch == '\\') {
+                    sb->append("\\\\");
+                } else {
+                    sb->append(ch);
+                }
+                break;
+        }
+    }
 }

@@ -75,6 +75,9 @@ Test {
             test_config.h \
             test_helpers.h
 
+    RESOURCES += \
+        test.qrc
+
 } else {
     TEMPLATE = app
     TARGET = qtext
