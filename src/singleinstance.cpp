@@ -43,12 +43,16 @@ bool SingleInstance::attach() {
     QString serverName = QString(QCryptographicHash::hash(serverNameSource.toUtf8(), QCryptographicHash::Sha256)
                                  .toBase64(QByteArray::Base64UrlEncoding | QByteArray::OmitTrailingEquals));
 
+    bool hasAlreadyConnected = false;
     _server = new QLocalServer();
     bool serverListening = _server->listen(serverName);
     if (!serverListening && (_server->serverError() == QAbstractSocket::AddressInUseError)) {
         QLocalSocket* client = new QLocalSocket();
         client->connectToServer(serverName);
-        if (!client->waitForConnected(250)) { //no answer - assume cleanup is needed
+        if (client->waitForConnected(250)) {
+            qDebug().noquote() << "[SingleInstance]" << "Another instance is already running";
+            hasAlreadyConnected = true;
+        } else { //no answer - assume cleanup is needed
             QLocalServer::removeServer(serverName);
             serverListening = _server->listen(serverName);
         }
@@ -69,8 +73,8 @@ bool SingleInstance::attach() {
 #endif
     }
 
-    if (!isFirstInstance) { //contact main instance if we're not the one
-        qDebug() << "Another instance is running.";
+    if (!isFirstInstance && !hasAlreadyConnected) { //contact main instance if we're not the one
+        qDebug().noquote() << "[SingleInstance]" << "Another instance is already running";
         QLocalSocket* client = new QLocalSocket();
         client->connectToServer(serverName);
         delete client;
