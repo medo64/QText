@@ -32,6 +32,8 @@
     #error "Only Linux and Windows are supported!"
 #endif
 
+namespace Medo { class Hotkey; }
+
 class Hotkey : public QObject, QAbstractNativeEventFilter {
     Q_OBJECT
 

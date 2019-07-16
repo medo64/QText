@@ -17,12 +17,12 @@ Hotkey::~Hotkey() {
 
 bool Hotkey::registerHotkey(QKeySequence keySequence) {
     if (_isRegistered) {
-        qDebug() << "Hotkey already registered!";
+        qDebug().noquote() << "[Hotkey]" << "Hotkey already registered!";
         return false;
     }
 
     if (keySequence.count() != 1) {
-        qDebug() << "Must have only one key combination!";
+        qDebug().noquote() << "[Hotkey]" << "Must have only one key combination!";
         return false;
     }
 
@@ -33,14 +33,14 @@ bool Hotkey::registerHotkey(QKeySequence keySequence) {
     if (successful) {
         _isRegistered = true;
     } else {
-        qDebug().nospace() << "Failed to register hotkey (" << keySequence.toString() <<  ")!";
+        qDebug().noquote() << "[Hotkey]" << "Failed to register hotkey (" + keySequence.toString() + ")!";
     }
     return successful;
 }
 
 bool Hotkey::unregisterHotkey() {
     if (!_isRegistered) {
-        qDebug() << "Hotkey not registered!";
+        qDebug().noquote() << "[Hotkey]" << "Hotkey not registered!";
         return false;
     }
 
@@ -48,7 +48,7 @@ bool Hotkey::unregisterHotkey() {
     if (successful) {
         _isRegistered = false;
     } else {
-        qDebug() << "Failed to deregister hotkey!";
+        qDebug().noquote() << "[Hotkey]" << "Failed to deregister hotkey!";
     }
     return successful;
 }
@@ -64,7 +64,7 @@ void Hotkey::nativeInit() {
 
 bool Hotkey::nativeRegisterHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers) {
     if (_hotkeyId > 0xBFFF) {
-        qDebug() << "No more Hotkey IDs!"; //cannot be bothered to track IDs as this is unlikely
+        qDebug().noquote() << "[Hotkey]" << "No more Hotkey IDs!"; //cannot be bothered to track IDs as this is unlikely
         return false;
     }
 
@@ -74,7 +74,7 @@ bool Hotkey::nativeRegisterHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers) 
     if (modifiers & Qt::ShiftModifier)   { modValue += MOD_SHIFT; }
 
     if (modifiers & ~(Qt::AltModifier | Qt::ControlModifier | Qt::ShiftModifier)) {
-        qDebug().noquote().nospace() << "Unrecognized modifiers (" << modifiers << ")!";
+        qDebug().noquote().nospace() << "[Hotkey] " << "Unrecognized modifiers (" << modifiers << ")!";
         return false;
     }
 
@@ -84,7 +84,7 @@ bool Hotkey::nativeRegisterHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers) 
     } else if ((key >= Qt::Key_F1) && (key <= Qt::Key_F24)) {
         keyValue = VK_F1 + (key - Qt::Key_F1);
     } else {
-        qDebug().noquote().nospace() << "Unrecognized key (" << key << " in " << ")!";
+        qDebug().noquote().nospace() << "[Hotkey] " << "Unrecognized key (" << key << ")!";
         return false;
     }
 
@@ -118,7 +118,7 @@ bool Hotkey::nativeRegisterHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers) 
     if (modifiers & Qt::ControlModifier) { modValue |= XCB_MOD_MASK_CONTROL; }
     if (modifiers & Qt::ShiftModifier)   { modValue |= XCB_MOD_MASK_SHIFT; }
     if (modifiers & ~(Qt::AltModifier | Qt::ControlModifier | Qt::ShiftModifier | Qt::MetaModifier)) {
-        qDebug().noquote().nospace() << "Unrecognized modifiers (" << modifiers << ")!";
+        qDebug().noquote().nospace() << "[Hotkey] " << "Unrecognized modifiers (" << modifiers << ")!";
         return false;
     }
 
@@ -128,7 +128,7 @@ bool Hotkey::nativeRegisterHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers) 
     } else if ((key >= Qt::Key_F1) && (key <= Qt::Key_F35)) {
         keySymbol = XK_F1 + (key - Qt::Key_F1);
     } else {
-        qDebug().noquote().nospace() << "Unrecognized key (" << key << " in " << ")!";
+        qDebug().noquote().nospace() << "[Hotkey] " << "Unrecognized key (" << key << " in " << ")!";
         return false;
     }
     xcb_keycode_t keyValue = XKeysymToKeycode(QX11Info::display(), keySymbol);
@@ -165,6 +165,7 @@ bool Hotkey::nativeEventFilter(const QByteArray&, void* message, long*) {
         xcb_keycode_t keyValue = ke->detail;
         uint16_t modValue = ke->state & (XCB_MOD_MASK_SHIFT|XCB_MOD_MASK_CONTROL|XCB_MOD_MASK_1); //xmodmap -pm (to see masks: default 1 Alt, 4 Super)
         if ((_hotkeyMods == modValue) && (_hotkeyKey == keyValue)) {
+            qDebug().noquote() << "[Hotkey]" << "Hotkey detected";
             emit activated();
             return true;
         }
