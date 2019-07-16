@@ -448,8 +448,11 @@ void MainWindow::onTrayActivate(QSystemTrayIcon::ActivationReason reason) {
 }
 
 void MainWindow::onTrayShow() {
+    this->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+    this->hide(); //workaround for Ubuntu
     this->show();
-    this->activateWindow();
+    this->raise(); //workaround for MacOS
+    this->activateWindow(); //workaround for Windows
 }
 
 void MainWindow::onTrayExit() {
