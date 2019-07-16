@@ -19,6 +19,7 @@ class FileItem : public QTextEdit {
         bool isPlain();
         bool isHtml();
         bool isModified();
+        bool isEmpty();
         bool load();
         bool save();
 

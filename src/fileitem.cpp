@@ -61,6 +61,11 @@ bool FileItem::isModified() {
     return this->document()->isModified();
 }
 
+bool FileItem::isEmpty() {
+    return this->document()->isEmpty();
+}
+
+
 bool FileItem::load() {
     qDebug() << "load()" << getPath();
 

@@ -265,10 +265,17 @@ void MainWindow::onFileRename() {
 
 void MainWindow::onFileDelete() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-    //auto tabIndex = ui->tabWidget->currentIndex();
-    file->deleteLater();
-    _folder->deleteFile(file);
-    //ui->tabWidget->tabBar()->removeTab(tabIndex);
+
+    QMessageBox msgBox;
+    msgBox.setIcon(QMessageBox::Question);
+    msgBox.setText("The document has been modified");
+    msgBox.setInformativeText("Do you really want to delete " + file->getTitle() + "?");
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msgBox.setDefaultButton(QMessageBox::Yes);
+    if (file->isEmpty() || (msgBox.exec() == QMessageBox::Yes)) {
+        file->deleteLater();
+        _folder->deleteFile(file);
+    }
 }
 
 void MainWindow::onTextCut() {
