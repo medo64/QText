@@ -429,11 +429,12 @@ Config::ConfigFile::ConfigFile(QString filePath) {
 #endif
 
 #ifdef QT_DEBUG
+    qDebug().noquote() << "[Config]" << configurationFilePath();
     for(LineData line: _lines) {
         QString key = line.getKey();
         QString value = line.getValue();
         if (!key.isNull() && !key.isEmpty()) {
-            qDebug().nospace() << "[Settings] " << key << ": " << value;
+            qDebug().noquote() << "[Config]" << key + ":" << value;
         }
     }
 #endif
@@ -629,7 +630,7 @@ bool Config::ConfigFile::save() {
         out << content;
         return file.commit();
     } else {
-        qDebug() << "Cannot write file: " << file.errorString();
+        qDebug().noquote() << "[Config]" << "Cannot write file!" << file.errorString();
         return false;
     }
 }

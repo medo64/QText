@@ -1,3 +1,7 @@
+/* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
+
+// 2019-07-15: Initial version
+
 #ifndef CONFIG_H
 #define CONFIG_H
 
@@ -5,6 +9,8 @@
 #include <QMutex>
 #include <QString>
 #include <QVector>
+
+namespace Medo { class Config; }
 
 class Config {
 
