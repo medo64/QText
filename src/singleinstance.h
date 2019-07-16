@@ -15,7 +15,7 @@ class SingleInstance : public QObject {
     public:
 
         /*! Returns singleton instance. */
-        static SingleInstance& instance();
+        static SingleInstance* instance();
 
         /*! Returns true if current application is the first instance. */
         static bool attach();

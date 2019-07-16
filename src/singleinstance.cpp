@@ -18,10 +18,6 @@ SingleInstance::SingleInstance()
     : QObject(nullptr) {
 }
 
-SingleInstance& SingleInstance::instance() {
-    return _instance;
-}
-
 SingleInstance::~SingleInstance() {
     QMutexLocker locker(&_mutex);
 
@@ -29,6 +25,10 @@ SingleInstance::~SingleInstance() {
         _server->close();
         delete _server;
     }
+}
+
+SingleInstance* SingleInstance::instance() {
+    return &_instance;
 }
 
 
@@ -58,7 +58,7 @@ bool SingleInstance::attach() {
     bool isFirstInstance = false;
     if (serverListening) { //only the first instance can listen (on Linux)
         isFirstInstance = true;
-        connect(_server, SIGNAL(newConnection()), &SingleInstance::instance(), SLOT(onNewConnection()));
+        connect(_server, SIGNAL(newConnection()), SingleInstance::instance(), SLOT(onNewConnection()));
 
 #if defined(Q_OS_WIN) //check if there is a server running - needed on Windows as two local servers can run there
         CreateMutexW(nullptr, true, reinterpret_cast<LPCWSTR>(serverName.utf16()));

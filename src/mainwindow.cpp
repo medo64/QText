@@ -65,7 +65,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     }
 
     { //single instance
-        connect(&SingleInstance::instance(), SIGNAL(newInstanceDetected()), this, SLOT(onTrayShow()));
+        connect(SingleInstance::instance(), SIGNAL(newInstanceDetected()), this, SLOT(onTrayShow()));
     }
 
     { //icon setup
