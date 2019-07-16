@@ -9,6 +9,8 @@
 #include <QMutex>
 #include <QObject>
 
+namespace Medo { class SingleInstance; }
+
 class SingleInstance : public QObject {
     Q_OBJECT
 

@@ -42,6 +42,7 @@ bool SingleInstance::attach() {
     serverNameSource += QSysInfo::machineHostName();
     QString serverName = QString(QCryptographicHash::hash(serverNameSource.toUtf8(), QCryptographicHash::Sha256)
                                  .toBase64(QByteArray::Base64UrlEncoding | QByteArray::OmitTrailingEquals));
+    qDebug().noquote() << "[SingleInstance]" << "Local server name is" << serverName;
 
     bool hasAlreadyConnected = false;
     _server = new QLocalServer();
@@ -94,5 +95,6 @@ void SingleInstance::onNewConnection() {
     QLocalSocket* client = _server->nextPendingConnection();
     connect(client, &QLocalSocket::disconnected, client, &QLocalSocket::deleteLater);
     delete client;
+    qDebug().noquote() << "[SingleInstance]" << "New instance detected";
     emit newInstanceDetected();
 }
