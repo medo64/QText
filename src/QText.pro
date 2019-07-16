@@ -22,6 +22,7 @@ SOURCES += \
         qtabwidgetex.cpp \
         settings.cpp \
         singleinstance.cpp \
+        state.cpp \
         storage.cpp
 
 HEADERS += \
@@ -36,6 +37,7 @@ HEADERS += \
         qtabwidgetex.h \
         settings.h \
         singleinstance.h \
+        state.h \
         storage.h
 
 FORMS += \

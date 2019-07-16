@@ -1,13 +1,16 @@
+#include "mainwindow.h"
+#include "config.h"
 #include "filenamedialog.h"
 #include "helpers.h"
-#include "mainwindow.h"
 #include "settings.h"
 #include "singleinstance.h"
+#include "state.h"
 #include "storage.h"
 #include "ui_filenamedialog.h"
 #include "ui_mainwindow.h"
 #include <QClipboard>
 #include <QMenu>
+#include <QMessageBox>
 #include <QMimeData>
 #include <QTabBar>
 #include <QTextDocumentFragment>
@@ -171,6 +174,12 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
 
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(onTabChanged()));
     connect(_clipboard, SIGNAL(dataChanged()), SLOT(onTextStateChanged()));
+
+    { //State
+        connect(State::instance(), &State::writeToConfig, [=] (QString key, QString value) { Config::write("State!" + key, value); });
+        connect(State::instance(), &State::readFromConfig, [=] (QString key) { return Config::read("State!" + key); });
+        State::load(this);
+    }
 }
 
 MainWindow::~MainWindow() {
@@ -179,6 +188,7 @@ MainWindow::~MainWindow() {
 
 
 void MainWindow::closeEvent(QCloseEvent *event) {
+    State::save(this);
     if (event->spontaneous()) {
         if (event->type() == QEvent::Close) {
             event->ignore();
@@ -190,6 +200,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 void MainWindow::keyPressEvent(QKeyEvent *event) {
     switch(event->key()) {
         case Qt::Key_Escape: {
+            State::save(this);
             this->hide();
         } break;
 
@@ -457,5 +468,6 @@ void MainWindow::onTrayShow() {
 
 void MainWindow::onTrayExit() {
     _tray->hide();
+    this->close();
     QCoreApplication::exit(0);
 }
