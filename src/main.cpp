@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "settings.h"
-#include "singleinstance.h"
+#include "medo/singleinstance.h"
 
 static std::shared_ptr<Storage> storage;
 

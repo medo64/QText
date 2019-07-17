@@ -1,8 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "hotkey.h"
 #include "storage.h"
+#include "medo/hotkey.h"
 #include <memory>
 #include <QApplication>
 #include <QMainWindow>

@@ -1,13 +1,13 @@
 #include "mainwindow.h"
-#include "config.h"
 #include "filenamedialog.h"
 #include "helpers.h"
 #include "settings.h"
-#include "singleinstance.h"
-#include "state.h"
 #include "storage.h"
 #include "ui_filenamedialog.h"
 #include "ui_mainwindow.h"
+#include "medo/config.h"
+#include "medo/singleinstance.h"
+#include "medo/state.h"
 #include <QClipboard>
 #include <QMenu>
 #include <QMessageBox>

@@ -10,34 +10,34 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-        config.cpp \
+        medo/config.cpp \
+        medo/hotkey.cpp \
+        medo/singleinstance.cpp \
+        medo/state.cpp \
         fileitem.cpp \
         filenamedialog.cpp \
         folderitem.cpp \
         helpers.cpp \
-        hotkey.cpp \
         main.cpp \
         mainwindow.cpp \
         qtabbarex.cpp \
         qtabwidgetex.cpp \
         settings.cpp \
-        singleinstance.cpp \
-        state.cpp \
         storage.cpp
 
 HEADERS += \
-        config.h \
+        medo/config.h \
+        medo/hotkey.h \
+        medo/singleinstance.h \
+        medo/state.h \
         fileitem.h \
         filenamedialog.h \
         folderitem.h \
         helpers.h \
-        hotkey.h \
         mainwindow.h \
         qtabbarex.h \
         qtabwidgetex.h \
         settings.h \
-        singleinstance.h \
-        state.h \
         storage.h
 
 FORMS += \
