@@ -1,8 +1,8 @@
-#include "test_config.h"
 #include <QDir>
 #include <QFile>
+#include "test_config.h"
 
-#include "config.h"
+#include "medo/config.h"
 
 void Test_Config::setup(QString applicationName, QString organizationName) {
     QCoreApplication::setApplicationName(applicationName);
@@ -480,4 +480,20 @@ void Test_Config::deleteAll() { //Delete all values
 
     Config::save();
     verifyTestConfig("Empty.cfg");
+}
+
+void Test_Config::twoReadsWithDifferentDefault() { //Each read must independently define default
+    setup("Test", "Testing", "Empty.cfg");
+
+    QCOMPARE(Config::read("NonexistentKey", "Default 1"), "Default 1");
+    QCOMPARE(Config::read("NonexistentKey", "Default 2"), "Default 2");
+}
+
+void Test_Config::writeOverridesReads() { //Each read must not return default if there was a write
+    setup("Test", "Testing", "Empty.cfg");
+
+    Config::write("SomeKey", "SomeValue");
+
+    QCOMPARE(Config::read("SomeKey", "Default 1"), "SomeValue");
+    QCOMPARE(Config::read("SomeKey", "Default 2"), "SomeValue");
 }

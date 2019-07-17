@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QtTest>
-#include "config.h"
 
 class Test_Config : public QObject {
     Q_OBJECT
@@ -47,6 +46,8 @@ class Test_Config : public QObject {
         void testConversionRead();
         void keyWhitespace();
         void deleteAll();
+        void twoReadsWithDifferentDefault();
+        void writeOverridesReads();
 
 };
 

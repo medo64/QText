@@ -5,9 +5,9 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include <QMap>
 #include <QMutex>
 #include <QString>
+#include <QStringList>
 #include <QVector>
 
 namespace Medo { class Config; }
