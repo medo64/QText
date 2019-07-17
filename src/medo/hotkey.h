@@ -6,6 +6,7 @@
 #define HOTKEY_H
 
 #include <QAbstractNativeEventFilter>
+#include <QByteArray>
 #include <QObject>
 #include <QKeySequence>
 

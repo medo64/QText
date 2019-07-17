@@ -1,4 +1,9 @@
-#include "mainwindow.h"
+#include <QClipboard>
+#include <QMenu>
+#include <QMessageBox>
+#include <QMimeData>
+#include <QTabBar>
+#include <QTextDocumentFragment>
 #include "filenamedialog.h"
 #include "helpers.h"
 #include "settings.h"
@@ -8,12 +13,7 @@
 #include "medo/config.h"
 #include "medo/singleinstance.h"
 #include "medo/state.h"
-#include <QClipboard>
-#include <QMenu>
-#include <QMessageBox>
-#include <QMimeData>
-#include <QTabBar>
-#include <QTextDocumentFragment>
+#include "mainwindow.h"
 
 MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr), ui(new Ui::MainWindow) {
     ui->setupUi(this);

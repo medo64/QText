@@ -1,5 +1,5 @@
 #include "settings.h"
-#include "config.h"
+#include "medo/config.h"
 
 #include <QDir>
 
