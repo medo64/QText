@@ -1,3 +1,7 @@
+/* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
+
+// 2019-07-15: Initial version
+
 #ifndef STATE_H
 #define STATE_H
 
@@ -55,13 +59,6 @@ class State  : public QObject {
     private:
         void loadEx(QString objectName, QMainWindow* window);
         void saveEx(QString objectName, QMainWindow* window);
-
-    private:
-        QString readValue(QString key);
-        QString adjustValue(QString value, QString defaultValue);
-        int adjustValue(QString value, int defaultValue);
-        //void writeValue(QString key, QString value);
-        //void writeValue(QString key, int value);
 
 };
 
