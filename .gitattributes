@@ -6,3 +6,4 @@
 *.pro     text
 *.ui      text
 Makefile  text
+src/test/Config/*  binary
