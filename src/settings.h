@@ -13,6 +13,8 @@ class Settings {
         static void setHotkey(QKeySequence newHotkey);
         static bool minimizeToTray();
         static void setMinimizeToTray(bool newMinimizeToTray);
+        static int quickSaveInterval();
+        static void setQuickSaveInterval(int newQuickSaveInterval);
 
 };
 

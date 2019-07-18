@@ -1,7 +1,8 @@
-#include "fileitem.h"
-#include "helpers.h"
 #include <QDir>
 #include <QDebug>
+#include "helpers.h"
+#include "settings.h"
+#include "fileitem.h"
 
 FileItem::FileItem(QString directoryPath, QString fileName)
     : QTextEdit(nullptr) {
@@ -163,14 +164,21 @@ void FileItem::onModificationChanged(bool changed) {
 
     emit modificationChanged(this, changed);
 
-    if (_timerSavePending == nullptr) {
-        _timerSavePending = new QTimer(); //set timer to fire 3 seconds after the last key press
-        _timerSavePending->setInterval(3000);
-        _timerSavePending->setSingleShot(true);
-        QObject::connect(_timerSavePending, SIGNAL(timeout()), this, SLOT(onSavePendingTimeout()));
+    int interval = Settings::quickSaveInterval();
+    if (interval > 0) {
+        if (_timerSavePending == nullptr) {
+            _timerSavePending = new QTimer(); //set timer to fire 3 seconds after the last key press
+            _timerSavePending->setSingleShot(true);
+            QObject::connect(_timerSavePending, SIGNAL(timeout()), this, SLOT(onSavePendingTimeout()));
+        }
+        _timerSavePending->stop();
+        _timerSavePending->setInterval(interval);
+        _timerSavePending->start();
+    } else if (_timerSavePending != nullptr) { //if interval is 0, remove pending timer
+        _timerSavePending->stop();
+        delete _timerSavePending;
+        _timerSavePending = nullptr;
     }
-    _timerSavePending->stop();
-    _timerSavePending->start();
 }
 
 void FileItem::onSavePendingTimeout() {

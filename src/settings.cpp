@@ -37,3 +37,16 @@ bool Settings::minimizeToTray() {
 void Settings::setMinimizeToTray(bool newMinimizeToTray) {
     Config::write("MinimizeToTray", newMinimizeToTray);
 }
+
+
+int Settings::quickSaveInterval() {
+    int value = Config::read("quickSaveInterval", 2500);
+    if (value == 0) { return 0; } //quick save disabled
+    if (value < 1000) { return 1000;  } //minimum is 1 seconds
+    if (value > 60000) { return 60000;  } //maximum is 60 seconds
+    return value;
+}
+
+void Settings::setQuickSaveInterval(int newQuickSaveInterval) {
+    Config::write("MinimizeToTray", newQuickSaveInterval);
+}
