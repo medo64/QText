@@ -144,6 +144,10 @@ bool FileItem::save() {
 bool FileItem::event(QEvent *event) {
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent* e = static_cast<QKeyEvent*>(event);
+        if ((e->key() == Qt::Key_Return) && (e->modifiers() != Qt::NoModifier)) { //allow enter with any modifier
+            e->setModifiers(Qt::NoModifier);
+            return QTextEdit::event(e);
+        }
         if (e->modifiers() == Qt::AltModifier) { return false; } //ignore keys with Alt
     }
     return QTextEdit::event(event);
