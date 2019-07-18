@@ -48,6 +48,11 @@ class Test_Config : public QObject {
         void deleteAll();
         void twoReadsWithDifferentDefault();
         void writeOverridesReads();
+        void removeCausesDefault();
+        void removeAllCausesDefault();
+        void writeChangesOnlyLastEntry();
+        void caseInsensitiveDefaults();
+        void caseInsensitiveWrites();
 
 };
 

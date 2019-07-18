@@ -636,17 +636,33 @@ bool Config::ConfigFile::save() {
 }
 
 QString Config::ConfigFile::readOne(QString key) {
-    int index = -1;
+    QMutexLocker locker(&_cacheMutex);
+    QVariant cacheValue = _cache.value(key.toUpper());
+    if (!cacheValue.isNull()) {
+        QStringList cachedValues = cacheValue.toStringList();
+        return !cachedValues.empty() ? cachedValues.last() : QString();
+    }
+
+    QStringList values;
     for(int i=0; i<_lines.length(); i++) {
         LineData line = _lines[i];
         if (key.compare(line.getKey(), Qt::CaseInsensitive) == 0) {
-            index = i; //last key takes precedence
+            values.append(line.getValue());
         }
     }
-    return (index >= 0) ? _lines[index].getValue() : QString();
+
+    _cache.insert(key.toUpper(), values);
+    return !values.isEmpty() ? values.last() : QString();
 }
 
 QStringList Config::ConfigFile::readMany(QString key) {
+    QMutexLocker locker(&_cacheMutex);
+    QVariant cacheValue = _cache.value(key.toUpper());
+    if (!cacheValue.isNull()) {
+        QStringList cachedValues = cacheValue.toStringList();
+        return !cachedValues.empty() ? cachedValues : QStringList();
+    }
+
     QStringList values = QStringList();
     for(int i=0; i<_lines.length(); i++) {
         LineData line = _lines[i];
@@ -654,10 +670,15 @@ QStringList Config::ConfigFile::readMany(QString key) {
             values.push_back(line.getValue());
         }
     }
+
+    _cache.insert(key.toUpper(), values);
     return values;
 }
 
 void Config::ConfigFile::writeOne(QString key, QString value) {
+    QMutexLocker locker(&_cacheMutex);
+    _cache.remove(key.toUpper()); //invalidate cache and deal with it during read
+
     int index = -1;
     for(int i=0; i<_lines.length(); i++) {
         LineData line = _lines[i];
@@ -691,6 +712,9 @@ void Config::ConfigFile::writeOne(QString key, QString value) {
 }
 
 void Config::ConfigFile::writeMany(QString key, QStringList values) {
+    QMutexLocker locker(&_cacheMutex);
+    _cache.remove(key.toUpper()); //invalidate cache and deal with it during read
+
     int lastIndex = -1;
     LineData lastLine;
     for (int i = _lines.length() - 1; i>=0; i--) { //find insertion point
@@ -742,7 +766,10 @@ void Config::ConfigFile::writeMany(QString key, QStringList values) {
 }
 
 void Config::ConfigFile::removeMany(QString key) {
-    for(int i=_lines.length() -1; i>=0; i--) {
+    QMutexLocker locker(&_cacheMutex);
+    _cache.remove(key.toUpper()); //invalidate cache
+
+    for(int i=_lines.length()-1; i>=0; i--) {
         LineData line = _lines[i];
         if (key.compare(line.getKey(), Qt::CaseInsensitive) == 0) {
             _lines.removeAt(i);
@@ -752,6 +779,9 @@ void Config::ConfigFile::removeMany(QString key) {
 }
 
 void Config::ConfigFile::removeAll() {
+    QMutexLocker locker(&_cacheMutex);
+    _cache.clear(); //invalidate cache
+
     _lines.clear();
     if (_immediateSave) { save(); }
 }

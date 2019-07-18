@@ -1,13 +1,15 @@
 /* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
 
-// 2019-07-15: Initial version
+// 2019-07-17: Initial version
 
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <QHash>
 #include <QMutex>
 #include <QString>
 #include <QStringList>
+#include <QVariant>
 #include <QVector>
 
 namespace Medo { class Config; }
@@ -193,6 +195,10 @@ class Config {
                 void writeMany(QString key, QStringList value);
                 void removeMany(QString key);
                 void removeAll();
+
+            private:
+                QMutex _cacheMutex;
+                QHash<QString, QVariant> _cache;
 
             private:
                 typedef enum {

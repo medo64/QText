@@ -411,8 +411,8 @@ void Test_Config::testConversionWrite() { //Test conversion
     Config::write("Integer Min", std::numeric_limits<int32_t>::min());
     Config::write("Integer Max", std::numeric_limits<int32_t>::max());
     Config::write("Long", static_cast<long long>(42));
-    Config::write("Long Min", std::numeric_limits<int64_t>::min());
-    Config::write("Long Max", std::numeric_limits<int64_t>::max());
+    Config::write("Long Min", static_cast<long long>(std::numeric_limits<int64_t>::min()));
+    Config::write("Long Max", static_cast<long long>(std::numeric_limits<int64_t>::max()));
     Config::write("Boolean", true);
     Config::write("Double", static_cast<double>(42.42));
     Config::write("Double Pi", static_cast<double>(3.1415926535897931));
@@ -496,4 +496,56 @@ void Test_Config::writeOverridesReads() { //Each read must not return default if
 
     QCOMPARE(Config::read("SomeKey", "Default 1"), "SomeValue");
     QCOMPARE(Config::read("SomeKey", "Default 2"), "SomeValue");
+}
+
+void Test_Config::writeChangesOnlyLastEntry() { //write a single entry will override only the last member
+    setup("Test", "Testing", "Empty.cfg");
+
+    Config::writeMany("SomeKey", QStringList({ "Value 1", "Value 2" }));
+    QCOMPARE(Config::readMany("SomeKey")[0], "Value 1");
+    QCOMPARE(Config::readMany("SomeKey")[1], "Value 2");
+
+    Config::write("SomeKey", "Value New");
+    QCOMPARE(Config::readMany("SomeKey")[0], "Value 1");
+    QCOMPARE(Config::readMany("SomeKey")[1], "Value New");
+}
+
+void Test_Config::removeCausesDefault() { //Each read must return default if previous write has been removed
+    setup("Test", "Testing", "Empty.cfg");
+
+    Config::write("SomeKey", "SomeValue");
+    QCOMPARE(Config::read("SomeKey"), "SomeValue");
+
+    Config::remove("SomeKEY");
+
+    QCOMPARE(Config::read("SomeKey", "Default 1"), "Default 1");
+    QCOMPARE(Config::read("SomeKey", "Default 2"), "Default 2");
+}
+
+void Test_Config::removeAllCausesDefault() { //Each read must return default if previous write has been removed
+    setup("Test", "Testing", "Empty.cfg");
+
+    Config::write("SomeKey", "SomeValue");
+    QCOMPARE(Config::read("SomeKey"), "SomeValue");
+
+    Config::removeAll();
+
+    QCOMPARE(Config::read("SomeKey", "Default 1"), "Default 1");
+    QCOMPARE(Config::read("SomeKey", "Default 2"), "Default 2");
+}
+
+void Test_Config::caseInsensitiveDefaults() {
+    setup("Test", "Testing", "Empty.cfg");
+
+    QCOMPARE(Config::read("NON-EXISTENT KEY", "Default 1"), "Default 1");
+    QCOMPARE(Config::read("non-existent key", "Default 2"), "Default 2");
+}
+
+void Test_Config::caseInsensitiveWrites() {
+    setup("Test", "Testing", "Empty.cfg");
+
+    Config::write("Some Key", "SomeValue");
+
+    QCOMPARE(Config::read("SOME KEY", "Default 1"), "SomeValue");
+    QCOMPARE(Config::read("some key", "Default 2"), "SomeValue");
 }
