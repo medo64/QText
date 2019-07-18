@@ -1,6 +1,6 @@
+#include <QPushButton>
 #include "filenamedialog.h"
 #include "ui_filenamedialog.h"
-#include <QPushButton>
 
 FileNameDialog::FileNameDialog(QWidget *parent, QString fileName, std::shared_ptr<FolderItem> folder)
     : QDialog(parent)
@@ -9,7 +9,7 @@ FileNameDialog::FileNameDialog(QWidget *parent, QString fileName, std::shared_pt
 
     _folder = folder;
 
-    this->layout()->setSizeConstraint(QLayout::SetFixedSize);
+    this->setFixedSize(this->geometry().width(), this->geometry().height());
     if (fileName != nullptr) {
         ui->textFileName->setText(fileName);
     } else {
