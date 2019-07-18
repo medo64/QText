@@ -24,6 +24,7 @@ class FileItem : public QTextEdit {
         bool save();
 
     protected:
+        bool event(QEvent *event);
         void focusInEvent(QFocusEvent *event);
         void focusOutEvent(QFocusEvent *event);
 

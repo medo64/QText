@@ -141,6 +141,14 @@ bool FileItem::save() {
 }
 
 
+bool FileItem::event(QEvent *event) {
+    if (event->type() == QEvent::KeyPress) {
+        QKeyEvent* e = static_cast<QKeyEvent*>(event);
+        if (e->modifiers() == Qt::AltModifier) { return false; } //ignore keys with Alt
+    }
+    return QTextEdit::event(event);
+}
+
 void FileItem::focusInEvent(QFocusEvent* e) {
     qDebug().nospace() << "focusInEvent(" << QVariant::fromValue(e->reason()).toString() << ") " << getPath();
     QTextEdit::focusInEvent(e);

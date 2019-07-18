@@ -207,10 +207,59 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
-    switch(event->key()) {
+    auto data = static_cast<uint>(event->key()) | event->modifiers();
+    switch(data) {
         case Qt::Key_Escape: {
             State::save(this);
             this->hide();
+        } break;
+
+        case Qt::AltModifier | Qt::Key_1: {
+            if (ui->tabWidget->count() >= 1) { ui->tabWidget->setCurrentIndex(0); }
+        } break;
+
+        case Qt::AltModifier | Qt::Key_2: {
+            if (ui->tabWidget->count() >= 2) { ui->tabWidget->setCurrentIndex(1); }
+        } break;
+
+        case Qt::AltModifier | Qt::Key_3: {
+            if (ui->tabWidget->count() >= 3) { ui->tabWidget->setCurrentIndex(2); }
+        } break;
+
+        case Qt::AltModifier | Qt::Key_4: {
+            if (ui->tabWidget->count() >= 4) { ui->tabWidget->setCurrentIndex(3); }
+        } break;
+
+        case Qt::AltModifier | Qt::Key_5: {
+            if (ui->tabWidget->count() >= 5) { ui->tabWidget->setCurrentIndex(4); }
+        } break;
+
+        case Qt::AltModifier | Qt::Key_6: {
+            if (ui->tabWidget->count() >= 6) { ui->tabWidget->setCurrentIndex(5); }
+        } break;
+
+        case Qt::AltModifier | Qt::Key_7: {
+            if (ui->tabWidget->count() >= 7) { ui->tabWidget->setCurrentIndex(6); }
+        } break;
+
+        case Qt::AltModifier | Qt::Key_8: {
+            if (ui->tabWidget->count() >= 8) { ui->tabWidget->setCurrentIndex(7); }
+        } break;
+
+        case Qt::AltModifier | Qt::Key_9: {
+            if (ui->tabWidget->count() >= 9) { ui->tabWidget->setCurrentIndex(8); }
+        } break;
+
+        case Qt::AltModifier | Qt::Key_0: {
+            if (ui->tabWidget->count() >= 10) { ui->tabWidget->setCurrentIndex(9); }
+        } break;
+
+        case Qt::AltModifier | Qt::Key_Left: {
+            if (ui->tabWidget->currentIndex() > 0) { ui->tabWidget->setCurrentIndex(ui->tabWidget->currentIndex() - 1); }
+        } break;
+
+        case Qt::AltModifier | Qt::Key_Right: {
+            if (ui->tabWidget->currentIndex() < ui->tabWidget->count() - 1) { ui->tabWidget->setCurrentIndex(ui->tabWidget->currentIndex() + 1); }
         } break;
 
         default: QMainWindow::keyPressEvent(event);
