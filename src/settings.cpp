@@ -5,7 +5,7 @@
 
 QString Settings::dataPath() {
     QString defaultPath = Config::dataDirectory();
-    QString path = Config::read("DataPath", defaultPath);
+    QString path = Config::read("DataPath", Config::read("FilesLocation", defaultPath));
     return (path.length() > 0) ? QDir::cleanPath(path) : defaultPath;
 }
 
