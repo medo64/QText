@@ -6,6 +6,7 @@ unix:LIBS += -lX11 -lxcb
 
 
 DEFINES += QT_DEPRECATED_WARNINGS
+CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
 CONFIG += c++11
 
