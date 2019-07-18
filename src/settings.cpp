@@ -28,3 +28,12 @@ void Settings::setHotkey(QKeySequence newHotkey) {
     QString hotkeyText { newHotkey.toString(QKeySequence::PortableText) };
     Config::write("DataPath", hotkeyText);
 }
+
+
+bool Settings::minimizeToTray() {
+    return Config::read("MinimizeToTray", false);
+}
+
+void Settings::setMinimizeToTray(bool newMinimizeToTray) {
+    Config::write("MinimizeToTray", newMinimizeToTray);
+}

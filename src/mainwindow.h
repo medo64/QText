@@ -22,6 +22,7 @@ class MainWindow : public QMainWindow {
 
     protected:
         void closeEvent(QCloseEvent *event);
+        void changeEvent(QEvent *event);
         void keyPressEvent(QKeyEvent *event);
 
     private:

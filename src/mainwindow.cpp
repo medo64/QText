@@ -187,6 +187,15 @@ MainWindow::~MainWindow() {
 }
 
 
+void MainWindow::changeEvent(QEvent *event) {
+   if (event->type() == QEvent::WindowStateChange) {
+       if (isMinimized() && Settings::minimizeToTray()) {
+           this->hide();
+       }
+   }
+   return QMainWindow::changeEvent(event);
+}
+
 void MainWindow::closeEvent(QCloseEvent *event) {
     State::save(this);
     if (event->spontaneous()) {
