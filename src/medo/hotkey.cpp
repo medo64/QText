@@ -141,6 +141,12 @@ bool Hotkey::nativeRegisterHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers) 
     if (cookieError == nullptr) {
         _hotkeyMods = modValue;
         _hotkeyKey = keyValue;
+
+        //Workaround for caps/num lock
+        xcb_grab_key_checked(connection, 1, static_cast<xcb_window_t>(QX11Info::appRootWindow()), modValue | XCB_MOD_MASK_LOCK,                  keyValue, XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC);
+        xcb_grab_key_checked(connection, 1, static_cast<xcb_window_t>(QX11Info::appRootWindow()), modValue | XCB_MOD_MASK_2,                     keyValue, XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC);
+        xcb_grab_key_checked(connection, 1, static_cast<xcb_window_t>(QX11Info::appRootWindow()), modValue | XCB_MOD_MASK_LOCK | XCB_MOD_MASK_2, keyValue, XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC);
+
         return true;
     } else {
         free(cookieError);
@@ -153,6 +159,11 @@ bool Hotkey::nativeUnregisterHotkey() {
     auto cookie = xcb_ungrab_key(connection, _hotkeyKey, static_cast<xcb_window_t>(QX11Info::appRootWindow()), _hotkeyMods);
     auto cookieError = xcb_request_check(connection, cookie);
     if (cookieError == nullptr) {
+        //Workaround for caps/num lock
+        xcb_ungrab_key(connection, _hotkeyKey, static_cast<xcb_window_t>(QX11Info::appRootWindow()), _hotkeyMods | XCB_MOD_MASK_LOCK);
+        xcb_ungrab_key(connection, _hotkeyKey, static_cast<xcb_window_t>(QX11Info::appRootWindow()), _hotkeyMods | XCB_MOD_MASK_2);
+        xcb_ungrab_key(connection, _hotkeyKey, static_cast<xcb_window_t>(QX11Info::appRootWindow()), _hotkeyMods | XCB_MOD_MASK_LOCK | XCB_MOD_MASK_2);
+
         return true;
     } else {
         free(cookieError);
