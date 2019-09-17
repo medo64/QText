@@ -20,6 +20,7 @@ int main(int argc, char *argv[]) {
     storage = std::make_shared<Storage>(Settings::dataPath());
 
     MainWindow w { storage };
+    w.setWindowFlag(Qt::Tool);
 
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
         w.show();

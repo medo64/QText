@@ -72,8 +72,9 @@ bool Hotkey::nativeRegisterHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers) 
     if (modifiers & Qt::AltModifier)     { modValue += MOD_ALT; }
     if (modifiers & Qt::ControlModifier) { modValue += MOD_CONTROL; }
     if (modifiers & Qt::ShiftModifier)   { modValue += MOD_SHIFT; }
+    if (modifiers & Qt::MetaModifier)    { modValue += MOD_WIN; }
 
-    if (modifiers & ~(Qt::AltModifier | Qt::ControlModifier | Qt::ShiftModifier)) {
+    if (modifiers & ~(Qt::AltModifier | Qt::ControlModifier | Qt::ShiftModifier | Qt::MetaModifier)) {
         qDebug().noquote().nospace() << "[Hotkey] " << "Unrecognized modifiers (" << modifiers << ")!";
         return false;
     }
@@ -117,6 +118,7 @@ bool Hotkey::nativeRegisterHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers) 
     if (modifiers & Qt::AltModifier)     { modValue |= XCB_MOD_MASK_1; }
     if (modifiers & Qt::ControlModifier) { modValue |= XCB_MOD_MASK_CONTROL; }
     if (modifiers & Qt::ShiftModifier)   { modValue |= XCB_MOD_MASK_SHIFT; }
+    if (modifiers & Qt::MetaModifier)    { modValue |= XCB_MOD_MASK_4; }
     if (modifiers & ~(Qt::AltModifier | Qt::ControlModifier | Qt::ShiftModifier | Qt::MetaModifier)) {
         qDebug().noquote().nospace() << "[Hotkey] " << "Unrecognized modifiers (" << modifiers << ")!";
         return false;
@@ -163,7 +165,7 @@ bool Hotkey::nativeEventFilter(const QByteArray&, void* message, long*) {
     if ((e->response_type & ~0x80) == XCB_KEY_PRESS) {
         xcb_key_press_event_t* ke = reinterpret_cast<xcb_key_press_event_t*>(e);
         xcb_keycode_t keyValue = ke->detail;
-        uint16_t modValue = ke->state & (XCB_MOD_MASK_SHIFT|XCB_MOD_MASK_CONTROL|XCB_MOD_MASK_1); //xmodmap -pm (to see masks: default 1 Alt, 4 Super)
+        uint16_t modValue = ke->state & (XCB_MOD_MASK_SHIFT | XCB_MOD_MASK_CONTROL | XCB_MOD_MASK_1 | XCB_MOD_MASK_4); //xmodmap -pm (to see masks: default 1 Alt, 4 Super)
         if ((_hotkeyMods == modValue) && (_hotkeyKey == keyValue)) {
             qDebug().noquote() << "[Hotkey]" << "Hotkey detected";
             emit activated();
