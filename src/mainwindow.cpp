@@ -21,6 +21,11 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     _storage = storage;
     _folder = storage->getBaseFolder();
 
+    //taskbar visibility
+    if (!Settings::showInTaskbar()) {
+        this->setWindowFlag(Qt::Tool);
+    }
+
     { //application icon
         QIcon appIcon;
         appIcon.addFile(":icons/16x16/qtext.png", QSize(16, 16));
@@ -353,6 +358,7 @@ void MainWindow::onTextCut() {
     if (cursor.hasSelection()) {
         _clipboard->clear();
         _clipboard->setText(cursor.selection().toPlainText());
+
         cursor.removeSelectedText();
     }
 }

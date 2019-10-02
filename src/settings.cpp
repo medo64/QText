@@ -50,3 +50,12 @@ int Settings::quickSaveInterval() {
 void Settings::setQuickSaveInterval(int newQuickSaveInterval) {
     Config::write("MinimizeToTray", newQuickSaveInterval);
 }
+
+
+bool Settings::showInTaskbar() {
+    return Config::read("ShowInTaskbar", true);
+}
+
+void Settings::setShowInTaskbar(bool newShowInTaskbar) {
+    Config::write("ShowInTaskbar", newShowInTaskbar);
+}

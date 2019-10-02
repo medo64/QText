@@ -15,6 +15,8 @@ class Settings {
         static void setMinimizeToTray(bool newMinimizeToTray);
         static int quickSaveInterval();
         static void setQuickSaveInterval(int newQuickSaveInterval);
+        static bool showInTaskbar();
+        static void setShowInTaskbar(bool newShowInTaskbar);
 
 };
 
