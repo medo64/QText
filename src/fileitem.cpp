@@ -12,6 +12,7 @@ FileItem::FileItem(QString directoryPath, QString fileName)
 
     this->setLineWrapMode(QTextEdit::WidgetWidth);
     this->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+    this->setAcceptRichText(false);
 
     load();
     connect(this->document(), SIGNAL(modificationChanged(bool)), this, SLOT(onModificationChanged(bool)));
