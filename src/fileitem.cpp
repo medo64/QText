@@ -1,5 +1,6 @@
 #include <QDir>
 #include <QDebug>
+#include <QFileInfo>
 #include "helpers.h"
 #include "settings.h"
 #include "fileitem.h"
@@ -73,6 +74,7 @@ bool FileItem::load() {
     if (_timerSavePending != nullptr) { _timerSavePending->stop(); }
     this->blockSignals(true);
 
+    bool fileValid;
     QString path = getPath();
     QFile file(path);
     if (file.exists()) {
@@ -90,28 +92,36 @@ bool FileItem::load() {
             this->document()->setModified(false);
             this->blockSignals(false);
             emit titleChanged(this);
-            return true;
+            fileValid = true;
         } else {
             this->setReadOnly(true);
             this->setStyleSheet("QTextEdit { background-color: red; color: white; }");
             this->setText(file.errorString() + "\n" + path);
             qDebug() << "load()" << getPath() << "error:" << file.errorString();
-            return false;
+            fileValid = false;
         }
     } else { //create a new one
         if(file.open(QIODevice::WriteOnly)) {
             file.close();
             this->document()->setModified(false);
             emit titleChanged(this);
-            return true;
+            fileValid = true;
         } else {
             this->setReadOnly(true);
             this->setStyleSheet("QTextEdit { background-color: red; color: white; }");
             this->setText(file.errorString() + "\n" + path);
             qDebug() << "new()" << getPath() << "error:" << file.errorString();
-            return false;
+            fileValid = false;
         }
     }
+
+    if (fileValid) {
+        QFileInfo info(file);
+        _modificationTime = info.lastModified();
+    } else {
+        _modificationTime = QDateTime::currentDateTimeUtc();
+    }
+    return fileValid;
 }
 
 bool FileItem::save() {
@@ -155,6 +165,15 @@ bool FileItem::event(QEvent *event) {
 
 void FileItem::focusInEvent(QFocusEvent* e) {
     qDebug().nospace() << "focusInEvent(" << QVariant::fromValue(e->reason()).toString() << ") " << getPath();
+    QString path = getPath();
+    QFile file(path);
+    if (file.exists()) {
+        QFileInfo info(file);
+        if (_modificationTime != info.lastModified()) { load(); }
+    } else {
+        load(); //just to ensure all fields are filled
+    }
+
     QTextEdit::focusInEvent(e);
     emit activated(this);
 }

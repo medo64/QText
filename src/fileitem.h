@@ -2,6 +2,7 @@
 #define FILEITEM_H
 
 #include <memory>
+#include <QDateTime>
 #include <QFocusEvent>
 #include <QString>
 #include <QTextEdit>
@@ -34,6 +35,7 @@ class FileItem : public QTextEdit {
         QTextEdit* _editor = nullptr;
         QTimer* _timerSavePending = nullptr;
         void setIsModified(bool isModified);
+        QDateTime _modificationTime;
 
     signals:
         void activated(FileItem* file);
