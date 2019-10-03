@@ -2,7 +2,6 @@
 /build
 /build-*
 /dist
-/target
 **/*.pro.user
 **/*.pro.user.*
 **/*.rs.bk

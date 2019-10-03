@@ -1,3 +1,7 @@
+VERSION = 0.0.1
+DEFINES += "VERSION=$$VERSION"
+
+
 QT       += core gui widgets
 QT       += network  # QLocalServer/QLocalSocket
 
