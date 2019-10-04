@@ -1,12 +1,23 @@
-VERSION = 0.0.1
-DEFINES += "VERSION=$$VERSION"
+APP_VERSION = 0.0.1
+DEFINES += "APP_VERSION=\\\"$$APP_VERSION\\\""
+
+APP_COMMIT = $$system(git -C \"$$_PRO_FILE_PWD_\" log -n 1 --format=%h)
+APP_COMMIT_DIRTY = $$system(git -C \"$$_PRO_FILE_PWD_\" diff --quiet ; echo $?)
+!equals(APP_COMMIT_DIRTY, 0) {
+    APP_COMMIT = $$upper($$APP_COMMIT) #upper-case if working directory is dirty
+}
+DEFINES += "APP_COMMIT=\\\"$$APP_COMMIT\\\""
+
+DEFINES += "APP_QT_VERSION=\\\"$$QT_VERSION\\\""
 
 
 QT       += core gui widgets
 QT       += network  # QLocalServer/QLocalSocket
 
-unix:QT  += x11extras
-unix:LIBS += -lX11 -lxcb
+unix {
+    QT  += x11extras
+    LIBS += -lX11 -lxcb
+}
 
 
 DEFINES += QT_DEPRECATED_WARNINGS

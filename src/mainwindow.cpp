@@ -164,25 +164,47 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         connect(ui->actionRedo, SIGNAL(triggered()), this, SLOT(onTextRedo()));
     }
 
+    //align-right
     QWidget* spacerWidget = new QWidget(this);
     spacerWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     spacerWidget->setVisible(true);
     ui->mainToolBar->addWidget(spacerWidget);
 
+    //folder button menu
     onFolderSelect(); //setup folder select menu button
     onTabChanged(); //update toolbar & focus
-
     connect(ui->actionReopen, SIGNAL(triggered()), this, SLOT(onFileReopen()));
     connect(ui->actionShowContainingDirectory, SIGNAL(triggered()), this, SLOT(onShowContainingDirectory()));
     connect(ui->actionShowContainingDirectoryOnly, SIGNAL(triggered()), this, SLOT(onShowContainingDirectoryOnly()));
 
+    //app button menu
+    {
+        QIcon appIcon;
+        appIcon.addFile(":icons/16x16/redo.png", QSize(16, 16));
+        appIcon.addFile(":icons/24x24/redo.png", QSize(24, 24));
+        appIcon.addFile(":icons/32x32/redo.png", QSize(32, 32));
+        appIcon.addFile(":icons/48x48/redo.png", QSize(48, 48));
+        appIcon.addFile(":icons/64x64/redo.png", QSize(64, 64));
+
+        _appButton = new QToolButton();
+        _appButton->setIcon(appIcon);
+        _appButton->setPopupMode(QToolButton::InstantPopup);
+        _appButton->setMenu(new QMenu());
+
+        QAction* aboutAppAction = new QAction("&About");
+        connect(aboutAppAction, SIGNAL(triggered()), this, SLOT(onAppAbout()));
+        _appButton->menu()->addAction(aboutAppAction);
+    }
+    ui->mainToolBar->addWidget(_appButton);
+
+    //tabs
     ui->tabWidget->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tabWidget, SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(onTabMenuRequested(const QPoint&)));
-
     ui->tabWidget->tabBar()->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tabWidget->tabBar(), SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(onTabMenuRequested(const QPoint&)));
-
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(onTabChanged()));
+
+    //clipboard
     connect(_clipboard, SIGNAL(dataChanged()), SLOT(onTextStateChanged()));
 
     { //State
@@ -463,6 +485,14 @@ void MainWindow::onShowContainingDirectoryOnly() {
     onShowContainingDirectory2(_folder->getPath(), nullptr);
 }
 
+void MainWindow::onAppAbout() {
+    QString description = QCoreApplication::applicationName() + " " + APP_VERSION + "+" + APP_COMMIT;
+#ifdef QT_DEBUG
+    description.append("\nDEBUG");
+#endif
+    description.append("\n\nQt "); description.append(APP_QT_VERSION);
+    QMessageBox::about(this, "About",  description);
+}
 
 void MainWindow::onTabMenuRequested(const QPoint &point) {
     if (point.isNull()) { return; }

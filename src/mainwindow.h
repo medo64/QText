@@ -31,6 +31,7 @@ class MainWindow : public QMainWindow {
         std::shared_ptr<FolderItem> _folder;
         QSystemTrayIcon *_tray;
         QToolButton* _folderButton = nullptr;
+        QToolButton* _appButton = nullptr;
         QClipboard* _clipboard = QApplication::clipboard();
         Hotkey* _hotkey;
 
@@ -51,6 +52,7 @@ class MainWindow : public QMainWindow {
         void onFolderSelect();
         void onShowContainingDirectory();
         void onShowContainingDirectoryOnly();
+        void onAppAbout();
         void onTabMenuRequested(const QPoint&);
         void onTabChanged();
         void onTextStateChanged();
