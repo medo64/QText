@@ -52,6 +52,15 @@ void Settings::setQuickSaveInterval(int newQuickSaveInterval) {
 }
 
 
+bool Settings::setupCompleted() {
+    return Config::read("SetupCompleted", false);
+}
+
+void Settings::setSetupCompleted(bool newSetupCompleted) {
+    Config::write("SetupCompleted", newSetupCompleted);
+}
+
+
 bool Settings::showInTaskbar() {
     return Config::read("ShowInTaskbar", true);
 }

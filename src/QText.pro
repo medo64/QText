@@ -28,6 +28,7 @@ SOURCES += \
         qtabbarex.cpp \
         qtabwidgetex.cpp \
         settings.cpp \
+        setup.cpp \
         storage.cpp
 
 HEADERS += \
@@ -43,6 +44,7 @@ HEADERS += \
         qtabbarex.h \
         qtabwidgetex.h \
         settings.h \
+        setup.h \
         storage.h
 
 FORMS += \

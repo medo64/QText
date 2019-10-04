@@ -62,7 +62,12 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         _tray->setContextMenu(trayMenu);
 
         _tray->setIcon(trayIcon);
-        _tray->setToolTip(QCoreApplication::applicationName());
+        auto hotkeyText = Settings::hotkey().toString(QKeySequence::PortableText);
+        if (hotkeyText.length() > 0) {
+            _tray->setToolTip( + "Access notes from tray or press " + hotkeyText + " hotkey.");
+        } else {
+            _tray->setToolTip( + "Access notes from tray.");
+        }
         _tray->show();
     }
 
@@ -184,6 +189,10 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         connect(State::instance(), &State::writeToConfig, [=] (QString key, QString value) { Config::write("State!" + key, value); });
         connect(State::instance(), &State::readFromConfig, [=] (QString key) { return Config::read("State!" + key); });
         State::load(this);
+    }
+
+    if (!Settings::setupCompleted()) { // show extra info when ran first time
+        _tray->showMessage(QCoreApplication::applicationName(), _tray->toolTip(), QSystemTrayIcon::Information, 2500);
     }
 }
 

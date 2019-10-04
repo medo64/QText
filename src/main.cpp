@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "settings.h"
+#include "setup.h"
 #include "medo/singleinstance.h"
 
 static std::shared_ptr<Storage> storage;
@@ -23,6 +24,11 @@ int main(int argc, char *argv[]) {
 
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
         w.show();
+    }
+
+    if (!Settings::setupCompleted()) {
+        Settings::setSetupCompleted(true);
+        Setup::setAutostart(true);
     }
 
     return a.exec();

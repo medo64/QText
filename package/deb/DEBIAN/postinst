@@ -24,17 +24,4 @@ pXF542bTCX+bXOfPWbdl/mnIBRKdsNGNu/FbXTQ4gEmXQwmki5YL8kRwbBloxuH2
 =gY4j
 -----END PGP PUBLIC KEY BLOCK-----" | apt-key add -
 
-mkdir -p $HOME/.config/autostart
-cat << 'EOF' > $HOME/.config/autostart/qtext.desktop
-[Desktop Entry]
-Name=QText
-Exec=/opt/qtext/qtext
-Terminal=false
-Type=Application
-StartupNotify=false
-X-GNOME-Autostart-enabled=true
-EOF
-
-nohup /opt/qtext/qtext </dev/null >/dev/null 2>&1 &
-
 exit 0
