@@ -207,6 +207,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         _appButton = new QToolButton();
         _appButton->setIcon(appIcon);
         _appButton->setPopupMode(QToolButton::InstantPopup);
+        _appButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextBesideIcon);
         _appButton->setMenu(new QMenu());
 
         QAction* aboutAppAction = new QAction("&About");
