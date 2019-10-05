@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "settings.h"
 #include "setup.h"
+#include "medo/config.h"
 #include "medo/singleinstance.h"
 
 static std::shared_ptr<Storage> storage;
@@ -30,7 +31,7 @@ int main(int argc, char *argv[]) {
     w.show();
 #endif
 
-    if (!Settings::setupCompleted()) {
+    if (!Settings::setupCompleted() && !Config::isPortable()) {
         Settings::setSetupCompleted(true);
         Setup::setAutostart(true);
     }
