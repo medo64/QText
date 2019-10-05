@@ -22,9 +22,13 @@ int main(int argc, char *argv[]) {
 
     MainWindow w { storage };
 
+#ifndef QT_DEBUG
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
         w.show();
     }
+#else //show immediately when debugging
+    w.show();
+#endif
 
     if (!Settings::setupCompleted()) {
         Settings::setSetupCompleted(true);

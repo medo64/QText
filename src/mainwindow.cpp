@@ -214,7 +214,8 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     }
 
     if (!Settings::setupCompleted()) { // show extra info when ran first time
-        _tray->showMessage(QCoreApplication::applicationName(), _tray->toolTip(), QSystemTrayIcon::Information, 2500);
+        auto duration = Config::isPortable() ? 1000 : 2500; //shorter duration if config is portable
+        _tray->showMessage(QCoreApplication::applicationName(), _tray->toolTip(), QSystemTrayIcon::Information, duration);
     }
 }
 
@@ -224,12 +225,12 @@ MainWindow::~MainWindow() {
 
 
 void MainWindow::changeEvent(QEvent *event) {
-   if (event->type() == QEvent::WindowStateChange) {
-       if (isMinimized() && Settings::minimizeToTray()) {
-           this->hide();
-       }
-   }
-   return QMainWindow::changeEvent(event);
+    if (event->type() == QEvent::WindowStateChange) {
+        if (isMinimized() && Settings::minimizeToTray()) {
+            this->hide();
+        }
+    }
+    return QMainWindow::changeEvent(event);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
@@ -238,6 +239,9 @@ void MainWindow::closeEvent(QCloseEvent *event) {
         if (event->type() == QEvent::Close) {
             event->ignore();
             this->hide();
+#ifdef QT_DEBUG //close immediately for easier debugging
+            QCoreApplication::exit(0);
+#endif
         }
     }
 }
@@ -248,6 +252,9 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
         case Qt::Key_Escape: {
             State::save(this);
             this->hide();
+#ifdef QT_DEBUG //close immediately for easier debugging
+            QCoreApplication::exit(0);
+#endif
         } break;
 
         case Qt::AltModifier | Qt::Key_1: {
