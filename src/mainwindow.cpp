@@ -534,7 +534,12 @@ void MainWindow::onShowContainingDirectoryOnly() {
 }
 
 void MainWindow::onAppAbout() {
-    QString description = QCoreApplication::applicationName() + " " + APP_VERSION + "+" + APP_COMMIT;
+    QString description = QCoreApplication::applicationName() + " " + APP_VERSION;
+    QString commit = APP_COMMIT;
+    if (commit.length() > 0) {
+        description.append("+");
+        description.append(APP_COMMIT);
+    }
 #ifdef QT_DEBUG
     description.append("\nDEBUG");
 #endif
