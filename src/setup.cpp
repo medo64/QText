@@ -26,6 +26,7 @@ void Setup::nativeAutostartRemove() {
 }
 
 bool Setup::nativeAutostartCheck() {
+    return false;
 }
 
 #elif defined(Q_OS_LINUX)
