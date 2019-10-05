@@ -323,6 +323,28 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
             if (ui->tabWidget->currentIndex() < ui->tabWidget->count() - 1) { ui->tabWidget->setCurrentIndex(ui->tabWidget->currentIndex() + 1); }
         } break;
 
+        case Qt::AltModifier | Qt::Key_Up: {
+            for (size_t i=1; i<_storage->folderCount(); i++) {
+                auto folder = _storage->getFolder(i);
+                if (folder->getPath().compare(_folder->getPath(), Qt::CaseSensitive) == 0) {
+                    _folder = _storage->getFolder(i - 1);
+                    onFolderSelect();
+                    break;
+                }
+            }
+        } break;
+
+        case Qt::AltModifier | Qt::Key_Down: {
+            for (size_t i=0; i<_storage->folderCount() - 1; i++) {
+                auto folder = _storage->getFolder(i);
+                if (folder->getPath().compare(_folder->getPath(), Qt::CaseSensitive) == 0) {
+                    _folder = _storage->getFolder(i + 1);
+                    onFolderSelect();
+                    break;
+                }
+            }
+        } break;
+
         default: QMainWindow::keyPressEvent(event);
     }
 }
