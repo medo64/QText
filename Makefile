@@ -61,18 +61,18 @@ release: src/QText.pro
 	$(if $(findstring 0,$(HAS_QMAKE)),,$(error No 'qmake' in path, consider installing 'qtbase5-dev' package))
 	$(if $(findstring 0,$(HAS_X11EXTRAS)),,$(error X11 extras not found, consider installing 'libqt5x11extras5-dev' package))
 	$(if $(findstring 0,$(HAS_UNCOMMITTED)),,$(warning Uncommitted changes present))
-	@mkdir -p build/
-	@cd build/ ; qmake -qt=qt5 CONFIG+=release ../src/QText.pro ; make
+	@mkdir -p build/release
+	@cd build/release ; qmake -qt=qt5 CONFIG+=release ../../src/QText.pro ; make
 	@mkdir -p bin/
-	@cp build/qtext bin/qtext
+	@cp build/release/qtext bin/qtext
 
 debug: src/QText.pro
 	$(if $(findstring 0,$(HAS_QMAKE)),,$(error No 'qmake' in path, consider installing 'qtbase5-dev' package))
 	$(if $(findstring 0,$(HAS_X11EXTRAS)),,$(error X11 extras not found, consider installing 'libqt5x11extras5-dev' package))
-	@mkdir -p build/
-	@cd build/ ; qmake -qt=qt5 CONFIG+=debug ../src/QText.pro ; make
+	@mkdir -p build/debug
+	@cd build/debug ; qmake -qt=qt5 CONFIG+=debug ../../src/QText.pro ; make
 	@mkdir -p bin/
-	@cp build/qtext bin/qtext
+	@cp build/debug/qtext bin/qtext
 
 
 package: dist
