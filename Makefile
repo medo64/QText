@@ -111,5 +111,5 @@ package: dist
 	@fakeroot dpkg-deb --build $(PACKAGE_DIR)/ > /dev/null
 	@cp /tmp/$(PACKAGE_NAME).deb dist/
 	@$(RM) -r $(PACKAGE_DIR)/
-	-@lintian --suppress-tags dir-or-file-in-opt dist/$(PACKAGE_NAME).deb
+	@lintian --suppress-tags dir-or-file-in-opt dist/$(PACKAGE_NAME).deb
 	@echo Output at dist/$(PACKAGE_NAME).deb
