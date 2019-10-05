@@ -1,6 +1,8 @@
 /* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
 
 // 2019-07-05: Initial version
+// 2019-09-16: Allowing Meta/Win key as a hotkey modifier
+// 2019-10-04: Reorganizing includes to minimize conflicts
 
 #ifndef HOTKEY_H
 #define HOTKEY_H
@@ -9,29 +11,6 @@
 #include <QByteArray>
 #include <QObject>
 #include <QKeySequence>
-
-#if defined(Q_OS_WIN)
-    #include <windows.h>
-#elif defined(Q_OS_LINUX)
-    #include <QX11Info>
-    #include <xcb/xcb.h>
-    #include <X11/keysym.h>
-    #include <X11/Xlib.h>
-    //workaround for compiler errors
-    #undef Bool
-    #undef CursorShape
-    #undef Expose
-    #undef KeyPress
-    #undef KeyRelease
-    #undef FocusIn
-    #undef FocusOut
-    #undef FontChange
-    #undef None
-    #undef Status
-    #undef Unsorted
-#else
-    #error "Only Linux and Windows are supported!"
-#endif
 
 namespace Medo { class Hotkey; }
 
@@ -68,11 +47,11 @@ class Hotkey : public QObject, QAbstractNativeEventFilter {
         bool nativeRegisterHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers);
         bool nativeUnregisterHotkey();
 #if defined(Q_OS_WIN)
-        static std::atomic<WPARAM> _globalHotkeyCounter;
-        int _hotkeyId = 0; //0x0000 through 0xBFFF
+        static std::atomic<uint64_t> _globalHotkeyCounter; //actually WPARAM; just 64-bit integer here to avoid include of windows.h
+        uint64_t _hotkeyId = 0; //0x0000 through 0xBFFF
 #elif defined(Q_OS_LINUX)
         uint16_t _hotkeyMods;
-        xcb_keycode_t _hotkeyKey;
+        uint8_t _hotkeyKey; //actually xcb_keycode_t; just 64-bit integer here to avoid include of X11 headers
 #endif
 
     public slots:
