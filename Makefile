@@ -15,6 +15,11 @@ DEB_BUILD_ARCH := $(shell getconf LONG_BIT | sed "s/32/i386/" | sed "s/64/amd64/
 SOURCE_LIST := Makefile CONTRIBUTING.md LICENSE.md README.md src/ docs/
 
 
+HAS_QMAKE := $(shell which qmake >/dev/null ; echo $$?)
+HAS_X11EXTRAS := $(shell test -d /usr/share/doc/libqt5x11extras5-dev ; echo $$?)
+HAS_UNCOMMITTED := $(shell git diff --quiet ; echo $$?)
+
+
 all: release
 
 
@@ -53,16 +58,17 @@ dist: release
 
 
 release: src/QText.pro
-	@command -v qmake >/dev/null 2>&1 || { echo >&2 "No 'qmake' in path, consider installing 'qtbase5-dev' package!"; exit 1; }
-	@test -d /usr/share/doc/libqt5x11extras5-dev || { echo >&2 "X11 extras not found, consider installing 'libqt5x11extras5-dev' package!"; exit 1; }
+	$(if $(findstring 0,$(HAS_QMAKE)),,$(error No 'qmake' in path, consider installing 'qtbase5-dev' package))
+	$(if $(findstring 0,$(HAS_X11EXTRAS)),,$(error X11 extras not found, consider installing 'libqt5x11extras5-dev' package))
+	$(if $(findstring 0,$(HAS_UNCOMMITTED)),,$(warning Uncommitted changes present))
 	@mkdir -p build/
 	@cd build/ ; qmake -qt=qt5 CONFIG+=release ../src/QText.pro ; make
 	@mkdir -p bin/
 	@cp build/qtext bin/qtext
 
 debug: src/QText.pro
-	@command -v qmake >/dev/null 2>&1 || { echo >&2 "No 'qmake' in path, consider installing 'qtbase5-dev' package!"; exit 1; }
-	@test -d /usr/share/doc/libqt5x11extras5-dev || { echo >&2 "X11 extras not found, consider installing 'libqt5x11extras5-dev' package!"; exit 1; }
+	$(if $(findstring 0,$(HAS_QMAKE)),,$(error No 'qmake' in path, consider installing 'qtbase5-dev' package))
+	$(if $(findstring 0,$(HAS_X11EXTRAS)),,$(error X11 extras not found, consider installing 'libqt5x11extras5-dev' package))
 	@mkdir -p build/
 	@cd build/ ; qmake -qt=qt5 CONFIG+=debug ../src/QText.pro ; make
 	@mkdir -p bin/
@@ -70,6 +76,7 @@ debug: src/QText.pro
 
 
 package: dist
+	$(if $(findstring 0,$(HAS_UNCOMMITTED)),,$(error Uncommitted changes present))
 	@command -v dpkg-deb >/dev/null 2>&1 || { echo >&2 "Package 'dpkg-deb' not installed!"; exit 1; }
 	@echo "Packaging for $(DEB_BUILD_ARCH)"
 	@$(eval PACKAGE_NAME = $(DIST_NAME)_$(DIST_SHORT_VERSION)_$(DEB_BUILD_ARCH))
