@@ -19,6 +19,9 @@ unix {
     LIBS += -lX11 -lxcb
 }
 
+win32 {
+    VERSION = $$APP_VERSION.0
+}
 
 DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
