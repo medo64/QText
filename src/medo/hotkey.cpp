@@ -1,6 +1,16 @@
 #include "hotkey.h"
 #include <QCoreApplication>
 #include <QDebug>
+#if defined(Q_OS_WIN)
+    #include <windows.h>
+#elif defined(Q_OS_LINUX)
+    #include <QX11Info>
+    #include <xcb/xcb.h>
+    #include <X11/keysym.h>
+    #include <X11/Xlib.h>
+#else
+    #error "Only Linux and Windows are supported!"
+#endif
 
 Hotkey::Hotkey(QObject* parent)
     : QObject(parent) {
@@ -56,10 +66,10 @@ bool Hotkey::unregisterHotkey() {
 
 #if defined(Q_OS_WIN)
 
-std::atomic<WPARAM> Hotkey::_globalHotkeyCounter(0);
+std::atomic<uint64_t> Hotkey::_globalHotkeyCounter(0);
 
 void Hotkey::nativeInit() {
-    _hotkeyId = static_cast<int>(_globalHotkeyCounter++);
+    _hotkeyId = reinterpret_cast<WPARAM>(_globalHotkeyCounter++);
 }
 
 bool Hotkey::nativeRegisterHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers) {
@@ -89,11 +99,11 @@ bool Hotkey::nativeRegisterHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers) 
         return false;
     }
 
-    return RegisterHotKey(nullptr, _hotkeyId, modValue, keyValue);
+    return RegisterHotKey(nullptr, static_cast<int>(_hotkeyId), modValue, keyValue);
 }
 
 bool Hotkey::nativeUnregisterHotkey() {
-    return UnregisterHotKey(nullptr, _hotkeyId);
+    return UnregisterHotKey(nullptr, static_cast<int>(_hotkeyId));
 }
 
 
@@ -155,14 +165,15 @@ bool Hotkey::nativeRegisterHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers) 
 }
 
 bool Hotkey::nativeUnregisterHotkey() {
+    auto hotkeyKey = reinterpret_cast<xcb_keycode_t>(_hotkeyKey);
     xcb_connection_t* connection = QX11Info::connection(); // xcb_connect(nullptr, nullptr); // QX11Info::connection();
-    auto cookie = xcb_ungrab_key(connection, _hotkeyKey, static_cast<xcb_window_t>(QX11Info::appRootWindow()), _hotkeyMods);
+    auto cookie = xcb_ungrab_key(connection, hotkeyKey, static_cast<xcb_window_t>(QX11Info::appRootWindow()), _hotkeyMods);
     auto cookieError = xcb_request_check(connection, cookie);
     if (cookieError == nullptr) {
         //Workaround for caps/num lock
-        xcb_ungrab_key(connection, _hotkeyKey, static_cast<xcb_window_t>(QX11Info::appRootWindow()), _hotkeyMods | XCB_MOD_MASK_LOCK);
-        xcb_ungrab_key(connection, _hotkeyKey, static_cast<xcb_window_t>(QX11Info::appRootWindow()), _hotkeyMods | XCB_MOD_MASK_2);
-        xcb_ungrab_key(connection, _hotkeyKey, static_cast<xcb_window_t>(QX11Info::appRootWindow()), _hotkeyMods | XCB_MOD_MASK_LOCK | XCB_MOD_MASK_2);
+        xcb_ungrab_key(connection, hotkeyKey, static_cast<xcb_window_t>(QX11Info::appRootWindow()), _hotkeyMods | XCB_MOD_MASK_LOCK);
+        xcb_ungrab_key(connection, hotkeyKey, static_cast<xcb_window_t>(QX11Info::appRootWindow()), _hotkeyMods | XCB_MOD_MASK_2);
+        xcb_ungrab_key(connection, hotkeyKey, static_cast<xcb_window_t>(QX11Info::appRootWindow()), _hotkeyMods | XCB_MOD_MASK_LOCK | XCB_MOD_MASK_2);
 
         return true;
     } else {
