@@ -18,6 +18,10 @@ FolderItem::FolderItem(const QString directoryPath, const QString directoryName)
 }
 
 
+QString FolderItem::getKey() {
+    return (_directoryName == nullptr) ? "" : Helpers::getFolderTitleFromName(_directoryName);
+}
+
 QString FolderItem::getTitle() {
     return (_directoryName == nullptr) ? "(Default)" : Helpers::getFolderTitleFromName(_directoryName);
 }

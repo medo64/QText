@@ -11,6 +11,8 @@ class Settings {
         static void setDataPath(QString newPath);
         static QKeySequence hotkey();
         static void setHotkey(QKeySequence newHotkey);
+        static QString lastFolder();
+        static void setLastFolder(QString folder);
         static bool minimizeToTray();
         static void setMinimizeToTray(bool newMinimizeToTray);
         static int quickSaveInterval();

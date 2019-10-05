@@ -9,6 +9,7 @@ class FolderItem {
     public:
         FolderItem(const QString directoryBase, const QString directoryName);
         QString getPath();
+        QString getKey();
         QString getTitle();
         size_t fileCount();
         FileItem* getFile(size_t index);

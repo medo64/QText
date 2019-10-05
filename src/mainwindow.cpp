@@ -19,7 +19,26 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     ui->setupUi(this);
 
     _storage = storage;
-    _folder = storage->getBaseFolder();
+
+    //determine last used folder
+    _folder = storage->getBaseFolder(); //default folder
+    auto lastFolder = Settings::lastFolder();
+    if (lastFolder.length() > 0) {
+        for (size_t i=0; i<_storage->folderCount(); i++) { //check for exact match
+            auto folder = _storage->getFolder(i);
+            if (folder->getKey().compare(lastFolder, Qt::CaseSensitive) == 0) {
+                _folder = folder;
+                break;
+            }
+        }
+        for (size_t i=0; i<_storage->folderCount(); i++) { //check case-insensitive version
+            auto folder = _storage->getFolder(i);
+            if (folder->getKey().compare(lastFolder, Qt::CaseInsensitive) == 0) {
+                _folder = folder;
+                break;
+            }
+        }
+    }
 
     //taskbar visibility
     if (!Settings::showInTaskbar()) {
@@ -442,6 +461,7 @@ void MainWindow::onFolderSelect() {
             if (folder->getPath().compare(path, Qt::CaseSensitive) == 0) {
                 _folder->saveAll(); //save all files in previous folder / just in case
                 _folder = folder;
+                Settings::setLastFolder(_folder->getKey());
                 break;
             }
         }

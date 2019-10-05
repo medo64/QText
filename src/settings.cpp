@@ -30,6 +30,15 @@ void Settings::setHotkey(QKeySequence newHotkey) {
 }
 
 
+QString Settings::lastFolder() {
+    return Config::read("LastFolder", "");
+}
+
+void Settings::setLastFolder(QString folder) {
+    Config::write("LastFolder", folder);
+}
+
+
 bool Settings::minimizeToTray() {
     return Config::read("MinimizeToTray", false);
 }
