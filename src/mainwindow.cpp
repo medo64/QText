@@ -495,7 +495,7 @@ void MainWindow::onFolderSelect() {
         ui->mainToolBar->addWidget(_folderButton);
     }
 
-    _folderButton->setText(_folder->getTitle());
+    _folderButton->setText(_folder->getTitle() + " ");
     _folderButton->menu()->clear();
     for(size_t i=0; i<_storage->folderCount(); i++) {
         auto folder = _storage->getFolder(i);
