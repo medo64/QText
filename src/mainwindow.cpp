@@ -196,14 +196,13 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     connect(ui->actionShowContainingDirectory, SIGNAL(triggered()), this, SLOT(onShowContainingDirectory()));
     connect(ui->actionShowContainingDirectoryOnly, SIGNAL(triggered()), this, SLOT(onShowContainingDirectoryOnly()));
 
-    //app button menu
-    {
+    { //app button menu
         QIcon appIcon;
-        appIcon.addFile(":icons/16x16/redo.png", QSize(16, 16));
-        appIcon.addFile(":icons/24x24/redo.png", QSize(24, 24));
-        appIcon.addFile(":icons/32x32/redo.png", QSize(32, 32));
-        appIcon.addFile(":icons/48x48/redo.png", QSize(48, 48));
-        appIcon.addFile(":icons/64x64/redo.png", QSize(64, 64));
+        appIcon.addFile(":icons/16x16/app.png", QSize(16, 16));
+        appIcon.addFile(":icons/24x24/app.png", QSize(24, 24));
+        appIcon.addFile(":icons/32x32/app.png", QSize(32, 32));
+        appIcon.addFile(":icons/48x48/app.png", QSize(48, 48));
+        appIcon.addFile(":icons/64x64/app.png", QSize(64, 64));
 
         _appButton = new QToolButton();
         _appButton->setIcon(appIcon);

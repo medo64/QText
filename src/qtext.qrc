@@ -57,5 +57,10 @@
         <file>icons/48x48/tray-white.png</file>
         <file>icons/64x64/tray-color.png</file>
         <file>icons/64x64/tray-white.png</file>
+        <file>icons/16x16/app.png</file>
+        <file>icons/24x24/app.png</file>
+        <file>icons/32x32/app.png</file>
+        <file>icons/48x48/app.png</file>
+        <file>icons/64x64/app.png</file>
     </qresource>
 </RCC>
