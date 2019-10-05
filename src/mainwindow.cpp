@@ -507,6 +507,8 @@ void MainWindow::onFolderSelect() {
         _folderButton->menu()->addAction(folderAction);
     }
 
+    auto lastFileKey = Settings::lastFile(_folder->getKey());
+
     ui->tabWidget->clear();
     for (size_t i = 0; i < _folder->fileCount(); i++) {
         auto file = _folder->getFile(i);
@@ -517,6 +519,9 @@ void MainWindow::onFolderSelect() {
         QObject::connect(file, SIGNAL(cursorPositionChanged()), this, SLOT(onTextStateChanged()));
         QObject::connect(file->document(), SIGNAL(undoAvailable(bool)), this, SLOT(onTextStateChanged()));
         QObject::connect(file->document(), SIGNAL(redoAvailable(bool)), this, SLOT(onTextStateChanged()));
+        if (file->getKey().compare(lastFileKey, Qt::CaseInsensitive) == 0) {
+            ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);
+        }
     }
     onTabChanged();
 }
@@ -587,7 +592,10 @@ void MainWindow::onTabChanged() {
 
     onTextStateChanged();
 
-    if (exists) { file->setFocus(); }
+    if (exists) {
+        file->setFocus();
+        Settings::setLastFile(_folder->getKey(), file->getKey());
+    }
 }
 
 void MainWindow::onTextStateChanged() {

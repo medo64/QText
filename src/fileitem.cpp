@@ -22,6 +22,10 @@ FileItem::~FileItem() {
 }
 
 
+QString FileItem::getKey() {
+    return _fileName;
+}
+
 QString FileItem::getTitle() {
     QString extensions[] { ".txt", ".html" };
     for (int i = 0; i < extensions->length(); i++) {

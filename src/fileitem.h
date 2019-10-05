@@ -14,6 +14,7 @@ class FileItem : public QTextEdit {
     public:
         FileItem(QString directoryPath, QString fileName);
         ~FileItem();
+        QString getKey();
         QString getPath();
         QString getTitle();
         void setTitle(QString newTitle);

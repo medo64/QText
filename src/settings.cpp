@@ -30,6 +30,23 @@ void Settings::setHotkey(QKeySequence newHotkey) {
 }
 
 
+QString Settings::lastFile(QString folder) {
+    if (folder.length() > 0) {
+        return Config::read("LastFile!" + folder, "");
+    } else {
+        return Config::read("LastFile", "");
+    }
+}
+
+void Settings::setLastFile(QString folder, QString file) {
+    if (folder.length() > 0) {
+        Config::write("LastFile!" + folder, file);
+    } else {
+        Config::write("LastFile", file);
+    }
+}
+
+
 QString Settings::lastFolder() {
     return Config::read("LastFolder", "");
 }
