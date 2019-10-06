@@ -10,7 +10,8 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setApplicationName("QText");
     QCoreApplication::setOrganizationName("Josip Medved");
 
-    qputenv("QT_DEVICE_PIXEL_RATIO", QByteArray("auto"));
+    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", QByteArray("true"));
+    qputenv("QT_SCALE_FACTOR", QByteArray("1"));
 
     QApplication a(argc, argv);
     QApplication::setQuitOnLastWindowClosed(false);
