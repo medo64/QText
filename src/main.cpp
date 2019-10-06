@@ -1,3 +1,4 @@
+#include <QCommandLineParser>
 #include "mainwindow.h"
 #include "settings.h"
 #include "setup.h"
@@ -6,14 +7,24 @@
 
 static std::shared_ptr<Storage> storage;
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     QCoreApplication::setApplicationName("QText");
     QCoreApplication::setOrganizationName("Josip Medved");
+    QCoreApplication::setApplicationVersion(APP_VERSION);
 
     qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", QByteArray("true"));
     qputenv("QT_SCALE_FACTOR", QByteArray("1"));
 
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
+
+    QCommandLineParser cli;
+    cli.setApplicationDescription("Note taking utility with auto-save.");
+    cli.addHelpOption();
+    cli.addVersionOption();
+    QCommandLineOption hideOption(QStringList() << "s" << "hide", "Application is immediatelly sent to tray.");
+    cli.addOption(hideOption);
+    cli.process(app);
+
     QApplication::setQuitOnLastWindowClosed(false);
 
     if (!SingleInstance::attach()) {
@@ -25,7 +36,7 @@ int main(int argc, char *argv[]) {
     MainWindow w { storage };
 
 #ifndef QT_DEBUG
-    if (!QSystemTrayIcon::isSystemTrayAvailable()) {
+    if (!QSystemTrayIcon::isSystemTrayAvailable() || !cli.isSet(hideOption)) {
         w.show();
     }
 #else //show immediately when debugging
@@ -37,5 +48,5 @@ int main(int argc, char *argv[]) {
         Setup::setAutostart(true);
     }
 
-    return a.exec();
+    return app.exec();
 }
