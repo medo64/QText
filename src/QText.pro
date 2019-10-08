@@ -56,6 +56,7 @@ SOURCES += \
         qtabbarex.cpp \
         qtabwidgetex.cpp \
         settings.cpp \
+        settingsdialog.cpp \
         setup.cpp \
         storage.cpp
 
@@ -72,11 +73,13 @@ HEADERS += \
         qtabbarex.h \
         qtabwidgetex.h \
         settings.h \
+        settingsdialog.h \
         setup.h \
         storage.h
 
 FORMS += \
         filenamedialog.ui \
+        settingsdialog.ui \
         mainwindow.ui
 
 # Default rules for deployment.

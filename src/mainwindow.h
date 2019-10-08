@@ -52,6 +52,7 @@ class MainWindow : public QMainWindow {
         void onFolderSelect();
         void onShowContainingDirectory();
         void onShowContainingDirectoryOnly();
+        void onAppSettings();
         void onAppAbout();
         void onTabMenuRequested(const QPoint&);
         void onTabChanged();

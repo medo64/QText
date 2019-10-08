@@ -4,16 +4,19 @@
 #include <QMimeData>
 #include <QTabBar>
 #include <QTextDocumentFragment>
-#include "filenamedialog.h"
 #include "helpers.h"
 #include "settings.h"
 #include "storage.h"
-#include "ui_filenamedialog.h"
-#include "ui_mainwindow.h"
 #include "medo/config.h"
 #include "medo/singleinstance.h"
 #include "medo/state.h"
 #include "mainwindow.h"
+
+#include "filenamedialog.h"
+#include "settingsdialog.h"
+#include "ui_filenamedialog.h"
+#include "ui_settingsdialog.h"
+#include "ui_mainwindow.h"
 
 MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr), ui(new Ui::MainWindow) {
     ui->setupUi(this);
@@ -206,13 +209,19 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
 
         _appButton = new QToolButton();
         _appButton->setIcon(appIcon);
-        _appButton->setPopupMode(QToolButton::InstantPopup);
-        _appButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextBesideIcon);
+        _appButton->setPopupMode(QToolButton::MenuButtonPopup);
         _appButton->setMenu(new QMenu());
+        connect(_appButton, SIGNAL(clicked()), this, SLOT(onAppSettings()));
 
-        QAction* aboutAppAction = new QAction("&About");
-        connect(aboutAppAction, SIGNAL(triggered()), this, SLOT(onAppAbout()));
-        _appButton->menu()->addAction(aboutAppAction);
+        QAction* appSettingsAction = new QAction("&Settings");
+        connect(appSettingsAction, SIGNAL(triggered()), this, SLOT(onAppSettings()));
+        _appButton->menu()->addAction(appSettingsAction);
+
+        _appButton->menu()->addSeparator();
+
+        QAction* appAboutAction = new QAction("&About");
+        connect(appAboutAction, SIGNAL(triggered()), this, SLOT(onAppAbout()));
+        _appButton->menu()->addAction(appAboutAction);
     }
     ui->mainToolBar->addWidget(_appButton);
 
@@ -537,6 +546,16 @@ void MainWindow::onShowContainingDirectory() {
 
 void MainWindow::onShowContainingDirectoryOnly() {
     onShowContainingDirectory2(_folder->getPath(), nullptr);
+}
+
+void MainWindow::onAppSettings() {
+    auto dialog = std::make_shared<SettingsDialog>(this);
+    switch (dialog->exec()) {
+        case QDialog::Accepted: {
+            } break;
+        default:
+            break;
+    }
 }
 
 void MainWindow::onAppAbout() {
