@@ -33,6 +33,7 @@ win32 {
     QMAKE_TARGET_COMPANY = $$APP_COMPANY
     QMAKE_TARGET_COPYRIGHT = $$APP_COPYRIGHT
     QMAKE_TARGET_DESCRIPTION = $$APP_DESCRIPTION
+    RC_ICONS = icons/qtext.ico
     VERSION = $$APP_VERSION.0
 }
 
@@ -87,8 +88,6 @@ RESOURCES += \
     qtext.qrc
 
 DISTFILES +=
-
-RC_ICONS = icons/qtext.ico
 
 
 Test {
