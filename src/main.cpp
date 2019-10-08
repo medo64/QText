@@ -8,8 +8,8 @@
 static std::shared_ptr<Storage> storage;
 
 int main(int argc, char* argv[]) {
-    QCoreApplication::setApplicationName("QText");
-    QCoreApplication::setOrganizationName("Josip Medved");
+    QCoreApplication::setApplicationName(APP_PRODUCT);
+    QCoreApplication::setOrganizationName(APP_COMPANY);
     QCoreApplication::setApplicationVersion(APP_VERSION);
 
     qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", QByteArray("true"));

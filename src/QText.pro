@@ -1,12 +1,21 @@
-APP_VERSION = 0.0.1
+APP_PRODUCT = "QText"
+APP_COMPANY = "Josip Medved"
+APP_VERSION = "0.0.1"
+APP_COPYRIGHT = "Copyright 2004 Josip Medved <jmedved@jmedved.com>"
+APP_DESCRIPTION = "Note taking utility with auto-save."
+
+DEFINES += "APP_PRODUCT=\"\\\"$$APP_PRODUCT\\\"\""
+DEFINES += "APP_COMPANY=\"\\\"$$APP_COMPANY\\\"\""
 DEFINES += "APP_VERSION=\\\"$$APP_VERSION\\\""
+DEFINES += "APP_COPYRIGHT=\"\\\"$$APP_COPYRIGHT\\\"\""
+DEFINES += "APP_DESCRIPTION=\"\\\"$$APP_DESCRIPTION\\\"\""
 
 APP_COMMIT = $$system(git -C \"$$_PRO_FILE_PWD_\" log -n 1 --format=%h)
 APP_COMMIT_DIRTY = $$system(git -C \"$$_PRO_FILE_PWD_\" diff --quiet ; echo $?)
 !equals(APP_COMMIT_DIRTY, 0) {
     APP_COMMIT = $$upper($$APP_COMMIT) #upper-case if working directory is dirty
 }
-DEFINES += "APP_COMMIT=\\\"$$APP_COMMIT\\\""
+DEFINES += "APP_COMMIT=\"\\\"$$APP_COMMIT\\\"\""
 
 DEFINES += "APP_QT_VERSION=\\\"$$QT_VERSION\\\""
 
@@ -20,6 +29,10 @@ unix {
 }
 
 win32 {
+    QMAKE_TARGET_PRODUCT = $$APP_PRODUCT
+    QMAKE_TARGET_COMPANY = $$APP_COMPANY
+    QMAKE_TARGET_COPYRIGHT = $$APP_COPYRIGHT
+    QMAKE_TARGET_DESCRIPTION = $$APP_DESCRIPTION
     VERSION = $$APP_VERSION.0
 }
 
