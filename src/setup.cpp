@@ -66,8 +66,9 @@ bool Setup::nativeAutostartCheck() {
 void Setup::nativeAutostartAdd() {
     QDir autostartDirectory(QDir::cleanPath(QDir::homePath() +"/.config/autostart"));
     if (!autostartDirectory.exists()) { autostartDirectory.mkpath("."); }
+    QString autostartFile = QDir::cleanPath(autostartDirectory.path() + "/qtext.desktop");
 
-    QFile file(QDir::cleanPath(autostartDirectory.path() + "/qtext.desktop"));
+    QFile file(autostartFile);
     if (file.open(QIODevice::WriteOnly)) {
         QTextStream stream(&file);
         stream << "[Desktop Entry]" << endl;
@@ -81,11 +82,17 @@ void Setup::nativeAutostartAdd() {
 }
 
 void Setup::nativeAutostartRemove() {
-
+    QDir autostartDirectory(QDir::cleanPath(QDir::homePath() +"/.config/autostart"));
+    if (!autostartDirectory.exists()) { autostartDirectory.mkpath("."); }
+    QString autostartFile = QDir::cleanPath(autostartDirectory.path() + "/qtext.desktop");
+    QFile::remove(autostartFile);
 }
 
 bool Setup::nativeAutostartCheck() {
-    return false;
+    QDir autostartDirectory(QDir::cleanPath(QDir::homePath() +"/.config/autostart"));
+    if (!autostartDirectory.exists()) { autostartDirectory.mkpath("."); }
+    QString autostartFile = QDir::cleanPath(autostartDirectory.path() + "/qtext.desktop");
+    return QFile::exists(autostartFile);
 }
 
 #endif
