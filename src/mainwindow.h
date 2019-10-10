@@ -34,6 +34,7 @@ class MainWindow : public QMainWindow {
         QToolButton* _appButton = nullptr;
         QClipboard* _clipboard = QApplication::clipboard();
         Hotkey* _hotkey;
+        void applySettings(bool applyShowInTaskbar = true);
 
     private slots:
         void onFileActivated(FileItem* file);

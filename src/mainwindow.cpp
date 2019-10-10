@@ -43,11 +43,6 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         }
     }
 
-    //taskbar visibility
-    if (!Settings::showInTaskbar()) {
-        this->setWindowFlag(Qt::Tool);
-    }
-
     { //application icon
         QIcon appIcon;
         appIcon.addFile(":icons/16x16/qtext.png", QSize(16, 16));
@@ -240,6 +235,8 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         connect(State::instance(), &State::readFromConfig, [=] (QString key) { return Config::read("State!" + key); });
         State::load(this);
     }
+
+    applySettings();
 
     if (!Settings::setupCompleted()) { // show extra info when ran first time
         auto duration = Config::isPortable() ? 1000 : 2500; //shorter duration if config is portable
@@ -552,7 +549,11 @@ void MainWindow::onAppSettings() {
     auto dialog = std::make_shared<SettingsDialog>(this);
     switch (dialog->exec()) {
         case QDialog::Accepted: {
-            } break;
+            applySettings(dialog->changedShowInTaskbar);
+            this->show(); //to show window after setWindowFlag
+            this->activateWindow();
+        } break;
+
         default:
             break;
     }
@@ -654,4 +655,14 @@ void MainWindow::onTrayExit() {
     _tray->hide();
     this->close();
     QCoreApplication::exit(0);
+}
+
+void MainWindow::applySettings(bool applyShowInTaskbar) {
+    if (applyShowInTaskbar) {
+        if (!Settings::showInTaskbar()) {
+            setWindowFlag(Qt::Tool);
+        } else {
+            setWindowFlag(Qt::Tool, false);
+        }
+    }
 }
