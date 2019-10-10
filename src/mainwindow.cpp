@@ -212,11 +212,15 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         connect(appSettingsAction, SIGNAL(triggered()), this, SLOT(onAppSettings()));
         _appButton->menu()->addAction(appSettingsAction);
 
-        _appButton->menu()->addSeparator();
-
         QAction* appAboutAction = new QAction("&About");
         connect(appAboutAction, SIGNAL(triggered()), this, SLOT(onAppAbout()));
         _appButton->menu()->addAction(appAboutAction);
+
+        _appButton->menu()->addSeparator();
+
+        QAction* appQuitAction = new QAction("&Quit");
+        connect(appQuitAction, SIGNAL(triggered()), this, SLOT(onTrayExit()));
+        _appButton->menu()->addAction(appQuitAction);
     }
     ui->mainToolBar->addWidget(_appButton);
 
