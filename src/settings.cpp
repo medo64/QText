@@ -3,6 +3,19 @@
 
 #include <QDir>
 
+bool Settings::alwaysOnTop() {
+    return Config::read("AlwaysOnTop", defaultAlwaysOnTop());
+}
+
+bool Settings::defaultAlwaysOnTop() {
+    return false;
+}
+
+void Settings::setAlwaysOnTop(bool newAlwaysOnTop) {
+    Config::write("AlwaysOnTop", newAlwaysOnTop);
+}
+
+
 QString Settings::dataPath() {
     QString path = Config::read("DataPath", Config::read("FilesLocation", defaultDataPath()));
     return (path.length() > 0) ? QDir::cleanPath(path) : defaultDataPath();

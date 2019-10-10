@@ -236,6 +236,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         State::load(this);
     }
 
+    if (Settings::alwaysOnTop()) { setWindowFlag(Qt::WindowStaysOnTopHint); } //always on top cannot be set dynamically :(
     applySettings();
 
     if (!Settings::setupCompleted()) { // show extra info when ran first time

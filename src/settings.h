@@ -7,6 +7,11 @@
 class Settings {
 
     public:
+
+        static bool alwaysOnTop();
+        static bool defaultAlwaysOnTop();
+        static void setAlwaysOnTop(bool newAlwaysOnTop);
+
         static QString dataPath();
         static QString defaultDataPath();
         static void setDataPath(QString newPath);
