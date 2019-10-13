@@ -60,7 +60,7 @@ class MainWindow : public QMainWindow {
         void onTextStateChanged();
         void onTrayActivate(QSystemTrayIcon::ActivationReason reason);
         void onTrayShow();
-        void onTrayExit();
+        void onAppQuit();
 
 };
 

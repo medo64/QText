@@ -71,7 +71,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         QMenu* trayMenu = new QMenu(this);
         auto defaultAction = trayMenu->addAction("&Show", this, SLOT(onTrayShow()));
         trayMenu->addSeparator();
-        trayMenu->addAction("E&xit", this, SLOT(onTrayExit()));
+        trayMenu->addAction("&Quit", this, SLOT(onAppQuit()));
 
         auto font = defaultAction->font();
         font.setBold(true);
@@ -219,7 +219,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         _appButton->menu()->addSeparator();
 
         QAction* appQuitAction = new QAction("&Quit");
-        connect(appQuitAction, SIGNAL(triggered()), this, SLOT(onTrayExit()));
+        connect(appQuitAction, SIGNAL(triggered()), this, SLOT(onAppQuit()));
         _appButton->menu()->addAction(appQuitAction);
     }
     ui->mainToolBar->addWidget(_appButton);
@@ -578,6 +578,12 @@ void MainWindow::onAppAbout() {
     QMessageBox::about(this, "About",  description);
 }
 
+void MainWindow::onAppQuit() {
+    _tray->hide();
+    this->close();
+    QCoreApplication::exit(0);
+}
+
 void MainWindow::onTabMenuRequested(const QPoint &point) {
     if (point.isNull()) { return; }
 
@@ -654,12 +660,6 @@ void MainWindow::onTrayShow() {
     this->show();
     this->raise(); //workaround for MacOS
     this->activateWindow(); //workaround for Windows
-}
-
-void MainWindow::onTrayExit() {
-    _tray->hide();
-    this->close();
-    QCoreApplication::exit(0);
 }
 
 void MainWindow::applySettings(bool applyShowInTaskbar) {
