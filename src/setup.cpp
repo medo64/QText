@@ -67,13 +67,14 @@ void Setup::nativeAutostartAdd() {
     QDir autostartDirectory(QDir::cleanPath(QDir::homePath() +"/.config/autostart"));
     if (!autostartDirectory.exists()) { autostartDirectory.mkpath("."); }
     QString autostartFile = QDir::cleanPath(autostartDirectory.path() + "/qtext.desktop");
+    QString execLine = QCoreApplication::applicationFilePath() + " --hide";
 
     QFile file(autostartFile);
     if (file.open(QIODevice::WriteOnly)) {
         QTextStream stream(&file);
         stream << "[Desktop Entry]" << endl;
         stream << "Name=QText" << endl;
-        stream << "Exec=" << QCoreApplication::applicationFilePath() << endl;
+        stream << "Exec=" << execLine << endl;
         stream << "Terminal=false" << endl;
         stream << "Type=Application" << endl;
         stream << "StartupNotify=false" << endl;
