@@ -106,7 +106,7 @@
     <string>New</string>
    </property>
    <property name="toolTip">
-    <string>New file</string>
+    <string>New file (Ctrl+N)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
@@ -121,7 +121,7 @@
     <string>&amp;Save</string>
    </property>
    <property name="toolTip">
-    <string>Save file</string>
+    <string>Save file (Ctrl+S)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -132,7 +132,7 @@
     <string>Re&amp;open</string>
    </property>
    <property name="toolTip">
-    <string>Reload file</string>
+    <string>Reload file (Ctrl+O)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
@@ -147,7 +147,7 @@
     <string>R&amp;ename</string>
    </property>
    <property name="toolTip">
-    <string>Rename file</string>
+    <string>Rename file (F2)</string>
    </property>
    <property name="shortcut">
     <string>F2</string>
@@ -172,7 +172,7 @@
     <string>Cu&amp;t</string>
    </property>
    <property name="toolTip">
-    <string>Cut text</string>
+    <string>Cut text (Ctrl+X)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+X</string>
@@ -187,7 +187,7 @@
     <string>&amp;Copy</string>
    </property>
    <property name="toolTip">
-    <string>Copy text</string>
+    <string>Copy text (Ctrl+C)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+C</string>
@@ -202,7 +202,7 @@
     <string>&amp;Paste</string>
    </property>
    <property name="toolTip">
-    <string>Paste text</string>
+    <string>Paste text (Ctrl+V)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+V</string>
@@ -217,7 +217,7 @@
     <string>&amp;Undo</string>
    </property>
    <property name="toolTip">
-    <string>Undo action</string>
+    <string>Undo action (Ctrl+Z)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Z</string>
@@ -232,7 +232,7 @@
     <string>&amp;Redo</string>
    </property>
    <property name="toolTip">
-    <string>Redo action</string>
+    <string>Redo action (Ctrl+Y)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Y</string>
