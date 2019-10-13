@@ -93,7 +93,22 @@ bool Setup::nativeAutostartCheck() {
     QDir autostartDirectory(QDir::cleanPath(QDir::homePath() +"/.config/autostart"));
     if (!autostartDirectory.exists()) { autostartDirectory.mkpath("."); }
     QString autostartFile = QDir::cleanPath(autostartDirectory.path() + "/qtext.desktop");
-    return QFile::exists(autostartFile);
+    QString execLine = QCoreApplication::applicationFilePath() + " --hide";
+
+    QFile file(autostartFile);
+    if (file.open(QIODevice::ReadOnly)) {
+        QTextStream stream(&file);
+        while (!stream.atEnd()) {
+           QString line = stream.readLine();
+           if (line.startsWith("Exec=")) {
+               QStringList parts = line.split("=");
+               QString execLineFound = parts[1].trimmed();
+               if (execLine.compare(execLineFound, Qt::CaseSensitive) == 0) { return true; }
+               break;
+           }
+        }
+    }
+    return false;
 }
 
 #endif
