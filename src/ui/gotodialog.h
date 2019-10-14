@@ -34,6 +34,7 @@ class GotoDialog : public QDialog {
     private slots:
         void onTextEdited(const QString& text);
         void onItemSelectionChanged();
+        void onItemActivated();
 
 };
 

@@ -22,6 +22,7 @@ GotoDialog::GotoDialog(QWidget *parent, std::shared_ptr<Storage> storage) : QDia
 
     connect(ui->textSearch, SIGNAL(textEdited(const QString&)), SLOT(onTextEdited(const QString&)));
     connect(ui->listWidget, SIGNAL(itemSelectionChanged()), SLOT(onItemSelectionChanged()));
+    connect(ui->listWidget, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(onItemActivated()));
 
     onTextEdited("");
 }
@@ -130,9 +131,14 @@ void GotoDialog::onTextEdited(const QString& text) {
 
     bool hasAny = ui->listWidget->count() > 0;
     if (hasAny) { ui->listWidget->setCurrentRow(0); }
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(hasAny);
 }
 
 void GotoDialog::onItemSelectionChanged() {
     bool hasAnySelected = ui->listWidget->selectedItems().count() > 0;
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(hasAnySelected);
+}
+
+void GotoDialog::onItemActivated() {
+    accept();
 }
