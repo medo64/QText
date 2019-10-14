@@ -96,22 +96,20 @@ class Config {
          * /param defaultValue Default value. */
         static QString read(QString key, QString defaultValue);
 
-        /*! Returns value for a given key or default value if one is not found.
-         * /param key Key.
-         * /param defaultValue Default value. */
-        static QString read(QString key, const char* defaultValue);
-
-
         /*! Writes value to a given key.
          * /param key Key.
          * /param value Value. */
         static void write(QString key, QString value);
 
+        /*! Returns value for a given key or default value if one is not found.
+         * /param key Key.
+         * /param defaultValue Default value. */
+        static QString read(QString key, const char* defaultValue);
+
         /*! Writes value to a given key.
          * /param key Key.
          * /param value Value. */
         static void write(QString key, const char* value);
-
 
         /*! Returns value for a given key or default value if one is not found or cannot be converted to bool.
          * /param key Key.
@@ -123,7 +121,6 @@ class Config {
          * /param value Value. */
         static void write(QString key, bool value);
 
-
         /*! Returns value for a given key or default value if one is not found or cannot be converted to int.
          * /param key Key.
          * /param defaultValue Default value. */
@@ -134,7 +131,6 @@ class Config {
          * /param value Value. */
         static void write(QString key, int value);
 
-
         /*! Returns value for a given key or default value if one is not found or cannot be converted to long.
          * /param key Key.
          * /param defaultValue Default value. */
@@ -144,7 +140,6 @@ class Config {
          * /param key Key.
          * /param value Value. */
         static void write(QString key, long long value);
-
 
         /*! Returns value for a given key or default value if one is not found or cannot be converted to double.
          * /param key Key.

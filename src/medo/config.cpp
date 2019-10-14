@@ -304,11 +304,6 @@ QString Config::read(QString key, QString defaultValue) {
     return !value.isNull() ? value : defaultValue;
 }
 
-QString Config::read(QString key, const char* defaultValue) {
-    return read(key, QString(defaultValue));
-}
-
-
 void Config::write(QString key, QString value) {
     key = key.trimmed(); //get rid of spaces around key
     if (key.isEmpty()) { return; } //ignore empty keys
@@ -316,10 +311,13 @@ void Config::write(QString key, QString value) {
     getConfigFile()->writeOne(key, value);
 }
 
+QString Config::read(QString key, const char* defaultValue) {
+    return read(key, QString(defaultValue));
+}
+
 void Config::write(QString key, const char* value) {
     write(key, QString(value));
 }
-
 
 bool Config::read(QString key, bool defaultValue) {
     QString text = read(key, QString()).trimmed();
@@ -341,7 +339,6 @@ void Config::write(QString key, bool value) {
     write(key, value ? "true" : "false");
 }
 
-
 int Config::read(QString key, int defaultValue) {
     QString text = read(key, QString()).trimmed();
     bool isOK; int value = text.toInt(&isOK);
@@ -352,7 +349,6 @@ void Config::write(QString key, int value) {
     write(key, QString::number(value));
 }
 
-
 long long Config::read(QString key, long long defaultValue) {
     QString text = read(key, QString()).trimmed();
     bool isOK; long long value = text.toLongLong(&isOK);
@@ -362,7 +358,6 @@ long long Config::read(QString key, long long defaultValue) {
 void Config::write(QString key, long long value) {
     write(key, QString::number(value));
 }
-
 
 double Config::read(QString key, double defaultValue) {
     QString text = read(key, QString()).trimmed();
