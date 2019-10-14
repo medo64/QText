@@ -10,7 +10,7 @@ FileItem::FileItem(QString directoryPath, QString fileName)
     _directoryPath = directoryPath;
     _fileName = fileName;
 
-    this->setLineWrapMode(QTextEdit::WidgetWidth);
+    this->setLineWrapMode(Settings::wordWrap() ? QTextEdit::WidgetWidth : QTextEdit::NoWrap);
     this->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
     this->setAcceptRichText(false);
 

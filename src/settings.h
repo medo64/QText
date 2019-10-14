@@ -36,6 +36,10 @@ class Settings {
         static int defaultTabWidth();
         static void setTabWidth(int newTabWidth);
 
+        static bool wordWrap();
+        static bool defaultWordWrap();
+        static void setWordWrap(bool newWordWrap);
+
 
         static QString lastFile(QString folder);
         static void setLastFile(QString folder, QString file);

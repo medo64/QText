@@ -107,6 +107,19 @@ void Settings::setTabWidth(int newTabWidth) {
 }
 
 
+bool Settings::wordWrap() {
+    return Config::read("WordWrap", defaultWordWrap());
+}
+
+bool Settings::defaultWordWrap() {
+    return true;
+}
+
+void Settings::setWordWrap(bool newWordWrap) {
+    Config::write("WordWrap", newWordWrap);
+}
+
+
 // state settings
 
 
