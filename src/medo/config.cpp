@@ -8,24 +8,29 @@
 
 QMutex Config::_publicAccessMutex(QMutex::Recursive);
 QString Config::_configurationFilePath;
+QString Config::_stateFilePath;
 QString Config::_dataDirectoryPath;
 Config::PortableStatus Config::_isPortable(UNKNOWN);
 bool Config::_immediateSave(true);
 Config::ConfigFile* Config::_configFile(nullptr);
+Config::ConfigFile* Config::_stateFile(nullptr);
 
 void Config::reset() {
     QMutexLocker locker(&_publicAccessMutex);
 
     _configurationFilePath = QString();
+    _stateFilePath = QString();
     _dataDirectoryPath = QString();
     _isPortable = PortableStatus::UNKNOWN;
     _immediateSave = true;
     resetConfigFile();
+    resetStateFile();
 }
 
 bool Config::load() {
     QMutexLocker locker(&_publicAccessMutex);
     resetConfigFile();
+    resetStateFile();
     QFile file(configurationFilePath());
     return file.exists();
 }
@@ -126,7 +131,6 @@ QString Config::configurationFilePath() {
     return _configurationFilePath;
 }
 
-
 QString Config::configurationFilePathWhenPortable() {
 #if defined(Q_OS_WIN)
     QString applicationName = QCoreApplication::applicationName();
@@ -161,6 +165,70 @@ QString Config::configurationFilePathWhenInstalled() {
 #endif
 
     return QDir::cleanPath(configFile);
+}
+
+
+QString Config::stateFile() {
+    QMutexLocker locker(&_publicAccessMutex);
+
+    QString statePath = stateFilePath();
+
+    QFileInfo stateFileInfo (statePath);
+    QDir stateFileDir = stateFileInfo.dir();
+    if (!stateFileDir.exists()) { stateFileDir.mkpath("."); }
+
+    QFile stateFile (statePath);
+    if (!stateFile.exists()) {
+        stateFile.open(QFile::WriteOnly);
+        stateFile.close();
+    }
+
+    return statePath;
+}
+
+QString Config::stateFilePath() {
+    QMutexLocker locker(&_publicAccessMutex);
+
+    if (_stateFilePath.isEmpty()) {
+        _stateFilePath = isPortable() ? stateFilePathWhenPortable() : stateFilePathWhenInstalled();
+    }
+    return _stateFilePath;
+}
+
+QString Config::stateFilePathWhenPortable() {
+#if defined(Q_OS_WIN)
+    QString applicationName = QCoreApplication::applicationName();
+    assert(applicationName.length() > 0);
+
+    QString exeDir = QCoreApplication::applicationDirPath();
+    QString stateFile = exeDir + "/" + applicationName + ".user";
+#elif defined(Q_OS_LINUX)
+    QString applicationName = QCoreApplication::applicationName().simplified().replace(" ", "").toLower(); //lowercase with spaces removed
+    assert(applicationName.length() > 0);
+
+    QString exeDir = QCoreApplication::applicationDirPath();
+    QString stateFile = exeDir + "/." + applicationName.toLower() + ".user";
+#endif
+
+    return QDir::cleanPath(stateFile);
+}
+
+QString Config::stateFilePathWhenInstalled() {
+#if defined(Q_OS_WIN)
+    QString applicationName = QCoreApplication::applicationName();
+    assert(applicationName.length() > 0);
+
+    QString appDataLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QString stateFile = appDataLocation + "/" + applicationName + ".user";
+#elif defined(Q_OS_LINUX)
+    QString applicationName = QCoreApplication::applicationName().simplified().replace(" ", "").toLower(); //lowercase with spaces removed
+    assert(applicationName.length() > 0);
+
+    QString configLocation = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation);
+    QString stateFile = configLocation + "/" + applicationName.toLower() + ".user";
+#endif
+
+    return QDir::cleanPath(stateFile);
 }
 
 
@@ -349,6 +417,50 @@ void Config::writeMany(QString key, QStringList values) {
 }
 
 
+QString Config::stateRead(QString key, QString defaultValue) {
+    key = key.trimmed(); //get rid of spaces around key
+    if (key.isEmpty()) { return QString(); } //ignore empty keys; return null
+    QMutexLocker locker(&_publicAccessMutex);
+    QString value = getStateFile()->readOne(key);
+    return !value.isNull() ? value : defaultValue;
+}
+
+void Config::stateWrite(QString key, QString value) {
+    key = key.trimmed(); //get rid of spaces around key
+    if (key.isEmpty()) { return; } //ignore empty keys
+    QMutexLocker locker(&_publicAccessMutex);
+    getStateFile()->writeOne(key, value);
+}
+
+QString Config::stateRead(QString key, const char* defaultValue) {
+    return stateRead(key, QString(defaultValue));
+}
+
+void Config::stateWrite(QString key, const char* value) {
+    stateWrite(key, QString(value));
+}
+
+bool Config::stateRead(QString key, bool defaultValue) {
+    QString text = stateRead(key, QString()).trimmed();
+    if ((text.compare("true", Qt::CaseInsensitive) == 0) || (text.compare("yes", Qt::CaseInsensitive) == 0)
+            || (text.compare("T", Qt::CaseInsensitive) == 0) || (text.compare("Y", Qt::CaseInsensitive) == 0)
+            || (text.compare("+", Qt::CaseInsensitive) == 0)) {
+        return true;
+    } else if ((text.compare("false", Qt::CaseInsensitive) == 0) || (text.compare("no", Qt::CaseInsensitive) == 0)
+            || (text.compare("F", Qt::CaseInsensitive) == 0) || (text.compare("N", Qt::CaseInsensitive) == 0)
+            || (text.compare("-", Qt::CaseInsensitive) == 0)) {
+        return false;
+    } else {
+        bool isOK; long long value = text.toLongLong(&isOK);
+        return isOK ? (value != 0) : defaultValue;
+    }
+}
+
+void Config::stateWrite(QString key, bool value) {
+    stateWrite(key, value ? QString("true") : QString("false"));
+}
+
+
 void Config::remove(QString key) {
     key = key.trimmed(); //get rid of spaces around key
     if (key.isEmpty()) { return; } //ignore empty keys
@@ -373,6 +485,21 @@ void Config::resetConfigFile() {
     if (_configFile != nullptr) {
         delete _configFile;
         _configFile = nullptr;
+    }
+}
+
+
+Config::ConfigFile* Config::getStateFile() {
+    if (_stateFile == nullptr) {
+        _stateFile = new ConfigFile(stateFile());
+    }
+    return _stateFile;
+}
+
+void Config::resetStateFile() {
+    if (_stateFile != nullptr) {
+        delete _stateFile;
+        _stateFile = nullptr;
     }
 }
 

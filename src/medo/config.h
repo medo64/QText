@@ -1,6 +1,7 @@
 /* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
 
 // 2019-07-17: Initial version
+// 2019-10-13: Added stateRead and stateWrite operations
 
 #ifndef CONFIG_H
 #define CONFIG_H
@@ -58,6 +59,19 @@ class Config {
          *   Linux: Config file under current directory is used (e.g. ./.<appname>).
          *   Windows: Config file under current directory is used (e.g. ./<AppName>.cfg). */
         static QString configurationFilePath();
+
+
+        /*! Returns state file path. If file doesn't exist, it's created. Returned value is cached. */
+        static QString stateFile();
+
+        /*! Returns state file path. Returned value is cached.
+         * When installed:
+         *   Linux: File is saved in config directory (e.g. ~/.config/<appname>.user).
+         *   Windows: File is saved under application data path (e.g. C:/Users/<UserName>/AppData/Roaming/<OrgName>/<AppName>/<AppName>.user).
+         * When iportable (either not installed or config file exists):
+         *   Linux: Config file under current directory is used (e.g. ./.<appname>.user).
+         *   Windows: Config file under current directory is used (e.g. ./<AppName>.user). */
+        static QString stateFilePath();
 
 
         /*! Returns data directory path. If directory doesn't exist, it's created. Returned value is cached. */
@@ -158,6 +172,37 @@ class Config {
         static void writeMany(QString key, QStringList values);
 
 
+        /*! Returns state value for a given key or default value if one is not found.
+         * /param key Key.
+         * /param defaultValue Default value. */
+        static QString stateRead(QString key, QString defaultValue);
+
+        /*! Writes state value to a given key.
+         * /param key Key.
+         * /param value Value. */
+        static void stateWrite(QString key, QString value);
+
+        /*! Returns state value for a given key or default value if one is not found.
+         * /param key Key.
+         * /param defaultValue Default value. */
+        static QString stateRead(QString key, const char* defaultValue);
+
+        /*! Writes state value to a given key.
+         * /param key Key.
+         * /param value Value. */
+        static void stateWrite(QString key, const char* value);
+
+        /*! Returns state value for a given key or default value if one is not found or cannot be converted to bool.
+         * /param key Key.
+         * /param defaultValue Default value. */
+        static bool stateRead(QString key, bool defaultValue);
+
+        /*! Writes state value to a given key.
+         * /param key Key.
+         * /param value Value. */
+        static void stateWrite(QString key, bool value);
+
+
         /*! Remove all values of a given key.
          * /param key Key. */
         static void remove(QString key);
@@ -176,11 +221,14 @@ class Config {
     private:
         static QMutex _publicAccessMutex; //to ensure multi-threaded access works without conflict
         static QString _configurationFilePath;
+        static QString _stateFilePath;
         static QString _dataDirectoryPath;
         static PortableStatus _isPortable;
         static bool _immediateSave;
         static QString configurationFilePathWhenPortable();
         static QString configurationFilePathWhenInstalled();
+        static QString stateFilePathWhenPortable();
+        static QString stateFilePathWhenInstalled();
         static QString dataDirectoryPathWhenPortable();
         static QString dataDirectoryPathWhenInstalled();
 
@@ -254,6 +302,9 @@ class Config {
         static ConfigFile* getConfigFile();
         static void resetConfigFile();
         static ConfigFile* _configFile;
+        static ConfigFile* getStateFile();
+        static void resetStateFile();
+        static ConfigFile* _stateFile;
 
 };
 

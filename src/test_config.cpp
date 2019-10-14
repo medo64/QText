@@ -32,19 +32,22 @@ void Test_Config::setup(QString applicationName, QString organizationName, QStri
 }
 
 void Test_Config::cleanup() {
-    cleanup(Config::configurationFilePath(), Config::dataDirectoryPath());
+    cleanup(Config::configurationFilePath(), Config::stateFilePath(), Config::dataDirectoryPath());
 }
 
-void Test_Config::cleanup(QString configFile, QString dataDirectory) {
-    QFile file(configFile);
-    if (file.exists()) { file.remove(); }
+void Test_Config::cleanup(QString configFile, QString stateFile, QString dataDirectory) {
+    QFile fileC(configFile);
+    if (fileC.exists()) { fileC.remove(); }
+
+    QFile fileS(stateFile);
+    if (fileS.exists()) { fileS.remove(); }
 
     QDir dir(dataDirectory);
     if (dir.exists()) { dir.removeRecursively(); }
 }
 
-void Test_Config::verifyTestConfig(QString testConfigFile) {
-    QFile expectedFile(":/test/Config/" + testConfigFile);
+void Test_Config::verifyTestFile(QString testFileName, QString actualFileName) {
+    QFile expectedFile(":/test/Config/" + testFileName);
     QStringList expectedFileLines;
     if (expectedFile.open(QFile::ReadOnly)) {
         QTextStream in(&expectedFile);
@@ -56,7 +59,7 @@ void Test_Config::verifyTestConfig(QString testConfigFile) {
         QFAIL("Cannot open source file!");
     }
 
-    QFile actualFile(Config::configurationFilePath());
+    QFile actualFile(actualFileName);
     QStringList actualFileLines;
     if (actualFile.open(QFile::ReadOnly)) {
         QTextStream in(&actualFile);
@@ -80,28 +83,37 @@ void Test_Config::paths() {
     setup("Test", "Testing");
 #if defined(Q_OS_WIN)
     QString expectedConfigurationFileWhenInstalled = QDir::homePath() + "/AppData/Roaming/Testing/Test/Test.cfg";
+    QString expectedStateFileWhenInstalled = QDir::homePath() + "/AppData/Roaming/Testing/Test/Test.user";
     QString expectedDataDirectoryWhenInstalled = QDir::homePath() + "/AppData/Roaming/Testing/Test/Data";
     QString expectedConfigurationFileWhenPortable = QCoreApplication::applicationDirPath() + "/Test.cfg";
+    QString expectedStateFileWhenPortable = QCoreApplication::applicationDirPath() + "/Test.user";
     QString expectedDataDirectoryWhenPortable = QCoreApplication::applicationDirPath() + "/Test.Data";
 #elif defined(Q_OS_LINUX)
     QString expectedConfigurationFileWhenInstalled = QDir::homePath() + "/.config/test.conf";
+    QString expectedStateFileWhenInstalled = QDir::homePath() + "/.config/test.user";
     QString expectedDataDirectoryWhenInstalled = QDir::homePath() + "/.local/share/test";
     QString expectedConfigurationFileWhenPortable = QCoreApplication::applicationDirPath() + "/.test";
+    QString expectedStateFileWhenPortable = QCoreApplication::applicationDirPath() + "/.test.user";
     QString expectedDataDirectoryWhenPortable = QCoreApplication::applicationDirPath() + "/.test.data";
 #endif
-    cleanup(expectedConfigurationFileWhenInstalled, expectedDataDirectoryWhenInstalled);
-    cleanup(expectedConfigurationFileWhenPortable, expectedDataDirectoryWhenPortable);
+    cleanup(expectedConfigurationFileWhenInstalled, expectedStateFileWhenInstalled, expectedDataDirectoryWhenInstalled);
+    cleanup(expectedConfigurationFileWhenPortable, expectedStateFileWhenPortable, expectedDataDirectoryWhenPortable);
 
     {
         Config::setPortable(false);
 
         QCOMPARE(Config::configurationFile(), expectedConfigurationFileWhenInstalled);
+        QCOMPARE(Config::stateFile(), expectedStateFileWhenInstalled);
         QCOMPARE(Config::dataDirectory(), expectedDataDirectoryWhenInstalled);
         QCOMPARE(Config::isPortable(), false);
 
         QFile finalConfigFile (expectedConfigurationFileWhenInstalled);
         QVERIFY(finalConfigFile.exists());
         finalConfigFile.remove(); //cleanup
+
+        QFile finalStateFile (expectedStateFileWhenInstalled);
+        QVERIFY(finalStateFile.exists());
+        finalStateFile.remove(); //cleanup
 
         QDir finalDataDir (expectedDataDirectoryWhenInstalled);
         QVERIFY(finalDataDir.exists());
@@ -112,12 +124,17 @@ void Test_Config::paths() {
         Config::setPortable(true);
 
         QCOMPARE(Config::configurationFile(), expectedConfigurationFileWhenPortable);
+        QCOMPARE(Config::stateFile(), expectedStateFileWhenPortable);
         QCOMPARE(Config::dataDirectory(), expectedDataDirectoryWhenPortable);
         QCOMPARE(Config::isPortable(), true);
 
         QFile finalConfigFile (expectedConfigurationFileWhenPortable);
         QVERIFY(finalConfigFile.exists());
         finalConfigFile.remove(); //cleanup
+
+        QFile finalStateFile (expectedStateFileWhenPortable);
+        QVERIFY(finalStateFile.exists());
+        finalStateFile.remove(); //cleanup
 
         QDir finalDataDir (expectedDataDirectoryWhenPortable);
         QVERIFY(finalDataDir.exists());
@@ -129,28 +146,37 @@ void Test_Config::pathsWithSpaces() {
     setup("Test X", "Testing");
 #if defined(Q_OS_WIN)
     QString expectedConfigurationFileWhenInstalled = QDir::homePath() + "/AppData/Roaming/Testing/Test X/Test X.cfg";
+    QString expectedStateFileWhenInstalled = QDir::homePath() + "/AppData/Roaming/Testing/Test X/Test X.user";
     QString expectedDataDirectoryWhenInstalled = QDir::homePath() + "/AppData/Roaming/Testing/Test X/Data";
     QString expectedConfigurationFileWhenPortable = QCoreApplication::applicationDirPath() + "/Test X.cfg";
+    QString expectedStateFileWhenPortable = QCoreApplication::applicationDirPath() + "/Test X.user";
     QString expectedDataDirectoryWhenPortable = QCoreApplication::applicationDirPath() + "/Test X.Data";
 #elif defined(Q_OS_LINUX)
     QString expectedConfigurationFileWhenInstalled = QDir::homePath() + "/.config/testx.conf";
+    QString expectedStateFileWhenInstalled = QDir::homePath() + "/.config/testx.user";
     QString expectedDataDirectoryWhenInstalled = QDir::homePath() + "/.local/share/testx";
     QString expectedConfigurationFileWhenPortable = QCoreApplication::applicationDirPath() + "/.testx";
+    QString expectedStateFileWhenPortable = QCoreApplication::applicationDirPath() + "/.testx.user";
     QString expectedDataDirectoryWhenPortable = QCoreApplication::applicationDirPath() + "/.testx.data";
 #endif
-    cleanup(expectedConfigurationFileWhenInstalled, expectedDataDirectoryWhenInstalled);
-    cleanup(expectedConfigurationFileWhenPortable, expectedDataDirectoryWhenPortable);
+    cleanup(expectedConfigurationFileWhenInstalled, expectedStateFileWhenInstalled, expectedDataDirectoryWhenInstalled);
+    cleanup(expectedConfigurationFileWhenPortable, expectedStateFileWhenPortable, expectedDataDirectoryWhenPortable);
 
     {
         Config::setPortable(true);
 
         QCOMPARE(Config::dataDirectory(), expectedDataDirectoryWhenPortable);
         QCOMPARE(Config::configurationFile(), expectedConfigurationFileWhenPortable);
+        QCOMPARE(Config::stateFile(), expectedStateFileWhenPortable);
         QCOMPARE(Config::isPortable(), true);
 
         QFile finalConfigFile (expectedConfigurationFileWhenPortable);
         QVERIFY(finalConfigFile.exists());
         finalConfigFile.remove(); //cleanup
+
+        QFile finalStateFile (expectedStateFileWhenPortable);
+        QVERIFY(finalStateFile.exists());
+        finalStateFile.remove(); //cleanup
 
         QDir finalDataDir (expectedDataDirectoryWhenPortable);
         QVERIFY(finalDataDir.exists());
@@ -162,11 +188,16 @@ void Test_Config::pathsWithSpaces() {
 
         QCOMPARE(Config::dataDirectory(), expectedDataDirectoryWhenInstalled);
         QCOMPARE(Config::configurationFile(), expectedConfigurationFileWhenInstalled);
+        QCOMPARE(Config::stateFile(), expectedStateFileWhenInstalled);
         QCOMPARE(Config::isPortable(), false);
 
         QFile finalConfigFile (expectedConfigurationFileWhenInstalled);
         QVERIFY(finalConfigFile.exists());
         finalConfigFile.remove(); //cleanup
+
+        QFile finalStateFile (expectedStateFileWhenInstalled);
+        QVERIFY(finalStateFile.exists());
+        finalStateFile.remove(); //cleanup
 
         QDir finalDataDir (expectedDataDirectoryWhenInstalled);
         QVERIFY(finalDataDir.exists());
@@ -193,9 +224,21 @@ void Test_Config::nullKey() {
     QVERIFY(value.isNull());
 }
 
+void Test_Config::nullKeyState() {
+    setup("Test", "Testing");
+    QString value = Config::stateRead(QString(), "default");
+    QVERIFY(value.isNull());
+}
+
 void Test_Config::emptyKey() {
     setup("Test", "Testing");
     QString value = Config::read("", "default");
+    QVERIFY(value.isNull());
+}
+
+void Test_Config::emptyKeyState() {
+    setup("Test", "Testing");
+    QString value = Config::stateRead("", "default");
     QVERIFY(value.isNull());
 }
 
@@ -203,43 +246,43 @@ void Test_Config::emptySave() { //Empty file Load/Save
     setup("Test", "Testing", "Empty.cfg");
     QVERIFY2(Config::load(), "File should exist before load.");
     QVERIFY2(Config::save(), "Save should succeed.");
-    verifyTestConfig("Empty.cfg");
+    verifyTestFile("Empty.cfg", Config::configurationFilePath());
 }
 
 void Test_Config::emptyLinesCrLf() { //CRLF preserved on Save
     setup("Test", "Testing", "EmptyLinesCRLF.cfg");
     QVERIFY2(Config::save(), "Save should succeed.");
-    verifyTestConfig("EmptyLinesCRLF.cfg");
+    verifyTestFile("EmptyLinesCRLF.cfg", Config::configurationFilePath());
 }
 
 void Test_Config::emptyLinesLf() { //LF preserved on Save
     setup("Test", "Testing", "EmptyLinesLF.cfg");
     QVERIFY2(Config::save(), "Save should succeed.");
-    verifyTestConfig("EmptyLinesLF.cfg");
+    verifyTestFile("EmptyLinesLF.cfg", Config::configurationFilePath());
 }
 
 void Test_Config::emptyLinesCr() { //CR preserved on Save
     setup("Test", "Testing", "EmptyLinesCR.cfg");
     QVERIFY2(Config::save(), "Save should succeed.");
-    verifyTestConfig("EmptyLinesCR.cfg");
+    verifyTestFile("EmptyLinesCR.cfg", Config::configurationFilePath());
 }
 
 void Test_Config::emptyLinesMixed() { //Mixed line ending gets normalized on Save
     setup("Test", "Testing", "EmptyLinesMixed.cfg");
     QVERIFY2(Config::save(), "Save should succeed.");
-    verifyTestConfig("EmptyLinesMixed.Good.cfg");
+    verifyTestFile("EmptyLinesMixed.Good.cfg", Config::configurationFilePath());
 }
 
 void Test_Config::commentsOnly() { //Comments are preserved on Save
     setup("Test", "Testing", "CommentsOnly.cfg");
     QVERIFY2(Config::save(), "Save should succeed.");
-    verifyTestConfig("CommentsOnly.cfg");
+    verifyTestFile("CommentsOnly.cfg", Config::configurationFilePath());
 }
 
 void Test_Config::commentsWithValues() { //Values with comments are preserved on Save
     setup("Test", "Testing", "CommentsWithValues.cfg");
     QVERIFY2(Config::save(), "Save should succeed.");
-    verifyTestConfig("CommentsWithValues.cfg");
+    verifyTestFile("CommentsWithValues.cfg", Config::configurationFilePath());
 }
 
 void Test_Config::spacingEscape() { //Leading spaces are preserved on Save
@@ -255,7 +298,7 @@ void Test_Config::spacingEscape() { //Leading spaces are preserved on Save
 
     Config::write("Null", QString(QChar('\0')) + "Null" + QString(QChar('\0')));
     Config::save();
-    verifyTestConfig("SpacingEscape.Good.cfg");
+    verifyTestFile("SpacingEscape.Good.cfg", Config::configurationFilePath());
 }
 
 void Test_Config::writeBasic() { //Basic write
@@ -263,7 +306,15 @@ void Test_Config::writeBasic() { //Basic write
     Config::write("Key1", "Value 1");
     Config::write("Key2", "Value 2");
     Config::save();
-    verifyTestConfig("WriteBasic.Good.cfg");
+    verifyTestFile("WriteBasic.Good.cfg", Config::configurationFilePath());
+}
+
+void Test_Config::writeBasicState() { //Basic write
+    setup("Test", "Testing", "Empty.cfg");
+    Config::stateWrite("Key1", "Value 1");
+    Config::stateWrite("Key2", "Value 2");
+    Config::save();
+    verifyTestFile("WriteBasic.Good.cfg", Config::stateFilePath());
 }
 
 void Test_Config::writeNoEmptyLine() { //Basic write (without empty line ending)
@@ -271,7 +322,7 @@ void Test_Config::writeNoEmptyLine() { //Basic write (without empty line ending)
     Config::write("Key1", "Value 1");
     Config::write("Key2", "Value 2");
     Config::save();
-    verifyTestConfig("WriteNoEmptyLine.Good.cfg");
+    verifyTestFile("WriteNoEmptyLine.Good.cfg", Config::configurationFilePath());
 }
 
 void Test_Config::writeSameSeparatorEquals() { //Separator equals (=) is preserved upon save
@@ -279,7 +330,7 @@ void Test_Config::writeSameSeparatorEquals() { //Separator equals (=) is preserv
     Config::write("Key1", "Value 1");
     Config::write("Key2", "Value 2");
     Config::save();
-    verifyTestConfig("WriteSameSeparatorEquals.Good.cfg");
+    verifyTestFile("WriteSameSeparatorEquals.Good.cfg", Config::configurationFilePath());
 }
 
 void Test_Config::writeSameSeparatorSpace() { //Separator space ( ) is preserved upon save
@@ -287,7 +338,7 @@ void Test_Config::writeSameSeparatorSpace() { //Separator space ( ) is preserved
     Config::write("Key1", "Value 1");
     Config::write("Key2", "Value 2");
     Config::save();
-    verifyTestConfig("WriteSameSeparatorSpace.Good.cfg");
+    verifyTestFile("WriteSameSeparatorSpace.Good.cfg", Config::configurationFilePath());
 }
 
 void Test_Config::replace() { //Write replaces existing entry
@@ -297,7 +348,17 @@ void Test_Config::replace() { //Write replaces existing entry
     Config::save();
     QCOMPARE(Config::read("Key1", QString()), "Value 1a");
     QCOMPARE(Config::read("Key2", QString()), "Value 2a");
-    verifyTestConfig("Replace.Good.cfg");
+    verifyTestFile("Replace.Good.cfg", Config::configurationFilePath());
+}
+
+void Test_Config::replaceState() { //Write replaces existing entry
+    setup("Test", "Testing", "Replace.cfg");
+    Config::stateWrite("Key1", "Value 1a");
+    Config::stateWrite("Key2", "Value 2a");
+    Config::save();
+    QCOMPARE(Config::stateRead("Key1", QString()), "Value 1a");
+    QCOMPARE(Config::stateRead("Key2", QString()), "Value 2a");
+    verifyTestFile("Replace.Good.cfg", Config::stateFilePath());
 }
 
 void Test_Config::spacingPreserved() { //Write preserves spacing
@@ -306,7 +367,7 @@ void Test_Config::spacingPreserved() { //Write preserves spacing
     Config::write("KeyTwo", "Value 2b");
     Config::write("KeyThree", "Value 3c");
     Config::save();
-    verifyTestConfig("SpacingPreserved.Good.cfg");
+    verifyTestFile("SpacingPreserved.Good.cfg", Config::configurationFilePath());
 }
 
 void Test_Config::spacingPreservedOnAdd() { //Write preserves spacing on add
@@ -318,7 +379,7 @@ void Test_Config::spacingPreservedOnAdd() { //Write preserves spacing on add
     Config::writeMany("Five", QStringList({ "Value 5a", "Value 5b", "Value 5c" }));
     Config::write("FourtyTwo", 42);
     Config::save();
-    verifyTestConfig("SpacingPreservedOnAdd.Good.cfg");
+    verifyTestFile("SpacingPreservedOnAdd.Good.cfg", Config::configurationFilePath());
 }
 
 void Test_Config::writeToEmpty() { //Write without preexisting file
@@ -330,7 +391,7 @@ void Test_Config::writeToEmpty() { //Write without preexisting file
     configFile.remove();
 
     Config::save();
-    verifyTestConfig("Replace.Good.cfg");
+    verifyTestFile("Replace.Good.cfg", Config::configurationFilePath());
 }
 
 void Test_Config::replaceOnlyLast() { //Write replaces only the last instance of same key
@@ -343,7 +404,7 @@ void Test_Config::replaceOnlyLast() { //Write replaces only the last instance of
     QCOMPARE(Config::read("Key2", QString()), "Value 2a");
     QCOMPARE(Config::read("Key3", QString()), "Value 3");
 
-    verifyTestConfig("ReplaceOnlyLast.Good.cfg");
+    verifyTestFile("ReplaceOnlyLast.Good.cfg", Config::configurationFilePath());
 }
 
 void Test_Config::removeSingle() { //Removing entry
@@ -351,7 +412,7 @@ void Test_Config::removeSingle() { //Removing entry
     Config::remove("Key1");
     Config::save();
 
-    verifyTestConfig("Remove.Good.cfg");
+    verifyTestFile("Remove.Good.cfg", Config::configurationFilePath());
 }
 
 void Test_Config::removeMulti() { //Removing multiple entries
@@ -359,7 +420,7 @@ void Test_Config::removeMulti() { //Removing multiple entries
     Config::remove("Key2");
     Config::save();
 
-    verifyTestConfig("RemoveMulti.Good.cfg");
+    verifyTestFile("RemoveMulti.Good.cfg", Config::configurationFilePath());
 }
 
 void Test_Config::readMulti() { //Reading multiple entries
@@ -376,7 +437,7 @@ void Test_Config::multiWrite() { //Multi-value write
     Config::writeMany("Key2", QStringList({ "Value 2a", "Value 2b", "Value 2c" }));
     Config::write("Key3", "Value 3");
     Config::save();
-    verifyTestConfig("WriteMulti.Good.cfg");
+    verifyTestFile("WriteMulti.Good.cfg", Config::configurationFilePath());
 
     QCOMPARE(Config::read("Key1"), "Value 1");
     QCOMPARE(Config::read("Key3"), "Value 3");
@@ -392,7 +453,7 @@ void Test_Config::multiReplace() { //Multi-value replace
     setup("Test", "Testing", "WriteMulti.cfg");
     Config::writeMany("Key2", QStringList({ "Value 2a", "Value 2b", "Value 2c" }));
     Config::save();
-    verifyTestConfig("WriteMulti.Good.cfg");
+    verifyTestFile("WriteMulti.Good.cfg", Config::configurationFilePath());
 
     QCOMPARE(Config::read("Key1"), "Value 1");
     QCOMPARE(Config::read("Key3"), "Value 3");
@@ -425,7 +486,7 @@ void Test_Config::testConversionWrite() { //Test conversion
     Config::write("Double Infinity-", -std::numeric_limits<double>::infinity());
 
     Config::save();
-    verifyTestConfig("WriteConvertedCpp.Good.cfg");
+    verifyTestFile("WriteConvertedCpp.Good.cfg", Config::configurationFilePath());
 }
 
 void Test_Config::testConversionRead() { //Test conversion
@@ -453,7 +514,7 @@ void Test_Config::keyWhitespace() { //Key whitespace reading and saving
     setup("Test", "Testing", "KeyWhitespace.cfg");
 
     Config::save();
-    verifyTestConfig("KeyWhitespace.Good.cfg");
+    verifyTestFile("KeyWhitespace.Good.cfg", Config::configurationFilePath());
 
     QCOMPARE(Config::read("Key 1"), "Value 1");
     QCOMPARE(Config::read("Key 3"), "Value 3");
@@ -476,10 +537,10 @@ void Test_Config::deleteAll() { //Delete all values
     QVERIFY(Config::read("Key1").isNull());
     QVERIFY(Config::read("Key2").isNull());
 
-    verifyTestConfig("WriteBasic.Good.cfg");
+    verifyTestFile("WriteBasic.Good.cfg", Config::configurationFilePath());
 
     Config::save();
-    verifyTestConfig("Empty.cfg");
+    verifyTestFile("Empty.cfg", Config::configurationFilePath());
 }
 
 void Test_Config::twoReadsWithDifferentDefault() { //Each read must independently define default

@@ -125,34 +125,34 @@ void Settings::setWordWrap(bool newWordWrap) {
 
 QString Settings::lastFile(QString folder) {
     if (folder.length() > 0) {
-        return Config::read("LastFile!" + folder, "");
+        return Config::stateRead("LastFile!" + folder, "");
     } else {
-        return Config::read("LastFile", "");
+        return Config::stateRead("LastFile", "");
     }
 }
 
 void Settings::setLastFile(QString folder, QString file) {
     if (folder.length() > 0) {
-        Config::write("LastFile!" + folder, file);
+        Config::stateWrite("LastFile!" + folder, file);
     } else {
-        Config::write("LastFile", file);
+        Config::stateWrite("LastFile", file);
     }
 }
 
 
 QString Settings::lastFolder() {
-    return Config::read("LastFolder", "");
+    return Config::stateRead("LastFolder", "");
 }
 
 void Settings::setLastFolder(QString folder) {
-    Config::write("LastFolder", folder);
+    Config::stateWrite("LastFolder", folder);
 }
 
 
 bool Settings::setupCompleted() {
-    return Config::read("SetupCompleted", false);
+    return Config::stateRead("SetupCompleted", false);
 }
 
 void Settings::setSetupCompleted(bool newSetupCompleted) {
-    Config::write("SetupCompleted", newSetupCompleted);
+    Config::stateWrite("SetupCompleted", newSetupCompleted);
 }

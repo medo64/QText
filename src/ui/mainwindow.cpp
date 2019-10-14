@@ -232,8 +232,8 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     connect(_clipboard, SIGNAL(dataChanged()), SLOT(onTextStateChanged()));
 
     { //State
-        connect(State::instance(), &State::writeToConfig, [=] (QString key, QString value) { Config::write("State!" + key, value); });
-        connect(State::instance(), &State::readFromConfig, [=] (QString key) { return Config::read("State!" + key); });
+        connect(State::instance(), &State::writeToConfig, [=] (QString key, QString value) { Config::stateWrite("State!" + key, value); });
+        connect(State::instance(), &State::readFromConfig, [=] (QString key) { return Config::stateRead("State!" + key, QString()); });
         State::load(this);
     }
 
