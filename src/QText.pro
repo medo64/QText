@@ -43,6 +43,7 @@ CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 CONFIG += c++11
 
 SOURCES += \
+        gotodialog.cpp \
         medo/config.cpp \
         medo/hotkey.cpp \
         medo/singleinstance.cpp \
@@ -61,6 +62,7 @@ SOURCES += \
         storage.cpp
 
 HEADERS += \
+        gotodialog.h \
         medo/config.h \
         medo/hotkey.h \
         medo/singleinstance.h \
@@ -79,6 +81,7 @@ HEADERS += \
 
 FORMS += \
         filenamedialog.ui \
+        gotodialog.ui \
         settingsdialog.ui \
         mainwindow.ui
 

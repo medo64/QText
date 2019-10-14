@@ -13,8 +13,10 @@
 #include "mainwindow.h"
 
 #include "filenamedialog.h"
+#include "gotodialog.h"
 #include "settingsdialog.h"
 #include "ui_filenamedialog.h"
+#include "ui_gotodialog.h"
 #include "ui_settingsdialog.h"
 #include "ui_mainwindow.h"
 
@@ -22,26 +24,6 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     ui->setupUi(this);
 
     _storage = storage;
-
-    //determine last used folder
-    _folder = storage->getBaseFolder(); //default folder
-    auto lastFolder = Settings::lastFolder();
-    if (lastFolder.length() > 0) {
-        for (size_t i=0; i<_storage->folderCount(); i++) { //check for exact match
-            auto folder = _storage->getFolder(i);
-            if (folder->getKey().compare(lastFolder, Qt::CaseSensitive) == 0) {
-                _folder = folder;
-                break;
-            }
-        }
-        for (size_t i=0; i<_storage->folderCount(); i++) { //check case-insensitive version
-            auto folder = _storage->getFolder(i);
-            if (folder->getKey().compare(lastFolder, Qt::CaseInsensitive) == 0) {
-                _folder = folder;
-                break;
-            }
-        }
-    }
 
     { //application icon
         QIcon appIcon;
@@ -179,6 +161,15 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         redoIcon.addFile(":icons/64x64/redo.png", QSize(64, 64));
         ui->actionRedo->setIcon(redoIcon);
         connect(ui->actionRedo, SIGNAL(triggered()), this, SLOT(onTextRedo()));
+
+        QIcon gotoIcon;
+        gotoIcon.addFile(":icons/16x16/goto.png", QSize(16, 16));
+        gotoIcon.addFile(":icons/24x24/goto.png", QSize(24, 24));
+        gotoIcon.addFile(":icons/32x32/goto.png", QSize(32, 32));
+        gotoIcon.addFile(":icons/48x48/goto.png", QSize(48, 48));
+        gotoIcon.addFile(":icons/64x64/goto.png", QSize(64, 64));
+        ui->actionGoto->setIcon(gotoIcon);
+        connect(ui->actionGoto, SIGNAL(triggered()), this, SLOT(onGoto()));
     }
 
     //align-right
@@ -187,12 +178,18 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     spacerWidget->setVisible(true);
     ui->mainToolBar->addWidget(spacerWidget);
 
-    //folder button menu
-    onFolderSelect(); //setup folder select menu button
-    onTabChanged(); //update toolbar & focus
-    connect(ui->actionReopen, SIGNAL(triggered()), this, SLOT(onFileReopen()));
-    connect(ui->actionShowContainingDirectory, SIGNAL(triggered()), this, SLOT(onShowContainingDirectory()));
-    connect(ui->actionShowContainingDirectoryOnly, SIGNAL(triggered()), this, SLOT(onShowContainingDirectoryOnly()));
+    { //folder button menu
+        _folderButton = new QToolButton();
+        _folderButton->setPopupMode(QToolButton::InstantPopup);
+        _folderButton->setMenu(new QMenu());
+        ui->mainToolBar->addWidget(_folderButton);
+
+        onFolderSelect(); //setup folder select menu button
+        onTabChanged(); //update toolbar & focus
+        connect(ui->actionReopen, SIGNAL(triggered()), this, SLOT(onFileReopen()));
+        connect(ui->actionShowContainingDirectory, SIGNAL(triggered()), this, SLOT(onShowContainingDirectory()));
+        connect(ui->actionShowContainingDirectoryOnly, SIGNAL(triggered()), this, SLOT(onShowContainingDirectoryOnly()));
+    }
 
     { //app button menu
         QIcon appIcon;
@@ -247,6 +244,10 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         auto duration = Config::isPortable() ? 1000 : 2500; //shorter duration if config is portable
         _tray->showMessage(QCoreApplication::applicationName(), _tray->toolTip(), QSystemTrayIcon::Information, duration);
     }
+
+    //determine last used folder
+    selectFolder(storage->getBaseFolder()->getKey()); //default folder
+    selectFolder(Settings::lastFolder());
 }
 
 MainWindow::~MainWindow() {
@@ -338,9 +339,9 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
         case Qt::AltModifier | Qt::Key_Up: {
             for (size_t i=1; i<_storage->folderCount(); i++) {
                 auto folder = _storage->getFolder(i);
-                if (folder->getPath().compare(_folder->getPath(), Qt::CaseSensitive) == 0) {
-                    _folder = _storage->getFolder(i - 1);
-                    onFolderSelect();
+                if (folder->getKey().compare(_folder->getKey(), Qt::CaseSensitive) == 0) {
+                    auto newFolder = _storage->getFolder(i - 1);
+                    selectFolder(newFolder->getKey());
                     break;
                 }
             }
@@ -349,9 +350,9 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
         case Qt::AltModifier | Qt::Key_Down: {
             for (size_t i=0; i<_storage->folderCount() - 1; i++) {
                 auto folder = _storage->getFolder(i);
-                if (folder->getPath().compare(_folder->getPath(), Qt::CaseSensitive) == 0) {
-                    _folder = _storage->getFolder(i + 1);
-                    onFolderSelect();
+                if (folder->getKey().compare(_folder->getKey(), Qt::CaseSensitive) == 0) {
+                    auto newFolder = _storage->getFolder(i + 1);
+                    selectFolder(newFolder->getKey());
                     break;
                 }
             }
@@ -482,59 +483,39 @@ void MainWindow::onTextRedo() {
     file->document()->redo();
 }
 
+void MainWindow::onGoto() {
+    auto dialog = std::make_shared<GotoDialog>(this, _storage);
+    switch (dialog->exec()) {
+        case QDialog::Accepted: {
+                selectFolder(dialog->FolderKey);
+                if (dialog->FileKey.length() > 0) { selectFile(dialog->FileKey); }
+            } break;
+        default:
+            break;
+    }
+}
+
 
 void MainWindow::onFolderSelect() {
     QAction *action = qobject_cast<QAction *>(sender());
 
     if (action != nullptr) {
-        auto data = action->data();
-        auto path = action->data().value<QString>();
-        for (size_t i=0; i<_storage->folderCount(); i++) {
-            auto folder = _storage->getFolder(i);
-            if (folder->getPath().compare(path, Qt::CaseSensitive) == 0) {
-                _folder->saveAll(); //save all files in previous folder / just in case
-                _folder = folder;
-                Settings::setLastFolder(_folder->getKey());
-                break;
-            }
-        }
+        auto key = action->data().value<QString>();
+        selectFolder(key);
+
+        auto lastFileKey = Settings::lastFile(_folder->getKey());
+        selectFile(lastFileKey);
     }
 
-    if (_folderButton == nullptr) {
-        _folderButton = new QToolButton();
-        _folderButton->setPopupMode(QToolButton::InstantPopup);
-        _folderButton->setMenu(new QMenu());
-        ui->mainToolBar->addWidget(_folderButton);
-    }
-
-    _folderButton->setText(_folder->getTitle() + " ");
     _folderButton->menu()->clear();
     for(size_t i=0; i<_storage->folderCount(); i++) {
         auto folder = _storage->getFolder(i);
         QAction* folderAction = new QAction(folder->getTitle());
-        folderAction->setData(folder->getPath());
+        folderAction->setData(folder->getKey());
         folderAction->setDisabled(folder == _folder);
         connect(folderAction, SIGNAL(triggered()), this, SLOT(onFolderSelect()));
         _folderButton->menu()->addAction(folderAction);
     }
-
-    auto lastFileKey = Settings::lastFile(_folder->getKey());
-
-    ui->tabWidget->clear();
-    for (size_t i = 0; i < _folder->fileCount(); i++) {
-        auto file = _folder->getFile(i);
-        ui->tabWidget->addTab(file, file->getTitle());
-        QObject::connect(file, SIGNAL(titleChanged(FileItem*)), this, SLOT(onFileTitleChanged(FileItem*)));
-        QObject::connect(file, SIGNAL(modificationChanged(FileItem*, bool)), this, SLOT(onFileModificationChanged(FileItem*, bool)));
-        QObject::connect(file, SIGNAL(activated(FileItem*)), this, SLOT(onFileActivated(FileItem*)));
-        QObject::connect(file, SIGNAL(cursorPositionChanged()), this, SLOT(onTextStateChanged()));
-        QObject::connect(file->document(), SIGNAL(undoAvailable(bool)), this, SLOT(onTextStateChanged()));
-        QObject::connect(file->document(), SIGNAL(redoAvailable(bool)), this, SLOT(onTextStateChanged()));
-        if (file->getKey().compare(lastFileKey, Qt::CaseInsensitive) == 0) {
-            ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);
-        }
-    }
-    onTabChanged();
 }
 
 void onShowContainingDirectory2(QString directoryPath, QString filePath) {
@@ -660,6 +641,64 @@ void MainWindow::onTrayShow() {
     this->show();
     this->raise(); //workaround for MacOS
     this->activateWindow(); //workaround for Windows
+}
+
+void MainWindow::selectFolder(QString folderKey) {
+    qDebug().nospace() << "selectFolder(" << folderKey << ") ";
+    std::shared_ptr<FolderItem> selectedFolder = nullptr;
+
+    for (size_t i=0; i<_storage->folderCount(); i++) {
+        auto folder = _storage->getFolder(i);
+        if (folder->getKey().compare(folderKey, Qt::CaseSensitive) == 0) {
+            selectedFolder = folder;
+            break;
+        }
+    }
+    if (selectedFolder == nullptr) { //try case-insensitive match
+        for (size_t i=0; i<_storage->folderCount(); i++) {
+            auto folder = _storage->getFolder(i);
+            if (folder->getKey().compare(folderKey, Qt::CaseInsensitive) == 0) {
+                selectedFolder = folder;
+                break;
+            }
+        }
+    }
+
+    if (selectedFolder != nullptr) {
+        if (_folder != nullptr) { _folder->saveAll(); } //save all files in previous folder / just in case
+        _folder = selectedFolder;
+
+        _folderButton->setText(_folder->getTitle() + " ");
+        Settings::setLastFolder(_folder->getKey());
+
+        ui->tabWidget->blockSignals(true);
+        ui->tabWidget->clear();
+        for (size_t i = 0; i < _folder->fileCount(); i++) {
+            auto file = _folder->getFile(i);
+            ui->tabWidget->addTab(file, file->getTitle());
+            QObject::connect(file, SIGNAL(titleChanged(FileItem*)), this, SLOT(onFileTitleChanged(FileItem*)));
+            QObject::connect(file, SIGNAL(modificationChanged(FileItem*, bool)), this, SLOT(onFileModificationChanged(FileItem*, bool)));
+            QObject::connect(file, SIGNAL(activated(FileItem*)), this, SLOT(onFileActivated(FileItem*)));
+            QObject::connect(file, SIGNAL(cursorPositionChanged()), this, SLOT(onTextStateChanged()));
+            QObject::connect(file->document(), SIGNAL(undoAvailable(bool)), this, SLOT(onTextStateChanged()));
+            QObject::connect(file->document(), SIGNAL(redoAvailable(bool)), this, SLOT(onTextStateChanged()));
+        }
+        ui->tabWidget->blockSignals(false);
+
+        selectFile(Settings::lastFile(_folder->getKey()));
+    }
+}
+
+void MainWindow::selectFile(QString fileKey) {
+    qDebug().nospace() << "selectFile(" << fileKey << ") " << _folder->getKey();
+    for (int i = 0; i < ui->tabWidget->count() ; i++) {
+        auto file = dynamic_cast<FileItem*>(ui->tabWidget->widget(i));
+        if (file->getKey().compare(fileKey, Qt::CaseInsensitive) == 0) {
+            ui->tabWidget->setCurrentIndex(i);
+            onTabChanged();
+            break;
+        }
+    }
 }
 
 void MainWindow::applySettings(bool applyShowInTaskbar) {

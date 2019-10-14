@@ -35,6 +35,8 @@ class MainWindow : public QMainWindow {
         QClipboard* _clipboard = QApplication::clipboard();
         Hotkey* _hotkey;
         void applySettings(bool applyShowInTaskbar = true);
+        void selectFolder(QString folderKey);
+        void selectFile(QString fileKey);
 
     private slots:
         void onFileActivated(FileItem* file);
@@ -50,6 +52,7 @@ class MainWindow : public QMainWindow {
         void onTextPaste();
         void onTextUndo();
         void onTextRedo();
+        void onGoto();
         void onFolderSelect();
         void onShowContainingDirectory();
         void onShowContainingDirectoryOnly();

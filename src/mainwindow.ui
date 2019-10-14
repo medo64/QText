@@ -93,6 +93,8 @@
    <addaction name="separator"/>
    <addaction name="actionUndo"/>
    <addaction name="actionRedo"/>
+   <addaction name="separator"/>
+   <addaction name="actionGoto"/>
   </widget>
   <action name="actionNew">
    <property name="icon">
@@ -248,6 +250,21 @@
    </property>
    <property name="toolTip">
     <string>Delete file</string>
+   </property>
+  </action>
+  <action name="actionGoto">
+   <property name="icon">
+    <iconset resource="qtext.qrc">
+     <normaloff>:/icons/16x16/goto.png</normaloff>:/icons/16x16/goto.png</iconset>
+   </property>
+   <property name="text">
+    <string>Go &amp;To</string>
+   </property>
+   <property name="toolTip">
+    <string>Find folder or file (Ctrl+G)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+G</string>
    </property>
   </action>
  </widget>

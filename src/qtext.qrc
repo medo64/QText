@@ -62,5 +62,20 @@
         <file>icons/32x32/app.png</file>
         <file>icons/48x48/app.png</file>
         <file>icons/64x64/app.png</file>
+        <file>icons/16x16/goto.png</file>
+        <file>icons/24x24/goto.png</file>
+        <file>icons/32x32/goto.png</file>
+        <file>icons/48x48/goto.png</file>
+        <file>icons/64x64/goto.png</file>
+        <file>icons/64x64/file.png</file>
+        <file>icons/64x64/folder.png</file>
+        <file>icons/48x48/file.png</file>
+        <file>icons/48x48/folder.png</file>
+        <file>icons/32x32/file.png</file>
+        <file>icons/32x32/folder.png</file>
+        <file>icons/24x24/file.png</file>
+        <file>icons/24x24/folder.png</file>
+        <file>icons/16x16/file.png</file>
+        <file>icons/16x16/folder.png</file>
     </qresource>
 </RCC>
