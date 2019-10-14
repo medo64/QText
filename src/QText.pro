@@ -43,47 +43,47 @@ CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 CONFIG += c++11
 
 SOURCES += \
-        gotodialog.cpp \
+        ui/filenamedialog.cpp \
+        ui/gotodialog.cpp \
+        ui/settingsdialog.cpp \
+        ui/mainwindow.cpp \
         medo/config.cpp \
         medo/hotkey.cpp \
         medo/singleinstance.cpp \
         medo/state.cpp \
         fileitem.cpp \
-        filenamedialog.cpp \
         folderitem.cpp \
         helpers.cpp \
         main.cpp \
-        mainwindow.cpp \
         qtabbarex.cpp \
         qtabwidgetex.cpp \
         settings.cpp \
-        settingsdialog.cpp \
         setup.cpp \
         storage.cpp
 
 HEADERS += \
-        gotodialog.h \
+        ui/filenamedialog.h \
+        ui/gotodialog.h \
+        ui/settingsdialog.h \
+        ui/mainwindow.h \
         medo/config.h \
         medo/hotkey.h \
         medo/singleinstance.h \
         medo/state.h \
         fileitem.h \
-        filenamedialog.h \
         folderitem.h \
         helpers.h \
-        mainwindow.h \
         qtabbarex.h \
         qtabwidgetex.h \
         settings.h \
-        settingsdialog.h \
         setup.h \
         storage.h
 
 FORMS += \
-        filenamedialog.ui \
-        gotodialog.ui \
-        settingsdialog.ui \
-        mainwindow.ui
+        ui/filenamedialog.ui \
+        ui/gotodialog.ui \
+        ui/settingsdialog.ui \
+        ui/mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

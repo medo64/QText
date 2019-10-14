@@ -1,5 +1,5 @@
 #include <QCommandLineParser>
-#include "mainwindow.h"
+#include "ui/mainwindow.h"
 #include "settings.h"
 #include "setup.h"
 #include "medo/config.h"
