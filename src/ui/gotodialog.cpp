@@ -4,6 +4,7 @@
 
 GotoDialog::GotoDialog(QWidget *parent, std::shared_ptr<Storage> storage) : QDialog(parent), ui(new Ui::GotoDialog) {
     ui->setupUi(this);
+    ui->textSearch->installEventFilter(this);
 
     _storage = storage;
 
@@ -27,6 +28,34 @@ GotoDialog::GotoDialog(QWidget *parent, std::shared_ptr<Storage> storage) : QDia
 
 GotoDialog::~GotoDialog() {
     delete ui;
+}
+
+bool GotoDialog::eventFilter(QObject* obj, QEvent* event) {
+    if (event->type() == QEvent::KeyPress) {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        switch(keyEvent->key()) {
+            case Qt::Key_Up: {
+                if (ui->listWidget->currentRow() >= 0) {
+                    if (ui->listWidget->currentRow() > 0) {
+                        ui->listWidget->setCurrentRow(ui->listWidget->currentRow() - 1);
+                    }
+                } else if (ui->listWidget->count() > 0) {
+                    ui->listWidget->setCurrentRow(0);
+                }
+            } return true;
+
+            case Qt::Key_Down: {
+                if (ui->listWidget->currentRow() >= 0) {
+                    if (ui->listWidget->currentRow() < ui->listWidget->count() - 1) {
+                        ui->listWidget->setCurrentRow(ui->listWidget->currentRow() + 1);
+                    }
+                } else if (ui->listWidget->count() > 0) {
+                    ui->listWidget->setCurrentRow(0);
+                }
+            } return true;
+        }
+    }
+    return QObject::eventFilter(obj, event);
 }
 
 void GotoDialog::accept() {

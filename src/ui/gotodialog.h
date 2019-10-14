@@ -25,6 +25,7 @@ class GotoDialog : public QDialog {
         void accept();
 
     private:
+        bool eventFilter(QObject* obj, QEvent* event);
         Ui::GotoDialog *ui;
         std::shared_ptr<Storage> _storage;
         QIcon _folderIcon;
