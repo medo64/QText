@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "settings.h"
 #include "medo/config.h"
 
@@ -90,6 +91,19 @@ bool Settings::defaultShowInTaskbar() {
 
 void Settings::setShowInTaskbar(bool newShowInTaskbar) {
     Config::write("ShowInTaskbar", newShowInTaskbar);
+}
+
+
+int Settings::tabWidth() {
+    return std::min(std::max(Config::read("TabWidth", defaultTabWidth()), 2), 16);
+}
+
+int Settings::defaultTabWidth() {
+    return 4;
+}
+
+void Settings::setTabWidth(int newTabWidth) {
+    Config::write("TabWidth", std::min(std::max(newTabWidth, 2), 16));
 }
 
 

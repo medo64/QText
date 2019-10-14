@@ -32,6 +32,10 @@ class Settings {
         static bool defaultShowInTaskbar();
         static void setShowInTaskbar(bool newShowInTaskbar);
 
+        static int tabWidth();
+        static int defaultTabWidth();
+        static void setTabWidth(int newTabWidth);
+
 
         static QString lastFile(QString folder);
         static void setLastFile(QString folder, QString file);

@@ -15,6 +15,11 @@ FileItem::FileItem(QString directoryPath, QString fileName)
     this->setAcceptRichText(false);
 
     load();
+
+    QFontMetricsF fm (this->font());
+    auto tabWidth = Settings::tabWidth() * fm.width(' ');
+    this->setTabStopDistance(tabWidth);
+
     connect(this->document(), SIGNAL(modificationChanged(bool)), this, SLOT(onModificationChanged(bool)));
 }
 
