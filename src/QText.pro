@@ -108,13 +108,13 @@ Test {
 
     SOURCES -= main.cpp
     SOURCES += \
-            test_config.cpp \
-            test_helpers.cpp \
-            test_main.cpp
+            test/test_config.cpp \
+            test/test_helpers.cpp \
+            test/test_main.cpp
 
     HEADERS += \
-            test_config.h \
-            test_helpers.h
+            test/test_config.h \
+            test/test_helpers.h
 
     RESOURCES += \
         test.qrc
