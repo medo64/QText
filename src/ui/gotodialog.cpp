@@ -79,7 +79,7 @@ void GotoDialog::onTextEdited(const QString& text) {
         item->setData(Qt::UserRole, folder->getKey());
         items.push_back(item);
     } else {
-        for (size_t i=1; i<_storage->folderCount(); i++) {
+        for (size_t i = 0; i<_storage->folderCount(); i++) {
             auto folder = _storage->getFolder(i);
             auto folderTitle = folder->getTitle();
             if (folderTitle.contains(text, Qt::CaseInsensitive)) {
