@@ -127,7 +127,7 @@ bool FileItem::load() {
 
     if (fileValid) {
         QFileInfo info(file);
-        _modificationTime = info.lastModified();
+        _modificationTime = info.lastModified(); //store so that file change can be detected
     } else {
         _modificationTime = QDateTime::currentDateTimeUtc();
     }
@@ -153,6 +153,8 @@ bool FileItem::save() {
         out << contents;
         file.close();
         this->document()->setModified(false);
+        QFileInfo info(file);
+        _modificationTime = info.lastModified(); //remember modification time to avoid reload
         return true;
     } else {
         qDebug() << "save()" << getPath() << "error:" << file.errorString();
