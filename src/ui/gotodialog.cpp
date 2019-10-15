@@ -92,7 +92,8 @@ void GotoDialog::onTextEdited(const QString& text) {
                 auto file = folder->getFile(j);
                 auto fileTitle = file->getTitle();
                 if (fileTitle.contains(text, Qt::CaseInsensitive)) {
-                    QListWidgetItem* item = new QListWidgetItem(_fileIcon, fileTitle);
+                    QString newTitle = fileTitle + " " + (i>0 ? "(in " + folderTitle + ")" : folderTitle);
+                    QListWidgetItem* item = new QListWidgetItem(_fileIcon, newTitle);
                     item->setData(Qt::UserRole, folder->getKey() + "/" + file->getKey());
                     items.push_back(item);
                 }
