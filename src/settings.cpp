@@ -31,6 +31,20 @@ void Settings::setDataPath(QString newPath) {
 }
 
 
+QString Settings::dataPath2() {
+    QString path = Config::read("DataPath2", defaultDataPath2());
+    return (path.length() > 0) ? QDir::cleanPath(path) : path;
+}
+
+QString Settings::defaultDataPath2() {
+    return QString();
+}
+
+void Settings::setDataPath2(QString newPath) {
+    Config::write("DataPath2", QDir::cleanPath(newPath));
+}
+
+
 QKeySequence Settings::hotkey() {
     QString hotkeyText = Config::read("Hotkey", "");
     if (hotkeyText.length() > 0) {

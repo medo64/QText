@@ -7,7 +7,7 @@
 class Storage {
 
     public:
-        Storage(const QString path);
+        Storage(const QString path, const QString path2);
         size_t folderCount();
         std::shared_ptr<FolderItem> getFolder(size_t index);
         std::shared_ptr<FolderItem> getBaseFolder();
@@ -15,6 +15,7 @@ class Storage {
 
     private:
         QString _path;
+        QString _path2;
         std::vector<std::shared_ptr<FolderItem>> _folders;
 
 };

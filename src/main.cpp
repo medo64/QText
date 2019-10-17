@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
         return static_cast<int>(0x80004004); //exit immediately if another instance is running
     }
 
-    storage = std::make_shared<Storage>(Settings::dataPath());
+    storage = std::make_shared<Storage>(Settings::dataPath(), Settings::dataPath2());
 
     MainWindow w { storage };
 

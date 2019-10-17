@@ -16,6 +16,10 @@ class Settings {
         static QString defaultDataPath();
         static void setDataPath(QString newPath);
 
+        static QString dataPath2();
+        static QString defaultDataPath2();
+        static void setDataPath2(QString newPath);
+
         static QKeySequence hotkey();
         static QKeySequence defaultHotkey();
         static void setHotkey(QKeySequence newHotkey);

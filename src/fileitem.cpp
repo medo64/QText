@@ -5,10 +5,11 @@
 #include "settings.h"
 #include "fileitem.h"
 
-FileItem::FileItem(QString directoryPath, QString fileName)
+FileItem::FileItem(QString prefix, QString directoryPath, QString fileName)
     : QTextEdit(nullptr) {
     _directoryPath = directoryPath;
     _fileName = fileName;
+    _prefix = prefix;
 
     this->setLineWrapMode(Settings::wordWrap() ? QTextEdit::WidgetWidth : QTextEdit::NoWrap);
     this->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
@@ -26,6 +27,10 @@ FileItem::FileItem(QString directoryPath, QString fileName)
 FileItem::~FileItem() {
 }
 
+
+QString FileItem::getPrefix() {
+    return _prefix;
+}
 
 QString FileItem::getKey() {
     return _fileName;

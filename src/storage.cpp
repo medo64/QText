@@ -2,11 +2,9 @@
 #include "folderitem.h"
 #include <QDir>
 
-Storage::Storage(const QString path) {
+Storage::Storage(const QString path, QString path2) {
     QDir rootDirectory = path.startsWith("~/") ? QDir::homePath() + path.mid(1) : path;
-    if (!rootDirectory.exists()) {
-        rootDirectory.mkpath(path);
-    }
+    if (!rootDirectory.exists()) { rootDirectory.mkpath(path); }
 
     _path = rootDirectory.path();
 
@@ -15,6 +13,20 @@ Storage::Storage(const QString path) {
     for(QString directory : directories) {
         auto folder = std::make_shared<FolderItem>(_path, directory);
         _folders.push_back(folder);
+    }
+
+    if (path2.length() > 0) { //append second directory too
+        QDir rootDirectory2 = path.startsWith("~/") ? QDir::homePath() + path.mid(1) : path2;
+        if (!rootDirectory2.exists()) { rootDirectory2.mkpath(path2); }
+
+        _path2 = rootDirectory2.path();
+
+        _folders.push_back(std::make_shared<FolderItem>("2", _path2, nullptr));
+        QStringList directories2 = rootDirectory2.entryList(QDir::Dirs|QDir::NoDotAndDotDot, QDir::SortFlag::Name);
+        for(QString directory2 : directories2) {
+            auto folder2 = std::make_shared<FolderItem>("2", _path2, directory2);
+            _folders.push_back(folder2);
+        }
     }
 }
 

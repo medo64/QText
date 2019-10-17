@@ -62,7 +62,7 @@ bool GotoDialog::eventFilter(QObject* obj, QEvent* event) {
 void GotoDialog::accept() {
     if (ui->listWidget->selectedItems().count() > 0) {
         auto selectedItem = ui->listWidget->selectedItems().first();
-        auto keys = selectedItem->data(Qt::UserRole).toString().split("/");
+        auto keys = selectedItem->data(Qt::UserRole).toString().split('\0');
         FolderKey = keys[0];
         FileKey = (keys.count() == 2) ? keys[1] : "";
         QDialog::accept();
@@ -94,7 +94,7 @@ void GotoDialog::onTextEdited(const QString& text) {
                 if (fileTitle.contains(text, Qt::CaseInsensitive)) {
                     QString newTitle = fileTitle + " " + (i>0 ? "(in " + folderTitle + ")" : folderTitle);
                     QListWidgetItem* item = new QListWidgetItem(_fileIcon, newTitle);
-                    item->setData(Qt::UserRole, folder->getKey() + "/" + file->getKey());
+                    item->setData(Qt::UserRole, folder->getKey() + '\0' + file->getKey());
                     items.push_back(item);
                 }
             }
@@ -107,8 +107,10 @@ void GotoDialog::onTextEdited(const QString& text) {
         auto title2 = item2->text();
         auto startsWith1 = title1.startsWith(title, Qt::CaseInsensitive);
         auto startsWith2 = title2.startsWith(title, Qt::CaseInsensitive);
-        auto isFolder1 = item1->data(Qt::UserRole).toString().contains('/');
-        auto isFolder2 = item2->data(Qt::UserRole).toString().contains('/');
+        auto isFolder1 = item1->data(Qt::UserRole).toString().contains('\0');
+        auto isFolder2 = item2->data(Qt::UserRole).toString().contains('\0');
+        auto folderKey1 = item1->data(Qt::UserRole).toString().split('\0')[0];
+        auto folderKey2 = item2->data(Qt::UserRole).toString().split('\0')[0];
 
         if (startsWith1 && !startsWith2) { //sort matching prefixes first
             return true;
@@ -120,7 +122,12 @@ void GotoDialog::onTextEdited(const QString& text) {
             } else if (!isFolder1 && isFolder2) {
                 return false;
             } else {
-                return (title1.compare(title2, Qt::CaseInsensitive) < 0);
+                auto compareResult = title1.compare(title2, Qt::CaseInsensitive);
+                if (compareResult == 0) { //sort by folder key only if all other is same
+                    return folderKey1.compare(folderKey2, Qt::CaseSensitive) < 0;
+                } else {
+                    return (compareResult < 0);
+                }
             }
         }
     });

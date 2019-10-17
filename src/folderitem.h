@@ -8,6 +8,7 @@ class FolderItem {
 
     public:
         FolderItem(const QString directoryBase, const QString directoryName);
+        FolderItem(const QString prefix, const QString directoryBase, const QString directoryName); //prefix differentiates between DataPath and DataPath2
         QString getKey();
         QString getPath();
         QString getTitle();
@@ -21,6 +22,7 @@ class FolderItem {
     private:
         QString _directoryPath;
         QString _directoryName;
+        QString _prefix;
         std::vector<FileItem*> _files;
 
 };
