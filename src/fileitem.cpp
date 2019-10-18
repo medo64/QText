@@ -176,7 +176,7 @@ bool FileItem::event(QEvent *event) {
             return QTextEdit::event(e);
         }
         if (e->modifiers() == Qt::AltModifier) { return false; } //ignore keys with Alt
-        if (e->modifiers() == Qt::ControlModifier | Qt::AltModifier) { return false; } //ignore keys with Ctrl+Alt
+        if (e->modifiers() == (Qt::ControlModifier | Qt::AltModifier)) { return false; } //ignore keys with Ctrl+Alt
     }
     return QTextEdit::event(event);
 }
