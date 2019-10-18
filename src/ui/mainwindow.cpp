@@ -11,15 +11,15 @@
 #include "medo/config.h"
 #include "medo/singleinstance.h"
 #include "medo/state.h"
-#include "mainwindow.h"
 
-#include "filenamedialog.h"
-#include "gotodialog.h"
-#include "settingsdialog.h"
-#include "ui_filenamedialog.h"
-#include "ui_gotodialog.h"
-#include "ui_settingsdialog.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "filenamedialog.h"
+#include "ui_filenamedialog.h"
+#include "gotodialog.h"
+#include "ui_gotodialog.h"
+#include "settingsdialog.h"
+#include "ui_settingsdialog.h"
 
 MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr), ui(new Ui::MainWindow) {
     ui->setupUi(this);
