@@ -134,10 +134,7 @@
     <string>Re&amp;open</string>
    </property>
    <property name="toolTip">
-    <string>Reload file (Ctrl+R)</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+R</string>
+    <string>Reload file</string>
    </property>
   </action>
   <action name="actionRename">
