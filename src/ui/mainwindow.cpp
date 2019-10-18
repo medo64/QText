@@ -237,6 +237,15 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         State::load(this);
     }
 
+    { //show shortcut in tooltip
+        for(QAction* action : ui->mainToolBar->actions()) {
+            auto shortcut = action->shortcut();
+            if (!shortcut.isEmpty()) {
+                action->setToolTip(action->toolTip() + "\n(" + shortcut.toString() + ")");
+            }
+        }
+    }
+
     if (Settings::alwaysOnTop()) { setWindowFlag(Qt::WindowStaysOnTopHint); } //always on top cannot be set dynamically :(
     applySettings();
 

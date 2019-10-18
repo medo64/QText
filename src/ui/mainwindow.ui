@@ -108,7 +108,7 @@
     <string>New</string>
    </property>
    <property name="toolTip">
-    <string>New file (Ctrl+N)</string>
+    <string>New file</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
@@ -123,7 +123,7 @@
     <string>&amp;Save</string>
    </property>
    <property name="toolTip">
-    <string>Save file (Ctrl+S)</string>
+    <string>Save file</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -146,7 +146,7 @@
     <string>R&amp;ename</string>
    </property>
    <property name="toolTip">
-    <string>Rename file (F2)</string>
+    <string>Rename file</string>
    </property>
    <property name="shortcut">
     <string>F2</string>
@@ -171,7 +171,7 @@
     <string>Cu&amp;t</string>
    </property>
    <property name="toolTip">
-    <string>Cut text (Ctrl+X)</string>
+    <string>Cut text</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+X</string>
@@ -186,7 +186,7 @@
     <string>&amp;Copy</string>
    </property>
    <property name="toolTip">
-    <string>Copy text (Ctrl+C)</string>
+    <string>Copy text</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+C</string>
@@ -201,7 +201,7 @@
     <string>&amp;Paste</string>
    </property>
    <property name="toolTip">
-    <string>Paste text (Ctrl+V)</string>
+    <string>Paste text</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+V</string>
@@ -216,7 +216,7 @@
     <string>&amp;Undo</string>
    </property>
    <property name="toolTip">
-    <string>Undo action (Ctrl+Z)</string>
+    <string>Undo action</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Z</string>
@@ -231,7 +231,7 @@
     <string>&amp;Redo</string>
    </property>
    <property name="toolTip">
-    <string>Redo action (Ctrl+Y)</string>
+    <string>Redo action</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Y</string>
@@ -258,7 +258,7 @@
     <string>Go &amp;To</string>
    </property>
    <property name="toolTip">
-    <string>Find folder or file (Ctrl+G)</string>
+    <string>Find folder or file</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+G</string>
