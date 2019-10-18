@@ -289,6 +289,10 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
 #endif
         } break;
 
+        case Qt::ControlModifier | Qt::Key_O: {
+            _folderButton->showMenu();
+        } break;
+
         case Qt::AltModifier | Qt::Key_1: {
             if (ui->tabWidget->count() >= 1) { ui->tabWidget->setCurrentIndex(0); }
         } break;

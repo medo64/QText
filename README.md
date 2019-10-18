@@ -11,6 +11,7 @@ Simple note taking program.
 | `Ctrl+C`    | Copy text                   |
 | `Ctrl+G`    | Find folder or file by name |
 | `Ctrl+N`    | New file                    |
+| `Ctrl+O`    | Select folder               |
 | `Ctrl+R`    | Reload file                 |
 | `Ctrl+S`    | Save file immediatelly      |
 | `Ctrl+V`    | Paste text                  |
