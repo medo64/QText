@@ -280,7 +280,8 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 void MainWindow::keyPressEvent(QKeyEvent *event) {
     auto data = static_cast<uint>(event->key()) | event->modifiers();
     switch(data) {
-        case Qt::Key_Escape: {
+        case Qt::Key_Escape:
+        case Qt::ControlModifier | Qt::Key_F4: {
             State::save(this);
             this->hide();
 #ifdef QT_DEBUG //close immediately for easier debugging
