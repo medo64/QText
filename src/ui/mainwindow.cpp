@@ -302,6 +302,10 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
             _folderButton->showMenu();
         } break;
 
+        case Qt::ControlModifier | Qt::AltModifier | Qt::Key_R: {
+            onShowContainingDirectory();
+        } break;
+
         case Qt::AltModifier | Qt::Key_1: {
             if (ui->tabWidget->count() >= 1) { ui->tabWidget->setCurrentIndex(0); }
         } break;
@@ -537,8 +541,12 @@ void onShowContainingDirectory2(QString directoryPath, QString filePath) {
 }
 
 void MainWindow::onShowContainingDirectory() {
-    auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-    onShowContainingDirectory2(_folder->getPath(), file->getPath());
+    if (ui->tabWidget->currentWidget() != nullptr) {
+        auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+        onShowContainingDirectory2(_folder->getPath(), file->getPath());
+    } else {
+        onShowContainingDirectory2(_folder->getPath(), nullptr);
+    }
 }
 
 void MainWindow::onShowContainingDirectoryOnly() {

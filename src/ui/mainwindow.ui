@@ -156,10 +156,22 @@
    <property name="text">
     <string>Show Containing &amp;Directory</string>
    </property>
+   <property name="toolTip">
+    <string>Show file in containing directory</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+R</string>
+   </property>
   </action>
   <action name="actionShowContainingDirectoryOnly">
    <property name="text">
     <string>Show Containing &amp;Directory</string>
+   </property>
+   <property name="toolTip">
+    <string>Show containing directory</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+R</string>
    </property>
   </action>
   <action name="actionCut">
