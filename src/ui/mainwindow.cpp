@@ -237,6 +237,12 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         State::load(this);
     }
 
+    { //show shortcuts in context menu
+        for(QAction* action : findChildren<QAction*>()) {
+            action->setShortcutVisibleInContextMenu(true);
+        }
+    }
+
     { //show shortcut in tooltip
         for(QAction* action : ui->mainToolBar->actions()) {
             auto shortcut = action->shortcut();
