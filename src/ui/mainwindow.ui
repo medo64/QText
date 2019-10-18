@@ -276,6 +276,17 @@
     <string>Ctrl+G</string>
    </property>
   </action>
+  <action name="actionCopyContainingPath">
+   <property name="text">
+    <string>Copy Containing Path</string>
+   </property>
+   <property name="toolTip">
+    <string>Copy path to clipboard</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+C</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

@@ -1,4 +1,5 @@
 #include <QClipboard>
+#include <QDir>
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
@@ -189,6 +190,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         connect(ui->actionReopen, SIGNAL(triggered()), this, SLOT(onFileReopen()));
         connect(ui->actionShowContainingDirectory, SIGNAL(triggered()), this, SLOT(onShowContainingDirectory()));
         connect(ui->actionShowContainingDirectoryOnly, SIGNAL(triggered()), this, SLOT(onShowContainingDirectoryOnly()));
+        connect(ui->actionCopyContainingPath, SIGNAL(triggered()), this, SLOT(onCopyContainingPath()));
     }
 
     { //app button menu
@@ -308,8 +310,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
             _folderButton->showMenu();
         } break;
 
-        case Qt::ControlModifier | Qt::AltModifier | Qt::Key_R: {
-            onShowContainingDirectory();
+        case Qt::ControlModifier | Qt::AltModifier | Qt::Key_C: {
+            onCopyContainingPath();
         } break;
 
         case Qt::AltModifier | Qt::Key_1: {
@@ -559,6 +561,16 @@ void MainWindow::onShowContainingDirectoryOnly() {
     onShowContainingDirectory2(_folder->getPath(), nullptr);
 }
 
+void MainWindow::onCopyContainingPath() {
+    _clipboard->clear();
+    if (ui->tabWidget->currentWidget() != nullptr) {
+        auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+        _clipboard->setText(QDir::toNativeSeparators(file->getPath()));
+    } else {
+        _clipboard->setText(QDir::toNativeSeparators(_folder->getPath()));
+    }
+}
+
 void MainWindow::onAppSettings() {
     auto dialog = std::make_shared<SettingsDialog>(this);
     switch (dialog->exec()) {
@@ -615,9 +627,11 @@ void MainWindow::onTabMenuRequested(const QPoint &point) {
         menu.addAction(ui->actionDelete);
         menu.addSeparator();
         menu.addAction(ui->actionShowContainingDirectory);
+        menu.addAction(ui->actionCopyContainingPath);
     } else {
         menu.addSeparator();
         menu.addAction(ui->actionShowContainingDirectoryOnly);
+        menu.addAction(ui->actionCopyContainingPath);
     }
 
     menu.exec(tabbar->mapToGlobal(point));
