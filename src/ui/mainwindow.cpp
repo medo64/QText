@@ -72,7 +72,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     }
 
     { //hotkey
-        _hotkey = new Hotkey();
+        _hotkey = new Hotkey(this);
         _hotkey->registerHotkey(Settings::hotkey());
         connect(_hotkey, SIGNAL(activated()), this, SLOT(onTrayShow()));
     }
