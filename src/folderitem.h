@@ -1,8 +1,10 @@
 #ifndef FOLDERITEM_H
 #define FOLDERITEM_H
 
-#include "fileitem.h"
 #include <QString>
+#include "fileitem.h"
+
+class FileItem;
 
 class FolderItem {
 

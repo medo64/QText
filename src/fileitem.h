@@ -7,14 +7,16 @@
 #include <QString>
 #include <QTextEdit>
 #include <QTimer>
+#include "folderitem.h"
+
+class FolderItem;
 
 class FileItem : public QTextEdit {
     Q_OBJECT
 
     public:
-        FileItem(QString prefix, QString directoryPath, QString fileName);
+        FileItem(FolderItem* folder, QString fileName);
         ~FileItem();
-        QString getPrefix();
         QString getKey();
         QString getPath();
         QString getTitle();
@@ -32,9 +34,8 @@ class FileItem : public QTextEdit {
         void focusOutEvent(QFocusEvent *event);
 
     private:
-        QString _directoryPath;
+        FolderItem* _folder;
         QString _fileName;
-        QString _prefix;
         QTextEdit* _editor = nullptr;
         QTimer* _timerSavePending = nullptr;
         void setIsModified(bool isModified);

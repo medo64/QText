@@ -5,11 +5,10 @@
 #include "settings.h"
 #include "fileitem.h"
 
-FileItem::FileItem(QString prefix, QString directoryPath, QString fileName)
+FileItem::FileItem(FolderItem* folder, QString fileName)
     : QTextEdit(nullptr) {
-    _directoryPath = directoryPath;
+    _folder = folder;
     _fileName = fileName;
-    _prefix = prefix;
 
     this->setLineWrapMode(Settings::wordWrap() ? QTextEdit::WidgetWidth : QTextEdit::NoWrap);
     this->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
@@ -27,10 +26,6 @@ FileItem::FileItem(QString prefix, QString directoryPath, QString fileName)
 FileItem::~FileItem() {
 }
 
-
-QString FileItem::getPrefix() {
-    return _prefix;
-}
 
 QString FileItem::getKey() {
     return _fileName;
@@ -54,7 +49,7 @@ void FileItem::setTitle(QString newTitle) {
 
     QString curPath = getPath();
     QString newFileName = Helpers::getFileNameFromTitle(newTitle) + (isHtml() ? ".html" : ".txt");
-    QString newPath = QDir::cleanPath(_directoryPath + QDir::separator() + newFileName);
+    QString newPath = QDir::cleanPath(_folder->getPath() + QDir::separator() + newFileName);
 
     QFile curFile(curPath);
     QFile newFile(newPath);
@@ -204,7 +199,7 @@ void FileItem::focusOutEvent(QFocusEvent* e) {
 
 
 QString FileItem::getPath() {
-    return QDir::cleanPath(_directoryPath + QDir::separator() + _fileName);
+    return QDir::cleanPath(_folder->getPath() + QDir::separator() + _fileName);
 }
 
 

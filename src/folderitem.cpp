@@ -14,7 +14,7 @@ FolderItem::FolderItem(const QString prefix, const QString directoryPath, const 
 
     QStringList files = directory.entryList(QStringList() << "*.txt" << "*.html", QDir::Files);
     for(QString fileName : files) {
-        _files.push_back(new FileItem(prefix, path, fileName));
+        _files.push_back(new FileItem(this, fileName));
     }
 }
 
@@ -27,7 +27,7 @@ FolderItem::FolderItem(const QString directoryPath, const QString directoryName)
 
     QStringList files = directory.entryList(QStringList() << "*.txt" << "*.html", QDir::Files);
     for(QString fileName : files) {
-        _files.push_back(new FileItem(_prefix, path, fileName));
+        _files.push_back(new FileItem(this, fileName));
     }
 }
 
@@ -53,7 +53,7 @@ FileItem* FolderItem::getFile(size_t index) {
 }
 
 FileItem* FolderItem::newFile(QString title) {
-    auto file = new FileItem(_prefix, this->getPath(), Helpers::getFileNameFromTitle(title) + ".txt");
+    auto file = new FileItem(this, Helpers::getFileNameFromTitle(title) + ".txt");
     _files.push_back(file);
     return file;
 }
