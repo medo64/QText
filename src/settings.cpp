@@ -70,7 +70,7 @@ bool Settings::minimizeToTray() {
 }
 
 bool Settings::defaultMinimizeToTray() {
-    return false;
+    return true;
 }
 
 void Settings::setMinimizeToTray(bool newMinimizeToTray) {
