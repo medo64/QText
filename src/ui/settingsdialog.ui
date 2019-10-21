@@ -17,23 +17,26 @@
    <item row="0" column="0" alignment="Qt::AlignTop">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabLookAndFeel">
       <attribute name="title">
        <string>Look &amp;&amp; Feel</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
+      <layout class="QVBoxLayout" name="verticalLayoutLookAndFeel">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <widget class="QCheckBox" name="checkboxShowInTaskbar">
-           <property name="text">
-            <string>Show in taskbar</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <widget class="QCheckBox" name="checkboxShowInTaskbar">
+         <property name="text">
+          <string>Show in taskbar</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkboxMinimizeToTray">
+         <property name="text">
+          <string>Minimize to tray</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -41,24 +44,26 @@
       <attribute name="title">
        <string>System</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <layout class="QVBoxLayout" name="verticalLayoutSystem">
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <widget class="QCheckBox" name="checkboxAutostart">
-           <property name="text">
-            <string>Auto-start</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="checkboxMinimizeToTray">
-           <property name="text">
-            <string>Minimize to tray</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <widget class="QCheckBox" name="checkboxAutostart">
+         <property name="text">
+          <string>Auto-start</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacerSystem">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
