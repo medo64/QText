@@ -11,6 +11,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 
     _oldShowInTaskbar = Settings::showInTaskbar();
     _oldAutostart = Setup::autostart();
+    _oldMinimizeToTray = Settings::minimizeToTray();
 
     connect(ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), this,  SLOT(onButtonClicked(QAbstractButton*)));
     reset();
@@ -31,11 +32,13 @@ void SettingsDialog::onButtonClicked(QAbstractButton* button) {
 void SettingsDialog::reset() {
     ui->checkboxShowInTaskbar->setChecked(_oldShowInTaskbar);
     ui->checkboxAutostart->setChecked(_oldAutostart);
+    ui->checkboxMinimizeToTray->setChecked(_oldMinimizeToTray);
 }
 
 void SettingsDialog::restoreDefaults() {
     ui->checkboxShowInTaskbar->setChecked(Settings::defaultShowInTaskbar());
     ui->checkboxAutostart->setChecked(true);
+    ui->checkboxMinimizeToTray->setChecked(Settings::defaultMinimizeToTray());
 }
 
 void SettingsDialog::accept() {
@@ -46,6 +49,10 @@ void SettingsDialog::accept() {
     bool newAutostart = (ui->checkboxAutostart->checkState() == Qt::Checked);
     changedAutostart = newAutostart != _oldAutostart;
     if (changedAutostart) { Setup::setAutostart(newAutostart); }
+
+    bool newMinimizeToTray = (ui->checkboxMinimizeToTray->checkState() == Qt::Checked);
+    changedMinimizeToTray = newMinimizeToTray != _oldMinimizeToTray;
+    if (changedMinimizeToTray) { Settings::setMinimizeToTray(newMinimizeToTray); }
 
     QDialog::accept();
 }

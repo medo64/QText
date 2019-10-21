@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>450</width>
-    <height>138</height>
+    <height>158</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item row="0" column="0" alignment="Qt::AlignTop">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tabLookAndFeel">
       <attribute name="title">
@@ -48,6 +48,13 @@
           <widget class="QCheckBox" name="checkboxAutostart">
            <property name="text">
             <string>Auto-start</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkboxMinimizeToTray">
+           <property name="text">
+            <string>Minimize to tray</string>
            </property>
           </widget>
          </item>

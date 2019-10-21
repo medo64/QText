@@ -16,6 +16,7 @@ class SettingsDialog : public QDialog {
         ~SettingsDialog();
         bool changedShowInTaskbar;
         bool changedAutostart;
+        bool changedMinimizeToTray;
 
     protected:
         void accept();
@@ -26,6 +27,7 @@ class SettingsDialog : public QDialog {
         void restoreDefaults();
         bool _oldShowInTaskbar;
         bool _oldAutostart;
+        bool _oldMinimizeToTray;
 
 
     private slots:
