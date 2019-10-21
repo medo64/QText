@@ -33,3 +33,4 @@ Simple note taking program.
 | `Alt+Right`  | Select file to the right    |
 | `Alt+Up`     | Select previous folder      |
 | `Alt+Down`   | Select next folder          |
+| `Alt+Home`   | Select base folder          |

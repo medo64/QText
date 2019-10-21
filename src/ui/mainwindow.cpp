@@ -384,6 +384,10 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
             }
         } break;
 
+        case Qt::AltModifier | Qt::Key_Home: {
+            selectFolder(_storage->getBaseFolder()->getKey());
+        } break;
+
         default: QMainWindow::keyPressEvent(event);
     }
 }
