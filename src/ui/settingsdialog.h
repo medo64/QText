@@ -14,9 +14,9 @@ class SettingsDialog : public QDialog {
     public:
         explicit SettingsDialog(QWidget *parent = nullptr);
         ~SettingsDialog();
-        bool changedShowInTaskbar;
         bool changedAutostart;
         bool changedMinimizeToTray;
+        bool changedShowInTaskbar;
 
     protected:
         void accept();
@@ -25,9 +25,9 @@ class SettingsDialog : public QDialog {
         Ui::SettingsDialog *ui;
         void reset();
         void restoreDefaults();
-        bool _oldShowInTaskbar;
         bool _oldAutostart;
         bool _oldMinimizeToTray;
+        bool _oldShowInTaskbar;
 
 
     private slots:
