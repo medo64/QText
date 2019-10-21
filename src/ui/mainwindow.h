@@ -53,7 +53,8 @@ class MainWindow : public QMainWindow {
         void onTextUndo();
         void onTextRedo();
         void onGoto();
-        void onFolderSelect();
+        void onFolderMenuShow();
+        void onFolderMenuSelect();
         void onShowContainingDirectory();
         void onShowContainingDirectoryOnly();
         void onCopyContainingPath();

@@ -184,8 +184,9 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         _folderButton->setPopupMode(QToolButton::InstantPopup);
         _folderButton->setMenu(new QMenu());
         ui->mainToolBar->addWidget(_folderButton);
+        connect(_folderButton->menu(), SIGNAL(aboutToShow()), this, SLOT(onFolderMenuShow()));
 
-        onFolderSelect(); //setup folder select menu button
+        onFolderMenuSelect(); //setup folder select menu button
         onTabChanged(); //update toolbar & focus
         connect(ui->actionReopen, SIGNAL(triggered()), this, SLOT(onFileReopen()));
         connect(ui->actionShowContainingDirectory, SIGNAL(triggered()), this, SLOT(onShowContainingDirectory()));
@@ -527,8 +528,19 @@ void MainWindow::onGoto() {
     }
 }
 
+void MainWindow::onFolderMenuShow() {
+    _folderButton->menu()->clear();
+    for(size_t i=0; i<_storage->folderCount(); i++) {
+        auto folder = _storage->getFolder(i);
+        QAction* folderAction = new QAction(folder->getTitle());
+        folderAction->setData(folder->getKey());
+        folderAction->setDisabled(folder == _folder);
+        connect(folderAction, SIGNAL(triggered()), this, SLOT(onFolderMenuSelect()));
+        _folderButton->menu()->addAction(folderAction);
+    }
+}
 
-void MainWindow::onFolderSelect() {
+void MainWindow::onFolderMenuSelect() {
     QAction *action = qobject_cast<QAction *>(sender());
 
     if (action != nullptr) {
@@ -538,17 +550,8 @@ void MainWindow::onFolderSelect() {
         auto lastFileKey = Settings::lastFile(_folder->getKey());
         selectFile(lastFileKey);
     }
-
-    _folderButton->menu()->clear();
-    for(size_t i=0; i<_storage->folderCount(); i++) {
-        auto folder = _storage->getFolder(i);
-        QAction* folderAction = new QAction(folder->getTitle());
-        folderAction->setData(folder->getKey());
-        folderAction->setDisabled(folder == _folder);
-        connect(folderAction, SIGNAL(triggered()), this, SLOT(onFolderSelect()));
-        _folderButton->menu()->addAction(folderAction);
-    }
 }
+
 
 void onShowContainingDirectory2(QString directoryPath, QString filePath) {
     Helpers::showInFileManager(directoryPath, filePath);
