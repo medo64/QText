@@ -27,6 +27,10 @@ FileItem::~FileItem() {
 }
 
 
+FolderItem* FileItem::getFolder() {
+    return _folder;
+}
+
 QString FileItem::getKey() {
     return _fileName;
 }
@@ -53,8 +57,8 @@ void FileItem::setTitle(QString newTitle) {
 
     QFile curFile(curPath);
     QFile newFile(newPath);
-    if (!newFile.exists()) {
-        curFile.rename(newPath);
+
+    if (curFile.rename(newPath)) {
         _fileName = newFileName;
         emit titleChanged(this);
     }

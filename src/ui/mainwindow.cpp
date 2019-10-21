@@ -410,11 +410,11 @@ void MainWindow::onFileActivated(FileItem* file) {
 
 
 void MainWindow::onFileNew() {
-    auto dialog = std::make_shared<FileNameDialog>(this, nullptr, _folder);
+    auto dialog = new FileNameDialog(this, _folder.get());
     switch (dialog->exec()) {
         case QDialog::Accepted:
             {
-                auto newTitle = dialog->getFileName();
+                auto newTitle = dialog->getTitle();
                 auto file = _folder->newFile(newTitle);
                 auto index = ui->tabWidget->addTab(file, file->getTitle());
                 ui->tabWidget->setCurrentIndex(index);
@@ -439,13 +439,15 @@ void MainWindow::onFileSave() {
 
 void MainWindow::onFileRename() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+    auto tabIndex = ui->tabWidget->currentIndex();
 
-    auto dialog = std::make_shared<FileNameDialog>(this, file->getTitle(), _folder);
+    auto dialog = new FileNameDialog(this, file);
     switch (dialog->exec()) {
         case QDialog::Accepted:
             {
-                auto newTitle = dialog->getFileName();
+                auto newTitle = dialog->getTitle();
                 file->setTitle(newTitle);
+                ui->tabWidget->setTabText(tabIndex, newTitle);
                 file->setFocus();
             }
             break;

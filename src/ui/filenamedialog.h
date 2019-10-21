@@ -14,16 +14,19 @@ class FileNameDialog : public QDialog {
     Q_OBJECT
 
     public:
-        explicit FileNameDialog(QWidget *parent, QString fileName, std::shared_ptr<FolderItem> folder);
+        explicit FileNameDialog(QWidget *parent, FolderItem* folder);
+        explicit FileNameDialog(QWidget *parent, FileItem* file);
         ~FileNameDialog();
-        QString getFileName();
+        QString getTitle();
 
     private:
+        explicit FileNameDialog(QWidget *parent);
         Ui::FileNameDialog *ui;
-        std::shared_ptr<FolderItem> _folder;
+        FolderItem* _folder; //used for new file
+        FileItem* _file; //used for rename - empty when new
 
     private slots:
-        void onTextEdited(const QString &text);
+        void onTextChanged(const QString &text);
 
 };
 
