@@ -50,6 +50,14 @@ class FileItem : public QTextEdit {
     private slots:
         void onModificationChanged(bool changed);
         void onSavePendingTimeout();
+        void onContextMenuRequested(const QPoint&);
+        void onContextMenuUndo();
+        void onContextMenuRedo();
+        void onContextMenuCutPlain();
+        void onContextMenuCopyPlain();
+        void onContextMenuPastePlain();
+        void onContextMenuDelete();
+        void onContextMenuSelectAll();
 
 };
 

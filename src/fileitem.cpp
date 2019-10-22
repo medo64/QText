@@ -1,7 +1,10 @@
-#include <QDir>
 #include <QDebug>
+#include <QDir>
 #include <QFileInfo>
+#include <QMenu>
+#include "clipboard.h"
 #include "helpers.h"
+#include "icons.h"
 #include "settings.h"
 #include "fileitem.h"
 
@@ -21,6 +24,8 @@ FileItem::FileItem(FolderItem* folder, QString fileName)
     this->setTabStopDistance(tabWidth);
 
     connect(this->document(), SIGNAL(modificationChanged(bool)), this, SLOT(onModificationChanged(bool)));
+    this->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(onContextMenuRequested(const QPoint&)));
 }
 
 FileItem::~FileItem() {
@@ -175,6 +180,36 @@ bool FileItem::event(QEvent *event) {
             e->setModifiers(Qt::NoModifier);
             return QTextEdit::event(e);
         }
+
+        if ((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_Z)) {
+            onContextMenuUndo();
+            return true;
+        } else if ((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_Y)) {
+            onContextMenuRedo();
+            return true;
+        } else if (((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_X))
+                || ((e->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) && (e->key() == Qt::Key_X))
+                || ((e->modifiers() == Qt::ShiftModifier) && (e->key() == Qt::Key_Delete))) {
+            onContextMenuCutPlain();
+            return true;
+        } else if (((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_C))
+                || ((e->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) && (e->key() == Qt::Key_C))
+                || ((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_Insert))) {
+            onContextMenuCopyPlain();
+            return true;
+        } else if (((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_V))
+                || ((e->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) && (e->key() == Qt::Key_V))
+                || ((e->modifiers() == Qt::ShiftModifier) && (e->key() == Qt::Key_Insert))) {
+            onContextMenuPastePlain();
+            return true;
+        } else if ((e->modifiers() == Qt::NoModifier) && (e->key() == Qt::Key_Delete)) {
+            onContextMenuDelete();
+            return true;
+        } else if ((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_A)) {
+            onContextMenuSelectAll();
+            return true;
+        }
+
         if (e->modifiers() == Qt::AltModifier) { return false; } //ignore keys with Alt
         if (e->modifiers() == (Qt::ControlModifier | Qt::AltModifier)) { return false; } //ignore keys with Ctrl+Alt
     }
@@ -233,4 +268,93 @@ void FileItem::onModificationChanged(bool changed) {
 void FileItem::onSavePendingTimeout() {
     qDebug() << "onSavePendingTimeout()" << getPath();
     if (this->document()->isModified()) { save(); }
+}
+
+
+void FileItem::onContextMenuRequested(const QPoint& point) {
+    if (point.isNull()) { return; }
+
+    QMenu menu(this);
+
+    QAction* undoAction = new QAction(Icons::undo(), "&Undo");
+    undoAction->setShortcut(QKeySequence("Ctrl+Z"));
+    undoAction->setShortcutVisibleInContextMenu(true);
+    undoAction->setDisabled(!document()->isUndoAvailable());
+    connect(undoAction, SIGNAL(triggered()), this, SLOT(onContextMenuUndo()));
+    menu.addAction(undoAction);
+
+    QAction* redoAction = new QAction(Icons::redo(), "&Redo");
+    redoAction->setShortcut(QKeySequence("Ctrl+Y"));
+    redoAction->setShortcutVisibleInContextMenu(true);
+    redoAction->setDisabled(!document()->isRedoAvailable());
+    connect(redoAction, SIGNAL(triggered()), this, SLOT(onContextMenuRedo()));
+    menu.addAction(redoAction);
+
+    menu.addSeparator();
+
+    QAction* cutAction = new QAction(Icons::cut(), "Cu&t");
+    cutAction->setShortcut(QKeySequence("Ctrl+X"));
+    cutAction->setShortcutVisibleInContextMenu(true);
+    cutAction->setDisabled(!textCursor().hasSelection());
+    connect(cutAction, SIGNAL(triggered()), this, SLOT(onContextMenuCutPlain()));
+    menu.addAction(cutAction);
+
+    QAction* copyAction = new QAction(Icons::copy(), "&Copy");
+    copyAction->setShortcut(QKeySequence("Ctrl+C"));
+    copyAction->setShortcutVisibleInContextMenu(true);
+    copyAction->setDisabled(!textCursor().hasSelection());
+    connect(copyAction, SIGNAL(triggered()), this, SLOT(onContextMenuCopyPlain()));
+    menu.addAction(copyAction);
+
+    QAction* pasteAction = new QAction(Icons::paste(), "&Paste");
+    pasteAction->setShortcut(QKeySequence("Ctrl+V"));
+    pasteAction->setShortcutVisibleInContextMenu(true);
+    pasteAction->setDisabled(!Clipboard::hasPlain());
+    connect(pasteAction, SIGNAL(triggered()), this, SLOT(onContextMenuPastePlain()));
+    menu.addAction(pasteAction);
+
+    QAction* deleteAction = new QAction("&Delete");
+    deleteAction->setShortcut(QKeySequence("Delete"));
+    deleteAction->setShortcutVisibleInContextMenu(true);
+    deleteAction->setDisabled(!textCursor().hasSelection());
+    connect(deleteAction, SIGNAL(triggered()), this, SLOT(onContextMenuDelete()));
+    menu.addAction(deleteAction);
+
+    menu.addSeparator();
+
+    QAction* selectAllAction = new QAction("Select &All");
+    selectAllAction->setShortcut(QKeySequence("Ctrl+A"));
+    selectAllAction->setShortcutVisibleInContextMenu(true);
+    connect(selectAllAction, SIGNAL(triggered()), this, SLOT(onContextMenuSelectAll()));
+    menu.addAction(selectAllAction);
+
+    menu.exec(this->mapToGlobal(point));
+}
+
+void FileItem::onContextMenuUndo() {
+    document()->undo();
+}
+
+void FileItem::onContextMenuRedo() {
+    document()->redo();
+}
+
+void FileItem::onContextMenuCutPlain() {
+    Clipboard::cutPlain(textCursor());
+}
+
+void FileItem::onContextMenuCopyPlain() {
+    Clipboard::copyPlain(textCursor());
+}
+
+void FileItem::onContextMenuPastePlain() {
+    Clipboard::pastePlain(textCursor());
+}
+
+void FileItem::onContextMenuDelete() {
+    textCursor().removeSelectedText();
+}
+
+void FileItem::onContextMenuSelectAll() {
+    selectAll();
 }
