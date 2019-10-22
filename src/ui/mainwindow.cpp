@@ -4,6 +4,7 @@
 #include <QTabBar>
 #include "clipboard.h"
 #include "helpers.h"
+#include "icons.h"
 #include "settings.h"
 #include "storage.h"
 #include "medo/config.h"
@@ -25,27 +26,10 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     _storage = storage;
 
     { //application icon
-        QIcon appIcon;
-        appIcon.addFile(":icons/16x16/qtext.png", QSize(16, 16));
-        appIcon.addFile(":icons/32x32/qtext.png", QSize(32, 32));
-        appIcon.addFile(":icons/48x48/qtext.png", QSize(48, 48));
-        appIcon.addFile(":icons/64x64/qtext.png", QSize(64, 64));
-        this->setWindowIcon(appIcon);
+        this->setWindowIcon(Icons::application());
     }
 
     { //tray
-        QIcon trayIcon;
-        if ((QSysInfo::kernelType() == "winnt") && (QSysInfo::productVersion() == "10")) {
-            trayIcon.addFile(":icons/16x16/tray-white.png", QSize(16, 16));
-            trayIcon.addFile(":icons/32x32/tray-white.png", QSize(32, 32));
-            trayIcon.addFile(":icons/48x48/tray-white.png", QSize(48, 48));
-            trayIcon.addFile(":icons/64x64/tray-white.png", QSize(64, 64));
-        } else {
-            trayIcon.addFile(":icons/16x16/tray-color.png", QSize(16, 16));
-            trayIcon.addFile(":icons/32x32/tray-color.png", QSize(32, 32));
-            trayIcon.addFile(":icons/48x48/tray-color.png", QSize(48, 48));
-            trayIcon.addFile(":icons/64x64/tray-color.png", QSize(64, 64));
-        }
         _tray = new QSystemTrayIcon(this);
         connect(_tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(onTrayActivate(QSystemTrayIcon::ActivationReason)));
 
@@ -58,8 +42,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         font.setBold(true);
         defaultAction->setFont(font);
         _tray->setContextMenu(trayMenu);
-
-        _tray->setIcon(trayIcon);
+        _tray->setIcon(Icons::tray());
         auto hotkeyText = Settings::hotkey().toString(QKeySequence::PortableText);
         if (hotkeyText.length() > 0) {
             _tray->setToolTip( + "Access notes from tray or press " + hotkeyText + " hotkey.");
@@ -79,95 +62,35 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
         connect(SingleInstance::instance(), SIGNAL(newInstanceDetected()), this, SLOT(onTrayShow()));
     }
 
-    { //icon setup
-        QIcon newIcon;
-        newIcon.addFile(":icons/16x16/new.png", QSize(16, 16));
-        newIcon.addFile(":icons/24x24/new.png", QSize(24, 24));
-        newIcon.addFile(":icons/32x32/new.png", QSize(32, 32));
-        newIcon.addFile(":icons/48x48/new.png", QSize(48, 48));
-        newIcon.addFile(":icons/64x64/new.png", QSize(64, 64));
-        ui->actionNew->setIcon(newIcon);
+    { //toolbar setup
+        ui->actionNew->setIcon(Icons::newFile());
         connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(onFileNew()));
 
-        QIcon saveIcon;
-        saveIcon.addFile(":icons/16x16/save.png", QSize(16, 16));
-        saveIcon.addFile(":icons/24x24/save.png", QSize(24, 24));
-        saveIcon.addFile(":icons/32x32/save.png", QSize(32, 32));
-        saveIcon.addFile(":icons/48x48/save.png", QSize(48, 48));
-        saveIcon.addFile(":icons/64x64/save.png", QSize(64, 64));
-        ui->actionSave->setIcon(saveIcon);
+        ui->actionSave->setIcon(Icons::saveFile());
         connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(onFileSave()));
 
-        QIcon renameIcon;
-        renameIcon.addFile(":icons/16x16/rename.png", QSize(16, 16));
-        renameIcon.addFile(":icons/24x24/rename.png", QSize(24, 24));
-        renameIcon.addFile(":icons/32x32/rename.png", QSize(32, 32));
-        renameIcon.addFile(":icons/48x48/rename.png", QSize(48, 48));
-        renameIcon.addFile(":icons/64x64/rename.png", QSize(64, 64));
-        ui->actionRename->setIcon(renameIcon);
+        ui->actionRename->setIcon(Icons::renameFile());
         connect(ui->actionRename, SIGNAL(triggered()), this, SLOT(onFileRename()));
 
-        QIcon deleteIcon;
-        deleteIcon.addFile(":icons/16x16/delete.png", QSize(16, 16));
-        deleteIcon.addFile(":icons/24x24/delete.png", QSize(24, 24));
-        deleteIcon.addFile(":icons/32x32/delete.png", QSize(32, 32));
-        deleteIcon.addFile(":icons/48x48/delete.png", QSize(48, 48));
-        deleteIcon.addFile(":icons/64x64/delete.png", QSize(64, 64));
-        ui->actionDelete->setIcon(deleteIcon);
+        ui->actionDelete->setIcon(Icons::deleteFile());
         connect(ui->actionDelete, SIGNAL(triggered()), this, SLOT(onFileDelete()));
 
-        QIcon cutIcon;
-        cutIcon.addFile(":icons/16x16/cut.png", QSize(16, 16));
-        cutIcon.addFile(":icons/24x24/cut.png", QSize(24, 24));
-        cutIcon.addFile(":icons/32x32/cut.png", QSize(32, 32));
-        cutIcon.addFile(":icons/48x48/cut.png", QSize(48, 48));
-        cutIcon.addFile(":icons/64x64/cut.png", QSize(64, 64));
-        ui->actionCut->setIcon(cutIcon);
+        ui->actionCut->setIcon(Icons::cut());
         connect(ui->actionCut, SIGNAL(triggered()), this, SLOT(onTextCut()));
 
-        QIcon copyIcon;
-        copyIcon.addFile(":icons/16x16/copy.png", QSize(16, 16));
-        copyIcon.addFile(":icons/24x24/copy.png", QSize(24, 24));
-        copyIcon.addFile(":icons/32x32/copy.png", QSize(32, 32));
-        copyIcon.addFile(":icons/48x48/copy.png", QSize(48, 48));
-        copyIcon.addFile(":icons/64x64/copy.png", QSize(64, 64));
-        ui->actionCopy->setIcon(copyIcon);
+        ui->actionCopy->setIcon(Icons::copy());
         connect(ui->actionCopy, SIGNAL(triggered()), this, SLOT(onTextCopy()));
 
-        QIcon pasteIcon;
-        pasteIcon.addFile(":icons/16x16/paste.png", QSize(16, 16));
-        pasteIcon.addFile(":icons/24x24/paste.png", QSize(24, 24));
-        pasteIcon.addFile(":icons/32x32/paste.png", QSize(32, 32));
-        pasteIcon.addFile(":icons/48x48/paste.png", QSize(48, 48));
-        pasteIcon.addFile(":icons/64x64/paste.png", QSize(64, 64));
-        ui->actionPaste->setIcon(pasteIcon);
+        ui->actionPaste->setIcon(Icons::paste());
         connect(ui->actionPaste, SIGNAL(triggered()), this, SLOT(onTextPaste()));
 
-        QIcon undoIcon;
-        undoIcon.addFile(":icons/16x16/undo.png", QSize(16, 16));
-        undoIcon.addFile(":icons/24x24/undo.png", QSize(24, 24));
-        undoIcon.addFile(":icons/32x32/undo.png", QSize(32, 32));
-        undoIcon.addFile(":icons/48x48/undo.png", QSize(48, 48));
-        undoIcon.addFile(":icons/64x64/undo.png", QSize(64, 64));
-        ui->actionUndo->setIcon(undoIcon);
+        ui->actionUndo->setIcon(Icons::undo());
         connect(ui->actionUndo, SIGNAL(triggered()), this, SLOT(onTextUndo()));
 
-        QIcon redoIcon;
-        redoIcon.addFile(":icons/16x16/redo.png", QSize(16, 16));
-        redoIcon.addFile(":icons/24x24/redo.png", QSize(24, 24));
-        redoIcon.addFile(":icons/32x32/redo.png", QSize(32, 32));
-        redoIcon.addFile(":icons/48x48/redo.png", QSize(48, 48));
-        redoIcon.addFile(":icons/64x64/redo.png", QSize(64, 64));
-        ui->actionRedo->setIcon(redoIcon);
+        ui->actionRedo->setIcon(Icons::redo());
         connect(ui->actionRedo, SIGNAL(triggered()), this, SLOT(onTextRedo()));
 
-        QIcon gotoIcon;
-        gotoIcon.addFile(":icons/16x16/goto.png", QSize(16, 16));
-        gotoIcon.addFile(":icons/24x24/goto.png", QSize(24, 24));
-        gotoIcon.addFile(":icons/32x32/goto.png", QSize(32, 32));
-        gotoIcon.addFile(":icons/48x48/goto.png", QSize(48, 48));
-        gotoIcon.addFile(":icons/64x64/goto.png", QSize(64, 64));
-        ui->actionGoto->setIcon(gotoIcon);
+        ui->actionGoto->setIcon(Icons::gotoDialog());
         connect(ui->actionGoto, SIGNAL(triggered()), this, SLOT(onGoto()));
     }
 
@@ -193,15 +116,8 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     }
 
     { //app button menu
-        QIcon appIcon;
-        appIcon.addFile(":icons/16x16/app.png", QSize(16, 16));
-        appIcon.addFile(":icons/24x24/app.png", QSize(24, 24));
-        appIcon.addFile(":icons/32x32/app.png", QSize(32, 32));
-        appIcon.addFile(":icons/48x48/app.png", QSize(48, 48));
-        appIcon.addFile(":icons/64x64/app.png", QSize(64, 64));
-
         _appButton = new QToolButton();
-        _appButton->setIcon(appIcon);
+        _appButton->setIcon(Icons::appMenu());
         _appButton->setPopupMode(QToolButton::MenuButtonPopup);
         _appButton->setMenu(new QMenu());
         connect(_appButton, SIGNAL(clicked()), this, SLOT(onAppSettings()));

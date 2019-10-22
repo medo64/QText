@@ -55,6 +55,7 @@ SOURCES += \
         fileitem.cpp \
         folderitem.cpp \
         helpers.cpp \
+        icons.cpp \
         main.cpp \
         qtabbarex.cpp \
         qtabwidgetex.cpp \
@@ -75,6 +76,7 @@ HEADERS += \
         fileitem.h \
         folderitem.h \
         helpers.h \
+        icons.h \
         qtabbarex.h \
         qtabwidgetex.h \
         settings.h \
