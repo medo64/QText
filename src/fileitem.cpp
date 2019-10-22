@@ -70,7 +70,8 @@ bool FileItem::isHtml() {
 }
 
 bool FileItem::isPlain() {
-    return !isHtml();
+    QString path = getPath();
+    return path.endsWith(".txt", Qt::CaseInsensitive);
 }
 
 bool FileItem::isModified() {
