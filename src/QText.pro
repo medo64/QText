@@ -51,6 +51,7 @@ SOURCES += \
         medo/hotkey.cpp \
         medo/singleinstance.cpp \
         medo/state.cpp \
+        clipboard.cpp \
         fileitem.cpp \
         folderitem.cpp \
         helpers.cpp \
@@ -70,6 +71,7 @@ HEADERS += \
         medo/hotkey.h \
         medo/singleinstance.h \
         medo/state.h \
+        clipboard.h \
         fileitem.h \
         folderitem.h \
         helpers.h \
