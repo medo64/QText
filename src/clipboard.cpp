@@ -5,7 +5,7 @@
 
 QClipboard* Clipboard::_clipboard = QApplication::clipboard();
 
-bool Clipboard::hasPlain() {
+bool Clipboard::hasText() {
     auto mimeData = _clipboard->mimeData();
     return mimeData->hasText();
 }
@@ -19,15 +19,15 @@ bool Clipboard::setText(QString text) {
     return false;
 }
 
-bool Clipboard::cutPlain(QTextCursor cursor) {
-    if (copyPlain(cursor)) {
+bool Clipboard::cutText(QTextCursor cursor) {
+    if (copyText(cursor)) {
         cursor.removeSelectedText();
         return true;
     }
     return false;
 }
 
-bool Clipboard::copyPlain(QTextCursor cursor) {
+bool Clipboard::copyText(QTextCursor cursor) {
     if (cursor.hasSelection()) {
         _clipboard->clear();
         _clipboard->setText(cursor.selection().toPlainText());
@@ -36,7 +36,7 @@ bool Clipboard::copyPlain(QTextCursor cursor) {
     return false;
 }
 
-bool Clipboard::pastePlain(QTextCursor cursor) {
+bool Clipboard::pasteText(QTextCursor cursor) {
     auto data = _clipboard->mimeData();
     if (data->hasText()) {
         if (cursor.hasSelection()) { cursor.removeSelectedText(); }

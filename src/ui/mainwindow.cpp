@@ -392,17 +392,17 @@ void MainWindow::onFileDelete() {
 
 void MainWindow::onTextCut() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-    Clipboard::cutPlain(file->textCursor());
+    Clipboard::cutText(file->textCursor());
 }
 
 void MainWindow::onTextCopy() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-    Clipboard::copyPlain(file->textCursor());
+    Clipboard::copyText(file->textCursor());
 }
 
 void MainWindow::onTextPaste() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-    Clipboard::pastePlain(file->textCursor());
+    Clipboard::pasteText(file->textCursor());
 }
 
 void MainWindow::onTextUndo() {
@@ -568,7 +568,7 @@ void MainWindow::onTextStateChanged() {
     bool isUndoAvailable = (document !=nullptr) ? document->isUndoAvailable() : false;
     bool isRedoAvailable = (document !=nullptr) ? document->isRedoAvailable() : false;
 
-    bool isClipboardTextAvailable = Clipboard::hasPlain();
+    bool isClipboardTextAvailable = Clipboard::hasText();
 
     ui->actionCut->setDisabled(!isSelectionAvailable);
     ui->actionCopy->setDisabled(!isSelectionAvailable);
