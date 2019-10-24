@@ -10,6 +10,15 @@ bool Clipboard::hasPlain() {
     return mimeData->hasText();
 }
 
+bool Clipboard::setText(QString text) {
+    _clipboard->clear();
+    if (!text.isEmpty()) {
+        _clipboard->setText(text);
+        return true;
+    }
+    return false;
+}
+
 bool Clipboard::cutPlain(QTextCursor cursor) {
     if (copyPlain(cursor)) {
         cursor.removeSelectedText();

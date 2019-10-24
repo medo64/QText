@@ -9,6 +9,7 @@ class Clipboard {
 
     public:
         static bool hasPlain();
+        static bool setText(QString text);
         static bool cutPlain(QTextCursor cursor);
         static bool copyPlain(QTextCursor cursor);
         static bool pastePlain(QTextCursor cursor);

@@ -146,7 +146,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(onTabChanged()));
 
     //clipboard
-    connect(_clipboard, SIGNAL(dataChanged()), SLOT(onTextStateChanged()));
+    connect(QApplication::clipboard(), SIGNAL(dataChanged()), SLOT(onTextStateChanged()));
 
     { //State
         connect(State::instance(), &State::writeToConfig, [=] (QString key, QString value) { Config::stateWrite("State!" + key, value); });
@@ -470,12 +470,11 @@ void MainWindow::onShowContainingDirectoryOnly() {
 }
 
 void MainWindow::onCopyContainingPath() {
-    _clipboard->clear();
     if (ui->tabWidget->currentWidget() != nullptr) {
         auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-        _clipboard->setText(QDir::toNativeSeparators(file->getPath()));
+        Clipboard::setText(QDir::toNativeSeparators(file->getPath()));
     } else {
-        _clipboard->setText(QDir::toNativeSeparators(_folder->getPath()));
+        Clipboard::setText(QDir::toNativeSeparators(_folder->getPath()));
     }
 }
 
