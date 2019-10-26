@@ -1,7 +1,6 @@
 #ifndef FILEITEM_H
 #define FILEITEM_H
 
-#include <memory>
 #include <QDateTime>
 #include <QFocusEvent>
 #include <QString>

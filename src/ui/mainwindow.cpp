@@ -330,7 +330,7 @@ void MainWindow::onFileActivated(FileItem* file) {
 
 
 void MainWindow::onFileNew() {
-    auto dialog = new FileNameDialog(this, _folder.get());
+    auto dialog = new FileNameDialog(this, _folder);
     switch (dialog->exec()) {
         case QDialog::Accepted:
             {
@@ -603,7 +603,7 @@ void MainWindow::onTrayShow() {
 
 void MainWindow::selectFolder(QString folderKey) {
     qDebug().nospace() << "selectFolder(" << folderKey << ") ";
-    std::shared_ptr<FolderItem> selectedFolder = nullptr;
+    FolderItem* selectedFolder = nullptr;
 
     for (int i = 0; i < _storage->folderCount(); i++) {
         auto folder = _storage->getFolder(i);

@@ -3,7 +3,6 @@
 
 #include "storage.h"
 #include "medo/hotkey.h"
-#include <memory>
 #include <QApplication>
 #include <QMainWindow>
 #include <QToolButton>
@@ -27,12 +26,12 @@ class MainWindow : public QMainWindow {
 
     private:
         Ui::MainWindow *ui;
-        Storage* _storage;
-        std::shared_ptr<FolderItem> _folder;
-        QSystemTrayIcon *_tray;
+        Storage* _storage = nullptr;
+        FolderItem* _folder = nullptr;
+        QSystemTrayIcon* _tray = nullptr;
         QToolButton* _folderButton = nullptr;
         QToolButton* _appButton = nullptr;
-        Hotkey* _hotkey;
+        Hotkey* _hotkey = nullptr;
         void applySettings(bool applyShowInTaskbar = true);
         void selectFolder(QString folderKey);
         void selectFile(QString fileKey);

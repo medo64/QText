@@ -8,10 +8,10 @@ Storage::Storage(const QString path, QString path2) {
 
     _path = rootDirectory.path();
 
-    _folders.push_back(std::make_shared<FolderItem>(_path, nullptr));
+    _folders.push_back(new FolderItem(_path, nullptr));
     QStringList directories = rootDirectory.entryList(QDir::Dirs|QDir::NoDotAndDotDot, QDir::SortFlag::Name);
     for(QString directory : directories) {
-        auto folder = std::make_shared<FolderItem>(_path, directory);
+        auto folder = new FolderItem(_path, directory);
         _folders.push_back(folder);
     }
 
@@ -21,10 +21,10 @@ Storage::Storage(const QString path, QString path2) {
 
         _path2 = rootDirectory2.path();
 
-        _folders.push_back(std::make_shared<FolderItem>("2", _path2, nullptr));
+        _folders.push_back(new FolderItem("2", _path2, nullptr));
         QStringList directories2 = rootDirectory2.entryList(QDir::Dirs|QDir::NoDotAndDotDot, QDir::SortFlag::Name);
         for(QString directory2 : directories2) {
-            auto folder2 = std::make_shared<FolderItem>("2", _path2, directory2);
+            auto folder2 = new FolderItem("2", _path2, directory2);
             _folders.push_back(folder2);
         }
     }
@@ -35,11 +35,11 @@ int Storage::folderCount() {
     return _folders.size();
 }
 
-std::shared_ptr<FolderItem> Storage::getFolder(int index) {
+FolderItem* Storage::getFolder(int index) {
     return _folders.at(index);
 }
 
-std::shared_ptr<FolderItem> Storage::getBaseFolder() {
+FolderItem* Storage::getBaseFolder() {
     return _folders.at(0);
 }
 
