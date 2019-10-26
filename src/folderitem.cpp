@@ -44,6 +44,10 @@ QString FolderItem::getTitle() {
     return (_directoryName == nullptr) ? "(Default" + _prefix + ")" : Helpers::getFolderTitleFromName(_directoryName);
 }
 
+bool FolderItem::hasPrefix() {
+    return !_prefix.isEmpty();
+}
+
 size_t FolderItem::fileCount() {
     return _files.size();
 }

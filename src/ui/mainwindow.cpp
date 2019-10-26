@@ -429,12 +429,16 @@ void MainWindow::onGoto() {
 }
 
 void MainWindow::onFolderMenuShow() {
+    QFont italicFont = _folderButton->menu()->font();
+    italicFont.setItalic(true);
+
     _folderButton->menu()->clear();
     for(size_t i=0; i<_storage->folderCount(); i++) {
         auto folder = _storage->getFolder(i);
         QAction* folderAction = new QAction(folder->getTitle());
         folderAction->setData(folder->getKey());
         folderAction->setDisabled(folder == _folder);
+        if (folder->hasPrefix()) { folderAction->setFont(italicFont); }
         connect(folderAction, SIGNAL(triggered()), this, SLOT(onFolderMenuSelect()));
         _folderButton->menu()->addAction(folderAction);
     }
@@ -623,7 +627,11 @@ void MainWindow::selectFolder(QString folderKey) {
         if (_folder != nullptr) { _folder->saveAll(); } //save all files in previous folder / just in case
         _folder = selectedFolder;
 
+        QFont italicFont = _folderButton->menu()->font();
+        italicFont.setItalic(true);
+
         _folderButton->setText(_folder->getTitle() + " ");
+        _folderButton->setFont(_folder->hasPrefix() ? italicFont : _folderButton->menu()->font());
         Settings::setLastFolder(_folder->getKey());
 
         ui->tabWidget->blockSignals(true);

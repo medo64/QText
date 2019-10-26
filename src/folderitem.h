@@ -14,6 +14,7 @@ class FolderItem {
         QString getKey();
         QString getPath();
         QString getTitle();
+        bool hasPrefix();
         size_t fileCount();
         FileItem* getFile(size_t index);
         FileItem* newFile(QString title);
