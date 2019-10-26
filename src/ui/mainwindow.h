@@ -27,7 +27,7 @@ class MainWindow : public QMainWindow {
     private:
         Ui::MainWindow *ui;
         Storage* _storage = nullptr;
-        FolderItem* _folder = nullptr;
+        FolderItem* _folder =nullptr;
         QSystemTrayIcon* _tray = nullptr;
         QToolButton* _folderButton = nullptr;
         QToolButton* _appButton = nullptr;

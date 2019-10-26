@@ -25,7 +25,7 @@ class GotoDialog : public QDialog {
     private:
         bool eventFilter(QObject* obj, QEvent* event);
         Ui::GotoDialog *ui;
-        Storage* _storage;
+        Storage* _storage = nullptr;
         QIcon _folderIcon;
         QIcon _fileIcon;
 

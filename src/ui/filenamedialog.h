@@ -22,8 +22,8 @@ class FileNameDialog : public QDialog {
     private:
         explicit FileNameDialog(QWidget *parent);
         Ui::FileNameDialog *ui;
-        FolderItem* _folder; //used for new file
-        FileItem* _file; //used for rename - empty when new
+        FolderItem* _folder = nullptr; //used for new file
+        FileItem* _file = nullptr; //used for rename - empty when new
 
     private slots:
         void onTextChanged(const QString &text);

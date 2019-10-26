@@ -34,7 +34,7 @@ class FileItem : public QTextEdit {
         void focusOutEvent(QFocusEvent *event);
 
     private:
-        FolderItem* _folder;
+        FolderItem* _folder = nullptr;
         QString _fileName;
         QTextEdit* _editor = nullptr;
         QTimer* _timerSavePending = nullptr;
