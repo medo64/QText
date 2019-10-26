@@ -31,11 +31,11 @@ Storage::Storage(const QString path, QString path2) {
 }
 
 
-size_t Storage::folderCount() {
+int Storage::folderCount() {
     return _folders.size();
 }
 
-std::shared_ptr<FolderItem> Storage::getFolder(size_t index) {
+std::shared_ptr<FolderItem> Storage::getFolder(int index) {
     return _folders.at(index);
 }
 

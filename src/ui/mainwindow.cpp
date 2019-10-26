@@ -279,7 +279,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
         } break;
 
         case Qt::AltModifier | Qt::Key_Up: {
-            for (size_t i=1; i<_storage->folderCount(); i++) {
+            for (int i = 1; i < _storage->folderCount(); i++) {
                 auto folder = _storage->getFolder(i);
                 if (folder->getKey().compare(_folder->getKey(), Qt::CaseSensitive) == 0) {
                     auto newFolder = _storage->getFolder(i - 1);
@@ -290,7 +290,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
         } break;
 
         case Qt::AltModifier | Qt::Key_Down: {
-            for (size_t i=0; i<_storage->folderCount() - 1; i++) {
+            for (int i = 0; i < _storage->folderCount() - 1; i++) {
                 auto folder = _storage->getFolder(i);
                 if (folder->getKey().compare(_folder->getKey(), Qt::CaseSensitive) == 0) {
                     auto newFolder = _storage->getFolder(i + 1);
@@ -433,7 +433,7 @@ void MainWindow::onFolderMenuShow() {
     italicFont.setItalic(true);
 
     _folderButton->menu()->clear();
-    for(size_t i=0; i<_storage->folderCount(); i++) {
+    for(int i = 0; i < _storage->folderCount(); i++) {
         auto folder = _storage->getFolder(i);
         QAction* folderAction = new QAction(folder->getTitle());
         folderAction->setData(folder->getKey());
@@ -605,7 +605,7 @@ void MainWindow::selectFolder(QString folderKey) {
     qDebug().nospace() << "selectFolder(" << folderKey << ") ";
     std::shared_ptr<FolderItem> selectedFolder = nullptr;
 
-    for (size_t i=0; i<_storage->folderCount(); i++) {
+    for (int i = 0; i < _storage->folderCount(); i++) {
         auto folder = _storage->getFolder(i);
         if (folder->getKey().compare(folderKey, Qt::CaseSensitive) == 0) {
             selectedFolder = folder;
@@ -613,7 +613,7 @@ void MainWindow::selectFolder(QString folderKey) {
         }
     }
     if (selectedFolder == nullptr) { //try case-insensitive match
-        for (size_t i=0; i<_storage->folderCount(); i++) {
+        for (int i = 0; i < _storage->folderCount(); i++) {
             auto folder = _storage->getFolder(i);
             if (folder->getKey().compare(folderKey, Qt::CaseInsensitive) == 0) {
                 selectedFolder = folder;
