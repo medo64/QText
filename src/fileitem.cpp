@@ -309,7 +309,7 @@ void FileItem::onContextMenuRequested(const QPoint& point) {
     QAction* pasteAction = new QAction(Icons::paste(), "&Paste");
     pasteAction->setShortcut(QKeySequence("Ctrl+V"));
     pasteAction->setShortcutVisibleInContextMenu(true);
-    pasteAction->setDisabled(!Clipboard::hasPlain());
+    pasteAction->setDisabled(!Clipboard::hasText());
     connect(pasteAction, SIGNAL(triggered()), this, SLOT(onContextMenuPastePlain()));
     menu.addAction(pasteAction);
 
@@ -340,15 +340,15 @@ void FileItem::onContextMenuRedo() {
 }
 
 void FileItem::onContextMenuCutPlain() {
-    Clipboard::cutPlain(textCursor());
+    Clipboard::cutText(textCursor());
 }
 
 void FileItem::onContextMenuCopyPlain() {
-    Clipboard::copyPlain(textCursor());
+    Clipboard::copyText(textCursor());
 }
 
 void FileItem::onContextMenuPastePlain() {
-    Clipboard::pastePlain(textCursor());
+    Clipboard::pasteText(textCursor());
 }
 
 void FileItem::onContextMenuDelete() {

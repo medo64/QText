@@ -8,10 +8,11 @@
 class Clipboard {
 
     public:
-        static bool hasPlain();
-        static bool cutPlain(QTextCursor cursor);
-        static bool copyPlain(QTextCursor cursor);
-        static bool pastePlain(QTextCursor cursor);
+        static bool hasText();
+        static bool setText(QString text);
+        static bool cutText(QTextCursor cursor);
+        static bool copyText(QTextCursor cursor);
+        static bool pasteText(QTextCursor cursor);
 
     private:
         static QClipboard* _clipboard;

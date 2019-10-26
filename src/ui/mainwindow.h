@@ -32,7 +32,6 @@ class MainWindow : public QMainWindow {
         QSystemTrayIcon *_tray;
         QToolButton* _folderButton = nullptr;
         QToolButton* _appButton = nullptr;
-        QClipboard* _clipboard = QApplication::clipboard();
         Hotkey* _hotkey;
         void applySettings(bool applyShowInTaskbar = true);
         void selectFolder(QString folderKey);
