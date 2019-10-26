@@ -293,7 +293,7 @@
   <customwidget>
    <class>QTabWidgetEx</class>
    <extends>QWidget</extends>
-   <header>qtabwidgetex.h</header>
+   <header>ui/qtabwidgetex.h</header>
   </customwidget>
  </customwidgets>
  <resources>

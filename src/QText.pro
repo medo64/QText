@@ -47,6 +47,8 @@ SOURCES += \
         ui/gotodialog.cpp \
         ui/settingsdialog.cpp \
         ui/mainwindow.cpp \
+        ui/qtabbarex.cpp \
+        ui/qtabwidgetex.cpp \
         medo/config.cpp \
         medo/hotkey.cpp \
         medo/singleinstance.cpp \
@@ -57,8 +59,6 @@ SOURCES += \
         helpers.cpp \
         icons.cpp \
         main.cpp \
-        qtabbarex.cpp \
-        qtabwidgetex.cpp \
         settings.cpp \
         setup.cpp \
         storage.cpp
@@ -68,6 +68,8 @@ HEADERS += \
         ui/gotodialog.h \
         ui/settingsdialog.h \
         ui/mainwindow.h \
+        ui/qtabbarex.h \
+        ui/qtabwidgetex.h \
         medo/config.h \
         medo/hotkey.h \
         medo/singleinstance.h \
@@ -77,8 +79,6 @@ HEADERS += \
         folderitem.h \
         helpers.h \
         icons.h \
-        qtabbarex.h \
-        qtabwidgetex.h \
         settings.h \
         setup.h \
         storage.h
