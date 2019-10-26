@@ -2,7 +2,7 @@
 #include "gotodialog.h"
 #include "ui_gotodialog.h"
 
-GotoDialog::GotoDialog(QWidget *parent, std::shared_ptr<Storage> storage) : QDialog(parent), ui(new Ui::GotoDialog) {
+GotoDialog::GotoDialog(QWidget *parent, Storage* storage) : QDialog(parent), ui(new Ui::GotoDialog) {
     ui->setupUi(this);
     ui->textSearch->installEventFilter(this);
 

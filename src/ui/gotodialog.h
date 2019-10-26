@@ -4,8 +4,6 @@
 #include <QDialog>
 #include <QIcon>
 #include <QListWidget>
-#include <memory>
-
 #include "storage.h"
 
 namespace Ui {
@@ -16,7 +14,7 @@ class GotoDialog : public QDialog {
     Q_OBJECT
 
     public:
-        explicit GotoDialog(QWidget *parent = nullptr,  std::shared_ptr<Storage> storage = nullptr);
+        explicit GotoDialog(QWidget *parent = nullptr,  Storage* storage = nullptr);
         ~GotoDialog();
         QString FolderKey;
         QString FileKey;
@@ -27,7 +25,7 @@ class GotoDialog : public QDialog {
     private:
         bool eventFilter(QObject* obj, QEvent* event);
         Ui::GotoDialog *ui;
-        std::shared_ptr<Storage> _storage;
+        Storage* _storage;
         QIcon _folderIcon;
         QIcon _fileIcon;
 

@@ -5,7 +5,7 @@
 #include "medo/config.h"
 #include "medo/singleinstance.h"
 
-static std::shared_ptr<Storage> storage;
+static Storage* storage;
 
 int main(int argc, char* argv[]) {
     QCoreApplication::setApplicationName(APP_PRODUCT);
@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
         return static_cast<int>(0x80004004); //exit immediately if another instance is running
     }
 
-    storage = std::make_shared<Storage>(Settings::dataPath(), Settings::dataPath2());
+    storage = new Storage(Settings::dataPath(), Settings::dataPath2());
 
     MainWindow w { storage };
 

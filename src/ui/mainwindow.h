@@ -17,7 +17,7 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
     public:
-        explicit MainWindow(std::shared_ptr<Storage> storage);
+        explicit MainWindow(Storage* storage);
         ~MainWindow();
 
     protected:
@@ -27,7 +27,7 @@ class MainWindow : public QMainWindow {
 
     private:
         Ui::MainWindow *ui;
-        std::shared_ptr<Storage> _storage;
+        Storage* _storage;
         std::shared_ptr<FolderItem> _folder;
         QSystemTrayIcon *_tray;
         QToolButton* _folderButton = nullptr;
