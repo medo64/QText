@@ -31,12 +31,23 @@ void QTabBarEx::mousePressEvent(QMouseEvent* event)  {
 }
 
 void QTabBarEx::mouseReleaseEvent(QMouseEvent* event) {
-    if ((event->button() == Qt::LeftButton) && (_sourceIndex >= 0)) {
+    if ((event->button() == Qt::LeftButton) && (_sourceIndex >= 0) && _cursorSet) {
         int destinationIndex = this->tabAt(event->pos());
-        moveTab(_sourceIndex, destinationIndex);
-        _sourceIndex = -1;
-        _cursorSet = false;
-        this->setCursor(Qt::ArrowCursor);
+        if (destinationIndex == -1) {
+            if (event->x() > this->tabRect(this->count() - 1).right()) {
+                destinationIndex = this->count() - 1;
+            } else if (event->x() < this->tabRect(0).left()) {
+                destinationIndex = 0;
+            }
+        }
+        if ((_sourceIndex != destinationIndex) && (destinationIndex >= 0)) {
+            moveTab(_sourceIndex, destinationIndex);
+            emit tabMoved(_sourceIndex, destinationIndex);
+        }
     }
+
+    _sourceIndex = -1;
+    _cursorSet = false;
+    this->setCursor(Qt::ArrowCursor);
     QTabBar::mouseReleaseEvent(event);
 }
