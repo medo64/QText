@@ -62,6 +62,7 @@ class MainWindow : public QMainWindow {
         void onAppAbout();
         void onTabMenuRequested(const QPoint&);
         void onTabChanged();
+        void onTabMoved(int from, int to);
         void onTextStateChanged();
         void onTrayActivate(QSystemTrayIcon::ActivationReason reason);
         void onTrayShow();

@@ -6,6 +6,7 @@
 #include <QTabBar>
 
 class QTabBarEx : public QTabBar {
+    Q_OBJECT
 
     public:
         QTabBarEx(QWidget *parent = nullptr);
@@ -19,6 +20,9 @@ class QTabBarEx : public QTabBar {
         int _sourceIndex;
         QPoint _sourcePoint;
         bool _cursorSet;
+
+    signals:
+        void tabMoved(int from, int to);
 
 };
 

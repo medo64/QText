@@ -98,3 +98,7 @@ QString FolderItem::getPath() {
         return QDir::cleanPath(_directoryPath + QDir::separator() + _directoryName);
     }
 }
+
+bool FolderItem::moveFile(int from, int to) {
+    _files.move(from, to);
+}

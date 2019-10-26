@@ -144,6 +144,7 @@ MainWindow::MainWindow(std::shared_ptr<Storage> storage) : QMainWindow(nullptr),
     ui->tabWidget->tabBar()->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tabWidget->tabBar(), SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(onTabMenuRequested(const QPoint&)));
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(onTabChanged()));
+    connect(ui->tabWidget, SIGNAL(tabMoved(int, int)), SLOT(onTabMoved(int, int)));
 
     //clipboard
     connect(_clipboard, SIGNAL(dataChanged()), SLOT(onTextStateChanged()));
@@ -559,6 +560,11 @@ void MainWindow::onTabChanged() {
         Settings::setLastFile(_folder->getKey(), file->getKey());
     }
 }
+
+void MainWindow::onTabMoved(int from, int to) {
+    _folder->moveFile(from, to);
+}
+
 
 void MainWindow::onTextStateChanged() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());

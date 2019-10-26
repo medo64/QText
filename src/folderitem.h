@@ -20,12 +20,13 @@ class FolderItem {
         bool deleteFile(FileItem* file);
         bool saveAll();
         bool fileExists(QString title);
+        bool moveFile(int from, int to);
 
     private:
         QString _directoryPath;
         QString _directoryName;
         QString _prefix;
-        std::vector<FileItem*> _files;
+        QVector<FileItem*> _files;
 
 };
 
