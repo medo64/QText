@@ -417,7 +417,7 @@ void MainWindow::onTextRedo() {
 }
 
 void MainWindow::onGoto() {
-    auto dialog = std::make_shared<GotoDialog>(this, _storage);
+    auto dialog = new GotoDialog(this, _storage);
     switch (dialog->exec()) {
         case QDialog::Accepted: {
                 selectFolder(dialog->FolderKey);
@@ -484,7 +484,7 @@ void MainWindow::onCopyContainingPath() {
 }
 
 void MainWindow::onAppSettings() {
-    auto dialog = std::make_shared<SettingsDialog>(this);
+    auto dialog = new SettingsDialog(this);
     switch (dialog->exec()) {
         case QDialog::Accepted: {
             applySettings(dialog->changedShowInTaskbar);
