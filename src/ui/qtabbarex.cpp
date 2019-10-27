@@ -42,7 +42,6 @@ void QTabBarEx::mouseReleaseEvent(QMouseEvent* event) {
         }
         if ((_sourceIndex != destinationIndex) && (destinationIndex >= 0)) {
             moveTab(_sourceIndex, destinationIndex);
-            emit tabMoved(_sourceIndex, destinationIndex);
         }
     }
 
@@ -50,4 +49,9 @@ void QTabBarEx::mouseReleaseEvent(QMouseEvent* event) {
     _cursorSet = false;
     this->setCursor(Qt::ArrowCursor);
     QTabBar::mouseReleaseEvent(event);
+}
+
+void QTabBarEx::moveTab(int from, int to) {
+    QTabBar::moveTab(from, to);
+    emit tabMoved(from, to);
 }

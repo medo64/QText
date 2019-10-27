@@ -19,6 +19,7 @@
 #include "ui_gotodialog.h"
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
+#include "qtabbarex.h"
 
 MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::MainWindow) {
     ui->setupUi(this);
@@ -304,6 +305,20 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
 
         case Qt::AltModifier | Qt::Key_Home: {
             selectFolder(_storage->getBaseFolder()->getKey());
+        } break;
+
+        case Qt::ShiftModifier | Qt::AltModifier | Qt::Key_Left: {
+            if (ui->tabWidget->currentIndex() > 0) {
+                QTabBarEx* tabbar = dynamic_cast<QTabBarEx*>(ui->tabWidget->tabBar());
+                tabbar->moveTab(ui->tabWidget->currentIndex(), ui->tabWidget->currentIndex() - 1);
+            }
+        } break;
+
+        case Qt::ShiftModifier | Qt::AltModifier | Qt::Key_Right: {
+            if (ui->tabWidget->currentIndex() < ui->tabWidget->count() - 1) {
+                QTabBarEx* tabbar = dynamic_cast<QTabBarEx*>(ui->tabWidget->tabBar());
+                tabbar->moveTab(ui->tabWidget->currentIndex(), ui->tabWidget->currentIndex() + 1);
+            }
         } break;
 
         default: QMainWindow::keyPressEvent(event);

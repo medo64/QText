@@ -10,6 +10,7 @@ class QTabBarEx : public QTabBar {
 
     public:
         QTabBarEx(QWidget *parent = nullptr);
+        void moveTab(int from, int to);
 
     protected:
         void mouseMoveEvent(QMouseEvent* event);
