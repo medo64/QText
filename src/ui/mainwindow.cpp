@@ -278,7 +278,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
             if (ui->tabWidget->currentIndex() < ui->tabWidget->count() - 1) { ui->tabWidget->setCurrentIndex(ui->tabWidget->currentIndex() + 1); }
         } break;
 
-        case Qt::AltModifier | Qt::Key_Up: {
+        case Qt::AltModifier | Qt::Key_Up:
+        case Qt::AltModifier | Qt::Key_PageUp: {
             for (int i = 1; i < _storage->folderCount(); i++) {
                 auto folder = _storage->getFolder(i);
                 if (folder->getKey().compare(_folder->getKey(), Qt::CaseSensitive) == 0) {
@@ -289,7 +290,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
             }
         } break;
 
-        case Qt::AltModifier | Qt::Key_Down: {
+        case Qt::AltModifier | Qt::Key_Down:
+        case Qt::AltModifier | Qt::Key_PageDown: {
             for (int i = 0; i < _storage->folderCount() - 1; i++) {
                 auto folder = _storage->getFolder(i);
                 if (folder->getKey().compare(_folder->getKey(), Qt::CaseSensitive) == 0) {
