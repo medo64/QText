@@ -16,7 +16,7 @@ Storage::Storage(const QString path, QString path2) {
     }
 
     if (path2.length() > 0) { //append second directory too
-        QDir rootDirectory2 = path.startsWith("~/") ? QDir::homePath() + path.mid(1) : path2;
+        QDir rootDirectory2 = path2.startsWith("~/") ? QDir::homePath() + path2.mid(1) : path2;
         if (!rootDirectory2.exists()) { rootDirectory2.mkpath(path2); }
 
         _path2 = rootDirectory2.path();
