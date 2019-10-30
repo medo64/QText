@@ -48,11 +48,11 @@ bool FolderItem::hasPrefix() {
     return !_prefix.isEmpty();
 }
 
-size_t FolderItem::fileCount() {
+int FolderItem::fileCount() {
     return _files.size();
 }
 
-FileItem* FolderItem::getFile(size_t index) {
+FileItem* FolderItem::getFile(int index) {
     return _files.at(index);
 }
 
@@ -85,7 +85,7 @@ bool FolderItem::fileExists(QString title) {
 
 bool FolderItem::saveAll() {
     bool allSaved = true;
-    for (size_t i = 0; i < fileCount(); i++) {
+    for (int i = 0; i < fileCount(); i++) {
         auto file = getFile(i);
         if (file->isModified()) {
             allSaved &= file->save();

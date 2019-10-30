@@ -652,7 +652,7 @@ void MainWindow::selectFolder(QString folderKey) {
 
         ui->tabWidget->blockSignals(true);
         ui->tabWidget->clear();
-        for (size_t i = 0; i < _folder->fileCount(); i++) {
+        for (int i = 0; i < _folder->fileCount(); i++) {
             auto file = _folder->getFile(i);
             ui->tabWidget->addTab(file, file->getTitle());
             QObject::connect(file, SIGNAL(titleChanged(FileItem*)), this, SLOT(onFileTitleChanged(FileItem*)));
