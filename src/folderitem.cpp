@@ -104,5 +104,9 @@ QString FolderItem::getPath() {
 }
 
 bool FolderItem::moveFile(int from, int to) {
+    if ((from < 0) || (from >= _files.count())) { return false; }
+    if ((to < 0) || (to >= _files.count())) { return false; }
+    if (from == to) { return false; }
     _files.move(from, to);
+    return true;
 }
