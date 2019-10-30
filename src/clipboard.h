@@ -14,9 +14,6 @@ class Clipboard {
         static bool copyText(QTextCursor cursor);
         static bool pasteText(QTextCursor cursor);
 
-    private:
-        static QClipboard* _clipboard;
-
 };
 
 #endif // CLIPBOARD_H

@@ -3,17 +3,15 @@
 #include <QTextDocumentFragment>
 #include "clipboard.h"
 
-QClipboard* Clipboard::_clipboard = QApplication::clipboard();
-
 bool Clipboard::hasText() {
-    auto mimeData = _clipboard->mimeData();
+    auto mimeData = QApplication::clipboard()->mimeData();
     return mimeData->hasText();
 }
 
 bool Clipboard::setText(QString text) {
-    _clipboard->clear();
+    QApplication::clipboard()->clear();
     if (!text.isEmpty()) {
-        _clipboard->setText(text);
+        QApplication::clipboard()->setText(text);
         return true;
     }
     return false;
@@ -29,15 +27,15 @@ bool Clipboard::cutText(QTextCursor cursor) {
 
 bool Clipboard::copyText(QTextCursor cursor) {
     if (cursor.hasSelection()) {
-        _clipboard->clear();
-        _clipboard->setText(cursor.selection().toPlainText());
+        QApplication::clipboard()->clear();
+        QApplication::clipboard()->setText(cursor.selection().toPlainText());
         return true;
     }
     return false;
 }
 
 bool Clipboard::pasteText(QTextCursor cursor) {
-    auto data = _clipboard->mimeData();
+    auto data = QApplication::clipboard()->mimeData();
     if (data->hasText()) {
         if (cursor.hasSelection()) { cursor.removeSelectedText(); }
         cursor.insertText(data->text());
