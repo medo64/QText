@@ -17,6 +17,7 @@ SOURCE_LIST := Makefile CONTRIBUTING.md LICENSE.md README.md src/ docs/
 
 HAS_QMAKE := $(shell which qmake >/dev/null ; echo $$?)
 HAS_X11EXTRAS := $(shell test -d /usr/share/doc/libqt5x11extras5-dev ; echo $$?)
+HAS_LINTIAN := $(shell which lintian >/dev/null ; echo $$?)
 HAS_UNCOMMITTED := $(shell git diff --quiet ; echo $$?)
 
 
@@ -77,6 +78,7 @@ debug: src/QText.pro
 
 package: dist
 	$(if $(findstring 0,$(HAS_UNCOMMITTED)),,$(error Uncommitted changes present))
+	$(if $(findstring 0,$(HAS_LINTIAN)),,$(warning No 'lintian' in path, consider installing 'lintian' package))
 	@command -v dpkg-deb >/dev/null 2>&1 || { echo >&2 "Package 'dpkg-deb' not installed!"; exit 1; }
 	@echo "Packaging for $(DEB_BUILD_ARCH)"
 	@$(eval PACKAGE_NAME = $(DIST_NAME)_$(DIST_SHORT_VERSION)_$(DEB_BUILD_ARCH))
