@@ -88,7 +88,7 @@ void GotoDialog::onTextEdited(const QString& text) {
                 items.push_back(item);
             }
 
-            for (size_t j=0; j<folder->fileCount(); j++) {
+            for (int j = 0; j < folder->fileCount(); j++) {
                 auto file = folder->getFile(j);
                 auto fileTitle = file->getTitle();
                 if (fileTitle.contains(text, Qt::CaseInsensitive)) {
