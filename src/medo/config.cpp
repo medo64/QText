@@ -397,7 +397,7 @@ QStringList Config::readMany(QString key) {
 
 QStringList Config::readMany(QString key, QStringList defaultValues) {
     QStringList values = readMany(key);
-    return !(values.length() > 0)? values : defaultValues;
+    return (values.length() > 0)? values : defaultValues;
 }
 
 void Config::writeMany(QString key, QStringList values) {

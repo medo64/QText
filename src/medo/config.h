@@ -2,6 +2,7 @@
 
 // 2019-07-17: Initial version
 // 2019-10-13: Added stateRead and stateWrite operations
+// 2019-11-01: Fixed readMany implementation
 
 #ifndef CONFIG_H
 #define CONFIG_H
