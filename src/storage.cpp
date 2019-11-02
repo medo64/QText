@@ -2,31 +2,21 @@
 #include "folderitem.h"
 #include <QDir>
 
-Storage::Storage(const QString path, QString path2) {
-    QDir rootDirectory = path.startsWith("~/") ? QDir::homePath() + path.mid(1) : path;
-    if (!rootDirectory.exists()) { rootDirectory.mkpath(path); }
+Storage::Storage(const QStringList paths) {
+    int index = 0;
+    for (QString path : paths) {
+        QDir rootDirectory = path.startsWith("~/") ? QDir::homePath() + path.mid(1) : path;
+        if (!rootDirectory.exists()) { rootDirectory.mkpath(path); }
+        QString cleanedPath = rootDirectory.path();
 
-    _path = rootDirectory.path();
-
-    _folders.push_back(new FolderItem(_path, nullptr));
-    QStringList directories = rootDirectory.entryList(QDir::Dirs|QDir::NoDotAndDotDot, QDir::SortFlag::Name);
-    for(QString directory : directories) {
-        auto folder = new FolderItem(_path, directory);
-        _folders.push_back(folder);
-    }
-
-    if (path2.length() > 0) { //append second directory too
-        QDir rootDirectory2 = path2.startsWith("~/") ? QDir::homePath() + path2.mid(1) : path2;
-        if (!rootDirectory2.exists()) { rootDirectory2.mkpath(path2); }
-
-        _path2 = rootDirectory2.path();
-
-        _folders.push_back(new FolderItem("2", _path2, nullptr));
-        QStringList directories2 = rootDirectory2.entryList(QDir::Dirs|QDir::NoDotAndDotDot, QDir::SortFlag::Name);
-        for(QString directory2 : directories2) {
-            auto folder2 = new FolderItem("2", _path2, directory2);
-            _folders.push_back(folder2);
+        _folders.push_back(new FolderItem(index, cleanedPath, nullptr));
+        QStringList directories = rootDirectory.entryList(QDir::Dirs|QDir::NoDotAndDotDot, QDir::SortFlag::Name);
+        for(QString directory : directories) {
+            auto folder = new FolderItem(index, cleanedPath, directory);
+            _folders.push_back(folder);
         }
+
+        index++;
     }
 }
 
@@ -41,9 +31,4 @@ FolderItem* Storage::getFolder(int index) {
 
 FolderItem* Storage::getBaseFolder() {
     return _folders.at(0);
-}
-
-
-QString Storage::getPath() {
-    return _path;
 }

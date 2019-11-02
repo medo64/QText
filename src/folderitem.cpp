@@ -4,23 +4,10 @@
 #include <QDir>
 #include <QString>
 
-FolderItem::FolderItem(const QString prefix, const QString directoryPath, const QString directoryName) {
+FolderItem::FolderItem(const int pathIndex, const QString directoryPath, const QString directoryName) {
     _directoryPath = directoryPath;
     _directoryName = directoryName;
-    _prefix = prefix;
-
-    QString path = getPath();
-    QDir directory = path;
-
-    QStringList files = directory.entryList(QStringList() << "*.txt" << "*.html", QDir::Files);
-    for(QString fileName : files) {
-        _files.push_back(new FileItem(this, fileName));
-    }
-}
-
-FolderItem::FolderItem(const QString directoryPath, const QString directoryName) {
-    _directoryPath = directoryPath;
-    _directoryName = directoryName;
+    _pathIndex = pathIndex;
 
     QString path = getPath();
     QDir directory = path;
@@ -33,19 +20,23 @@ FolderItem::FolderItem(const QString directoryPath, const QString directoryName)
 
 
 QString FolderItem::getKey() {
-    if (_prefix.length() > 0) {
-        return _prefix + "/" + ((_directoryName == nullptr) ? "" : _directoryName);
+    if (_pathIndex > 0) {
+        return QString::number(_pathIndex + 1) + "/" + ((_directoryName == nullptr) ? "" : _directoryName);
     } else {
         return (_directoryName == nullptr) ? "" : _directoryName;
     }
 }
 
 QString FolderItem::getTitle() {
-    return (_directoryName == nullptr) ? "(Default" + _prefix + ")" : Helpers::getFolderTitleFromName(_directoryName);
+    if (_directoryName == nullptr) {
+        return (_pathIndex == 0) ? "(Default)" : "(Default " + QString::number(_pathIndex + 1) + ")";
+    } else {
+        return Helpers::getFolderTitleFromName(_directoryName);
+    }
 }
 
-bool FolderItem::hasPrefix() {
-    return !_prefix.isEmpty();
+bool FolderItem::isPrimary() {
+    return (_pathIndex == 0);
 }
 
 int FolderItem::fileCount() {

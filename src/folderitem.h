@@ -9,12 +9,11 @@ class FileItem;
 class FolderItem {
 
     public:
-        FolderItem(const QString directoryBase, const QString directoryName);
-        FolderItem(const QString prefix, const QString directoryBase, const QString directoryName); //prefix differentiates between DataPath and DataPath2
+        FolderItem(const int pathIndex, const QString directoryBase, const QString directoryName); //prefix differentiates between DataPath and DataPath2
         QString getKey();
         QString getPath();
         QString getTitle();
-        bool hasPrefix();
+        bool isPrimary();
         int fileCount();
         FileItem* getFile(int index);
         FileItem* newFile(QString title);
@@ -26,7 +25,7 @@ class FolderItem {
     private:
         QString _directoryPath;
         QString _directoryName;
-        QString _prefix;
+        int _pathIndex;
         QVector<FileItem*> _files;
 
 };

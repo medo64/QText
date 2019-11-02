@@ -17,17 +17,25 @@ void Settings::setAlwaysOnTop(bool newAlwaysOnTop) {
 }
 
 
-QString Settings::dataPath() {
-    QString path = Config::read("DataPath", Config::read("FilesLocation", defaultDataPath()));
-    return (path.length() > 0) ? QDir::cleanPath(path) : defaultDataPath();
+QStringList Settings::dataPaths() {
+    QStringList paths = Config::readMany("DataPath", defaultDataPaths());
+    QStringList cleanedPaths;
+    for (QString path : paths) {
+        if (path.length() > 0) { cleanedPaths.append(QDir::cleanPath(path)); }
+    }
+    return (cleanedPaths.length() > 0) ? cleanedPaths : defaultDataPaths();
 }
 
-QString Settings::defaultDataPath() {
-    return Config::dataDirectory();
+QStringList Settings::defaultDataPaths() {
+    return QStringList(Config::dataDirectory());
 }
 
-void Settings::setDataPath(QString newPath) {
-    Config::write("DataPath", QDir::cleanPath(newPath));
+void Settings::setDataPaths(QStringList newPaths) {
+    QStringList cleanedPaths;
+    for (QString newPath : newPaths) {
+        if (newPath.length() > 0) { cleanedPaths.append(QDir::cleanPath(newPath)); }
+    }
+    Config::writeMany("DataPath", cleanedPaths);
 }
 
 

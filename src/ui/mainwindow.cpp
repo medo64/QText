@@ -455,7 +455,7 @@ void MainWindow::onFolderMenuShow() {
         QAction* folderAction = new QAction(folder->getTitle());
         folderAction->setData(folder->getKey());
         folderAction->setDisabled(folder == _folder);
-        if (folder->hasPrefix()) { folderAction->setFont(italicFont); }
+        if (!folder->isPrimary()) { folderAction->setFont(italicFont); }
         connect(folderAction, SIGNAL(triggered()), this, SLOT(onFolderMenuSelect()));
         _folderButton->menu()->addAction(folderAction);
     }
@@ -647,7 +647,7 @@ void MainWindow::selectFolder(QString folderKey) {
         italicFont.setItalic(true);
 
         _folderButton->setText(_folder->getTitle() + " ");
-        _folderButton->setFont(_folder->hasPrefix() ? italicFont : _folderButton->menu()->font());
+        _folderButton->setFont(!_folder->isPrimary() ? italicFont : _folderButton->menu()->font());
         Settings::setLastFolder(_folder->getKey());
 
         ui->tabWidget->blockSignals(true);

@@ -7,15 +7,13 @@
 class Storage {
 
     public:
-        Storage(const QString path, const QString path2);
+        Storage(const QStringList paths);
         int folderCount();
         FolderItem* getFolder(int index);
         FolderItem* getBaseFolder();
         QString getPath();
 
     private:
-        QString _path;
-        QString _path2;
         QVector<FolderItem*> _folders;
 
 };
