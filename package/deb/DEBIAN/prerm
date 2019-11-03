@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+
+sudo kill $(ps aux | grep '[/]opt/qtext/qtext' | awk '{print $2}') 2>/dev/null
+
+exit 0
