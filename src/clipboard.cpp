@@ -12,6 +12,9 @@ bool Clipboard::setText(QString text) {
     QApplication::clipboard()->clear();
     if (!text.isEmpty()) {
         QApplication::clipboard()->setText(text);
+        if (QApplication::clipboard()->supportsSelection()) {
+            QApplication::clipboard()->setText(text, QClipboard::Selection); //to support Linux Terminal app
+        }
         return true;
     }
     return false;
@@ -27,9 +30,7 @@ bool Clipboard::cutText(QTextCursor cursor) {
 
 bool Clipboard::copyText(QTextCursor cursor) {
     if (cursor.hasSelection()) {
-        QApplication::clipboard()->clear();
-        QApplication::clipboard()->setText(cursor.selection().toPlainText());
-        return true;
+        return setText(cursor.selection().toPlainText());
     }
     return false;
 }
