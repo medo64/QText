@@ -1,5 +1,6 @@
 #include "qtabbarex.h"
 #include <math.h>
+#include <QApplication>
 #include <QMouseEvent>
 
 QTabBarEx::QTabBarEx(QWidget *parent)
@@ -11,7 +12,7 @@ void QTabBarEx::mouseMoveEvent(QMouseEvent* event) {
     if ((event->buttons() & Qt::LeftButton) && (_sourceIndex >= 0) && !_moveInProgress) {
         auto destinationPoint = event->pos();
         auto distanceSquared = pow(destinationPoint.x() - _sourcePoint.x(), 2) + pow(destinationPoint.y() - _sourcePoint.y(), 2);
-        if (distanceSquared > 5) {
+        if (distanceSquared >= QApplication::startDragDistance()) {
             this->setCursor(Qt::SizeHorCursor);
             _moveInProgress = true;
         }
