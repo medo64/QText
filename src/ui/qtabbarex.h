@@ -20,7 +20,7 @@ class QTabBarEx : public QTabBar {
     private:
         int _sourceIndex;
         QPoint _sourcePoint;
-        bool _cursorSet;
+        bool _moveInProgress;
 
     signals:
         void tabMoved(int from, int to);
