@@ -1,5 +1,5 @@
 Package:        qtext
-Version:        MAJOR.MINOR
+Version:        MAJOR.MINOR.PATCH
 Architecture:   ARCHITECTURE
 Maintainer:     Josip Medved <jmedved@jmedved.com>
 Homepage:       https://www.medo64.com/qtext/

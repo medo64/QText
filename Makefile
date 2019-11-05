@@ -7,7 +7,6 @@ endif
 
 DIST_NAME := qtext
 DIST_VERSION := $(shell grep VERSION src/QText.pro | head -1 | cut -d'=' -f2 | awk '{print $$1}')
-DIST_SHORT_VERSION := $(shell echo $(DIST_VERSION) | cut -d. -f1-2)
 
 DEB_BUILD_ARCH := $(shell getconf LONG_BIT | sed "s/32/i386/" | sed "s/64/amd64/")
 
@@ -37,7 +36,7 @@ install: bin/qtext
 	@sudo install -d $(DESTDIR)/$(PREFIX)/bin/
 	@sudo install bin/qtext $(DESTDIR)/$(PREFIX)/bin/
 	@mkdir -p build/man/
-	@sed 's/MAJOR.MINOR//g' docs/man/qtext.1 > build/man/qtext.1
+	@sed 's/MAJOR.MINOR.PATCH/$(DIST_VERSION)/g' docs/man/qtext.1 > build/man/qtext.1
 	@gzip -cn --best build/man/qtext.1 > build/man/qtext.1.gz
 	@sudo install -m 644 build/man/qtext.1.gz /usr/share/man/man1/
 	@sudo mandb -q
@@ -81,13 +80,13 @@ package: dist
 	$(if $(findstring 0,$(HAS_LINTIAN)),,$(warning No 'lintian' in path, consider installing 'lintian' package))
 	@command -v dpkg-deb >/dev/null 2>&1 || { echo >&2 "Package 'dpkg-deb' not installed!"; exit 1; }
 	@echo "Packaging for $(DEB_BUILD_ARCH)"
-	@$(eval PACKAGE_NAME = $(DIST_NAME)_$(DIST_SHORT_VERSION)_$(DEB_BUILD_ARCH))
+	@$(eval PACKAGE_NAME = $(DIST_NAME)_$(DIST_VERSION)_$(DEB_BUILD_ARCH))
 	@$(eval PACKAGE_DIR = /tmp/$(PACKAGE_NAME)/)
 	-@$(RM) -r $(PACKAGE_DIR)/
 	@mkdir $(PACKAGE_DIR)/
 	@cp -r package/deb/DEBIAN $(PACKAGE_DIR)/
 	@cp -r package/deb/usr $(PACKAGE_DIR)/
-	@sed -i "s/MAJOR.MINOR/$(DIST_SHORT_VERSION)/" $(PACKAGE_DIR)/DEBIAN/control
+	@sed -i "s/MAJOR.MINOR.PATCH/$(DIST_VERSION)/" $(PACKAGE_DIR)/DEBIAN/control
 	@sed -i "s/ARCHITECTURE/$(DEB_BUILD_ARCH)/" $(PACKAGE_DIR)/DEBIAN/control
 	@mkdir -p $(PACKAGE_DIR)/usr/share/doc/qtext/
 	@cp package/deb/copyright $(PACKAGE_DIR)/usr/share/doc/qtext/copyright
@@ -101,7 +100,7 @@ package: dist
 	@echo ' -- Josip Medved <jmedved@jmedved.com>  $(shell date -R)' >> build/changelog
 	@gzip -cn --best build/changelog > $(PACKAGE_DIR)/usr/share/doc/qtext/changelog.gz
 	@mkdir -p build/man/
-	@sed 's/MAJOR.MINOR//g' docs/man/qtext.1 > build/man/qtext.1
+	@sed 's/MAJOR.MINOR.PATCH/$(DIST_VERSION)/g' docs/man/qtext.1 > build/man/qtext.1
 	@mkdir -p $(PACKAGE_DIR)/usr/share/man/man1/
 	@gzip -cn --best build/man/qtext.1 > $(PACKAGE_DIR)/usr/share/man/man1/qtext.1.gz
 	@find $(PACKAGE_DIR)/ -type d -exec chmod 755 {} +
