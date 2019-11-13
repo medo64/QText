@@ -202,9 +202,6 @@ bool FileItem::event(QEvent *event) {
                 || ((e->modifiers() == Qt::ShiftModifier) && (e->key() == Qt::Key_Insert))) {
             onContextMenuPastePlain();
             return true;
-        } else if ((e->modifiers() == Qt::NoModifier) && (e->key() == Qt::Key_Delete)) {
-            onContextMenuDelete();
-            return true;
         } else if ((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_A)) {
             onContextMenuSelectAll();
             return true;
