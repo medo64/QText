@@ -9,6 +9,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     ui(new Ui::SettingsDialog) {
     ui->setupUi(this);
 
+    _oldAlwaysOnTop = Settings::alwaysOnTop();
     _oldAutostart = Setup::autostart();
     _oldMinimizeToTray = Settings::minimizeToTray();
     _oldShowInTaskbar = Settings::showInTaskbar();
@@ -30,18 +31,24 @@ void SettingsDialog::onButtonClicked(QAbstractButton* button) {
 }
 
 void SettingsDialog::reset() {
+    ui->checkboxAlwaysOnTop->setChecked(_oldAlwaysOnTop);
     ui->checkboxAutostart->setChecked(_oldAutostart);
     ui->checkboxMinimizeToTray->setChecked(_oldMinimizeToTray);
     ui->checkboxShowInTaskbar->setChecked(_oldShowInTaskbar);
 }
 
 void SettingsDialog::restoreDefaults() {
+    ui->checkboxAlwaysOnTop->setChecked(Settings::defaultAlwaysOnTop());
     ui->checkboxAutostart->setChecked(true);
     ui->checkboxMinimizeToTray->setChecked(Settings::defaultMinimizeToTray());
     ui->checkboxShowInTaskbar->setChecked(Settings::defaultShowInTaskbar());
 }
 
 void SettingsDialog::accept() {
+    bool newAlwaysOnTop = (ui->checkboxAlwaysOnTop->checkState() == Qt::Checked);
+    changedAlwaysOnTop = newAlwaysOnTop != _oldAlwaysOnTop;
+    if (changedAlwaysOnTop) { Settings::setAlwaysOnTop(newAlwaysOnTop); }
+
     bool newAutostart = (ui->checkboxAutostart->checkState() == Qt::Checked);
     changedAutostart = newAutostart != _oldAutostart;
     if (changedAutostart) { Setup::setAutostart(newAutostart); }

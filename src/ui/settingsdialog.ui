@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>450</width>
-    <height>158</height>
+    <height>181</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -35,6 +35,13 @@
         <widget class="QCheckBox" name="checkboxMinimizeToTray">
          <property name="text">
           <string>Minimize to tray</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkboxAlwaysOnTop">
+         <property name="text">
+          <string>Always on top (requires restart)</string>
          </property>
         </widget>
        </item>
