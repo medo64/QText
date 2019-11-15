@@ -29,7 +29,15 @@ QString FolderItem::getKey() {
 
 QString FolderItem::getTitle() {
     if (_directoryName == nullptr) {
-        return (_pathIndex == 0) ? "(Default)" : "(Default " + QString::number(_pathIndex + 1) + ")";
+        QFileInfo path = _directoryPath;
+        QString dirName = path.fileName();
+        int iParStart = dirName.indexOf('(');
+        int iParEnd = dirName.lastIndexOf(')');
+        if ((iParStart >= 0) && (iParEnd > iParStart)) {
+            return dirName.mid(iParStart, iParEnd - iParStart + 1); //use name in parentheses if one exists
+        } else {
+            return (_pathIndex == 0) ? "(Default)" : "(Default " + QString::number(_pathIndex + 1) + ")";
+        }
     } else {
         return Helpers::getFolderTitleFromName(_directoryName);
     }
