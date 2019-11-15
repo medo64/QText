@@ -11,10 +11,10 @@ bool Clipboard::hasText() {
 bool Clipboard::setText(QString text) {
     QApplication::clipboard()->clear();
     if (!text.isEmpty()) {
-        QApplication::clipboard()->setText(text);
         if (QApplication::clipboard()->supportsSelection()) {
             QApplication::clipboard()->setText(text, QClipboard::Selection); //to support Linux Terminal app
         }
+        QApplication::clipboard()->setText(text);
         return true;
     }
     return false;
