@@ -75,7 +75,7 @@
     <Compile Include="%28Medo%29\Args [002].cs" />
     <Compile Include="%28Medo%29\Config [006].cs" />
     <Compile Include="%28Medo%29\EntryAssembly [003].cs" />
-    <Compile Include="%28Medo%29\ErrorReport [019].cs" />
+    <Compile Include="%28Medo%29\ErrorReport [020].cs" />
     <Compile Include="%28Medo%29\History [002].cs" />
     <Compile Include="%28Medo%29\ManifestResources [002].cs" />
     <Compile Include="%28Medo%29\MessageBox [007].cs" />
@@ -89,7 +89,7 @@
     <Compile Include="%28Medo%29\State [017].cs" />
     <Compile Include="%28Medo%29\UnhandledCatch [008].cs" />
     <Compile Include="%28Medo%29\Hotkey [002].cs" />
-    <Compile Include="%28Medo%29\Upgrade [004].cs" />
+    <Compile Include="%28Medo%29\Upgrade [005].cs" />
     <Compile Include="App.cs" />
     <Compile Include="ChangePasswordForm.cs">
       <SubType>Form</SubType>
