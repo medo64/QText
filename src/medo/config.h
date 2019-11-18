@@ -3,6 +3,8 @@
 // 2019-07-17: Initial version
 // 2019-10-13: Added stateRead and stateWrite operations
 // 2019-11-01: Fixed readMany implementation
+// 2019-11-17: Added stateReadMany and stateWriteMany
+//             Added option to set paths manually
 
 #ifndef CONFIG_H
 #define CONFIG_H
@@ -61,6 +63,10 @@ class Config {
          *   Windows: Config file under current directory is used (e.g. ./<AppName>.cfg). */
         static QString configurationFilePath();
 
+        /*! Sets configuration file path. No verification is made in regards to path suitability for purpose.
+         * \param configurationFilePath Full path to the configuration file. */
+        static void setConfigurationFilePath(QString configurationFilePath);
+
 
         /*! Returns state file path. If file doesn't exist, it's created. Returned value is cached. */
         static QString stateFile();
@@ -74,6 +80,10 @@ class Config {
          *   Windows: Config file under current directory is used (e.g. ./<AppName>.user). */
         static QString stateFilePath();
 
+        /*! Sets state file path. No verification is made in regards to path suitability for purpose.
+         * \param stateFilePath Full path to the state file. */
+        static void setStateFilePath(QString stateFilePath);
+
 
         /*! Returns data directory path. If directory doesn't exist, it's created. Returned value is cached. */
         static QString dataDirectory();
@@ -86,6 +96,10 @@ class Config {
          *   Linux: Subdirectory is used (e.g. ./.<appname>.data).
          *   Windows: Subdirectory is used (e.g. ./<AppName>.Data/). */
         static QString dataDirectoryPath();
+
+        /*! Sets data directory path. No verification is made in regards to path suitability for purpose.
+         * \param dataDirectoryPath Full path to the data directory. */
+        static void setDataDirectoryPath(QString dataDirectoryPath);
 
 
         /*! Returns value for a given key or null QString if one is not found.

@@ -131,6 +131,16 @@ QString Config::configurationFilePath() {
     return _configurationFilePath;
 }
 
+void Config::setConfigurationFilePath(QString configurationFilePath) {
+    QMutexLocker locker(&_publicAccessMutex);
+    resetConfigFile();
+
+    QString newPath = QDir::cleanPath(configurationFilePath);
+    if (newPath.startsWith("~/")) { newPath = QDir::homePath() + newPath.mid(1); } //allow use of tilda (~) for home directory
+
+    _configurationFilePath = newPath;
+}
+
 QString Config::configurationFilePathWhenPortable() {
 #if defined(Q_OS_WIN)
     QString applicationName = QCoreApplication::applicationName();
@@ -195,6 +205,16 @@ QString Config::stateFilePath() {
     return _stateFilePath;
 }
 
+void Config::setStateFilePath(QString stateFilePath) {
+    QMutexLocker locker(&_publicAccessMutex);
+    resetStateFile();
+
+    QString newPath = QDir::cleanPath(stateFilePath);
+    if (newPath.startsWith("~/")) { newPath = QDir::homePath() + newPath.mid(1); } //allow use of tilda (~) for home directory
+
+    _stateFilePath = newPath;
+}
+
 QString Config::stateFilePathWhenPortable() {
 #if defined(Q_OS_WIN)
     QString applicationName = QCoreApplication::applicationName();
@@ -250,6 +270,13 @@ QString Config::dataDirectoryPath() {
         _dataDirectoryPath = isPortable() ? dataDirectoryPathWhenPortable() : dataDirectoryPathWhenInstalled();
     }
     return _dataDirectoryPath;
+}
+
+void Config::setDataDirectoryPath(QString dataDirectoryPath) {
+    QMutexLocker locker(&_publicAccessMutex);
+    QString newPath = QDir::cleanPath(dataDirectoryPath);
+    if (newPath.startsWith("~/")) { newPath = QDir::homePath() + newPath.mid(1); } //allow use of tilda (~) for home directory
+    _dataDirectoryPath = newPath;
 }
 
 QString Config::dataDirectoryPathWhenPortable() {
