@@ -412,6 +412,19 @@ void Config::writeMany(QString key, QStringList values) {
 }
 
 
+void Config::remove(QString key) {
+    key = key.trimmed(); //get rid of spaces around key
+    if (key.isEmpty()) { return; } //ignore empty keys
+    QMutexLocker locker(&_publicAccessMutex);
+    getConfigFile()->removeMany(key);
+}
+
+void Config::removeAll() {
+    QMutexLocker locker(&_publicAccessMutex);
+    getConfigFile()->removeAll();
+}
+
+
 QString Config::stateRead(QString key, QString defaultValue) {
     key = key.trimmed(); //get rid of spaces around key
     if (key.isEmpty()) { return QString(); } //ignore empty keys; return null
@@ -456,16 +469,28 @@ void Config::stateWrite(QString key, bool value) {
 }
 
 
-void Config::remove(QString key) {
+QStringList Config::stateReadMany(QString key) {
+    key = key.trimmed(); //get rid of spaces around key
+    if (key.isEmpty()) { return QStringList(); } //ignore empty keys; return empty list
+    QMutexLocker locker(&_publicAccessMutex);
+    QStringList values = getStateFile()->readMany(key);
+    return values;
+}
+
+QStringList Config::stateReadMany(QString key, QStringList defaultValues) {
+    QStringList values = stateReadMany(key);
+    return (values.length() > 0)? values : defaultValues;
+}
+
+void Config::stateWriteMany(QString key, QStringList values) {
     key = key.trimmed(); //get rid of spaces around key
     if (key.isEmpty()) { return; } //ignore empty keys
     QMutexLocker locker(&_publicAccessMutex);
-    getConfigFile()->removeMany(key);
-}
-
-void Config::removeAll() {
-    QMutexLocker locker(&_publicAccessMutex);
-    getConfigFile()->removeAll();
+    if (values.length() > 0) {
+        getStateFile()->writeMany(key, values);
+    } else {
+        getStateFile()->removeMany(key);
+    }
 }
 
 

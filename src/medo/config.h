@@ -168,6 +168,14 @@ class Config {
         static void writeMany(QString key, QStringList values);
 
 
+        /*! Remove all values of a given key.
+         * /param key Key. */
+        static void remove(QString key);
+
+        /*! Remove all values. */
+        static void removeAll();
+
+
         /*! Returns state value for a given key or default value if one is not found.
          * /param key Key.
          * /param defaultValue Default value. */
@@ -199,12 +207,19 @@ class Config {
         static void stateWrite(QString key, bool value);
 
 
-        /*! Remove all values of a given key.
+        /*! Returns all state values for a given key or empty list if key doesn't exist.
          * /param key Key. */
-        static void remove(QString key);
+        static QStringList stateReadMany(QString key);
 
-        /*! Remove all values. */
-        static void removeAll();
+        /*! Returns all state values for a given key or default values if key doesn't exist.
+         * /param key Key.
+         * /param defaultValues Default values. */
+        static QStringList stateReadMany(QString key, QStringList defaultValues);
+
+        /*! Writes state values to a given key.
+         * /param key Key.
+         * /param values Values. */
+        static void stateWriteMany(QString key, QStringList values);
 
 
     private:
