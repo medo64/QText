@@ -13,6 +13,8 @@ class FolderItem {
         QString getKey();
         QString getPath();
         QString getTitle();
+        bool rename(QString newTitle);
+        bool isRoot();
         bool isPrimary();
         int fileCount();
         FileItem* getFile(int index);
@@ -27,6 +29,7 @@ class FolderItem {
         QString _directoryName;
         int _pathIndex;
         QVector<FileItem*> _files;
+        void cleanOrdering();
         void saveOrdering();
         void loadOrdering();
 

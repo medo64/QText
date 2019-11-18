@@ -15,6 +15,8 @@
 #include "ui_mainwindow.h"
 #include "filenamedialog.h"
 #include "ui_filenamedialog.h"
+#include "foldersdialog.h"
+#include "ui_foldersdialog.h"
 #include "gotodialog.h"
 #include "ui_gotodialog.h"
 #include "settingsdialog.h"
@@ -103,9 +105,10 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
 
     { //folder button menu
         _folderButton = new QToolButton();
-        _folderButton->setPopupMode(QToolButton::InstantPopup);
+        _folderButton->setPopupMode(QToolButton::MenuButtonPopup);
         _folderButton->setMenu(new QMenu());
         ui->mainToolBar->addWidget(_folderButton);
+        connect(_folderButton, SIGNAL(clicked()), this, SLOT(onFolderSetup()));
         connect(_folderButton->menu(), SIGNAL(aboutToShow()), this, SLOT(onFolderMenuShow()));
 
         onFolderMenuSelect(); //setup folder select menu button
@@ -445,6 +448,16 @@ void MainWindow::onGoto() {
     }
 }
 
+void MainWindow::onFolderSetup() {
+    _folder->saveAll();
+    auto dialog = new FoldersDialog(this, _storage, _folder);
+    if (dialog->exec() == QDialog::Accepted) {
+        selectFolder(dialog->selectedFolder());
+    } else {
+        selectFolder(_folder); //refresh current folder
+    }
+}
+
 void MainWindow::onFolderMenuShow() {
     QFont italicFont = _folderButton->menu()->font();
     italicFont.setItalic(true);
@@ -639,6 +652,10 @@ void MainWindow::selectFolder(QString folderKey) {
         }
     }
 
+    selectFolder(selectedFolder);
+}
+
+void MainWindow::selectFolder(FolderItem* selectedFolder) {
     if (selectedFolder != nullptr) {
         if (_folder != nullptr) { _folder->saveAll(); } //save all files in previous folder / just in case
         _folder = selectedFolder;

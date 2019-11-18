@@ -34,6 +34,7 @@ class MainWindow : public QMainWindow {
         Hotkey* _hotkey = nullptr;
         void applySettings(bool applyShowInTaskbar = true);
         void selectFolder(QString folderKey);
+        void selectFolder(FolderItem* folder);
         void selectFile(QString fileKey);
 
     private slots:
@@ -51,6 +52,7 @@ class MainWindow : public QMainWindow {
         void onTextUndo();
         void onTextRedo();
         void onGoto();
+        void onFolderSetup();
         void onFolderMenuShow();
         void onFolderMenuSelect();
         void onShowContainingDirectory();

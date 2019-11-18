@@ -46,9 +46,30 @@ QString FolderItem::getTitle() {
     }
 }
 
+bool FolderItem::rename(QString newTitle) {
+    if (newTitle.isEmpty()) { return false; }
+    QString newName = Helpers::getFolderNameFromTitle(newTitle);
+    if (newName.compare(_directoryName, Qt::CaseSensitive) == 0) { return false; }
+
+    QDir directory = _directoryPath;
+    if (directory.rename(_directoryName, newName)) {
+        cleanOrdering();
+        _directoryName = newName;
+        saveOrdering();
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool FolderItem::isRoot() {
+    return (_directoryName == nullptr);
+}
+
 bool FolderItem::isPrimary() {
     return (_pathIndex == 0);
 }
+
 
 int FolderItem::fileCount() {
     return _files.size();
@@ -116,6 +137,10 @@ bool FolderItem::moveFile(int from, int to) {
     return true;
 }
 
+
+void FolderItem::cleanOrdering() {
+    Config::stateWriteMany("Order!" + this->getKey(), QStringList());
+}
 
 void FolderItem::saveOrdering() {
     QStringList orderList;
