@@ -451,11 +451,8 @@ void MainWindow::onGoto() {
 void MainWindow::onFolderSetup() {
     _folder->saveAll();
     auto dialog = new FoldersDialog(this, _storage, _folder);
-    if (dialog->exec() == QDialog::Accepted) {
-        selectFolder(dialog->selectedFolder());
-    } else {
-        selectFolder(_folder); //refresh current folder
-    }
+    dialog->exec();
+    selectFolder(dialog->selectedFolder()); //will adjust folder if deleted
 }
 
 void MainWindow::onFolderMenuShow() {

@@ -21,17 +21,17 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0">
+    <widget class="QListWidget" name="listWidget"/>
+   </item>
+   <item row="1" column="2">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <enum>Qt::Vertical</enum>
      </property>
      <property name="standardButtons">
       <set>QDialogButtonBox::Close</set>
      </property>
     </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QListWidget" name="listWidget"/>
    </item>
   </layout>
  </widget>

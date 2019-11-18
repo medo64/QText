@@ -8,9 +8,16 @@ FoldersDialog::FoldersDialog(QWidget* parent, Storage* storage, FolderItem* sele
     ui(new Ui::FoldersDialog) {
     ui->setupUi(this);
 
+    _storage = storage;
+    _selectedFolder = selectedFolder;
+
     _renameButton = ui->buttonBox->addButton("&Rename", QDialogButtonBox::ResetRole);
     _renameButton->setEnabled(false);
     connect(_renameButton, &QAbstractButton::clicked, this, &FoldersDialog::onRename);
+
+    _deleteButton = ui->buttonBox->addButton("&Delete", QDialogButtonBox::ResetRole);
+    _deleteButton->setEnabled(false);
+    connect(_deleteButton, &QAbstractButton::clicked, this, &FoldersDialog::onDelete);
 
     QFont italicFont = ui->listWidget->font();
     italicFont.setItalic(true);
@@ -45,8 +52,32 @@ void FoldersDialog::onRename() {
     ui->listWidget->editItem(ui->listWidget->currentItem());
 }
 
+void FoldersDialog::onDelete() {
+    QListWidgetItem* item = ui->listWidget->currentItem();
+    if (item != nullptr) {
+        QVariant data = item->data(Qt::UserRole);
+        FolderItem* folder = static_cast<FolderItem*>(data.value<void*>());
+        if (folder->fileCount() > 0) {
+            QMessageBox msgBox(this);
+            msgBox.setText("This folder is not empty!");
+            msgBox.setInformativeText("Do you really want to delete this folder?");
+            msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+            msgBox.setDefaultButton(QMessageBox::No);
+            if (msgBox.exec() != QMessageBox::Yes) { return; }
+        }
+        if (_selectedFolder == folder) { _selectedFolder = _storage->getBaseFolder(); }
+        if (_storage->deleteFolder(folder)) {
+            QListWidgetItem* itemToDelete = ui->listWidget->takeItem(ui->listWidget->currentRow());
+            delete itemToDelete;
+        }
+    }
+}
+
+
 void FoldersDialog::onCurrentItemChanged(QListWidgetItem* current) {
-    _renameButton->setEnabled((current != nullptr) && (current->flags() & Qt::ItemIsEditable));
+    bool isEditableItem = (current != nullptr) && (current->flags() & Qt::ItemIsEditable);
+    _renameButton->setEnabled(isEditableItem);
+    _deleteButton->setEnabled(isEditableItem);
 }
 
 void FoldersDialog::onItemChanged(QListWidgetItem* item) {

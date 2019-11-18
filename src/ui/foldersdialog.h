@@ -23,8 +23,11 @@ class FoldersDialog : public QDialog {
     private:
         Ui::FoldersDialog* ui;
         QPushButton* _renameButton;
+        QPushButton* _deleteButton;
+        Storage* _storage = nullptr;
         FolderItem* _selectedFolder = nullptr;
         void onRename();
+        void onDelete();
         void onCurrentItemChanged(QListWidgetItem* current);
         void onItemChanged(QListWidgetItem* item);
         void onItemDoubleClicked(QListWidgetItem* item);

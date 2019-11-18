@@ -12,6 +12,7 @@ class Storage {
         FolderItem* getFolder(int index);
         FolderItem* getBaseFolder();
         QString getPath();
+        bool deleteFolder(FolderItem* folder);
 
     private:
         QVector<FolderItem*> _folders;

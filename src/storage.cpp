@@ -32,3 +32,19 @@ FolderItem* Storage::getFolder(int index) {
 FolderItem* Storage::getBaseFolder() {
     return _folders.at(0);
 }
+
+
+bool Storage::deleteFolder(FolderItem* folder) {
+    for (int i = 0; i < _folders.count(); i++) {
+        FolderItem* iFolder = _folders[i];
+        if (iFolder->isRoot()) { continue; } //skip root folders
+        if (iFolder == folder) {
+            QDir directory(iFolder->getPath());
+            if (directory.removeRecursively()) {
+                _folders.removeAt(i);
+                return true;
+            }
+        }
+    }
+    return false;
+}
