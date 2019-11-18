@@ -31,7 +31,9 @@ int main(int argc, char* argv[]) {
         return static_cast<int>(0x80004004); //exit immediately if another instance is running
     }
 
-    storage = new Storage(Settings::dataPaths());
+    QStringList dataPaths = Settings::dataPaths();
+    Config::setStateFilePath(dataPaths[0] + "/.qtext.user"); //store state file in the first directory
+    storage = new Storage(dataPaths);
 
     MainWindow w { storage };
 
