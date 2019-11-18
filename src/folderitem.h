@@ -27,6 +27,8 @@ class FolderItem {
         QString _directoryName;
         int _pathIndex;
         QVector<FileItem*> _files;
+        void saveOrdering();
+        void loadOrdering();
 
 };
 

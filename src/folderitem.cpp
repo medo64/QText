@@ -1,3 +1,4 @@
+#include "medo/config.h"
 #include "fileitem.h"
 #include "folderitem.h"
 #include "helpers.h"
@@ -16,6 +17,8 @@ FolderItem::FolderItem(const int pathIndex, const QString directoryPath, const Q
     for(QString fileName : files) {
         _files.push_back(new FileItem(this, fileName));
     }
+
+    loadOrdering();
 }
 
 
@@ -58,6 +61,7 @@ FileItem* FolderItem::getFile(int index) {
 FileItem* FolderItem::newFile(QString title) {
     auto file = new FileItem(this, Helpers::getFileNameFromTitle(title) + ".txt");
     _files.push_back(file);
+    saveOrdering();
     return file;
 }
 
@@ -67,6 +71,7 @@ bool FolderItem::deleteFile(FileItem* file) {
         if (iFile->getPath().compare(file->getPath(), Qt::CaseSensitive) == 0) {
             QFile::remove(iFile->getPath());
             _files.erase(item);
+            saveOrdering();
             return true;
         }
     }
@@ -107,5 +112,34 @@ bool FolderItem::moveFile(int from, int to) {
     if ((to < 0) || (to >= _files.count())) { return false; }
     if (from == to) { return false; }
     _files.move(from, to);
+    saveOrdering();
     return true;
+}
+
+
+void FolderItem::saveOrdering() {
+    QStringList orderList;
+    for (auto file : _files) {
+        orderList.append(file->getKey());
+    }
+    Config::stateWriteMany("Order!" + this->getKey(), orderList);
+}
+
+void FolderItem::loadOrdering() {
+    QStringList ordering = Config::stateReadMany("Order!" + this->getKey());
+    std::sort(_files.begin(), _files.end(), [ordering] (FileItem* item1, FileItem* item2) {
+        QString key1 = item1->getKey();
+        QString key2 = item2->getKey();
+        int index1 = ordering.indexOf(key1);
+        int index2 = ordering.indexOf(key2);
+        if ((index1 == -1) && (index2 == -1)) { //both items are new, just compare alphabetically
+            return key1.compare(key2, Qt::CaseSensitive) < 0;
+        } else if (index1 == -1) { //second item wins because first item is not in list
+            return false;
+        } else if (index2 == -1) { //first item wins because second item is not in list
+            return true;
+        } else { //both have previously stored index
+            return (index1 < index2);
+        }
+    });
 }
