@@ -11,6 +11,9 @@ FoldersDialog::FoldersDialog(QWidget* parent, Storage* storage, FolderItem* sele
     _storage = storage;
     _selectedFolder = selectedFolder;
 
+    _newButton = ui->buttonBox->addButton("&New", QDialogButtonBox::ResetRole);
+    connect(_newButton, &QAbstractButton::clicked, this, &FoldersDialog::onNew);
+
     _renameButton = ui->buttonBox->addButton("&Rename", QDialogButtonBox::ResetRole);
     _renameButton->setEnabled(false);
     connect(_renameButton, &QAbstractButton::clicked, this, &FoldersDialog::onRename);
@@ -19,23 +22,8 @@ FoldersDialog::FoldersDialog(QWidget* parent, Storage* storage, FolderItem* sele
     _deleteButton->setEnabled(false);
     connect(_deleteButton, &QAbstractButton::clicked, this, &FoldersDialog::onDelete);
 
-    QFont italicFont = ui->listWidget->font();
-    italicFont.setItalic(true);
-
     if (storage != nullptr) {
-        for (int i = 0; i < storage->folderCount(); i++) {
-            FolderItem* folder = storage->getFolder(i);
-            QListWidgetItem* item = new QListWidgetItem();
-            item->setText(folder->getTitle());
-            if (!folder->isPrimary()) { item->setFont(italicFont); }
-            item->setData(Qt::UserRole, QVariant::fromValue(static_cast<void*>(folder)));
-            if (!folder->isRoot()) { item->setFlags(item->flags() | Qt::ItemIsEditable); }
-            ui->listWidget->addItem(item);
-            if (folder == selectedFolder) {
-                //item->setSelected(true);
-                ui->listWidget->setCurrentItem(item);
-            }
-        }
+        fillList();
         connect(ui->listWidget, &QListWidget::currentItemChanged, this, &FoldersDialog::onCurrentItemChanged);
         connect(ui->listWidget, &QListWidget::itemChanged, this,  &FoldersDialog::onItemChanged);
         connect(ui->listWidget, &QListWidget::itemDoubleClicked, this,  &FoldersDialog::onItemDoubleClicked);
@@ -47,6 +35,18 @@ FoldersDialog::~FoldersDialog() {
     delete ui;
 }
 
+
+void FoldersDialog::onNew() {
+    FolderItem* folder = _storage->newFolder("New folder");
+    if (folder != nullptr) {
+        ui->listWidget->clear();
+        _selectedFolder = folder;
+        fillList();
+        if (ui->listWidget->currentItem() != nullptr) {
+            ui->listWidget->editItem(ui->listWidget->currentItem());
+        }
+    }
+}
 
 void FoldersDialog::onRename() {
     ui->listWidget->editItem(ui->listWidget->currentItem());
@@ -103,4 +103,22 @@ void FoldersDialog::onItemDoubleClicked(QListWidgetItem* item) {
 
 FolderItem* FoldersDialog::selectedFolder() {
     return _selectedFolder;
+}
+
+
+void FoldersDialog::fillList() {
+    QFont italicFont = ui->listWidget->font();
+    italicFont.setItalic(true);
+    for (int i = 0; i < _storage->folderCount(); i++) {
+        FolderItem* folder = _storage->getFolder(i);
+        QListWidgetItem* item = new QListWidgetItem();
+        item->setText(folder->getTitle());
+        if (!folder->isPrimary()) { item->setFont(italicFont); }
+        item->setData(Qt::UserRole, QVariant::fromValue(static_cast<void*>(folder)));
+        if (!folder->isRoot()) { item->setFlags(item->flags() | Qt::ItemIsEditable); }
+        ui->listWidget->addItem(item);
+        if (folder == _selectedFolder) {
+            ui->listWidget->setCurrentItem(item);
+        }
+    }
 }

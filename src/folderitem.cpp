@@ -30,6 +30,10 @@ QString FolderItem::getKey() {
     }
 }
 
+int FolderItem::getPathIndex() {
+    return _pathIndex;
+}
+
 QString FolderItem::getTitle() {
     if (_directoryName == nullptr) {
         QFileInfo path = _directoryPath;

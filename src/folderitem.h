@@ -12,6 +12,7 @@ class FolderItem {
         FolderItem(const int pathIndex, const QString directoryBase, const QString directoryName); //prefix differentiates between DataPath and DataPath2
         QString getKey();
         QString getPath();
+        int getPathIndex();
         QString getTitle();
         bool rename(QString newTitle);
         bool isRoot();

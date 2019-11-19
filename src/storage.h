@@ -12,10 +12,12 @@ class Storage {
         FolderItem* getFolder(int index);
         FolderItem* getBaseFolder();
         QString getPath();
+        FolderItem* newFolder(QString title);
         bool deleteFolder(FolderItem* folder);
 
     private:
         QVector<FolderItem*> _folders;
+        void sortFolders();
 
 };
 

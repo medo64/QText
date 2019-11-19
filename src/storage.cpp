@@ -1,3 +1,4 @@
+#include "helpers.h"
 #include "storage.h"
 #include "folderitem.h"
 #include <QDir>
@@ -18,6 +19,7 @@ Storage::Storage(const QStringList paths) {
 
         index++;
     }
+    sortFolders();
 }
 
 
@@ -34,6 +36,27 @@ FolderItem* Storage::getBaseFolder() {
 }
 
 
+FolderItem* Storage::newFolder(QString proposedTitle) {
+    QString rootPath = getBaseFolder()->getPath();
+    QString title = proposedTitle;
+    for (int i = 2; i < 100; i++) { //repeat until 100 is reached
+        QString dirName = Helpers::getFileNameFromTitle(title);
+        QDir dir = QDir::cleanPath(rootPath + "/" + dirName);
+        if (!dir.exists()) { //found one that doesn't exist - use this
+            if (dir.mkpath(".")) {
+                FolderItem* folder = new FolderItem(0, rootPath, dirName);
+                _folders.push_back(folder);
+                sortFolders();
+                return folder;
+            } else {
+                return nullptr; //cannot create directory
+            }
+        }
+        title = proposedTitle + " (" + QString::number(i) + ")"; //add number before trying again
+    }
+    return nullptr; //give up
+}
+
 bool Storage::deleteFolder(FolderItem* folder) {
     for (int i = 0; i < _folders.count(); i++) {
         FolderItem* iFolder = _folders[i];
@@ -47,4 +70,17 @@ bool Storage::deleteFolder(FolderItem* folder) {
         }
     }
     return false;
+}
+
+
+void Storage::sortFolders() {
+    std::sort(_folders.begin(), _folders.end(), [] (FolderItem* item1, FolderItem* item2) {
+        int index1 = item1->getPathIndex();
+        int index2 = item2->getPathIndex();
+        if (index1 == index2) { //both items are same level, just compare alphabetically
+            return item1->getTitle().compare(item2->getTitle(), Qt::CaseInsensitive) < 0;
+        } else { //different levels
+            return (index1 < index2);
+        }
+    });
 }
