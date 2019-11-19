@@ -1,4 +1,5 @@
 #include <QClipboard>
+#include <QThread>
 #include <QMimeData>
 #include <QTextDocumentFragment>
 #include "clipboard.h"
@@ -9,15 +10,23 @@ bool Clipboard::hasText() {
 }
 
 bool Clipboard::setText(QString text) {
-    QApplication::clipboard()->clear();
-    if (!text.isEmpty()) {
-        if (QApplication::clipboard()->supportsSelection()) {
-            QApplication::clipboard()->setText(text, QClipboard::Selection); //to support Linux Terminal app
-        }
-        QApplication::clipboard()->setText(text);
-        return true;
+    if (text.isEmpty()) { return false; }
+
+    QClipboard* clipboard = QApplication::clipboard();
+
+    QMimeData* data = new QMimeData;
+    data->setText(text);
+    clipboard->setMimeData(data, QClipboard::Clipboard);
+
+    if (clipboard->supportsSelection()) { //to support Linux Terminal app, only plain text
+        clipboard->setText(text, QClipboard::Selection);
     }
-    return false;
+
+#if defined(Q_OS_LINUX)
+    QThread::msleep(1); //workaround for copied text not being available...
+#endif
+
+    return true;
 }
 
 bool Clipboard::cutText(QTextCursor cursor) {
