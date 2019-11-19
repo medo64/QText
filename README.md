@@ -34,6 +34,7 @@ Simple note taking program.
 | `Alt+Up`          | Select previous folder                                  |
 | `Alt+Down`        | Select next folder                                      |
 | `Alt+Home`        | Select base folder                                      |
+| `Alt+End`         | Show folder selection menu                              |
 | `Alt+PageUp`      | Select previous folder                                  |
 | `Alt+PageDown`    | Select next folder                                      |
 | `Alt+Shift+Left`  | Select file to the left                                 |

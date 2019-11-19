@@ -310,6 +310,10 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
             selectFolder(_storage->getBaseFolder()->getKey());
         } break;
 
+        case Qt::AltModifier | Qt::Key_End: {
+            _folderButton->showMenu();
+        } break;
+
         case Qt::ShiftModifier | Qt::AltModifier | Qt::Key_Left: {
             if (ui->tabWidget->currentIndex() > 0) {
                 QTabBarEx* tabbar = dynamic_cast<QTabBarEx*>(ui->tabWidget->tabBar());
