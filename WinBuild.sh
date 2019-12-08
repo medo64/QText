@@ -37,7 +37,7 @@ $QMAKE_PATH -spec win32-g++ CONFIG+=release ../src/QText.pro
 $MAKE_PATH -f Makefile.Release
 cd ..
 mkdir -p bin/
-cp build/release/qtext.exe bin/qtext.exe
+cp build/release/qtext.exe bin/QText.exe
 cp `dirname $QMAKE_PATH`/libgcc_s_seh-1.dll bin/
 cp `dirname $QMAKE_PATH`/libstdc++-6.dll bin/
 cp `dirname $QMAKE_PATH`/libwinpthread-1.dll bin/
