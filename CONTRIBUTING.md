@@ -10,6 +10,27 @@ Project uses Qt 5 and Qt Creator is the preferred development environment.
 All code is situated in `src` directory.
 
 
+#### Linux
+
+To build project under Linux, the following packaages are required (in addition
+to Qt Creator):
+  * qtbase5-dev
+  * libqt5x11extras5-dev
+
+To build executables, one can use `make`:
+
+    make clean
+    make
+
+
+#### Windows
+
+To build project under Windows, in adition to Qt Creator with MinGW compiler,
+one also needs Git Bash to execute build script:
+
+    ./WinBuild.sh
+
+
 ### Running Unit Tests
 
 To run unit tests, you will need to create a new build configuration. To do so
