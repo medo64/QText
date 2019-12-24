@@ -17,6 +17,23 @@ void Settings::setAlwaysOnTop(bool newAlwaysOnTop) {
 }
 
 
+int Settings::clearUndoInterval() {
+    int value = Config::read("ClearUndoInterval", defaultClearUndoInterval());
+    if (value == 0) { return 0; } //disabled
+    if (value < 60) { return 60;  } //minimum is 1 minute
+    if (value > 24 * 60 * 60) { return 24 * 60 * 60;  } //maximum is 1 day
+    return value;
+}
+
+int Settings::defaultClearUndoInterval() {
+    return 15 * 60; //15 minutes
+}
+
+void Settings::setClearUndoInterval(int newClearUndoInterval) {
+    Config::write("ClearUndoInterval", newClearUndoInterval);
+}
+
+
 QStringList Settings::dataPaths() {
     QStringList paths = Config::readMany("DataPath", defaultDataPaths());
     QStringList cleanedPaths;

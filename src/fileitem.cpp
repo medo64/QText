@@ -220,6 +220,14 @@ void FileItem::focusInEvent(QFocusEvent* e) {
     if (file.exists()) {
         QFileInfo info(file);
         if (_modificationTime != info.lastModified()) { load(); }
+
+        int clearUndoInterval = Settings::clearUndoInterval();
+        if ((clearUndoInterval > 0) && (this->document()->isUndoAvailable() || this->document()->isRedoAvailable())) {
+            qint64 intervalSinceLastModification = info.lastModified().secsTo(QDateTime::currentDateTime());
+            if (intervalSinceLastModification > clearUndoInterval) {
+                this->document()->clearUndoRedoStacks();
+            }
+        }
     } else {
         load(); //just to ensure all fields are filled
     }

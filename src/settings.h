@@ -12,6 +12,10 @@ class Settings {
         static bool defaultAlwaysOnTop();
         static void setAlwaysOnTop(bool newAlwaysOnTop);
 
+        static int clearUndoInterval();
+        static int defaultClearUndoInterval();
+        static void setClearUndoInterval(int newClearUndoInterval);
+
         static QStringList dataPaths();
         static QStringList defaultDataPaths();
         static void setDataPaths(QStringList newPath);
