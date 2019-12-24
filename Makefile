@@ -6,7 +6,7 @@ endif
 
 
 DIST_NAME := qtext
-DIST_VERSION := $(shell grep VERSION src/QText.pro | head -1 | cut -d'=' -f2 | awk '{print $$1}')
+DIST_VERSION := $(shell grep VERSION src/QText.pro | head -1 | cut -d'=' -f2 | awk '{print $$1}' | sed 's/"//g')
 
 MAN_DATE := $(shell date +'%d %b %Y')
 
