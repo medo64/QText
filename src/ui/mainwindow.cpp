@@ -597,6 +597,8 @@ void MainWindow::onTabChanged() {
 
 void MainWindow::onTabMoved(int from, int to) {
     _folder->moveFile(from, to);
+    selectFolder(_folder); //workaround around tab widget not updating correctly
+    ui->tabWidget->setCurrentIndex(to);
 }
 
 
