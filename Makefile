@@ -1,4 +1,4 @@
-.PHONY: all clean distclean install uninstall dist release debug package
+.PHONY: all clean distclean install uninstall dist release debug package preview
 
 ifeq ($(PREFIX),)
     PREFIX := /usr/local/
@@ -119,3 +119,9 @@ package: dist
 	@$(RM) -r $(PACKAGE_DIR)/
 	@lintian --suppress-tags dir-or-file-in-opt dist/$(PACKAGE_NAME).deb
 	@echo Output at dist/$(PACKAGE_NAME).deb
+
+preview: docs/man/qtext.1
+	@mkdir -p build/man/
+	@sed 's/MAJOR.MINOR.PATCH/$(DIST_VERSION)/g' docs/man/qtext.1 > build/man/qtext.1
+	@sed -i 's/CURR_DATE/$(MAN_DATE)/g' build/man/qtext.1
+	@man -l build/man/qtext.1
