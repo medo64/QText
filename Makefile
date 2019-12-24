@@ -8,6 +8,8 @@ endif
 DIST_NAME := qtext
 DIST_VERSION := $(shell grep VERSION src/QText.pro | head -1 | cut -d'=' -f2 | awk '{print $$1}')
 
+MAN_DATE := $(shell date +'%d %b %Y')
+
 DEB_BUILD_ARCH := $(shell getconf LONG_BIT | sed "s/32/i386/" | sed "s/64/amd64/")
 
 
@@ -38,6 +40,7 @@ install: bin/qtext
 	@sudo install bin/qtext $(DESTDIR)/$(PREFIX)/bin/
 	@mkdir -p build/man/
 	@sed 's/MAJOR.MINOR.PATCH/$(DIST_VERSION)/g' docs/man/qtext.1 > build/man/qtext.1
+	@sed -i 's/CURR_DATE/$(MAN_DATE)/g' build/man/qtext.1
 	@gzip -cn --best build/man/qtext.1 > build/man/qtext.1.gz
 	@sudo install -m 644 build/man/qtext.1.gz /usr/share/man/man1/
 	@sudo mandb -q
@@ -102,6 +105,7 @@ package: dist
 	@gzip -cn --best build/changelog > $(PACKAGE_DIR)/usr/share/doc/qtext/changelog.gz
 	@mkdir -p build/man/
 	@sed 's/MAJOR.MINOR.PATCH/$(DIST_VERSION)/g' docs/man/qtext.1 > build/man/qtext.1
+	@sed -i 's/CURR_DATE/$(MAN_DATE)/g' build/man/qtext.1
 	@mkdir -p $(PACKAGE_DIR)/usr/share/man/man1/
 	@gzip -cn --best build/man/qtext.1 > $(PACKAGE_DIR)/usr/share/man/man1/qtext.1.gz
 	@find $(PACKAGE_DIR)/ -type d -exec chmod 755 {} +
