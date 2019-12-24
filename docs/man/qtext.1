@@ -11,7 +11,7 @@ QText \- Note taking utility
 .SH SYNOPSIS
 
 .ad l
-\fBqtext\fR
+\fBqtext\fP
 
 
 .SH DESCRIPTION
@@ -21,128 +21,190 @@ Note taking application with auto-save.
 .SH SHORTCUTS
 
 .TP
-\fBF2\fR
+\fBF2\fP
 Rename file
 
 .TP 12
-\fBCtrl+C\fR
+\fBCtrl+C\fP
 Copy text
 
 .TP
-\fBCtrl+G\fR
+\fBCtrl+G\fP
 Find folder or file by name
 
 .TP
-\fBCtrl+N\fR
+\fBCtrl+N\fP
 New file
 
 .TP
-\fBCtrl+O\fR
+\fBCtrl+O\fP
 Select folder
 
 .TP
-\fBCtrl+S\fR
+\fBCtrl+S\fP
 Save file immediatelly
 
 .TP
-\fBCtrl+V\fR
+\fBCtrl+V\fP
 Paste text
 
 .TP
-\fBCtrl+X\fR
+\fBCtrl+X\fP
 Cut text
 
 .TP
-\fBCtrl+Y\fR
+\fBCtrl+Y\fP
 Redo action
 
 .TP
-\fBCtrl+Z\fR
+\fBCtrl+Z\fP
 Undo action
 
 .TP
-\fBCtrl+Alt+R\fR
+\fBCtrl+Alt+R\fP
 Show containing directory
 
 .TP
-\fBAlt+1\fR
+\fBAlt+1\fP
 Select first tab
 
 .TP
-\fBAlt+2\fR
+\fBAlt+2\fP
 Select second tab
 
 .TP
-\fBAlt+3\fR
+\fBAlt+3\fP
 Select third tab
 
 .TP
-\fBAlt+4\fR
+\fBAlt+4\fP
 Select fourth tab
 
 .TP
-\fBAlt+5\fR
+\fBAlt+5\fP
 Select fifth tab
 
 .TP
-\fBAlt+6\fR
+\fBAlt+6\fP
 Select sixth tab
 
 .TP
-\fBAlt+7\fR
+\fBAlt+7\fP
 Select seventh tab
 
 .TP
-\fBAlt+8\fR
+\fBAlt+8\fP
 Select eight tab
 
 .TP
-\fBAlt+9\fR
+\fBAlt+9\fP
 Select nineth tab
 
 .TP
-\fBAlt+0\fR
+\fBAlt+0\fP
 Select tenth tab
 
 .TP
-\fBAlt+Left\fR
+\fBAlt+Left\fP
 Select file to the left
 
 .TP
-\fBAlt+Right\fR
+\fBAlt+Right\fP
 Select file to the right
 
 .TP
-\fBAlt+Up\fR
+\fBAlt+Up\fP
 Select previous folder
 
 .TP
-\fBAlt+Down\fR
+\fBAlt+Down\fP
 Select next folder
 
 .TP
-\fBAlt+Home\fR
+\fBAlt+Home\fP
 Select base folder
 
 .TP
-\fBAlt+End\fR
+\fBAlt+End\fP
 Show folder selection menu
 
 .TP
-\fBAlt+PageUp\fR
+\fBAlt+PageUp\fP
 Select previous folder
 
 .TP
-\fBAlt+PageDown\fR
+\fBAlt+PageDown\fP
 Select next folder
 
 .TP
-\fBAlt+Shift+Left\fR
+\fBAlt+Shift+Left\fP
 Move file to the left
 
 .TP
-\fBAlt+Shift+Right\fR
+\fBAlt+Shift+Right\fP
 Move file to the right
+
+
+.SH SETTINGS
+
+Settings for QText are stored in \fB~/.config/qtext.conf\fP when application
+is installed and next to executable in \fB.qtext\fP if run directly. It is
+recommended to change settings from application menu but they can also be
+changed directly.
+
+.TP
+\fBAlwaysOnTop\fP
+Controls if application will be shown on top of the other applications. Valid
+values are \fBtrue\fP and \fBfalse\fP.
+    AlwaysOnTop: false
+
+.TP
+\fBClearUndoInterval\fP
+Determines interval in seconds after whick Undo/Redo stack will be cleaned.
+Valid values are whole numbers between \fB60\fP and \fB86400\fP.
+    ClearUndoInterval: 900
+
+.TP
+\fBDataPath\fP
+Location where files are stored. It can be repeated multiple times and all
+directories will be loaded. However, only the first directory listed will have
+all operations available. Using more than one directory is not fully supported.
+    DataPath: ~/.local/share/qtext/
+
+.TP
+\fBHotkey\fP
+Determines hotkey used to show application.
+    Hotkey: Ctrl+Shift+Q
+
+.TP
+\fBMinimizeToTray\fP
+If true, minimizing application will actually move it to tray area instead.
+Valid values are \fBtrue\fP and \fBfalse\fP.
+    MinimizeToTray: true
+
+.TP
+\fBQuickSaveInterval\fP
+Interval in milliseconds after which file will be saved if there is no writing
+activity detected. Valid values are between \fB1000\fP and \fB60000\fP.
+    QuickSaveInterval: 2500
+
+.TP
+\fBShowInTaskbar\fP
+If true, application will be shown in taskbar. Valid values are \fBtrue\fP and
+\fBfalse\fP.
+    ShowInTaskbar: true
+
+.TP
+\fBTabWidth\fP
+Amount of spaces used for indenting. Valid values are between \fB2\fP and
+\fB16\fP.
+    TabWidth: 4
+
+.TP
+\fBWordWrap\fP
+If true, text will be wrapped instead of showing scrollbar. Valid values are
+\fBtrue\fP and \fBfalse\fP.
+    WordWrap: true
 
 
 .SH AUTHOR
