@@ -246,10 +246,19 @@ void FileItem::wheelEvent(QWheelEvent* e) {
     if (e->modifiers() == Qt::ControlModifier) {
         int numDegrees = e->delta() / 8;
         int numSteps = numDegrees / 15;
+        int deltaZoomAmount = numSteps * 2; //each wheel turn is 2 zoom steps
         if (numSteps > 0) {
-            this->zoomIn(numSteps * 2);
+            if (zoomAmount + deltaZoomAmount > 64) { deltaZoomAmount = 20 - zoomAmount; } //don't allow zoom to go over 64 points
+            if (deltaZoomAmount > 0) {
+                zoomAmount += deltaZoomAmount;
+                this->zoomIn(deltaZoomAmount);
+            }
         } else if (numSteps < 0) {
-            this->zoomOut(-numSteps * 2);
+            if (zoomAmount + deltaZoomAmount < 0) { deltaZoomAmount = -zoomAmount; } //don't allow zoom to go negative
+            if (deltaZoomAmount < 0) {
+                zoomAmount += deltaZoomAmount;
+                this->zoomIn(deltaZoomAmount);
+            }
         }
         e->accept();
     } else {

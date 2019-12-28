@@ -41,6 +41,7 @@ class FileItem : public QTextEdit {
         QTimer* _timerSavePending = nullptr;
         void setIsModified(bool isModified);
         QDateTime _modificationTime;
+        int zoomAmount = 0;
 
     signals:
         void activated(FileItem* file);
