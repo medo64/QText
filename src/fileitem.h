@@ -30,8 +30,9 @@ class FileItem : public QTextEdit {
 
     protected:
         bool event(QEvent *event);
-        void focusInEvent(QFocusEvent *event);
-        void focusOutEvent(QFocusEvent *event);
+        void focusInEvent(QFocusEvent* e);
+        void focusOutEvent(QFocusEvent* e);
+        void wheelEvent(QWheelEvent* e);
 
     private:
         FolderItem* _folder = nullptr;

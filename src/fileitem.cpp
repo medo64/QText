@@ -242,6 +242,21 @@ void FileItem::focusOutEvent(QFocusEvent* e) {
     if (this->document()->isModified()) { save(); }
 }
 
+void FileItem::wheelEvent(QWheelEvent* e) {
+    if (e->modifiers() == Qt::ControlModifier) {
+        int numDegrees = e->delta() / 8;
+        int numSteps = numDegrees / 15;
+        if (numSteps > 0) {
+            this->zoomIn(numSteps * 2);
+        } else if (numSteps < 0) {
+            this->zoomOut(-numSteps * 2);
+        }
+        e->accept();
+    } else {
+        QTextEdit::wheelEvent(e);
+    }
+}
+
 
 QString FileItem::getPath() {
     return QDir::cleanPath(_folder->getPath() + QDir::separator() + _fileName);
