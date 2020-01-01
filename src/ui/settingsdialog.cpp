@@ -8,6 +8,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SettingsDialog) {
     ui->setupUi(this);
+    this->setFixedSize(this->geometry().width(), this->geometry().height());
 
     _oldAlwaysOnTop = Settings::alwaysOnTop();
     _oldAutostart = Setup::autostart();
