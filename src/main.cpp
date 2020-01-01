@@ -12,6 +12,8 @@ int main(int argc, char* argv[]) {
     QCoreApplication::setOrganizationName(APP_COMPANY);
     QCoreApplication::setApplicationVersion(APP_VERSION);
 
+    QCoreApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+
     qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", QByteArray("true"));
     qputenv("QT_SCALE_FACTOR", QByteArray("1"));
 
