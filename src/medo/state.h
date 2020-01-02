@@ -1,6 +1,7 @@
 /* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
 
 // 2019-07-15: Initial version
+// 2020-01-01: Added widget methods
 
 #ifndef STATE_H
 #define STATE_H
@@ -40,6 +41,25 @@ class State  : public QObject {
         static void save(QString objectName, QMainWindow* window);
 
 
+        /*! Loads widget state if one exists.
+         * \param widget Widget. */
+        static void load(QWidget* widget);
+
+        /*! Loads widget state if one exists.
+         * \param objectName Object name.
+         * \param widget Widget. */
+        static void load(QString objectName, QWidget* widget);
+
+        /*! Saves widget state.
+         * \param widget Widget. */
+        static void save(QWidget* widget);
+
+        /*! Saves widget state.
+         * \param objectName Object name.
+         * \param widget Widget. */
+        static void save(QString objectName, QWidget* widget);
+
+
     signals:
 
         /*! Signals a read from config is needed. If key cannot be found, null QString() should be returned. */
@@ -59,6 +79,8 @@ class State  : public QObject {
     private:
         void loadEx(QString objectName, QMainWindow* window);
         void saveEx(QString objectName, QMainWindow* window);
+        void loadEx(QString objectName, QWidget* widget);
+        void saveEx(QString objectName, QWidget* widget);
 
 };
 
