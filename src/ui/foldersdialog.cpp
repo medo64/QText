@@ -1,5 +1,6 @@
 #include "foldersdialog.h"
 #include "ui_foldersdialog.h"
+#include "medo/state.h"
 
 #include <QMessageBox>
 
@@ -29,10 +30,17 @@ FoldersDialog::FoldersDialog(QWidget* parent, Storage* storage, FolderItem* sele
         connect(ui->listWidget, &QListWidget::itemDoubleClicked, this,  &FoldersDialog::onItemDoubleClicked);
     }
     onCurrentItemChanged(ui->listWidget->currentItem());
+
+    State::load(this);
 }
 
 FoldersDialog::~FoldersDialog() {
     delete ui;
+}
+
+void FoldersDialog::hideEvent(QHideEvent *event) {
+    State::save(this);
+    QWidget::hideEvent(event);
 }
 
 

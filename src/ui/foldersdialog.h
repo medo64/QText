@@ -20,6 +20,9 @@ class FoldersDialog : public QDialog {
         ~FoldersDialog();
         FolderItem* selectedFolder();
 
+    protected:
+        void hideEvent(QHideEvent *event);
+
     private:
         Ui::FoldersDialog* ui;
         QPushButton* _newButton;
