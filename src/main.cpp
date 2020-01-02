@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
 
     QCommandLineParser cli;
-    cli.setApplicationDescription("Note taking utility with auto-save.");
+    cli.setApplicationDescription(APP_DESCRIPTION);
     cli.addHelpOption();
     cli.addVersionOption();
     QCommandLineOption hideOption(QStringList() << "s" << "hide", "Application is immediatelly sent to tray.");
