@@ -153,11 +153,8 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     //clipboard
     connect(QApplication::clipboard(), SIGNAL(dataChanged()), SLOT(onTextStateChanged()));
 
-    { //State
-        connect(State::instance(), &State::writeToConfig, [=] (QString key, QString value) { Config::stateWrite("State!" + key, value); });
-        connect(State::instance(), &State::readFromConfig, [=] (QString key) { return Config::stateRead("State!" + key, QString()); });
-        State::load(this);
-    }
+    //State
+    State::load(this);
 
     { //show shortcuts in context menu
         for(QAction* action : findChildren<QAction*>()) {

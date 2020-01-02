@@ -4,6 +4,7 @@
 #include "setup.h"
 #include "medo/config.h"
 #include "medo/singleinstance.h"
+#include "medo/state.h"
 
 static Storage* storage;
 
@@ -35,8 +36,10 @@ int main(int argc, char* argv[]) {
 
     QStringList dataPaths = Settings::dataPaths();
     Config::setStateFilePath(dataPaths[0] + "/.qtext.user"); //store state file in the first directory
-    storage = new Storage(dataPaths);
+    QApplication::connect(State::instance(), &State::writeToConfig, [=] (QString key, QString value) { Config::stateWrite("State!" + key, value); });
+    QApplication::connect(State::instance(), &State::readFromConfig, [=] (QString key) { return Config::stateRead("State!" + key, QString()); });
 
+    storage = new Storage(dataPaths);
     MainWindow w { storage };
 
 #ifndef QT_DEBUG
