@@ -160,6 +160,18 @@
     <string>Use default application to show file</string>
    </property>
   </action>
+  <action name="actionOpenWithVisualStudioCode">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/vscode.png</normaloff>:/icons/16x16/vscode.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open Using Visual Studio &amp;Code</string>
+   </property>
+   <property name="toolTip">
+    <string>Use Visual Studio Code to show file</string>
+   </property>
+  </action>
   <action name="actionShowContainingDirectory">
    <property name="text">
     <string>Show Containing &amp;Directory</string>

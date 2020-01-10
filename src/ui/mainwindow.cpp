@@ -115,6 +115,7 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
         onTabChanged(); //update toolbar & focus
         connect(ui->actionReopen, SIGNAL(triggered()), this, SLOT(onFileReopen()));
         connect(ui->actionOpenWithDefaultApplication, SIGNAL(triggered()), this, SLOT(onOpenWithDefaultApplication()));
+        connect(ui->actionOpenWithVisualStudioCode, SIGNAL(triggered()), this, SLOT(onOpenWithVisualStudioCode()));
         connect(ui->actionShowContainingDirectory, SIGNAL(triggered()), this, SLOT(onShowContainingDirectory()));
         connect(ui->actionShowContainingDirectoryOnly, SIGNAL(triggered()), this, SLOT(onShowContainingDirectoryOnly()));
         connect(ui->actionCopyContainingPath, SIGNAL(triggered()), this, SLOT(onCopyContainingPath()));
@@ -493,6 +494,13 @@ void MainWindow::onOpenWithDefaultApplication() {
     }
 }
 
+void MainWindow::onOpenWithVisualStudioCode() {
+    if (ui->tabWidget->currentWidget() != nullptr) {
+        auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+        Helpers::openWithVSCode(file->getPath());
+    }
+}
+
 void onShowContainingDirectory2(QString directoryPath, QString filePath) {
     Helpers::showInFileManager(directoryPath, filePath);
 }
@@ -565,6 +573,8 @@ void MainWindow::onTabMenuRequested(const QPoint &point) {
         file = dynamic_cast<FileItem*>(ui->tabWidget->widget(tabIndex));
     }
 
+    bool vscodeAvailable = Helpers::openWithVSCodeAvailable();
+
     QMenu menu(this);
     menu.addAction(ui->actionNew);
     if (file != nullptr) {
@@ -576,6 +586,7 @@ void MainWindow::onTabMenuRequested(const QPoint &point) {
         menu.addAction(ui->actionDelete);
         menu.addSeparator();
         menu.addAction(ui->actionOpenWithDefaultApplication);
+        if (vscodeAvailable) { menu.addAction(ui->actionOpenWithVisualStudioCode); }
         menu.addAction(ui->actionShowContainingDirectory);
         menu.addAction(ui->actionCopyContainingPath);
     } else {

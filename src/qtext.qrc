@@ -77,5 +77,10 @@
         <file>icons/24x24/folder.png</file>
         <file>icons/16x16/file.png</file>
         <file>icons/16x16/folder.png</file>
+        <file>icons/16x16/vscode.png</file>
+        <file>icons/24x24/vscode.png</file>
+        <file>icons/32x32/vscode.png</file>
+        <file>icons/48x48/vscode.png</file>
+        <file>icons/64x64/vscode.png</file>
     </qresource>
 </RCC>
