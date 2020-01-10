@@ -55,6 +55,7 @@ class MainWindow : public QMainWindow {
         void onFolderSetup();
         void onFolderMenuShow();
         void onFolderMenuSelect();
+        void onOpenWithDefaultApplication();
         void onShowContainingDirectory();
         void onShowContainingDirectoryOnly();
         void onCopyContainingPath();

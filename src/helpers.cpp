@@ -183,3 +183,12 @@ bool Helpers::showInFileManager(QString directoryPath, QString filePath) {
 
     return QDesktopServices::openUrl(QUrl::fromLocalFile(directoryPath)); //fall-back to showing just directory
 }
+
+
+/*!
+ * \brief Opens file with default application
+ * \param filePath File path.
+ */
+bool Helpers::openWithDefaultApplication(QString filePath) {
+    return QDesktopServices::openUrl(QUrl::fromLocalFile(filePath));
+}

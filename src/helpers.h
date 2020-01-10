@@ -11,6 +11,7 @@ class Helpers {
         static QString getFolderNameFromTitle(QString folderTitle);
         static QString getFolderTitleFromName(QString folderName);
         static bool showInFileManager(QString directoryPath, QString filePath);
+        static bool openWithDefaultApplication(QString filePath);
 
     private:
         static bool isValidTitleChar(QChar ch);
