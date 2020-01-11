@@ -1,6 +1,7 @@
 #include <QPushButton>
 #include "gotodialog.h"
 #include "ui_gotodialog.h"
+#include "medo/state.h"
 
 GotoDialog::GotoDialog(QWidget *parent, Storage* storage) : QDialog(parent), ui(new Ui::GotoDialog) {
     ui->setupUi(this);
@@ -25,10 +26,17 @@ GotoDialog::GotoDialog(QWidget *parent, Storage* storage) : QDialog(parent), ui(
     connect(ui->listWidget, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(onItemActivated()));
 
     onTextEdited("");
+
+    State::load(this);
 }
 
 GotoDialog::~GotoDialog() {
     delete ui;
+}
+
+void GotoDialog::hideEvent(QHideEvent *event) {
+    State::save(this);
+    QWidget::hideEvent(event);
 }
 
 bool GotoDialog::eventFilter(QObject* obj, QEvent* event) {

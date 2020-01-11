@@ -21,6 +21,7 @@ class GotoDialog : public QDialog {
 
     protected:
         void accept();
+        void hideEvent(QHideEvent *event);
 
     private:
         bool eventFilter(QObject* obj, QEvent* event);
