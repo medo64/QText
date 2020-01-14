@@ -2,11 +2,13 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QMenu>
+#include <QTextDocumentFragment>
 #include "clipboard.h"
 #include "helpers.h"
 #include "icons.h"
 #include "settings.h"
 #include "fileitem.h"
+#include "ui/inserttimedialog.h"
 
 FileItem::FileItem(FolderItem* folder, QString fileName)
     : QTextEdit(nullptr) {
@@ -205,6 +207,9 @@ bool FileItem::event(QEvent *event) {
         } else if ((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_A)) {
             onContextMenuSelectAll();
             return true;
+        } else if ((e->modifiers() == Qt::NoModifier) && (e->key() == Qt::Key_F5)) {
+            onContextMenuInsertTime();
+            return true;
         }
 
         if (e->modifiers() == Qt::AltModifier) { return false; } //ignore keys with Alt
@@ -357,6 +362,14 @@ void FileItem::onContextMenuRequested(const QPoint& point) {
     connect(selectAllAction, SIGNAL(triggered()), this, SLOT(onContextMenuSelectAll()));
     menu.addAction(selectAllAction);
 
+    menu.addSeparator();
+
+    QAction* insertDateTimeAction = new QAction("Insert &Time/Date");
+    insertDateTimeAction->setShortcut(QKeySequence("F5"));
+    insertDateTimeAction->setShortcutVisibleInContextMenu(true);
+    connect(insertDateTimeAction, SIGNAL(triggered()), this, SLOT(onContextMenuInsertTime()));
+    menu.addAction(insertDateTimeAction);
+
     menu.exec(this->mapToGlobal(point));
 }
 
@@ -386,4 +399,12 @@ void FileItem::onContextMenuDelete() {
 
 void FileItem::onContextMenuSelectAll() {
     selectAll();
+}
+
+void FileItem::onContextMenuInsertTime() {
+    auto dialog = new InsertTimeDialog(this);
+    if (dialog->exec() == QDialog::Accepted) {
+        textCursor().removeSelectedText();
+        textCursor().insertText(dialog->FormattedTime + "\n");
+    }
 }

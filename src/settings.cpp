@@ -132,6 +132,19 @@ void Settings::setTabWidth(int newTabWidth) {
 }
 
 
+QString Settings::timeFormat() {
+    return Config::read("TimeFormat", defaultTimeFormat());
+}
+
+QString Settings::defaultTimeFormat() {
+    return QString();
+}
+
+void Settings::setTimeFormat(QString newTimeFormat) {
+    Config::write("TimeFormat", newTimeFormat);
+}
+
+
 bool Settings::wordWrap() {
     return Config::read("WordWrap", defaultWordWrap());
 }

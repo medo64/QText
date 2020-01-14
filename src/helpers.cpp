@@ -229,3 +229,10 @@ bool Helpers::openWithVSCodeAvailable() {
     QFile executableFile(executablePath);
     return executableFile.exists();
 }
+
+
+void Helpers::setReadonlyPalette(QWidget* widget) {
+    QPalette readOnlyPalette = widget->palette();
+    readOnlyPalette.setColor(QPalette::Base, widget->palette().color(QPalette::Window));
+    widget->setPalette(readOnlyPalette);
+}

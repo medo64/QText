@@ -44,6 +44,10 @@ class Settings {
         static int defaultTabWidth();
         static void setTabWidth(int newTabWidth);
 
+        static QString timeFormat();
+        static QString defaultTimeFormat();
+        static void setTimeFormat(QString newTimeFormat);
+
         static bool wordWrap();
         static bool defaultWordWrap();
         static void setWordWrap(bool newWordWrap);

@@ -46,6 +46,7 @@ SOURCES += \
         ui/filenamedialog.cpp \
         ui/foldersdialog.cpp \
         ui/gotodialog.cpp \
+        ui/inserttimedialog.cpp \
         ui/settingsdialog.cpp \
         ui/mainwindow.cpp \
         ui/qtabbarex.cpp \
@@ -68,6 +69,7 @@ HEADERS += \
         ui/filenamedialog.h \
         ui/foldersdialog.h \
         ui/gotodialog.h \
+        ui/inserttimedialog.h \
         ui/settingsdialog.h \
         ui/mainwindow.h \
         ui/qtabbarex.h \
@@ -89,6 +91,7 @@ FORMS += \
         ui/filenamedialog.ui \
         ui/foldersdialog.ui \
         ui/gotodialog.ui \
+        ui/inserttimedialog.ui \
         ui/settingsdialog.ui \
         ui/mainwindow.ui
 

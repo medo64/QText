@@ -2,6 +2,7 @@
 #define HELPERS_H
 
 #include <QString>
+#include <QWidget>
 
 class Helpers {
 
@@ -14,6 +15,7 @@ class Helpers {
         static bool openWithDefaultApplication(QString filePath);
         static bool openWithVSCode(QString filePath);
         static bool openWithVSCodeAvailable();
+        static void setReadonlyPalette(QWidget* widget);
 
     private:
         static bool isValidTitleChar(QChar ch);

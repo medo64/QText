@@ -9,6 +9,7 @@ Simple note taking program.
 | Key               | Description                                             |
 |-------------------|---------------------------------------------------------|
 | `F2`              | Rename file                                             |
+| `F5`              | Insert time and date                                    |
 | `Ctrl+C`          | Copy text                                               |
 | `Ctrl+G`          | Find folder or file by name                             |
 | `Ctrl+N`          | New file                                                |

@@ -59,6 +59,7 @@ class FileItem : public QTextEdit {
         void onContextMenuPastePlain();
         void onContextMenuDelete();
         void onContextMenuSelectAll();
+        void onContextMenuInsertTime();
 
 };
 
