@@ -6,6 +6,7 @@
 #include <QtPrintSupport/QPageSetupDialog>
 #include <QtPrintSupport/QPrintDialog>
 #include <QtPrintSupport/QPrinter>
+#include <QtPrintSupport/QPrintPreviewDialog>
 #include "clipboard.h"
 #include "helpers.h"
 #include "icons.h"
@@ -85,6 +86,9 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
         ui->actionPrint->setIcon(Icons::printFile());
         connect(ui->actionPrint, SIGNAL(triggered()), this, SLOT(onFilePrint()));
 
+        ui->actionPrintPreview->setIcon(Icons::printPreviewFile());
+        connect(ui->actionPrintPreview, SIGNAL(triggered()), this, SLOT(onFilePrintPreview()));
+
         ui->actionCut->setIcon(Icons::cut());
         connect(ui->actionCut, SIGNAL(triggered()), this, SLOT(onTextCut()));
 
@@ -103,6 +107,18 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
         ui->actionGoto->setIcon(Icons::gotoDialog());
         connect(ui->actionGoto, SIGNAL(triggered()), this, SLOT(onGoto()));
     }
+
+    { //print button menu
+        _printButton = new QToolButton();
+        _printButton->setIcon(Icons::printFile());
+        _printButton->setPopupMode(QToolButton::MenuButtonPopup);
+        _printButton->setMenu(new QMenu());
+        connect(_printButton, SIGNAL(clicked()), this, SLOT(onFilePrint()));
+
+        _printButton->menu()->addAction(ui->actionPrint);
+        _printButton->menu()->addAction(ui->actionPrintPreview);
+    }
+    ui->mainToolBar->insertWidget(ui->mainToolBar->actions()[3], _printButton);
 
     //align-right
     QWidget* spacerWidget = new QWidget(this);
@@ -424,10 +440,10 @@ void MainWindow::onFileDelete() {
 void MainWindow::onFilePrint() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
 
-    QPrinter printer;
+    QPrinter printer(QPrinter::PrinterResolution);
 
     QPrintDialog dialog(&printer, this);
-    dialog.setWindowTitle("Print " + file->getTitle());
+    dialog.setWindowTitle("Print: " + file->getTitle());
     if (file->textCursor().hasSelection()) {
         dialog.addEnabledOption(QAbstractPrintDialog::PrintSelection);
         dialog.setPrintRange(QAbstractPrintDialog::Selection); //make selection default
@@ -436,6 +452,18 @@ void MainWindow::onFilePrint() {
     if (dialog.exec() == QDialog::Accepted) {
         file->print(&printer);
     }
+}
+
+void MainWindow::onFilePrintPreview() {
+    auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+
+    QPrinter printer(QPrinter::ScreenResolution);
+
+    QPrintPreviewDialog dialog(&printer, this, Qt::Dialog | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
+    dialog.setWindowTitle("Print Preview: " + file->getTitle());
+    connect(&dialog, SIGNAL(paintRequested(QPrinter*)), file, SLOT(printPreview(QPrinter*)));
+    dialog.showMaximized();
+    dialog.exec();
 }
 
 void MainWindow::onTextCut() {
@@ -629,7 +657,9 @@ void MainWindow::onTabChanged() {
 
     ui->actionSave->setDisabled(!exists || file->isModified());
     ui->actionRename->setDisabled(hasAny);
+    _printButton->setDisabled(hasAny);
     ui->actionPrint->setDisabled(hasAny);
+    ui->actionPrintPreview->setDisabled(hasAny);
 
     onTextStateChanged();
 

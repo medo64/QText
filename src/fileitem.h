@@ -3,6 +3,7 @@
 
 #include <QDateTime>
 #include <QFocusEvent>
+#include <QPrinter>
 #include <QString>
 #include <QTextEdit>
 #include <QTimer>
@@ -47,6 +48,9 @@ class FileItem : public QTextEdit {
         void activated(FileItem* file);
         void titleChanged(FileItem* file);
         void modificationChanged(FileItem* file, bool isModified);
+
+    public slots:
+        void printPreview(QPrinter *printer);
 
     private slots:
         void onModificationChanged(bool changed);

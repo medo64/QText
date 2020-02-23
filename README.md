@@ -14,11 +14,13 @@ Simple note taking program.
 | `Ctrl+G`          | Find folder or file by name                             |
 | `Ctrl+N`          | New file                                                |
 | `Ctrl+O`          | Select folder                                           |
+| `Ctrl+P`          | Print                                                   |
 | `Ctrl+S`          | Save file immediatelly                                  |
 | `Ctrl+V`          | Paste text                                              |
 | `Ctrl+X`          | Cut text                                                |
 | `Ctrl+Y`          | Redo action                                             |
 | `Ctrl+Z`          | Undo action                                             |
+| `Ctrl+Shift+P`    | Print preview                                           |
 | `Ctrl+Alt+R`      | Show containing directory                               |
 | `Alt+1`           | Select first tab                                        |
 | `Alt+2`           | Select second tab                                       |

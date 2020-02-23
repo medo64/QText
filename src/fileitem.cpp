@@ -277,6 +277,11 @@ QString FileItem::getPath() {
 }
 
 
+void FileItem::printPreview(QPrinter *printer) {
+     print(printer);
+}
+
+
 void FileItem::onModificationChanged(bool changed) {
     qDebug().nospace() << "onModificationChanged(" << changed << ")" << getPath();
 

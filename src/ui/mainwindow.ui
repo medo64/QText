@@ -86,7 +86,6 @@
    <addaction name="actionNew"/>
    <addaction name="actionSave"/>
    <addaction name="actionRename"/>
-   <addaction name="actionPrint"/>
    <addaction name="separator"/>
    <addaction name="actionCut"/>
    <addaction name="actionCopy"/>
@@ -314,13 +313,28 @@
      <normaloff>:/icons/16x16/print.png</normaloff>:/icons/16x16/print.png</iconset>
    </property>
    <property name="text">
-    <string>Print</string>
+    <string>&amp;Print</string>
    </property>
    <property name="toolTip">
     <string>Print file</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionPrintPreview">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/print-preview.png</normaloff>:/icons/16x16/print-preview.png</iconset>
+   </property>
+   <property name="text">
+    <string>Print Pre&amp;view</string>
+   </property>
+   <property name="toolTip">
+    <string>Print preview</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+P</string>
    </property>
   </action>
  </widget>

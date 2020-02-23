@@ -29,6 +29,7 @@ class MainWindow : public QMainWindow {
         Storage* _storage = nullptr;
         FolderItem* _folder =nullptr;
         QSystemTrayIcon* _tray = nullptr;
+        QToolButton* _printButton = nullptr;
         QToolButton* _folderButton = nullptr;
         QToolButton* _appButton = nullptr;
         Hotkey* _hotkey = nullptr;
@@ -47,6 +48,7 @@ class MainWindow : public QMainWindow {
         void onFileRename();
         void onFileDelete();
         void onFilePrint();
+        void onFilePrintPreview();
         void onTextCut();
         void onTextCopy();
         void onTextPaste();
