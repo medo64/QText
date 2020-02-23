@@ -455,7 +455,9 @@ void MainWindow::onFilePrint() {
     }
 
     if (dialog.exec() == QDialog::Accepted) {
-        file->print(&printer);
+        QApplication::setOverrideCursor(Qt::WaitCursor);
+        file->document()->print(&printer);
+        QApplication::restoreOverrideCursor();
     }
 }
 
@@ -476,6 +478,7 @@ void MainWindow::onFilePrintToPdf() {
 
     QFileDialog dialog(this);
     dialog.setFileMode(QFileDialog::AnyFile);
+    dialog.setDefaultSuffix(".pdf");
     dialog.setNameFilter("Documents (*.pdf)");
     dialog.setAcceptMode(QFileDialog::AcceptSave);
     if (dialog.exec()) {
@@ -484,7 +487,10 @@ void MainWindow::onFilePrintToPdf() {
             auto fileName = fileNames[0];
             QPrinter printer(QPrinter::PrinterResolution);
             printer.setOutputFileName(fileName);
+
+            QApplication::setOverrideCursor(Qt::WaitCursor);
             file->print(&printer);
+            QApplication::restoreOverrideCursor();
         }
     }
 }
