@@ -44,6 +44,7 @@ cp `dirname $QMAKE_PATH`/libwinpthread-1.dll bin/
 cp `dirname $QMAKE_PATH`/Qt5Core.dll bin/
 cp `dirname $QMAKE_PATH`/Qt5Gui.dll bin/
 cp `dirname $QMAKE_PATH`/Qt5Network.dll bin/
+cp `dirname $QMAKE_PATH`/Qt5PrintSupport.dll bin/
 cp `dirname $QMAKE_PATH`/Qt5Widgets.dll bin/
 
 if [[ $HAS_UNCOMMITTED_RESULT -ne 0 ]]; then

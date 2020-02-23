@@ -86,6 +86,7 @@
    <addaction name="actionNew"/>
    <addaction name="actionSave"/>
    <addaction name="actionRename"/>
+   <addaction name="actionPrint"/>
    <addaction name="separator"/>
    <addaction name="actionCut"/>
    <addaction name="actionCopy"/>
@@ -305,6 +306,21 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+C</string>
+   </property>
+  </action>
+  <action name="actionPrint">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/print.png</normaloff>:/icons/16x16/print.png</iconset>
+   </property>
+   <property name="text">
+    <string>Print</string>
+   </property>
+   <property name="toolTip">
+    <string>Print file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
    </property>
   </action>
  </widget>

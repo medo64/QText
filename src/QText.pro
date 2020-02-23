@@ -22,6 +22,7 @@ DEFINES += "APP_QT_VERSION=\\\"$$QT_VERSION\\\""
 
 QT       += core gui widgets
 QT       += network  # QLocalServer/QLocalSocket
+QT       += printsupport
 
 unix {
     QT  += x11extras

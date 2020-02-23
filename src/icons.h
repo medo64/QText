@@ -13,6 +13,7 @@ class Icons {
         static QIcon saveFile();
         static QIcon renameFile();
         static QIcon deleteFile();
+        static QIcon printFile();
 
         static QIcon cut();
         static QIcon copy();

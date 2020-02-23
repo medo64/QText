@@ -2,6 +2,10 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QTabBar>
+#include <QtPrintSupport/QAbstractPrintDialog>
+#include <QtPrintSupport/QPageSetupDialog>
+#include <QtPrintSupport/QPrintDialog>
+#include <QtPrintSupport/QPrinter>
 #include "clipboard.h"
 #include "helpers.h"
 #include "icons.h"
@@ -77,6 +81,9 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
 
         ui->actionDelete->setIcon(Icons::deleteFile());
         connect(ui->actionDelete, SIGNAL(triggered()), this, SLOT(onFileDelete()));
+
+        ui->actionPrint->setIcon(Icons::printFile());
+        connect(ui->actionPrint, SIGNAL(triggered()), this, SLOT(onFilePrint()));
 
         ui->actionCut->setIcon(Icons::cut());
         connect(ui->actionCut, SIGNAL(triggered()), this, SLOT(onTextCut()));
@@ -414,6 +421,23 @@ void MainWindow::onFileDelete() {
     }
 }
 
+void MainWindow::onFilePrint() {
+    auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+
+    QPrinter printer;
+
+    QPrintDialog dialog(&printer, this);
+    dialog.setWindowTitle("Print " + file->getTitle());
+    if (file->textCursor().hasSelection()) {
+        dialog.addEnabledOption(QAbstractPrintDialog::PrintSelection);
+        dialog.setPrintRange(QAbstractPrintDialog::Selection); //make selection default
+    }
+
+    if (dialog.exec() == QDialog::Accepted) {
+        file->print(&printer);
+    }
+}
+
 void MainWindow::onTextCut() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
     Clipboard::cutText(file->textCursor());
@@ -601,9 +625,11 @@ void MainWindow::onTabMenuRequested(const QPoint &point) {
 void MainWindow::onTabChanged() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
     bool exists = (file != nullptr);
+    bool hasAny = (ui->tabWidget->count() == 0);
 
     ui->actionSave->setDisabled(!exists || file->isModified());
-    ui->actionRename->setDisabled(ui->tabWidget->count() == 0);
+    ui->actionRename->setDisabled(hasAny);
+    ui->actionPrint->setDisabled(hasAny);
 
     onTextStateChanged();
 
