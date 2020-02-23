@@ -337,6 +337,18 @@
     <string>Ctrl+Shift+P</string>
    </property>
   </action>
+  <action name="actionPrintToPdf">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/print-pdf.png</normaloff>:/icons/16x16/print-pdf.png</iconset>
+   </property>
+   <property name="text">
+    <string>Print to PD&amp;F</string>
+   </property>
+   <property name="toolTip">
+    <string>Print file into a PDF document</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

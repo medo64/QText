@@ -15,6 +15,7 @@ class Icons {
         static QIcon deleteFile();
         static QIcon printFile();
         static QIcon printPreviewFile();
+        static QIcon printToPdfFile();
 
         static QIcon cut();
         static QIcon copy();

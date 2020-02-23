@@ -86,6 +86,16 @@ QIcon Icons::printPreviewFile() {
     return icon;
 }
 
+QIcon Icons::printToPdfFile() {
+    QIcon icon;
+    icon.addFile(":icons/16x16/print-pdf.png", QSize(16, 16));
+    icon.addFile(":icons/24x24/print-pdf.png", QSize(24, 24));
+    icon.addFile(":icons/32x32/print-pdf.png", QSize(32, 32));
+    icon.addFile(":icons/48x48/print-pdf.png", QSize(48, 48));
+    icon.addFile(":icons/64x64/print-pdf.png", QSize(64, 64));
+    return icon;
+}
+
 
 QIcon Icons::cut() {
     QIcon icon;

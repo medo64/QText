@@ -49,6 +49,7 @@ class MainWindow : public QMainWindow {
         void onFileDelete();
         void onFilePrint();
         void onFilePrintPreview();
+        void onFilePrintToPdf();
         void onTextCut();
         void onTextCopy();
         void onTextPaste();

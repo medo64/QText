@@ -92,5 +92,10 @@
         <file>icons/32x32/print-preview.png</file>
         <file>icons/48x48/print-preview.png</file>
         <file>icons/64x64/print-preview.png</file>
+        <file>icons/16x16/print-pdf.png</file>
+        <file>icons/24x24/print-pdf.png</file>
+        <file>icons/32x32/print-pdf.png</file>
+        <file>icons/48x48/print-pdf.png</file>
+        <file>icons/64x64/print-pdf.png</file>
     </qresource>
 </RCC>

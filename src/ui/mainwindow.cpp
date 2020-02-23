@@ -1,4 +1,5 @@
 #include <QDir>
+#include <QFileDialog>
 #include <QMenu>
 #include <QMessageBox>
 #include <QTabBar>
@@ -89,6 +90,9 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
         ui->actionPrintPreview->setIcon(Icons::printPreviewFile());
         connect(ui->actionPrintPreview, SIGNAL(triggered()), this, SLOT(onFilePrintPreview()));
 
+        ui->actionPrintToPdf->setIcon(Icons::printToPdfFile());
+        connect(ui->actionPrintToPdf, SIGNAL(triggered()), this, SLOT(onFilePrintToPdf()));
+
         ui->actionCut->setIcon(Icons::cut());
         connect(ui->actionCut, SIGNAL(triggered()), this, SLOT(onTextCut()));
 
@@ -117,6 +121,7 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
 
         _printButton->menu()->addAction(ui->actionPrint);
         _printButton->menu()->addAction(ui->actionPrintPreview);
+        _printButton->menu()->addAction(ui->actionPrintToPdf);
     }
     ui->mainToolBar->insertWidget(ui->mainToolBar->actions()[3], _printButton);
 
@@ -466,6 +471,24 @@ void MainWindow::onFilePrintPreview() {
     dialog.exec();
 }
 
+void MainWindow::onFilePrintToPdf() {
+    auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+
+    QFileDialog dialog(this);
+    dialog.setFileMode(QFileDialog::AnyFile);
+    dialog.setNameFilter("Documents (*.pdf)");
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+    if (dialog.exec()) {
+        auto fileNames = dialog.selectedFiles();
+        if (fileNames.length() > 0) {
+            auto fileName = fileNames[0];
+            QPrinter printer(QPrinter::PrinterResolution);
+            printer.setOutputFileName(fileName);
+            file->print(&printer);
+        }
+    }
+}
+
 void MainWindow::onTextCut() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
     Clipboard::cutText(file->textCursor());
@@ -660,6 +683,7 @@ void MainWindow::onTabChanged() {
     _printButton->setDisabled(hasAny);
     ui->actionPrint->setDisabled(hasAny);
     ui->actionPrintPreview->setDisabled(hasAny);
+    ui->actionPrintToPdf->setDisabled(hasAny);
 
     onTextStateChanged();
 
