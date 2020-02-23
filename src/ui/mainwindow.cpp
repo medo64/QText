@@ -702,7 +702,11 @@ void MainWindow::selectFolder(FolderItem* selectedFolder) {
         }
         ui->tabWidget->blockSignals(false);
 
-        selectFile(Settings::lastFile(_folder->getKey()));
+        if (_folder->fileCount() > 0) {
+            selectFile(Settings::lastFile(_folder->getKey()));
+        } else {
+            onTabChanged(); //just to refresh disabled buttons
+        }
     }
 }
 
