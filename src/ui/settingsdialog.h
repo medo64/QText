@@ -20,6 +20,7 @@ class SettingsDialog : public QDialog {
         bool changedShowInTaskbar;
 
     protected:
+        void keyPressEvent(QKeyEvent *event);
         void accept();
 
     private:

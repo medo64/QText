@@ -1,4 +1,7 @@
+#include <QKeyEvent>
 #include <QPushButton>
+#include "medo/config.h"
+#include "helpers.h"
 #include "settings.h"
 #include "setup.h"
 #include "settingsdialog.h"
@@ -22,6 +25,25 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 SettingsDialog::~SettingsDialog() {
     delete ui;
 }
+
+
+void SettingsDialog::keyPressEvent(QKeyEvent *event) {
+    auto data = static_cast<uint>(event->key()) | event->modifiers();
+    switch (data) {
+        case Qt::Key_F8: {
+            Helpers::showInFileManager(QString(), Config::configurationFile());
+        } break;
+
+        case Qt::ShiftModifier | Qt::Key_F8: {
+            if (Helpers::openWithVSCodeAvailable()) {
+                Helpers::openWithVSCode(Config::configurationFile());
+            } else {
+                Helpers::openWithDefaultApplication(Config::configurationFile());
+            }
+        } break;
+    }
+}
+
 
 void SettingsDialog::onButtonClicked(QAbstractButton* button) {
     if (button == ui->buttonBox->button(QDialogButtonBox::Reset)) {
