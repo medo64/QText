@@ -30,6 +30,10 @@ SettingsDialog::~SettingsDialog() {
 void SettingsDialog::keyPressEvent(QKeyEvent *event) {
     auto data = static_cast<uint>(event->key()) | event->modifiers();
     switch (data) {
+        case Qt::Key_Escape: {
+            close();
+        } break;
+
         case Qt::Key_F8: {
             Helpers::showInFileManager(QString(), Config::configurationFile());
         } break;
