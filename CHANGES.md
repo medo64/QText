@@ -1,6 +1,13 @@
 ## Release Notes ##
 
 
+### 0.1.4 [2020-03-09] ###
+
+* Added date/time inserting
+* Added print support
+* Dialog look&feel updates
+
+
 ### 0.1.3 [2020-01-09] ###
 
 * Added VS Code integrations
