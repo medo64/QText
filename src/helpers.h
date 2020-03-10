@@ -16,6 +16,7 @@ class Helpers {
         static bool openWithVSCode(QString filePath);
         static bool openWithVSCodeAvailable();
         static void setReadonlyPalette(QWidget* widget);
+        static void replaceDialogIcon(QWidget* dialog);
 
     private:
         static bool isValidTitleChar(QChar ch);

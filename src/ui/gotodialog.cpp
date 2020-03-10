@@ -2,9 +2,11 @@
 #include "gotodialog.h"
 #include "ui_gotodialog.h"
 #include "medo/state.h"
+#include "helpers.h"
 
 GotoDialog::GotoDialog(QWidget *parent, Storage* storage) : QDialog(parent), ui(new Ui::GotoDialog) {
     ui->setupUi(this);
+    Helpers::replaceDialogIcon(this);
     ui->textSearch->installEventFilter(this);
 
     _storage = storage;

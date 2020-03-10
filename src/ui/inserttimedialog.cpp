@@ -1,13 +1,14 @@
 #include <QDateTime>
 #include <QTimer>
-#include "../helpers.h"
-#include "../settings.h"
 #include "inserttimedialog.h"
 #include "ui_inserttimedialog.h"
+#include "../helpers.h"
+#include "../settings.h"
 
 InsertTimeDialog::InsertTimeDialog(QWidget *parent) : QDialog(parent), ui(new Ui::InsertTimeDialog) {
     ui->setupUi(this);
     this->setFixedSize(this->geometry().width(), this->geometry().height());
+    Helpers::replaceDialogIcon(this);
 
     Helpers::setReadonlyPalette(ui->exampleText);
     //QPalette readOnlyPalette = ui->exampleText->palette();

@@ -1,12 +1,14 @@
 #include <QPushButton>
 #include "filenamedialog.h"
 #include "ui_filenamedialog.h"
+#include "helpers.h"
 
 FileNameDialog::FileNameDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::FileNameDialog) {
     ui->setupUi(this);
     this->setFixedSize(this->geometry().width(), this->geometry().height());
+    Helpers::replaceDialogIcon(this);
 
     ui->textFileName->setFocus();
 

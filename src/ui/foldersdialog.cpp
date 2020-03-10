@@ -1,6 +1,7 @@
 #include "foldersdialog.h"
 #include "ui_foldersdialog.h"
 #include "medo/state.h"
+#include "helpers.h"
 
 #include <QMessageBox>
 
@@ -8,6 +9,7 @@ FoldersDialog::FoldersDialog(QWidget* parent, Storage* storage, FolderItem* sele
     QDialog(parent),
     ui(new Ui::FoldersDialog) {
     ui->setupUi(this);
+    Helpers::replaceDialogIcon(this);
 
     _storage = storage;
     _selectedFolder = selectedFolder;

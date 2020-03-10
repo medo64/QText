@@ -9,6 +9,15 @@ QIcon Icons::application() {
     return icon;
 }
 
+QIcon Icons::applicationMonochrome() {
+    QIcon icon;
+    icon.addFile(":icons/16x16/qtext-mono.png", QSize(16, 16));
+    icon.addFile(":icons/32x32/qtext-mono.png", QSize(32, 32));
+    icon.addFile(":icons/48x48/qtext-mono.png", QSize(48, 48));
+    icon.addFile(":icons/64x64/qtext-mono.png", QSize(64, 64));
+    return icon;
+}
+
 QIcon Icons::tray() {
     QIcon icon;
     if ((QSysInfo::kernelType() == "winnt") && (QSysInfo::productVersion() == "10")) {

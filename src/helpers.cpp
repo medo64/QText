@@ -1,8 +1,9 @@
-#include "helpers.h"
 #include <QDesktopServices>
 #include <QDir>
 #include <QProcess>
 #include <QUrl>
+#include "helpers.h"
+#include "icons.h"
 
 /*!
  * \brief Returns escaped file name from title
@@ -231,8 +232,19 @@ bool Helpers::openWithVSCodeAvailable() {
 }
 
 
+/*!
+ * \brief Sets palette for read-only control
+ */
 void Helpers::setReadonlyPalette(QWidget* widget) {
     QPalette readOnlyPalette = widget->palette();
     readOnlyPalette.setColor(QPalette::Base, widget->palette().color(QPalette::Window));
     widget->setPalette(readOnlyPalette);
+}
+
+
+/*!
+ * \brief Replaces dialog icon
+ */
+void Helpers::replaceDialogIcon(QWidget* dialog) {
+    dialog->setWindowIcon(Icons::applicationMonochrome());
 }

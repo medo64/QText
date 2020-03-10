@@ -97,5 +97,9 @@
         <file>icons/32x32/print-pdf.png</file>
         <file>icons/48x48/print-pdf.png</file>
         <file>icons/64x64/print-pdf.png</file>
+        <file>icons/16x16/qtext-mono.png</file>
+        <file>icons/32x32/qtext-mono.png</file>
+        <file>icons/48x48/qtext-mono.png</file>
+        <file>icons/64x64/qtext-mono.png</file>
     </qresource>
 </RCC>

@@ -1,17 +1,18 @@
 #include <QKeyEvent>
 #include <QPushButton>
+#include "settingsdialog.h"
+#include "ui_settingsdialog.h"
 #include "medo/config.h"
 #include "helpers.h"
 #include "settings.h"
 #include "setup.h"
-#include "settingsdialog.h"
-#include "ui_settingsdialog.h"
 
 SettingsDialog::SettingsDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SettingsDialog) {
     ui->setupUi(this);
     this->setFixedSize(this->geometry().width(), this->geometry().height());
+    Helpers::replaceDialogIcon(this);
 
     _oldAlwaysOnTop = Settings::alwaysOnTop();
     _oldAutostart = Setup::autostart();

@@ -7,6 +7,7 @@ class Icons {
 
     public:
         static QIcon application();
+        static QIcon applicationMonochrome();
         static QIcon tray();
 
         static QIcon newFile();
