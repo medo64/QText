@@ -14,9 +14,8 @@ int main(int argc, char* argv[]) {
     QCoreApplication::setApplicationVersion(APP_VERSION);
 
     QCoreApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
-    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", QByteArray("true"));
-    qputenv("QT_SCALE_FACTOR", QByteArray("1"));
 
     QApplication app(argc, argv);
 
