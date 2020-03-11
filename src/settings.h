@@ -36,6 +36,10 @@ class Settings {
         static int defaultQuickSaveInterval();
         static void setQuickSaveInterval(int newQuickSaveInterval);
 
+        static double scaleFactor();
+        static double defaultScaleFactor();
+        static void setScaleFactor(double newScaleFactor);
+
         static bool showInTaskbar();
         static bool defaultShowInTaskbar();
         static void setShowInTaskbar(bool newShowInTaskbar);
