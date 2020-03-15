@@ -14,9 +14,11 @@ int main(int argc, char* argv[]) {
     QCoreApplication::setApplicationVersion(APP_VERSION);
 
     QCoreApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
-    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", QByteArray("true"));
-    qputenv("QT_SCALE_FACTOR", QByteArray("1"));
+    if (Settings::scaleFactor() > 0) { //explicit zoom factor
+        qputenv("QT_SCALE_FACTOR", QByteArray::number(Settings::scaleFactor()));
+    }
 
     QApplication app(argc, argv);
 
