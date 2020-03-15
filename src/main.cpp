@@ -18,10 +18,6 @@ int main(int argc, char* argv[]) {
 
     QApplication app(argc, argv);
 
-    if (Settings::scaleFactor() > 0) { //explicit zoom factor
-        qputenv("QT_SCALE_FACTOR", QByteArray::number(Settings::scaleFactor()));
-    }
-
     QCommandLineParser cli;
     cli.setApplicationDescription(APP_DESCRIPTION);
     cli.addHelpOption();

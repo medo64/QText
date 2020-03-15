@@ -106,21 +106,6 @@ void Settings::setQuickSaveInterval(int newQuickSaveInterval) {
 }
 
 
-double Settings::scaleFactor() {
-    double value = Config::read("ScaleFactor", defaultScaleFactor());
-    return (value == 0) ? 0.00 : std::min(std::max(value, 0.25), 4.00);
-}
-
-double Settings::defaultScaleFactor() {
-    return 0.00;
-}
-
-void Settings::setScaleFactor(double newScaleFactor) {
-    double value = (newScaleFactor == 0) ? 0.00 : std::min(std::max(newScaleFactor, 0.25), 4.00);
-    Config::write("ScaleFactor", value);
-}
-
-
 bool Settings::showInTaskbar() {
     return Config::read("ShowInTaskbar", defaultShowInTaskbar());
 }
