@@ -6,8 +6,8 @@
 class Icons {
 
     public:
-        static QIcon application();
-        static QIcon applicationMonochrome();
+        static QIcon app();
+        static QIcon appMono();
         static QIcon tray();
 
         static QIcon newFile();
@@ -25,9 +25,9 @@ class Icons {
         static QIcon undo();
         static QIcon redo();
 
-        static QIcon gotoDialog();
+        static QIcon gotoIcon();
 
-        static QIcon appMenu();
+        static QIcon settings();
 
 };
 

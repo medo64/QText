@@ -5,10 +5,10 @@
         <file>icons/32x32/new.png</file>
         <file>icons/48x48/new.png</file>
         <file>icons/64x64/new.png</file>
-        <file>icons/16x16/qtext.png</file>
-        <file>icons/32x32/qtext.png</file>
-        <file>icons/48x48/qtext.png</file>
-        <file>icons/64x64/qtext.png</file>
+        <file>icons/16x16/app.png</file>
+        <file>icons/32x32/app.png</file>
+        <file>icons/48x48/app.png</file>
+        <file>icons/64x64/app.png</file>
         <file>icons/16x16/save.png</file>
         <file>icons/24x24/save.png</file>
         <file>icons/32x32/save.png</file>
@@ -49,19 +49,19 @@
         <file>icons/24x24/delete.png</file>
         <file>icons/48x48/delete.png</file>
         <file>icons/64x64/delete.png</file>
-        <file>icons/16x16/tray-color.png</file>
-        <file>icons/16x16/tray-white.png</file>
-        <file>icons/32x32/tray-color.png</file>
-        <file>icons/32x32/tray-white.png</file>
-        <file>icons/48x48/tray-color.png</file>
-        <file>icons/48x48/tray-white.png</file>
-        <file>icons/64x64/tray-color.png</file>
-        <file>icons/64x64/tray-white.png</file>
-        <file>icons/16x16/app.png</file>
-        <file>icons/24x24/app.png</file>
-        <file>icons/32x32/app.png</file>
-        <file>icons/48x48/app.png</file>
-        <file>icons/64x64/app.png</file>
+        <file>icons/16x16/trayColor.png</file>
+        <file>icons/16x16/trayWhite.png</file>
+        <file>icons/32x32/trayColor.png</file>
+        <file>icons/32x32/trayWhite.png</file>
+        <file>icons/48x48/trayColor.png</file>
+        <file>icons/48x48/trayWhite.png</file>
+        <file>icons/64x64/trayColor.png</file>
+        <file>icons/64x64/trayWhite.png</file>
+        <file>icons/16x16/settings.png</file>
+        <file>icons/24x24/settings.png</file>
+        <file>icons/32x32/settings.png</file>
+        <file>icons/48x48/settings.png</file>
+        <file>icons/64x64/settings.png</file>
         <file>icons/16x16/goto.png</file>
         <file>icons/24x24/goto.png</file>
         <file>icons/32x32/goto.png</file>
@@ -87,19 +87,19 @@
         <file>icons/32x32/print.png</file>
         <file>icons/48x48/print.png</file>
         <file>icons/64x64/print.png</file>
-        <file>icons/16x16/print-preview.png</file>
-        <file>icons/24x24/print-preview.png</file>
-        <file>icons/32x32/print-preview.png</file>
-        <file>icons/48x48/print-preview.png</file>
-        <file>icons/64x64/print-preview.png</file>
-        <file>icons/16x16/print-pdf.png</file>
-        <file>icons/24x24/print-pdf.png</file>
-        <file>icons/32x32/print-pdf.png</file>
-        <file>icons/48x48/print-pdf.png</file>
-        <file>icons/64x64/print-pdf.png</file>
-        <file>icons/16x16/qtext-mono.png</file>
-        <file>icons/32x32/qtext-mono.png</file>
-        <file>icons/48x48/qtext-mono.png</file>
-        <file>icons/64x64/qtext-mono.png</file>
+        <file>icons/16x16/printPreview.png</file>
+        <file>icons/24x24/printPreview.png</file>
+        <file>icons/32x32/printPreview.png</file>
+        <file>icons/48x48/printPreview.png</file>
+        <file>icons/64x64/printPreview.png</file>
+        <file>icons/16x16/printPdf.png</file>
+        <file>icons/24x24/printPdf.png</file>
+        <file>icons/32x32/printPdf.png</file>
+        <file>icons/48x48/printPdf.png</file>
+        <file>icons/64x64/printPdf.png</file>
+        <file>icons/16x16/appMono.png</file>
+        <file>icons/32x32/appMono.png</file>
+        <file>icons/48x48/appMono.png</file>
+        <file>icons/64x64/appMono.png</file>
     </qresource>
 </RCC>

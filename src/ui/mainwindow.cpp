@@ -35,7 +35,7 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     _storage = storage;
 
     { //application icon
-        this->setWindowIcon(Icons::application());
+        this->setWindowIcon(Icons::app());
     }
 
     { //tray
@@ -108,7 +108,7 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
         ui->actionRedo->setIcon(Icons::redo());
         connect(ui->actionRedo, SIGNAL(triggered()), this, SLOT(onTextRedo()));
 
-        ui->actionGoto->setIcon(Icons::gotoDialog());
+        ui->actionGoto->setIcon(Icons::gotoIcon());
         connect(ui->actionGoto, SIGNAL(triggered()), this, SLOT(onGoto()));
     }
 
@@ -151,7 +151,7 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
 
     { //app button menu
         _appButton = new QToolButton();
-        _appButton->setIcon(Icons::appMenu());
+        _appButton->setIcon(Icons::settings());
         _appButton->setPopupMode(QToolButton::MenuButtonPopup);
         _appButton->setMenu(new QMenu());
         connect(_appButton, SIGNAL(clicked()), this, SLOT(onAppSettings()));

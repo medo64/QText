@@ -246,5 +246,5 @@ void Helpers::setReadonlyPalette(QWidget* widget) {
  * \brief Replaces dialog icon
  */
 void Helpers::replaceDialogIcon(QWidget* dialog) {
-    dialog->setWindowIcon(Icons::applicationMonochrome());
+    dialog->setWindowIcon(Icons::appMono());
 }

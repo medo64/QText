@@ -1,35 +1,35 @@
 #include "icons.h"
 
-QIcon Icons::application() {
+QIcon Icons::app() {
     QIcon icon;
-    icon.addFile(":icons/16x16/qtext.png", QSize(16, 16));
-    icon.addFile(":icons/32x32/qtext.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/qtext.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/qtext.png", QSize(64, 64));
+    icon.addFile(":icons/16x16/app.png", QSize(16, 16));
+    icon.addFile(":icons/32x32/app.png", QSize(32, 32));
+    icon.addFile(":icons/48x48/app.png", QSize(48, 48));
+    icon.addFile(":icons/64x64/app.png", QSize(64, 64));
     return icon;
 }
 
-QIcon Icons::applicationMonochrome() {
+QIcon Icons::appMono() {
     QIcon icon;
-    icon.addFile(":icons/16x16/qtext-mono.png", QSize(16, 16));
-    icon.addFile(":icons/32x32/qtext-mono.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/qtext-mono.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/qtext-mono.png", QSize(64, 64));
+    icon.addFile(":icons/16x16/appMono.png", QSize(16, 16));
+    icon.addFile(":icons/32x32/appMono.png", QSize(32, 32));
+    icon.addFile(":icons/48x48/appMono.png", QSize(48, 48));
+    icon.addFile(":icons/64x64/appMono.png", QSize(64, 64));
     return icon;
 }
 
 QIcon Icons::tray() {
     QIcon icon;
     if ((QSysInfo::kernelType() == "winnt") && (QSysInfo::productVersion() == "10")) {
-        icon.addFile(":icons/16x16/tray-white.png", QSize(16, 16));
-        icon.addFile(":icons/32x32/tray-white.png", QSize(32, 32));
-        icon.addFile(":icons/48x48/tray-white.png", QSize(48, 48));
-        icon.addFile(":icons/64x64/tray-white.png", QSize(64, 64));
+        icon.addFile(":icons/16x16/trayWhite.png", QSize(16, 16));
+        icon.addFile(":icons/32x32/trayWhite.png", QSize(32, 32));
+        icon.addFile(":icons/48x48/trayWhite.png", QSize(48, 48));
+        icon.addFile(":icons/64x64/trayWhite.png", QSize(64, 64));
     } else {
-        icon.addFile(":icons/16x16/tray-color.png", QSize(16, 16));
-        icon.addFile(":icons/32x32/tray-color.png", QSize(32, 32));
-        icon.addFile(":icons/48x48/tray-color.png", QSize(48, 48));
-        icon.addFile(":icons/64x64/tray-color.png", QSize(64, 64));
+        icon.addFile(":icons/16x16/trayColor.png", QSize(16, 16));
+        icon.addFile(":icons/32x32/trayColor.png", QSize(32, 32));
+        icon.addFile(":icons/48x48/trayColor.png", QSize(48, 48));
+        icon.addFile(":icons/64x64/trayColor.png", QSize(64, 64));
     }
     return icon;
 }
@@ -87,21 +87,21 @@ QIcon Icons::printFile() {
 
 QIcon Icons::printPreviewFile() {
     QIcon icon;
-    icon.addFile(":icons/16x16/print-preview.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/print-preview.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/print-preview.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/print-preview.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/print-preview.png", QSize(64, 64));
+    icon.addFile(":icons/16x16/printPreview.png", QSize(16, 16));
+    icon.addFile(":icons/24x24/printPreview.png", QSize(24, 24));
+    icon.addFile(":icons/32x32/printPreview.png", QSize(32, 32));
+    icon.addFile(":icons/48x48/printPreview.png", QSize(48, 48));
+    icon.addFile(":icons/64x64/printPreview.png", QSize(64, 64));
     return icon;
 }
 
 QIcon Icons::printToPdfFile() {
     QIcon icon;
-    icon.addFile(":icons/16x16/print-pdf.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/print-pdf.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/print-pdf.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/print-pdf.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/print-pdf.png", QSize(64, 64));
+    icon.addFile(":icons/16x16/printPdf.png", QSize(16, 16));
+    icon.addFile(":icons/24x24/printPdf.png", QSize(24, 24));
+    icon.addFile(":icons/32x32/printPdf.png", QSize(32, 32));
+    icon.addFile(":icons/48x48/printPdf.png", QSize(48, 48));
+    icon.addFile(":icons/64x64/printPdf.png", QSize(64, 64));
     return icon;
 }
 
@@ -158,7 +158,7 @@ QIcon Icons::redo() {
 }
 
 
-QIcon Icons::gotoDialog() {
+QIcon Icons::gotoIcon() {
     QIcon icon;
     icon.addFile(":icons/16x16/goto.png", QSize(16, 16));
     icon.addFile(":icons/24x24/goto.png", QSize(24, 24));
@@ -169,12 +169,12 @@ QIcon Icons::gotoDialog() {
 }
 
 
-QIcon Icons::appMenu() {
+QIcon Icons::settings() {
     QIcon icon;
-    icon.addFile(":icons/16x16/app.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/app.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/app.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/app.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/app.png", QSize(64, 64));
+    icon.addFile(":icons/16x16/settings.png", QSize(16, 16));
+    icon.addFile(":icons/24x24/settings.png", QSize(24, 24));
+    icon.addFile(":icons/32x32/settings.png", QSize(32, 32));
+    icon.addFile(":icons/48x48/settings.png", QSize(48, 48));
+    icon.addFile(":icons/64x64/settings.png", QSize(64, 64));
     return icon;
 }
