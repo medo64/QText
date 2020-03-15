@@ -5,6 +5,7 @@
 // 2019-11-01: Fixed readMany implementation
 // 2019-11-17: Added stateReadMany and stateWriteMany
 //             Added option to set paths manually
+// 2020-03-15: If QApplication hasn't bee initializesd, assume installed on Linux
 
 #ifndef CONFIG_H
 #define CONFIG_H

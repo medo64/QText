@@ -46,6 +46,11 @@ bool Config::isPortable() {
 
     if (_isPortable == PortableStatus::UNKNOWN) {
         QString exePath = QCoreApplication::applicationFilePath();
+        assert(!exePath.isNull()); //fail if QApplication is not initialized in debug mode
+        if (exePath.isNull()) { //probably got called before QApplication got initialized, assume installed
+            _isPortable = PortableStatus::FALSE;
+            return false;
+        }
 
 #if defined(Q_OS_WIN)
         QString localAppDataEnv { QDir::cleanPath(getenv("LOCALAPPDATA")) };
@@ -153,6 +158,7 @@ QString Config::configurationFilePathWhenPortable() {
     assert(applicationName.length() > 0);
 
     QString exeDir = QCoreApplication::applicationDirPath();
+    if (exeDir.isNull()) { return configurationFilePathWhenInstalled(); } //fallback to installed
     QString configFile = exeDir + "/." + applicationName.toLower();
 #endif
 
@@ -227,6 +233,7 @@ QString Config::stateFilePathWhenPortable() {
     assert(applicationName.length() > 0);
 
     QString exeDir = QCoreApplication::applicationDirPath();
+    if (exeDir.isNull()) { return stateFilePathWhenInstalled(); } //fallback to installed
     QString stateFile = exeDir + "/." + applicationName.toLower() + ".user";
 #endif
 
@@ -291,6 +298,7 @@ QString Config::dataDirectoryPathWhenPortable() {
     assert(applicationName.length() > 0);
 
     QString exeDir = QCoreApplication::applicationDirPath();
+    if (exeDir.isNull()) { return dataDirectoryPathWhenInstalled(); } //fallback to installed
     QString dataDirectory = exeDir + "/." + applicationName.toLower() + ".data";
 #endif
 
