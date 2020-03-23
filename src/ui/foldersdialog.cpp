@@ -2,6 +2,7 @@
 #include "ui_foldersdialog.h"
 #include "medo/state.h"
 #include "helpers.h"
+#include "settings.h"
 
 #include <QMessageBox>
 
@@ -43,6 +44,21 @@ FoldersDialog::~FoldersDialog() {
 void FoldersDialog::hideEvent(QHideEvent *event) {
     State::save(this);
     QWidget::hideEvent(event);
+}
+
+void FoldersDialog::keyPressEvent(QKeyEvent *event) {
+    auto data = static_cast<uint>(event->key()) | event->modifiers();
+    switch (data) {
+        case Qt::Key_Escape: {
+            close();
+        } break;
+
+        case Qt::ShiftModifier | Qt::Key_F8: {
+            if (Helpers::openWithVSCodeAvailable()) {
+                Helpers::openWithVSCode(Settings::dataPaths());
+            }
+        } break;
+    }
 }
 
 

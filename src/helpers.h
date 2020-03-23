@@ -14,6 +14,7 @@ class Helpers {
         static bool showInFileManager(QString directoryPath, QString filePath);
         static bool openWithDefaultApplication(QString filePath);
         static bool openWithVSCode(QString filePath);
+        static bool openWithVSCode(QStringList filePaths);
         static bool openWithVSCodeAvailable();
         static void setReadonlyPalette(QWidget* widget);
         static void replaceDialogIcon(QWidget* dialog);

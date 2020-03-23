@@ -21,6 +21,7 @@ class FoldersDialog : public QDialog {
         FolderItem* selectedFolder();
 
     protected:
+        void keyPressEvent(QKeyEvent *event);
         void hideEvent(QHideEvent *event);
 
     private:

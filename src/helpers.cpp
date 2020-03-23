@@ -217,6 +217,30 @@ bool Helpers::openWithVSCode(QString filePath) {
 }
 
 /*!
+ * \brief Opens file with vscode
+ * \param filePath File path.
+ */
+bool Helpers::openWithVSCode(QStringList filePaths) {
+#if defined(Q_OS_WIN)
+    QStringList homePaths = QStandardPaths::standardLocations(QStandardPaths::HomeLocation);
+    const QString executablePath = QDir::cleanPath(homePaths[0] + "/AppData/Local/Programs/Microsoft VS Code/Code.exe");
+#elif defined(Q_OS_LINUX)
+    QString executablePath = "/usr/bin/code";
+#endif
+
+    QFile executableFile(executablePath);
+    if (executableFile.exists()) {
+        QStringList params;
+        for(QString filePath : filePaths) {
+            params += QDir::toNativeSeparators(filePath);
+        }
+        if (QProcess::startDetached(executablePath, params)) { return true; }
+    }
+
+    return false;
+}
+
+/*!
  * \brief Returns true if VS Code is found
  */
 bool Helpers::openWithVSCodeAvailable() {
