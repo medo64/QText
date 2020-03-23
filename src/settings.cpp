@@ -34,6 +34,23 @@ void Settings::setClearUndoInterval(int newClearUndoInterval) {
 }
 
 
+bool Settings::colorTrayIcon() {
+    return Config::read("ColorTrayIcon", defaultColorTrayIcon());
+}
+
+bool Settings::defaultColorTrayIcon() {
+    if ((QSysInfo::kernelType() == "winnt") && (QSysInfo::productVersion() == "10")) {
+        return false; //white icon
+    } else {
+        return true; //color icon
+    }
+}
+
+void Settings::setColorTrayIcon(bool newColorTrayIcon) {
+    Config::write("ColorTrayIcon", newColorTrayIcon);
+}
+
+
 QStringList Settings::dataPaths() {
     QStringList paths = Config::readMany("DataPath", defaultDataPaths());
     QStringList cleanedPaths;

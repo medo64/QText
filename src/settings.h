@@ -16,6 +16,10 @@ class Settings {
         static int defaultClearUndoInterval();
         static void setClearUndoInterval(int newClearUndoInterval);
 
+        static bool colorTrayIcon();
+        static bool defaultColorTrayIcon();
+        static void setColorTrayIcon(bool newColorTrayIcon);
+
         static QStringList dataPaths();
         static QStringList defaultDataPaths();
         static void setDataPaths(QStringList newPath);

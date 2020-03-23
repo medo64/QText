@@ -18,19 +18,22 @@ QIcon Icons::appMono() {
     return icon;
 }
 
-QIcon Icons::tray() {
+
+QIcon Icons::trayColor() {
     QIcon icon;
-    if ((QSysInfo::kernelType() == "winnt") && (QSysInfo::productVersion() == "10")) {
-        icon.addFile(":icons/16x16/trayWhite.png", QSize(16, 16));
-        icon.addFile(":icons/32x32/trayWhite.png", QSize(32, 32));
-        icon.addFile(":icons/48x48/trayWhite.png", QSize(48, 48));
-        icon.addFile(":icons/64x64/trayWhite.png", QSize(64, 64));
-    } else {
-        icon.addFile(":icons/16x16/trayColor.png", QSize(16, 16));
-        icon.addFile(":icons/32x32/trayColor.png", QSize(32, 32));
-        icon.addFile(":icons/48x48/trayColor.png", QSize(48, 48));
-        icon.addFile(":icons/64x64/trayColor.png", QSize(64, 64));
-    }
+    icon.addFile(":icons/16x16/trayColor.png", QSize(16, 16));
+    icon.addFile(":icons/32x32/trayColor.png", QSize(32, 32));
+    icon.addFile(":icons/48x48/trayColor.png", QSize(48, 48));
+    icon.addFile(":icons/64x64/trayColor.png", QSize(64, 64));
+    return icon;
+}
+
+QIcon Icons::trayWhite() {
+    QIcon icon;
+    icon.addFile(":icons/16x16/trayWhite.png", QSize(16, 16));
+    icon.addFile(":icons/32x32/trayWhite.png", QSize(32, 32));
+    icon.addFile(":icons/48x48/trayWhite.png", QSize(48, 48));
+    icon.addFile(":icons/64x64/trayWhite.png", QSize(64, 64));
     return icon;
 }
 

@@ -195,6 +195,13 @@ Valid values are whole numbers between \fB60\fP and \fB86400\fP.
     ClearUndoInterval: 900
 
 .TP
+\fBColorTrayIcon\fP
+If `true`, a color icon will be used for tray. If `false`, a white icon will be
+used instead. Default is to show color icon on all platforms except Windows 10
+where default is to show a white icon.
+    AlwaysOnTop: true
+
+.TP
 \fBDataPath\fP
 Location where files are stored. It can be repeated multiple times and all
 directories will be loaded. However, only the first directory listed will have

@@ -8,7 +8,8 @@ class Icons {
     public:
         static QIcon app();
         static QIcon appMono();
-        static QIcon tray();
+        static QIcon trayColor();
+        static QIcon trayWhite();
 
         static QIcon newFile();
         static QIcon saveFile();
