@@ -1,6 +1,11 @@
 ## Release Notes ##
 
 
+### 0.1.7 [2020-03-23] ###
+
+* Opening all folders in VS Code using shortcut
+
+
 ### 0.1.6 [2020-03-15] ###
 
 * Fixed config file usage
