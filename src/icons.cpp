@@ -161,6 +161,27 @@ QIcon Icons::redo() {
 }
 
 
+QIcon Icons::find() {
+    QIcon icon;
+    icon.addFile(":icons/16x16/find.png", QSize(16, 16));
+    icon.addFile(":icons/24x24/find.png", QSize(24, 24));
+    icon.addFile(":icons/32x32/find.png", QSize(32, 32));
+    icon.addFile(":icons/48x48/find.png", QSize(48, 48));
+    icon.addFile(":icons/64x64/find.png", QSize(64, 64));
+    return icon;
+}
+
+QIcon Icons::findNext() {
+    QIcon icon;
+    icon.addFile(":icons/16x16/findNext.png", QSize(16, 16));
+    icon.addFile(":icons/24x24/findNext.png", QSize(24, 24));
+    icon.addFile(":icons/32x32/findNext.png", QSize(32, 32));
+    icon.addFile(":icons/48x48/findNext.png", QSize(48, 48));
+    icon.addFile(":icons/64x64/findNext.png", QSize(64, 64));
+    return icon;
+}
+
+
 QIcon Icons::gotoIcon() {
     QIcon icon;
     icon.addFile(":icons/16x16/goto.png", QSize(16, 16));

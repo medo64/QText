@@ -21,6 +21,7 @@
 #include "medo/state.h"
 
 #include "filenamedialog.h"
+#include "finddialog.h"
 #include "foldersdialog.h"
 #include "gotodialog.h"
 #include "settingsdialog.h"
@@ -107,6 +108,12 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
 
         ui->actionRedo->setIcon(Icons::redo());
         connect(ui->actionRedo, SIGNAL(triggered()), this, SLOT(onTextRedo()));
+
+        ui->actionFind->setIcon(Icons::find());
+        connect(ui->actionFind, SIGNAL(triggered()), this, SLOT(onFind()));
+
+        ui->actionFindNext->setIcon(Icons::findNext());
+        connect(ui->actionFindNext, SIGNAL(triggered()), this, SLOT(onFindNext()));
 
         ui->actionGoto->setIcon(Icons::gotoIcon());
         connect(ui->actionGoto, SIGNAL(triggered()), this, SLOT(onGoto()));
@@ -520,6 +527,28 @@ void MainWindow::onTextRedo() {
     file->document()->redo();
 }
 
+void MainWindow::onFind() {
+    auto dialog = new FindDialog(this, _findText);
+    if (dialog->exec() == QDialog::Accepted) {
+        _findText = dialog->searchText();
+        onFindNext();
+    }
+}
+
+void MainWindow::onFindNext() {
+    if (!_findText.isEmpty()) {
+        auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+        QTextCursor cursor = file->document()->find(_findText, file->textCursor());
+        if (!cursor.isNull()) {
+            file->setTextCursor(cursor);
+        } else {
+            QApplication::beep();
+        }
+    } else {
+        onFind(); //show dialog if no text
+    }
+}
+
 void MainWindow::onGoto() {
     auto dialog = new GotoDialog(this, _storage);
     switch (dialog->exec()) {
@@ -723,6 +752,8 @@ void MainWindow::onTextStateChanged() {
     ui->actionPaste->setDisabled(!isClipboardTextAvailable);
     ui->actionUndo->setDisabled(!isUndoAvailable);
     ui->actionRedo->setDisabled(!isRedoAvailable);
+    ui->actionFind->setDisabled(!hasFile);
+    ui->actionFindNext->setDisabled(!hasFile);
 }
 
 void MainWindow::onTrayActivate(QSystemTrayIcon::ActivationReason reason) {

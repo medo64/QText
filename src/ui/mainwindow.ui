@@ -94,6 +94,9 @@
    <addaction name="actionUndo"/>
    <addaction name="actionRedo"/>
    <addaction name="separator"/>
+   <addaction name="actionFind"/>
+   <addaction name="actionFindNext"/>
+   <addaction name="separator"/>
    <addaction name="actionGoto"/>
   </widget>
   <action name="actionNew">
@@ -347,6 +350,36 @@
    </property>
    <property name="toolTip">
     <string>Print file into a PDF document</string>
+   </property>
+  </action>
+  <action name="actionFind">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/find.png</normaloff>:/icons/16x16/find.png</iconset>
+   </property>
+   <property name="text">
+    <string>Find</string>
+   </property>
+   <property name="toolTip">
+    <string>Search for specified text</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="actionFindNext">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/findNext.png</normaloff>:/icons/16x16/findNext.png</iconset>
+   </property>
+   <property name="text">
+    <string>Find Next</string>
+   </property>
+   <property name="toolTip">
+    <string>Continues search for text</string>
+   </property>
+   <property name="shortcut">
+    <string>F3</string>
    </property>
   </action>
  </widget>

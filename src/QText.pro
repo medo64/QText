@@ -45,6 +45,7 @@ CONFIG += c++11
 
 SOURCES += \
         ui/filenamedialog.cpp \
+        ui/finddialog.cpp \
         ui/foldersdialog.cpp \
         ui/gotodialog.cpp \
         ui/inserttimedialog.cpp \
@@ -68,6 +69,7 @@ SOURCES += \
 
 HEADERS += \
         ui/filenamedialog.h \
+        ui/finddialog.h \
         ui/foldersdialog.h \
         ui/gotodialog.h \
         ui/inserttimedialog.h \
@@ -90,6 +92,7 @@ HEADERS += \
 
 FORMS += \
         ui/filenamedialog.ui \
+        ui/finddialog.ui \
         ui/foldersdialog.ui \
         ui/gotodialog.ui \
         ui/inserttimedialog.ui \

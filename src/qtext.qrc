@@ -101,5 +101,15 @@
         <file>icons/32x32/appMono.png</file>
         <file>icons/48x48/appMono.png</file>
         <file>icons/64x64/appMono.png</file>
+        <file>icons/16x16/find.png</file>
+        <file>icons/16x16/findNext.png</file>
+        <file>icons/24x24/find.png</file>
+        <file>icons/24x24/findNext.png</file>
+        <file>icons/32x32/find.png</file>
+        <file>icons/32x32/findNext.png</file>
+        <file>icons/48x48/find.png</file>
+        <file>icons/48x48/findNext.png</file>
+        <file>icons/64x64/find.png</file>
+        <file>icons/64x64/findNext.png</file>
     </qresource>
 </RCC>

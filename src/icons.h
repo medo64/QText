@@ -26,6 +26,9 @@ class Icons {
         static QIcon undo();
         static QIcon redo();
 
+        static QIcon find();
+        static QIcon findNext();
+
         static QIcon gotoIcon();
 
         static QIcon settings();
