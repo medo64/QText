@@ -61,7 +61,7 @@ FileItem* Find::findNext(FileItem* currentFile, bool backward) {
 QList<FileItem*> Find::fileList(FileItem* pivotFile, bool backward) {
     QList<FileItem*> items;
 
-    bool foundPivot;
+    bool foundPivot = false;
     int insertLocation = 0;
     for (int i = 0; i < _storage->folderCount(); i++) {
         FolderItem* folder = _storage->getFolder(i);
