@@ -538,7 +538,8 @@ void MainWindow::onTextRedo() {
 void MainWindow::onFind() {
     auto dialog = new FindDialog(this, Find::lastText());
     if (dialog->exec() == QDialog::Accepted) {
-        Find::setup(dialog->searchText());
+        auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+        Find::setup(dialog->searchText(), _storage, file);
         onFindNext();
     }
 }
@@ -546,7 +547,13 @@ void MainWindow::onFind() {
 void MainWindow::onFindNext() {
     if (Find::hasText()) {
         auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-        Find::findNext(file);
+        auto nextFile = Find::findNext(file);
+        if ((nextFile != nullptr) && (nextFile != file)) {
+            FolderItem* folder = file->getFolder();
+            FolderItem* nextFolder = nextFile->getFolder();
+            if (folder != nextFolder) { selectFolder(nextFolder); }
+            selectFile(nextFile->getKey());
+        }
     } else {
         onFind(); //show dialog if no text
     }
