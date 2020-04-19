@@ -9,7 +9,7 @@ QString Find::_findText;
 QFlags<QTextDocument::FindFlag> Find::_findFlags;
 FileItem* Find::_firstMatchFile = nullptr;
 QTextCursor Find::_firstMatchCursor;
-bool Find::_lastMatchBackward;
+bool Find::_firstMatchBackward;
 
 
 void Find::setup(Storage* storage, QString text, bool matchCase, bool wholeWord) {
@@ -22,7 +22,7 @@ void Find::setup(Storage* storage, QString text, bool matchCase, bool wholeWord)
 
     _firstMatchFile = nullptr;
     _firstMatchCursor = QTextCursor();
-    _lastMatchBackward = false;
+    _firstMatchBackward = false;
 }
 
 FileItem* Find::findNext(FileItem* currentFile, bool backward) {
@@ -36,17 +36,13 @@ FileItem* Find::findNext(FileItem* currentFile, bool backward) {
         auto resultCursor = document->find(_findText, cursor, flags);
 
         if (!resultCursor.isNull()) {
-            if (_firstMatchFile == nullptr) { //save first match
+            if ((_firstMatchFile == nullptr) || (_firstMatchBackward != backward)) { //save first match
                 _firstMatchFile = file;
                 _firstMatchCursor = resultCursor;
+                _firstMatchBackward = backward;
             } else if ((file == _firstMatchFile) && (resultCursor == _firstMatchCursor)) { //check if we wrapped around
-                if (backward == _lastMatchBackward) { //beep only when going in the same direction for two calls
-                    _firstMatchFile = nullptr; //reset search
-                    QApplication::beep();
-                    return nullptr;
-                }
+                QApplication::beep();
             }
-            _lastMatchBackward = backward;
             file->setTextCursor(resultCursor);
             return file;
         }

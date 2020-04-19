@@ -22,7 +22,7 @@ class Find {
         static QFlags<QTextDocument::FindFlag> _findFlags;
         static FileItem* _firstMatchFile;
         static QTextCursor _firstMatchCursor;
-        static bool _lastMatchBackward;
+        static bool _firstMatchBackward;
 
 };
 
