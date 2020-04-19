@@ -1,6 +1,11 @@
 ## Release Notes ##
 
 
+### 0.1.8 [2020-04-19] ###
+
+* Added search functionality
+
+
 ### 0.1.7 [2020-03-23] ###
 
 * Opening all folders in VS Code using shortcut
