@@ -456,6 +456,7 @@ void MainWindow::onFilePrint() {
     QPrinter printer(QPrinter::PrinterResolution);
 
     QPrintDialog dialog(&printer, this);
+    Helpers::setupResizableDialog(&dialog);
     dialog.setWindowTitle("Print: " + file->getTitle());
     if (file->textCursor().hasSelection()) {
         dialog.addEnabledOption(QAbstractPrintDialog::PrintSelection);
@@ -477,6 +478,7 @@ void MainWindow::onFilePrintPreview() {
     QPrinter printer(QPrinter::ScreenResolution);
 
     QPrintPreviewDialog dialog(&printer, this, Qt::Dialog | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
+    Helpers::setupResizableDialog(&dialog);
     dialog.setWindowTitle("Print Preview: " + file->getTitle());
     connect(&dialog, SIGNAL(paintRequested(QPrinter*)), file, SLOT(printPreview(QPrinter*)));
     dialog.showMaximized();
