@@ -1,12 +1,15 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "storage.h"
-#include "medo/hotkey.h"
 #include <QApplication>
 #include <QMainWindow>
 #include <QToolButton>
 #include <QSystemTrayIcon>
+
+#include "storage.h"
+
+#include "medo/hotkey.h"
+
 
 namespace Ui {
     class MainWindow;

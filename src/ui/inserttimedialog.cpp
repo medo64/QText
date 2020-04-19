@@ -7,8 +7,7 @@
 
 InsertTimeDialog::InsertTimeDialog(QWidget *parent) : QDialog(parent), ui(new Ui::InsertTimeDialog) {
     ui->setupUi(this);
-    this->setFixedSize(this->geometry().width(), this->geometry().height());
-    Helpers::replaceDialogIcon(this);
+    Helpers::setupFixedSizeDialog(this);
 
     Helpers::setReadonlyPalette(ui->exampleText);
     //QPalette readOnlyPalette = ui->exampleText->palette();

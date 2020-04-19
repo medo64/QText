@@ -8,26 +8,26 @@
 #include <QtPrintSupport/QPrintDialog>
 #include <QtPrintSupport/QPrinter>
 #include <QtPrintSupport/QPrintPreviewDialog>
+
 #include "clipboard.h"
 #include "helpers.h"
 #include "icons.h"
+#include "qtabbarex.h"
 #include "settings.h"
 #include "storage.h"
+
 #include "medo/config.h"
 #include "medo/singleinstance.h"
 #include "medo/state.h"
 
+#include "filenamedialog.h"
+#include "foldersdialog.h"
+#include "gotodialog.h"
+#include "settingsdialog.h"
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "filenamedialog.h"
-#include "ui_filenamedialog.h"
-#include "foldersdialog.h"
-#include "ui_foldersdialog.h"
-#include "gotodialog.h"
-#include "ui_gotodialog.h"
-#include "settingsdialog.h"
-#include "ui_settingsdialog.h"
-#include "qtabbarex.h"
+
 
 MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::MainWindow) {
     ui->setupUi(this);

@@ -6,7 +6,7 @@
 
 GotoDialog::GotoDialog(QWidget *parent, Storage* storage) : QDialog(parent), ui(new Ui::GotoDialog) {
     ui->setupUi(this);
-    Helpers::replaceDialogIcon(this);
+    Helpers::setupResizableDialog(this);
     ui->textSearch->installEventFilter(this);
 
     _storage = storage;

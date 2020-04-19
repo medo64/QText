@@ -269,6 +269,14 @@ void Helpers::setReadonlyPalette(QWidget* widget) {
 /*!
  * \brief Replaces dialog icon
  */
-void Helpers::replaceDialogIcon(QWidget* dialog) {
+void Helpers::setupResizableDialog(QWidget* dialog) {
     dialog->setWindowIcon(Icons::appMono());
+}
+
+/*!
+ * \brief Replaces dialog icon and makes it fixed size
+ */
+void Helpers::setupFixedSizeDialog(QWidget* dialog) {
+    dialog->setWindowIcon(Icons::appMono());
+    dialog->setFixedSize(dialog->geometry().width(), dialog->sizeHint().height());
 }

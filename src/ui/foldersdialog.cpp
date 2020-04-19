@@ -6,11 +6,9 @@
 
 #include <QMessageBox>
 
-FoldersDialog::FoldersDialog(QWidget* parent, Storage* storage, FolderItem* selectedFolder) :
-    QDialog(parent),
-    ui(new Ui::FoldersDialog) {
+FoldersDialog::FoldersDialog(QWidget* parent, Storage* storage, FolderItem* selectedFolder) : QDialog(parent), ui(new Ui::FoldersDialog) {
     ui->setupUi(this);
-    Helpers::replaceDialogIcon(this);
+    Helpers::setupResizableDialog(this);
 
     _storage = storage;
     _selectedFolder = selectedFolder;
