@@ -4,6 +4,7 @@
 #include <QString>
 #include <QWidget>
 #include "fileitem.h"
+#include "folderitem.h"
 
 class Helpers {
 
@@ -16,6 +17,8 @@ class Helpers {
         static bool openWithDefaultApplication(QString filePath);
         static bool openFileWithVSCode(FileItem* file);
         static bool openFileWithVSCode(QString filePath);
+        static bool openDirectoryWithVSCode(FileItem* file);
+        static bool openDirectoryWithVSCode(FolderItem* folder);
         static bool openDirectoriesWithVSCode(QStringList directoryPaths);
         static bool openWithVSCodeAvailable();
         static void setReadonlyPalette(QWidget* widget);

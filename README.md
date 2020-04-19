@@ -12,6 +12,7 @@ Simple note taking program.
 | `F3`              | Find next text match                                    |
 | `Shift+F3`        | Find previous text match                                |
 | `F5`              | Insert time and date                                    |
+| `Alt+F8`          | Show file and/or directory in Visual Studio Code        |
 | `Ctrl+C`          | Copy text                                               |
 | `Ctrl+F`          | Find text                                               |
 | `Ctrl+G`          | Find folder or file by name                             |

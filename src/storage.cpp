@@ -10,10 +10,11 @@ Storage::Storage(const QStringList paths) {
         if (!rootDirectory.exists()) { rootDirectory.mkpath(path); }
         QString cleanedPath = rootDirectory.path();
 
-        _folders.push_back(new FolderItem(index, cleanedPath, nullptr));
+        auto rootFolder = new FolderItem(nullptr, index, cleanedPath, nullptr);
+        _folders.push_back(rootFolder);
         QStringList directories = rootDirectory.entryList(QDir::Dirs|QDir::NoDotAndDotDot, QDir::SortFlag::Name);
         for(QString directory : directories) {
-            auto folder = new FolderItem(index, cleanedPath, directory);
+            auto folder = new FolderItem(rootFolder, index, cleanedPath, directory);
             _folders.push_back(folder);
         }
 
@@ -37,14 +38,15 @@ FolderItem* Storage::getBaseFolder() {
 
 
 FolderItem* Storage::newFolder(QString proposedTitle) {
-    QString rootPath = getBaseFolder()->getPath();
+    FolderItem* rootFolder = getBaseFolder();
+    QString rootPath = rootFolder->getPath();
     QString title = proposedTitle;
     for (int i = 2; i < 100; i++) { //repeat until 100 is reached
         QString dirName = Helpers::getFileNameFromTitle(title);
         QDir dir = QDir::cleanPath(rootPath + "/" + dirName);
         if (!dir.exists()) { //found one that doesn't exist - use this
             if (dir.mkpath(".")) {
-                FolderItem* folder = new FolderItem(0, rootPath, dirName);
+                FolderItem* folder = new FolderItem(rootFolder, 0, rootPath, dirName);
                 _folders.push_back(folder);
                 sortFolders();
                 return folder;

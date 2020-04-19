@@ -265,6 +265,17 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
             onFindNext(true);
         } break;
 
+        case Qt::AltModifier | Qt::Key_F8: {
+            if (Helpers::openWithVSCodeAvailable()) {
+                if (ui->tabWidget->count() > 0) {
+                    auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+                    Helpers::openDirectoryWithVSCode(file);
+                } else {
+                    Helpers::openDirectoryWithVSCode(_folder);
+                }
+            }
+        } break;
+
 
         case Qt::ControlModifier | Qt::Key_O: {
             _folderButton->showMenu();

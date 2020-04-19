@@ -215,13 +215,57 @@ bool Helpers::openFileWithVSCode(QString filePath) {
 #endif
 
     QFile executableFile(executablePath);
-    if (executableFile.exists()) {
-        QStringList params;
-        params += QDir::toNativeSeparators(filePath);
-        if (QProcess::startDetached(executablePath, params)) { return true; }
-    }
+    if (!executableFile.exists()) { return false; }
 
-    return false;
+    QStringList params;
+    params += QDir::toNativeSeparators(filePath);
+    return QProcess::startDetached(executablePath, params);
+}
+
+/*!
+ * \brief Opens directory with VSCode
+ * \param file File item.
+ */
+bool Helpers::openDirectoryWithVSCode(FileItem* file) {
+#if defined(Q_OS_WIN)
+    QStringList homePaths = QStandardPaths::standardLocations(QStandardPaths::HomeLocation);
+    const QString executablePath = QDir::cleanPath(homePaths[0] + "/AppData/Local/Programs/Microsoft VS Code/Code.exe");
+#elif defined(Q_OS_LINUX)
+    QString executablePath = "/usr/bin/code";
+#endif
+
+    QFile executableFile(executablePath);
+    if (!executableFile.exists()) { return false; }
+
+    auto folder = file->getFolder();
+    auto rootFolder = folder->isRoot() ? folder : folder->getRootFolder();
+
+    QStringList params;
+    params += QDir::toNativeSeparators(rootFolder->getPath());
+    params += QDir::toNativeSeparators(file->getPath());
+    return  QProcess::startDetached(executablePath, params);
+}
+
+/*!
+ * \brief Opens directory with VSCode
+ * \param folder Folder item.
+ */
+bool Helpers::openDirectoryWithVSCode(FolderItem* folder) {
+#if defined(Q_OS_WIN)
+    QStringList homePaths = QStandardPaths::standardLocations(QStandardPaths::HomeLocation);
+    const QString executablePath = QDir::cleanPath(homePaths[0] + "/AppData/Local/Programs/Microsoft VS Code/Code.exe");
+#elif defined(Q_OS_LINUX)
+    QString executablePath = "/usr/bin/code";
+#endif
+
+    QFile executableFile(executablePath);
+    if (!executableFile.exists()) { return false; }
+
+    auto rootFolder = folder->isRoot() ? folder : folder->getRootFolder();
+
+    QStringList params;
+    params += QDir::toNativeSeparators(rootFolder->getPath());
+    return  QProcess::startDetached(executablePath, params);
 }
 
 /*!
@@ -237,15 +281,13 @@ bool Helpers::openDirectoriesWithVSCode(QStringList directoryPaths) {
 #endif
 
     QFile executableFile(executablePath);
-    if (executableFile.exists()) {
-        QStringList params;
-        for(QString directoryPath : directoryPaths) {
-            params += QDir::toNativeSeparators(directoryPath);
-        }
-        if (QProcess::startDetached(executablePath, params)) { return true; }
-    }
+    if (!executableFile.exists()) return false;
 
-    return false;
+    QStringList params;
+    for(QString directoryPath : directoryPaths) {
+        params += QDir::toNativeSeparators(directoryPath);
+    }
+    return  QProcess::startDetached(executablePath, params);
 }
 
 /*!

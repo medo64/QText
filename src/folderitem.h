@@ -9,7 +9,8 @@ class FileItem;
 class FolderItem {
 
     public:
-        FolderItem(const int pathIndex, const QString directoryBase, const QString directoryName); //prefix differentiates between DataPath and DataPath2
+        FolderItem(FolderItem* rootFolder, const int pathIndex, const QString directoryBase, const QString directoryName); //prefix differentiates between DataPath and DataPath2
+        FolderItem* getRootFolder();
         QString getKey();
         QString getPath();
         int getPathIndex();
@@ -26,6 +27,7 @@ class FolderItem {
         bool moveFile(int from, int to);
 
     private:
+        FolderItem* _rootFolder;
         QString _directoryPath;
         QString _directoryName;
         int _pathIndex;

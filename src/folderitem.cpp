@@ -5,7 +5,8 @@
 #include <QDir>
 #include <QString>
 
-FolderItem::FolderItem(const int pathIndex, const QString directoryPath, const QString directoryName) {
+FolderItem::FolderItem(FolderItem* rootFolder, const int pathIndex, const QString directoryPath, const QString directoryName) {
+    _rootFolder = rootFolder;
     _directoryPath = directoryPath;
     _directoryName = directoryName;
     _pathIndex = pathIndex;
@@ -21,6 +22,10 @@ FolderItem::FolderItem(const int pathIndex, const QString directoryPath, const Q
     loadOrdering();
 }
 
+
+FolderItem* FolderItem::getRootFolder() {
+    return _rootFolder;
+}
 
 QString FolderItem::getKey() {
     if (_pathIndex > 0) {
