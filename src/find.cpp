@@ -5,11 +5,15 @@
 
 QString Find::_text = QString();
 Storage* Find::_storage = nullptr;
+FileItem* Find::_firstMatchFile = nullptr;
+QTextCursor Find::_firstMatchCursor = QTextCursor();
 
 
-void Find::setup(QString text, Storage* storage, FileItem* firstFile) {
+void Find::setup(QString text, Storage* storage) {
     _text = text;
     _storage = storage;
+    _firstMatchFile = nullptr;
+    _firstMatchCursor = QTextCursor();
 }
 
 FileItem* Find::findNext(FileItem* currentFile) {
@@ -19,6 +23,14 @@ FileItem* Find::findNext(FileItem* currentFile) {
         QTextCursor cursor = firstFile ? file->textCursor() : QTextCursor(); //only starting search starts from current cursor
         QTextCursor resultCursor = document->find(_text, cursor);
         if (!resultCursor.isNull()) {
+            if (_firstMatchFile == nullptr) { //save first match
+                _firstMatchFile = file;
+                _firstMatchCursor = resultCursor;
+            } else if ((file == _firstMatchFile) && (resultCursor == _firstMatchCursor)) { //check if we wrapped around
+                _firstMatchFile = nullptr; //reset search
+                QApplication::beep();
+                return nullptr;
+            }
             file->setTextCursor(resultCursor);
             return file;
         }

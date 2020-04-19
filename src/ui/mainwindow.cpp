@@ -538,8 +538,7 @@ void MainWindow::onTextRedo() {
 void MainWindow::onFind() {
     auto dialog = new FindDialog(this, Find::lastText());
     if (dialog->exec() == QDialog::Accepted) {
-        auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-        Find::setup(dialog->searchText(), _storage, file);
+        Find::setup(dialog->searchText(), _storage);
         onFindNext();
     }
 }

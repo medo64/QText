@@ -8,7 +8,7 @@
 class Find {
 
     public:
-        static void setup(QString text, Storage* storage, FileItem* firstFile);
+        static void setup(QString text, Storage* storage);
         static FileItem* findNext(FileItem* currentFile);
         static QString lastText();
         static bool hasText();
@@ -17,6 +17,8 @@ class Find {
         static QList<FileItem*> fileList(FileItem* pivotFile);
         static QString _text;
         static Storage* _storage;
+        static FileItem* _firstMatchFile;
+        static QTextCursor _firstMatchCursor;
 
 };
 
