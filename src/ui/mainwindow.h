@@ -36,7 +36,6 @@ class MainWindow : public QMainWindow {
         QToolButton* _folderButton = nullptr;
         QToolButton* _appButton = nullptr;
         Hotkey* _hotkey = nullptr;
-        QString _findText;
         void applySettings(bool applyShowInTaskbar = true);
         void selectFolder(QString folderKey);
         void selectFolder(FolderItem* folder);

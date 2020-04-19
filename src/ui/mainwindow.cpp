@@ -10,6 +10,7 @@
 #include <QtPrintSupport/QPrintPreviewDialog>
 
 #include "clipboard.h"
+#include "find.h"
 #include "helpers.h"
 #include "icons.h"
 #include "qtabbarex.h"
@@ -528,22 +529,17 @@ void MainWindow::onTextRedo() {
 }
 
 void MainWindow::onFind() {
-    auto dialog = new FindDialog(this, _findText);
+    auto dialog = new FindDialog(this, Find::lastText());
     if (dialog->exec() == QDialog::Accepted) {
-        _findText = dialog->searchText();
+        Find::setup(dialog->searchText());
         onFindNext();
     }
 }
 
 void MainWindow::onFindNext() {
-    if (!_findText.isEmpty()) {
+    if (Find::hasText()) {
         auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-        QTextCursor cursor = file->document()->find(_findText, file->textCursor());
-        if (!cursor.isNull()) {
-            file->setTextCursor(cursor);
-        } else {
-            QApplication::beep();
-        }
+        Find::findNext(file);
     } else {
         onFind(); //show dialog if no text
     }

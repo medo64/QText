@@ -59,6 +59,7 @@ SOURCES += \
         medo/state.cpp \
         clipboard.cpp \
         fileitem.cpp \
+        find.cpp \
         folderitem.cpp \
         helpers.cpp \
         icons.cpp \
@@ -83,6 +84,7 @@ HEADERS += \
         medo/state.h \
         clipboard.h \
         fileitem.h \
+        find.h \
         folderitem.h \
         helpers.h \
         icons.h \
