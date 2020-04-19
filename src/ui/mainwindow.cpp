@@ -621,7 +621,7 @@ void MainWindow::onOpenWithDefaultApplication() {
 void MainWindow::onOpenWithVisualStudioCode() {
     if (ui->tabWidget->currentWidget() != nullptr) {
         auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-        Helpers::openWithVSCode(file->getPath());
+        Helpers::openFileWithVSCode(file);
     }
 }
 

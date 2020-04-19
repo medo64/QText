@@ -51,9 +51,9 @@ void FoldersDialog::keyPressEvent(QKeyEvent *event) {
             close();
         } break;
 
-        case Qt::ShiftModifier | Qt::Key_F8: {
+        case Qt::AltModifier | Qt::Key_F8: {
             if (Helpers::openWithVSCodeAvailable()) {
-                Helpers::openWithVSCode(Settings::dataPaths());
+                Helpers::openDirectoriesWithVSCode(Settings::dataPaths());
             }
         } break;
     }

@@ -38,7 +38,7 @@ void SettingsDialog::keyPressEvent(QKeyEvent *event) {
 
         case Qt::ShiftModifier | Qt::Key_F8: {
             if (Helpers::openWithVSCodeAvailable()) {
-                Helpers::openWithVSCode(Config::configurationFile());
+                Helpers::openFileWithVSCode(Config::configurationFile());
             } else {
                 Helpers::openWithDefaultApplication(Config::configurationFile());
             }

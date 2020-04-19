@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QWidget>
+#include "fileitem.h"
 
 class Helpers {
 
@@ -13,8 +14,9 @@ class Helpers {
         static QString getFolderTitleFromName(QString folderName);
         static bool showInFileManager(QString directoryPath, QString filePath);
         static bool openWithDefaultApplication(QString filePath);
-        static bool openWithVSCode(QString filePath);
-        static bool openWithVSCode(QStringList filePaths);
+        static bool openFileWithVSCode(FileItem* file);
+        static bool openFileWithVSCode(QString filePath);
+        static bool openDirectoriesWithVSCode(QStringList directoryPaths);
         static bool openWithVSCodeAvailable();
         static void setReadonlyPalette(QWidget* widget);
         static void setupResizableDialog(QWidget* dialog);

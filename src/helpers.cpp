@@ -195,10 +195,18 @@ bool Helpers::openWithDefaultApplication(QString filePath) {
 }
 
 /*!
- * \brief Opens file with vscode
+ * \brief Opens file with VSCode
+ * \param file File.
+ */
+bool Helpers::openFileWithVSCode(FileItem* file) {
+    return openFileWithVSCode(file->getPath());
+}
+
+/*!
+ * \brief Opens file with VSCode
  * \param filePath File path.
  */
-bool Helpers::openWithVSCode(QString filePath) {
+bool Helpers::openFileWithVSCode(QString filePath) {
 #if defined(Q_OS_WIN)
     QStringList homePaths = QStandardPaths::standardLocations(QStandardPaths::HomeLocation);
     const QString executablePath = QDir::cleanPath(homePaths[0] + "/AppData/Local/Programs/Microsoft VS Code/Code.exe");
@@ -217,10 +225,10 @@ bool Helpers::openWithVSCode(QString filePath) {
 }
 
 /*!
- * \brief Opens file with vscode
- * \param filePath File path.
+ * \brief Opens file with VSCode
+ * \param path Directory paths.
  */
-bool Helpers::openWithVSCode(QStringList filePaths) {
+bool Helpers::openDirectoriesWithVSCode(QStringList directoryPaths) {
 #if defined(Q_OS_WIN)
     QStringList homePaths = QStandardPaths::standardLocations(QStandardPaths::HomeLocation);
     const QString executablePath = QDir::cleanPath(homePaths[0] + "/AppData/Local/Programs/Microsoft VS Code/Code.exe");
@@ -231,8 +239,8 @@ bool Helpers::openWithVSCode(QStringList filePaths) {
     QFile executableFile(executablePath);
     if (executableFile.exists()) {
         QStringList params;
-        for(QString filePath : filePaths) {
-            params += QDir::toNativeSeparators(filePath);
+        for(QString directoryPath : directoryPaths) {
+            params += QDir::toNativeSeparators(directoryPath);
         }
         if (QProcess::startDetached(executablePath, params)) { return true; }
     }
