@@ -472,12 +472,17 @@ void MainWindow::onFilePrint() {
 void MainWindow::onFilePrintPreview() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
 
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+
     QPrinter printer(QPrinter::ScreenResolution);
 
     QPrintPreviewDialog dialog(&printer, this, Qt::Dialog | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
     dialog.setWindowTitle("Print Preview: " + file->getTitle());
     connect(&dialog, SIGNAL(paintRequested(QPrinter*)), file, SLOT(printPreview(QPrinter*)));
     dialog.showMaximized();
+
+    QApplication::restoreOverrideCursor();
+
     dialog.exec();
 }
 
