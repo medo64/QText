@@ -59,7 +59,7 @@ class MainWindow : public QMainWindow {
         void onTextUndo();
         void onTextRedo();
         void onFind();
-        void onFindNext();
+        void onFindNext(bool backward = false);
         void onGoto();
         void onFolderSetup();
         void onFolderMenuShow();

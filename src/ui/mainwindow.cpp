@@ -261,6 +261,11 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
 #endif
         } break;
 
+        case Qt::ShiftModifier | Qt::Key_F3: {
+            onFindNext(true);
+        } break;
+
+
         case Qt::ControlModifier | Qt::Key_O: {
             _folderButton->showMenu();
         } break;
@@ -543,10 +548,10 @@ void MainWindow::onFind() {
     }
 }
 
-void MainWindow::onFindNext() {
+void MainWindow::onFindNext(bool backward) {
     if (Find::hasText()) {
         auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-        auto nextFile = Find::findNext(file);
+        auto nextFile = Find::findNext(file, backward);
         if ((nextFile != nullptr) && (nextFile != file)) {
             FolderItem* folder = file->getFolder();
             FolderItem* nextFolder = nextFile->getFolder();

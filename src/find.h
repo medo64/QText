@@ -9,19 +9,20 @@ class Find {
 
     public:
         static void setup(Storage* storage, QString text, bool matchCase, bool wholeWord);
-        static FileItem* findNext(FileItem* currentFile);
+        static FileItem* findNext(FileItem* currentFile, bool backward = false);
         static bool hasText();
         static QString lastText();
         static bool lastMatchCase();
         static bool lastWholeWord();
 
     private:
-        static QList<FileItem*> fileList(FileItem* pivotFile);
+        static QList<FileItem*> fileList(FileItem* pivotFile, bool backward = false);
         static Storage* _storage;
         static QString _findText;
         static QFlags<QTextDocument::FindFlag> _findFlags;
         static FileItem* _firstMatchFile;
         static QTextCursor _firstMatchCursor;
+        static bool _lastMatchBackward;
 
 };
 
