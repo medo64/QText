@@ -536,9 +536,9 @@ void MainWindow::onTextRedo() {
 }
 
 void MainWindow::onFind() {
-    auto dialog = new FindDialog(this, Find::lastText());
+    auto dialog = new FindDialog(this, Find::lastText(), Find::lastMatchCase());
     if (dialog->exec() == QDialog::Accepted) {
-        Find::setup(dialog->searchText(), _storage);
+        Find::setup(_storage, dialog->searchText(), dialog->matchCase());
         onFindNext();
     }
 }

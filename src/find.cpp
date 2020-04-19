@@ -1,17 +1,24 @@
 #include <QApplication>
+#include <QTextDocument>
+#include <QFlags>
 
 #include "find.h"
 
 
-QString Find::_text = QString();
 Storage* Find::_storage = nullptr;
+QString Find::_findText;
+QFlags<QTextDocument::FindFlag> Find::_findFlags;
 FileItem* Find::_firstMatchFile = nullptr;
-QTextCursor Find::_firstMatchCursor = QTextCursor();
+QTextCursor Find::_firstMatchCursor;
 
 
-void Find::setup(QString text, Storage* storage) {
-    _text = text;
+void Find::setup(Storage* storage, QString text, bool matchCase) {
     _storage = storage;
+
+    _findText = text;
+    _findFlags = QTextDocument::FindFlag();
+    if (matchCase) { _findFlags |= QTextDocument::FindCaseSensitively; }
+
     _firstMatchFile = nullptr;
     _firstMatchCursor = QTextCursor();
 }
@@ -21,7 +28,7 @@ FileItem* Find::findNext(FileItem* currentFile) {
     for(auto file : fileList(currentFile)) {
         QTextDocument* document = file->document();
         QTextCursor cursor = firstFile ? file->textCursor() : QTextCursor(); //only starting search starts from current cursor
-        QTextCursor resultCursor = document->find(_text, cursor);
+        QTextCursor resultCursor = document->find(_findText, cursor, _findFlags);
         if (!resultCursor.isNull()) {
             if (_firstMatchFile == nullptr) { //save first match
                 _firstMatchFile = file;
@@ -69,10 +76,14 @@ QList<FileItem*> Find::fileList(FileItem* pivotFile) {
 }
 
 
-QString Find::lastText() {
-    return _text;
+bool Find::hasText() {
+    return _findText.length() > 0;
 }
 
-bool Find::hasText() {
-    return _text.length() > 0;
+QString Find::lastText() {
+    return _findText;
+}
+
+bool Find::lastMatchCase() {
+    return _findFlags.testFlag(QTextDocument::FindCaseSensitively);
 }
