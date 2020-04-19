@@ -709,13 +709,14 @@ void MainWindow::onTabMoved(int from, int to) {
 void MainWindow::onTextStateChanged() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
 
-    bool isSelectionAvailable = (file != nullptr) ? file->textCursor().hasSelection() : false;
+    bool hasFile = (file != nullptr) ? true : false;
+    bool isSelectionAvailable = hasFile ? file->textCursor().hasSelection() : false;
 
-    auto document = (file != nullptr) ? file->document() : nullptr;
-    bool isUndoAvailable = (document !=nullptr) ? document->isUndoAvailable() : false;
-    bool isRedoAvailable = (document !=nullptr) ? document->isRedoAvailable() : false;
+    auto document = hasFile ? file->document() : nullptr;
+    bool isUndoAvailable = (document != nullptr) ? document->isUndoAvailable() : false;
+    bool isRedoAvailable = (document != nullptr) ? document->isRedoAvailable() : false;
 
-    bool isClipboardTextAvailable = Clipboard::hasText();
+    bool isClipboardTextAvailable = hasFile ? Clipboard::hasText() : false;
 
     ui->actionCut->setDisabled(!isSelectionAvailable);
     ui->actionCopy->setDisabled(!isSelectionAvailable);
