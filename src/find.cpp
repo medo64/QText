@@ -12,12 +12,13 @@ FileItem* Find::_firstMatchFile = nullptr;
 QTextCursor Find::_firstMatchCursor;
 
 
-void Find::setup(Storage* storage, QString text, bool matchCase) {
+void Find::setup(Storage* storage, QString text, bool matchCase, bool wholeWord) {
     _storage = storage;
 
     _findText = text;
     _findFlags = QTextDocument::FindFlag();
     if (matchCase) { _findFlags |= QTextDocument::FindCaseSensitively; }
+    if (wholeWord) { _findFlags |= QTextDocument::FindWholeWords; }
 
     _firstMatchFile = nullptr;
     _firstMatchCursor = QTextCursor();
@@ -86,4 +87,8 @@ QString Find::lastText() {
 
 bool Find::lastMatchCase() {
     return _findFlags.testFlag(QTextDocument::FindCaseSensitively);
+}
+
+bool Find::lastWholeWord() {
+    return _findFlags.testFlag(QTextDocument::FindWholeWords);
 }

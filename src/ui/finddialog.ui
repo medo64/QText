@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>91</height>
+    <height>115</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,14 +28,7 @@
    <item row="0" column="2">
     <widget class="QLineEdit" name="editSearch"/>
    </item>
-   <item row="1" column="2">
-    <widget class="QCheckBox" name="checkMatchCase">
-     <property name="text">
-      <string>Match case</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="2">
+   <item row="3" column="2">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -51,11 +44,26 @@
      </property>
     </widget>
    </item>
+   <item row="1" column="2">
+    <widget class="QCheckBox" name="checkMatchCase">
+     <property name="text">
+      <string>Match case</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QCheckBox" name="checkWholeWord">
+     <property name="text">
+      <string>Whole word</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <tabstops>
   <tabstop>editSearch</tabstop>
   <tabstop>checkMatchCase</tabstop>
+  <tabstop>checkWholeWord</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources>

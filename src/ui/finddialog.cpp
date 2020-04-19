@@ -5,7 +5,7 @@
 #include "finddialog.h"
 #include "ui_finddialog.h"
 
-FindDialog::FindDialog(QWidget *parent, QString searchText, bool matchCase) : QDialog(parent), ui(new Ui::FindDialog) {
+FindDialog::FindDialog(QWidget *parent, QString searchText, bool matchCase, bool wholeWord) : QDialog(parent), ui(new Ui::FindDialog) {
     ui->setupUi(this);
     Helpers::setupFixedSizeDialog(this);
 
@@ -14,6 +14,7 @@ FindDialog::FindDialog(QWidget *parent, QString searchText, bool matchCase) : QD
     ui->editSearch->setFocus();
 
     ui->checkMatchCase->setChecked(matchCase);
+    ui->checkWholeWord->setChecked(wholeWord);
 
     connect(ui->editSearch, &QLineEdit::textChanged, this, &FindDialog::onTextChanged);
     onTextChanged(ui->editSearch->text());
@@ -30,6 +31,10 @@ QString FindDialog::searchText() {
 
 bool FindDialog::matchCase() {
     return ui->checkMatchCase->isChecked();
+}
+
+bool FindDialog::wholeWord() {
+    return ui->checkWholeWord->isChecked();
 }
 
 

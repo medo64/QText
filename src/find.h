@@ -8,11 +8,12 @@
 class Find {
 
     public:
-        static void setup(Storage* storage, QString text, bool matchCase);
+        static void setup(Storage* storage, QString text, bool matchCase, bool wholeWord);
         static FileItem* findNext(FileItem* currentFile);
         static bool hasText();
         static QString lastText();
         static bool lastMatchCase();
+        static bool lastWholeWord();
 
     private:
         static QList<FileItem*> fileList(FileItem* pivotFile);
