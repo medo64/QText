@@ -1,6 +1,11 @@
 ## Release Notes ##
 
 
+### 0.1.9 [2020-04-21] ###
+
+* Fixed search bugs
+
+
 ### 0.1.8 [2020-04-19] ###
 
 * Added search functionality
