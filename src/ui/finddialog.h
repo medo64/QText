@@ -11,17 +11,18 @@ class FindDialog : public QDialog {
     Q_OBJECT
 
     public:
-        explicit FindDialog(QWidget *parent, QString searchText, bool matchCase, bool wholeWord);
+        explicit FindDialog(QWidget *parent, QString searchText, bool matchCase, bool wholeWord, bool useRegEx);
         ~FindDialog();
         QString searchText();
         bool matchCase();
         bool wholeWord();
+        bool useRegEx();
 
     private:
         Ui::FindDialog *ui;
 
     private slots:
-        void onTextChanged(const QString &text);
+        void onStateChanged();
 
 };
 

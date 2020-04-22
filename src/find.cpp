@@ -7,18 +7,20 @@
 Storage* Find::_storage = nullptr;
 QString Find::_findText;
 QFlags<QTextDocument::FindFlag> Find::_findFlags;
+bool Find::_findUseRegEx;
 FileItem* Find::_firstMatchFile = nullptr;
 QTextCursor Find::_firstMatchCursor;
 bool Find::_firstMatchBackward;
 
 
-void Find::setup(Storage* storage, QString text, bool matchCase, bool wholeWord) {
+void Find::setup(Storage* storage, QString text, bool matchCase, bool wholeWord, bool useRegEx) {
     _storage = storage;
 
     _findText = text;
     _findFlags = QTextDocument::FindFlag();
     if (matchCase) { _findFlags |= QTextDocument::FindCaseSensitively; }
     if (wholeWord) { _findFlags |= QTextDocument::FindWholeWords; }
+    _findUseRegEx = useRegEx;
 
     _firstMatchFile = nullptr;
     _firstMatchCursor = QTextCursor();
@@ -33,7 +35,13 @@ FileItem* Find::findNext(FileItem* currentFile, bool backward) {
         auto flags = backward ? _findFlags | QTextDocument::FindBackward : _findFlags;
 
         auto document = file->document();
-        auto resultCursor = document->find(_findText, cursor, flags);
+        QTextCursor resultCursor;
+        if (_findUseRegEx) {
+            auto regEx = QRegExp(_findText, _findFlags.testFlag(QTextDocument::FindCaseSensitively) ? Qt::CaseSensitive : Qt::CaseInsensitive);
+            resultCursor = document->find(regEx, cursor, flags);
+        } else {
+            resultCursor = document->find(_findText, cursor, flags);
+        }
 
         if (!resultCursor.isNull()) {
             if ((_firstMatchFile == nullptr) || (_firstMatchBackward != backward)) { //save first match
@@ -105,4 +113,8 @@ bool Find::lastMatchCase() {
 
 bool Find::lastWholeWord() {
     return _findFlags.testFlag(QTextDocument::FindWholeWords);
+}
+
+bool Find::lastUseRegEx() {
+    return _findUseRegEx;
 }
