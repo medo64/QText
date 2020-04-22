@@ -53,9 +53,24 @@ void FindDialog::onStateChanged() {
     ui->checkWholeWord->setEnabled(!isRegEx);
 
     if (isRegEx) {
+        auto toolTipText = "\\d: Matches a digit."  "\n"
+                           "\\D: Matches a non-digit."  "\n"
+                           "\\s: Matches a whitespace character."  "\n"
+                           "\\S: Matches a non-whitespace character."  "\n"
+                           "\\w: Matches a word character."  "\n"
+                           "\\W: Matches a non-word character."  "\n"
+                           "\\b: Word boundary assertions."  "\n"
+                           "\\a: Matches the ASCII BEL (BEL, 0x07)." "\n"
+                           "\\f: Matches the ASCII form feed (FF, 0x0C)." "\n"
+                           "\\n: Matches the ASCII line feed (LF, 0x0A, Unix newline)."  "\n"
+                           "\\r: Matches the ASCII carriage return (CR, 0x0D)."  "\n"
+                           "\\t: Matches the ASCII horizontal tab (HT, 0x09)."  "\n"
+                           "\\v: Matches the ASCII vertical tab (VT, 0x0B).";
+        ui->editSearch->setToolTip(toolTipText);
         auto regex = QRegExp(text);
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(regex.isValid() && !regex.isEmpty());
     } else {
+        ui->editSearch->setToolTip(QString());
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(text.length() > 0);
     }
 }
