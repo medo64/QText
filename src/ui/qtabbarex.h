@@ -1,6 +1,7 @@
 #ifndef QTABBAREX_H
 #define QTABBAREX_H
 
+#include <QElapsedTimer>
 #include <QMouseEvent>
 #include <QPoint>
 #include <QTabBar>
@@ -21,6 +22,7 @@ class QTabBarEx : public QTabBar {
         int _sourceIndex;
         QPoint _sourcePoint;
         bool _moveInProgress;
+        QElapsedTimer* _longClickTimer = nullptr;
 
     signals:
         void tabMoved(int from, int to);

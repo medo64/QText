@@ -1,7 +1,7 @@
-#include "qtabbarex.h"
 #include <math.h>
 #include <QApplication>
 #include <QMouseEvent>
+#include "qtabbarex.h"
 
 QTabBarEx::QTabBarEx(QWidget *parent)
     : QTabBar(parent) {
@@ -22,6 +22,12 @@ void QTabBarEx::mouseMoveEvent(QMouseEvent* event) {
 
 void QTabBarEx::mousePressEvent(QMouseEvent* event)  {
     if (event->button() == Qt::LeftButton) {
+        if (_longClickTimer != nullptr) { delete _longClickTimer; }
+        if (QElapsedTimer::isMonotonic()) { //don't deal with time if clock is not monotonic
+            _longClickTimer = new QElapsedTimer();
+            _longClickTimer->start();
+        }
+
         _sourceIndex = this->tabAt(event->pos());
         if (_sourceIndex >= 0) {
             _sourcePoint = event->pos();
@@ -44,6 +50,11 @@ void QTabBarEx::mouseReleaseEvent(QMouseEvent* event) {
         if ((_sourceIndex != destinationIndex) && (destinationIndex >= 0)) {
             moveTab(_sourceIndex, destinationIndex);
         }
+    } else if ((event->button() == Qt::LeftButton) && (_longClickTimer != nullptr) && !_moveInProgress) {
+        bool longPress = _longClickTimer->elapsed() >= (QApplication::startDragTime() * 3);
+        delete _longClickTimer;
+        _longClickTimer = nullptr;
+        if (longPress) { this->customContextMenuRequested(event->pos()); }
     }
 
     _sourceIndex = -1;
