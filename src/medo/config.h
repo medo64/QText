@@ -1,5 +1,6 @@
 /* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
 
+// 2020-04-26: Added extra escape sequences
 // 2019-07-17: Initial version
 // 2019-10-13: Added stateRead and stateWrite operations
 // 2019-11-01: Fixed readMany implementation

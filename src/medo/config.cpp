@@ -739,10 +739,13 @@ void Config::ConfigFile::processLine(QString lineText) {
                     QChar newCh;
                     switch (ch.unicode()) {
                         case '0': newCh = '\000'; break;
+                        case 'a': newCh = '\a'; break;
                         case 'b': newCh = '\b'; break;
-                        case 't': newCh = '\t'; break;
+                        case 'f': newCh = '\f'; break;
                         case 'n': newCh = '\n'; break;
                         case 'r': newCh = '\r'; break;
+                        case 't': newCh = '\t'; break;
+                        case 'v': newCh = '\v'; break;
                         case '_': newCh = ' '; break;
                         default: newCh = ch; break;
                     }
@@ -1059,10 +1062,13 @@ void Config::ConfigFile::LineData::escapeIntoStringBuilder(QString* sb, QString 
         switch (ch.unicode()) {
             case '\\': sb->append("\\\\"); break;
             case '\0': sb->append("\\0"); break;
+            case '\a': sb->append("\\a"); break;
             case '\b': sb->append("\\b"); break;
-            case '\t': sb->append("\\t"); break;
-            case '\r': sb->append("\\r"); break;
+            case '\f': sb->append("\\f"); break;
             case '\n': sb->append("\\n"); break;
+            case '\r': sb->append("\\r"); break;
+            case '\t': sb->append("\\t"); break;
+            case '\v': sb->append("\\v"); break;
             case '#': sb->append("\\#"); break;
             default:
                 if (!ch.isPrint()) {
@@ -1076,10 +1082,13 @@ void Config::ConfigFile::LineData::escapeIntoStringBuilder(QString* sb, QString 
                 } else if (ch.isSpace()) {
                     switch (ch.unicode()) {
                         case '\0': sb->append("\\0"); break;
+                        case '\a': sb->append("\\a"); break;
                         case '\b': sb->append("\\b"); break;
-                        case '\t': sb->append("\\t"); break;
+                        case '\f': sb->append("\\f"); break;
                         case '\n': sb->append("\\n"); break;
                         case '\r': sb->append("\\r"); break;
+                        case '\t': sb->append("\\t"); break;
+                        case '\v': sb->append("\\v"); break;
                         default: sb->append(QString("%1").arg(ch.unicode(), 4, 16, QChar('0'))); break;
                     }
                 } else if (ch == '\\') {
