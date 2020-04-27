@@ -18,11 +18,18 @@ class FindDialog : public QDialog {
         bool wholeWord();
         bool useRegEx();
 
+    protected:
+        void accept() override;
+
     private:
         Ui::FindDialog *ui;
+        QString composeTerm(QString text, bool matchCase, bool wholeWord, bool useRegEx);
+        QString decomposeTerm(QString term, bool* matchCase, bool* wholeWord, bool* useRegEx);
+        QString decomposeTerm(QString term);
 
     private slots:
         void onStateChanged();
+        void onHistorySelected();
 
 };
 

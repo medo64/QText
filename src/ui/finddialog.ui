@@ -11,23 +11,13 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Find</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../qtext.qrc">
     <normaloff>:/icons/16x16/appMono.png</normaloff>:/icons/16x16/appMono.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="2">
-    <widget class="QLineEdit" name="editSearch"/>
-   </item>
-   <item row="2" column="2">
-    <widget class="QCheckBox" name="checkWholeWord">
-     <property name="text">
-      <string>Whole word</string>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="1">
     <widget class="QLabel" name="labelSearch">
      <property name="text">
@@ -35,10 +25,20 @@
      </property>
     </widget>
    </item>
+   <item row="0" column="2">
+    <widget class="QComboBox" name="comboSearch"/>
+   </item>
    <item row="1" column="2">
     <widget class="QCheckBox" name="checkMatchCase">
      <property name="text">
       <string>Match case</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QCheckBox" name="checkWholeWord">
+     <property name="text">
+      <string>Whole word</string>
      </property>
     </widget>
    </item>
@@ -68,7 +68,7 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>editSearch</tabstop>
+  <tabstop>comboSearch</tabstop>
   <tabstop>checkMatchCase</tabstop>
   <tabstop>checkWholeWord</tabstop>
   <tabstop>checkUseRegEx</tabstop>
