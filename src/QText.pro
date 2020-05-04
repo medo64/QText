@@ -9,15 +9,14 @@ DEFINES += "APP_COMPANY=\"\\\"$$APP_COMPANY\\\"\""
 DEFINES += "APP_VERSION=\\\"$$APP_VERSION\\\""
 DEFINES += "APP_COPYRIGHT=\"\\\"$$APP_COPYRIGHT\\\"\""
 DEFINES += "APP_DESCRIPTION=\"\\\"$$APP_DESCRIPTION\\\"\""
+DEFINES += "APP_QT_VERSION=\\\"$$QT_VERSION\\\""
 
 APP_COMMIT = $$system(git -C \"$$_PRO_FILE_PWD_\" log -n 1 --format=%h)
-APP_COMMIT_DIRTY = $$system(git -C \"$$_PRO_FILE_PWD_\" diff --quiet ; echo $?)
-!equals(APP_COMMIT_DIRTY, 0) {
+APP_COMMIT_DIFF = $$system(git -C \"$$_PRO_FILE_PWD_\" diff)
+!isEmpty(APP_COMMIT_DIFF) {
     APP_COMMIT = $$upper($$APP_COMMIT) #upper-case if working directory is dirty
 }
 DEFINES += "APP_COMMIT=\"\\\"$$APP_COMMIT\\\"\""
-
-DEFINES += "APP_QT_VERSION=\\\"$$QT_VERSION\\\""
 
 
 QT       += core gui widgets
