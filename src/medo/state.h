@@ -3,8 +3,8 @@
 // 2019-07-15: Initial version
 // 2020-01-01: Added widget methods
 
-#ifndef STATE_H
-#define STATE_H
+#ifndef MEDO_STATE_H
+#define MEDO_STATE_H
 
 #include <QMainWindow>
 #include <QMutex>
@@ -84,4 +84,4 @@ class State  : public QObject {
 
 };
 
-#endif // STATE_H
+#endif // MEDO_STATE_H

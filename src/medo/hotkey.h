@@ -4,8 +4,8 @@
 // 2019-09-16: Allowing Meta/Win key as a hotkey modifier
 // 2019-10-04: Reorganizing includes to minimize conflicts
 
-#ifndef HOTKEY_H
-#define HOTKEY_H
+#ifndef MEDO_HOTKEY_H
+#define MEDO_HOTKEY_H
 
 #include <QAbstractNativeEventFilter>
 #include <QByteArray>
@@ -57,4 +57,4 @@ class Hotkey : public QObject, QAbstractNativeEventFilter {
     public slots:
 };
 
-#endif // HOTKEY_H
+#endif // MEDO_HOTKEY_H

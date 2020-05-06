@@ -2,8 +2,8 @@
 
 // 2019-07-06: Initial version
 
-#ifndef SINGLEINSTANCE_H
-#define SINGLEINSTANCE_H
+#ifndef MEDO_SINGLEINSTANCE_H
+#define MEDO_SINGLEINSTANCE_H
 
 #include <QLocalServer>
 #include <QMutex>
@@ -46,4 +46,4 @@ class SingleInstance : public QObject {
 
 };
 
-#endif // SINGLEINSTANCE_H
+#endif // MEDO_SINGLEINSTANCE_H
