@@ -1,5 +1,7 @@
 /* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
 
+// 2020-05-05: Added stateRead/stateWrite for integers, longs, and doubles
+//             Allowing : and = in key name
 // 2020-04-26: Added extra escape sequences
 // 2019-07-17: Initial version
 // 2019-10-13: Added stateRead and stateWrite operations
@@ -8,8 +10,8 @@
 //             Added option to set paths manually
 // 2020-03-15: If QApplication hasn't bee initializesd, assume installed on Linux
 
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef MEDO_CONFIG_H
+#define MEDO_CONFIG_H
 
 #include <QHash>
 #include <QMutex>
@@ -222,6 +224,36 @@ class Config {
          * /param value Value. */
         static void stateWrite(QString key, bool value);
 
+        /*! Returns state value for a given key or default value if one is not found or cannot be converted to int.
+         * /param key Key.
+         * /param defaultValue Default value. */
+        static int stateRead(QString key, int defaultValue);
+
+        /*! Writes state value to a given key.
+         * /param key Key.
+         * /param value Value. */
+        static void stateWrite(QString key, int value);
+
+        /*! Returns state value for a given key or default value if one is not found or cannot be converted to long.
+         * /param key Key.
+         * /param defaultValue Default value. */
+        static long long stateRead(QString key, long long defaultValue);
+
+        /*! Writes state value to a given key.
+         * /param key Key.
+         * /param value Value. */
+        static void stateWrite(QString key, long long value);
+
+        /*! Returns state value for a given key or default value if one is not found or cannot be converted to double.
+         * /param key Key.
+         * /param defaultValue Default value. */
+        static double stateRead(QString key, double defaultValue);
+
+        /*! Writes state value to a given key.
+         * /param key Key.
+         * /param value Value. */
+        static void stateWrite(QString key, double value);
+
 
         /*! Returns all state values for a given key or empty list if key doesn't exist.
          * /param key Key. */
@@ -335,4 +367,4 @@ class Config {
 
 };
 
-#endif // CONFIG_H
+#endif // MEDO_CONFIG_H

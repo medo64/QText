@@ -503,6 +503,52 @@ void Config::stateWrite(QString key, bool value) {
     stateWrite(key, value ? QString("true") : QString("false"));
 }
 
+int Config::stateRead(QString key, int defaultValue) {
+    QString text = stateRead(key, QString()).trimmed();
+    bool isOK; int value = text.toInt(&isOK);
+    return isOK ? value : defaultValue;
+}
+
+void Config::stateWrite(QString key, int value) {
+    stateWrite(key, QString::number(value));
+}
+
+long long Config::stateRead(QString key, long long defaultValue) {
+    QString text = stateRead(key, QString()).trimmed();
+    bool isOK; long long value = text.toLongLong(&isOK);
+    return isOK ? value : defaultValue;
+}
+
+void Config::stateWrite(QString key, long long value) {
+    stateWrite(key, QString::number(value));
+}
+
+double Config::stateRead(QString key, double defaultValue) {
+    QString text = stateRead(key, QString()).trimmed();
+    if (text.compare("NAN", Qt::CaseInsensitive) == 0) { //compatibility with C#-based config
+        return std::numeric_limits<double>::quiet_NaN();
+    } else if (text.compare("Infinity", Qt::CaseInsensitive) == 0) { //compatibility with C#-based config
+        return std::numeric_limits<double>::infinity();
+    } else if (text.compare("-Infinity", Qt::CaseInsensitive) == 0) { //compatibility with C#-based config
+        return -std::numeric_limits<double>::infinity();
+    } else {
+        bool isOK; double value = text.toDouble(&isOK);
+        return isOK ? value : defaultValue;
+    }
+}
+
+void Config::stateWrite(QString key, double value) {
+    QString text = QString::number(value, 'G', 14);
+    if (text.compare("NAN", Qt::CaseInsensitive) == 0) {
+        stateWrite(key, "NaN"); //compatibility with C#-based config
+    } else if (text.compare("INF", Qt::CaseInsensitive) == 0) {
+        stateWrite(key, "Infinity"); //compatibility with C#-based config
+    } else if (text.compare("-INF", Qt::CaseInsensitive) == 0) {
+        stateWrite(key, "-Infinity"); //compatibility with C#-based config
+    } else {
+        stateWrite(key, text);
+    }
+}
 
 QStringList Config::stateReadMany(QString key) {
     key = key.trimmed(); //get rid of spaces around key
@@ -1093,6 +1139,10 @@ void Config::ConfigFile::LineData::escapeIntoStringBuilder(QString* sb, QString 
                     }
                 } else if (ch == '\\') {
                     sb->append("\\\\");
+                } else if ((ch == ':') && isKey) {
+                    sb->append("\\:");
+                } else if ((ch == '=') && isKey) {
+                    sb->append("\\=");
                 } else {
                     sb->append(ch);
                 }
