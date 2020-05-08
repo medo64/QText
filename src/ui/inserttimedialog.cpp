@@ -20,7 +20,7 @@ InsertTimeDialog::InsertTimeDialog(QWidget *parent) : QDialog(parent), ui(new Ui
     connect(updateExample, &QTimer::timeout, this, &InsertTimeDialog::onUpdateExampleTimeout);
     updateExample->start(1000);
 
-    connect(ui->formatText, SIGNAL(textEdited(const QString&)), SLOT(onTextEdited(const QString&)));
+    connect(ui->formatText, &QLineEdit::textEdited, this, &InsertTimeDialog::onTextEdited);
     onUpdateExampleTimeout();
 }
 

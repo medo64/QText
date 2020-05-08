@@ -23,9 +23,9 @@ GotoDialog::GotoDialog(QWidget *parent, Storage* storage) : QDialog(parent), ui(
     _folderIcon.addFile(":icons/48x48/folder.png", QSize(48, 48));
     _folderIcon.addFile(":icons/64x64/folder.png", QSize(64, 64));
 
-    connect(ui->textSearch, SIGNAL(textEdited(const QString&)), SLOT(onTextEdited(const QString&)));
-    connect(ui->listWidget, SIGNAL(itemSelectionChanged()), SLOT(onItemSelectionChanged()));
-    connect(ui->listWidget, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(onItemActivated()));
+    connect(ui->textSearch, &QLineEdit::textEdited, this, &GotoDialog::onTextEdited);
+    connect(ui->listWidget, &QListWidget::itemSelectionChanged, this, &GotoDialog::onItemSelectionChanged);
+    connect(ui->listWidget, &QListWidget::itemActivated, this, &GotoDialog::onItemActivated);
 
     onTextEdited("");
 

@@ -9,7 +9,7 @@ FileNameDialog::FileNameDialog(QWidget *parent) : QDialog(parent), ui(new Ui::Fi
 
     ui->textFileName->setFocus();
 
-    connect(ui->textFileName, SIGNAL(textChanged(const QString&)), this, SLOT(onTextChanged(const QString&)));
+    connect(ui->textFileName, &QLineEdit::textChanged, this, &FileNameDialog::onTextChanged);
     onTextChanged(ui->textFileName->text());
 }
 

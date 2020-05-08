@@ -25,9 +25,9 @@ FileItem::FileItem(FolderItem* folder, QString fileName)
     auto tabWidth = Settings::tabWidth() * fm.width(' ');
     this->setTabStopDistance(tabWidth);
 
-    connect(this->document(), SIGNAL(modificationChanged(bool)), this, SLOT(onModificationChanged(bool)));
+    connect(this->document(), &QTextDocument::modificationChanged, this, &FileItem::onModificationChanged);
     this->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(onContextMenuRequested(const QPoint&)));
+    connect(this, &FileItem::customContextMenuRequested, this, &FileItem::onContextMenuRequested);
 }
 
 FileItem::~FileItem() {
@@ -292,7 +292,7 @@ void FileItem::onModificationChanged(bool changed) {
         if (_timerSavePending == nullptr) {
             _timerSavePending = new QTimer(); //set timer to fire 3 seconds after the last key press
             _timerSavePending->setSingleShot(true);
-            QObject::connect(_timerSavePending, SIGNAL(timeout()), this, SLOT(onSavePendingTimeout()));
+            QObject::connect(_timerSavePending, &QTimer::timeout, this, &FileItem::onSavePendingTimeout);
         }
         _timerSavePending->stop();
         _timerSavePending->setInterval(interval);
@@ -319,14 +319,14 @@ void FileItem::onContextMenuRequested(const QPoint& point) {
     undoAction->setShortcut(QKeySequence("Ctrl+Z"));
     undoAction->setShortcutVisibleInContextMenu(true);
     undoAction->setDisabled(!document()->isUndoAvailable());
-    connect(undoAction, SIGNAL(triggered()), this, SLOT(onContextMenuUndo()));
+    connect(undoAction, &QAction::triggered, this, &FileItem::onContextMenuUndo);
     menu.addAction(undoAction);
 
     QAction* redoAction = new QAction(Icons::redo(), "&Redo");
     redoAction->setShortcut(QKeySequence("Ctrl+Y"));
     redoAction->setShortcutVisibleInContextMenu(true);
     redoAction->setDisabled(!document()->isRedoAvailable());
-    connect(redoAction, SIGNAL(triggered()), this, SLOT(onContextMenuRedo()));
+    connect(redoAction, &QAction::triggered, this, &FileItem::onContextMenuRedo);
     menu.addAction(redoAction);
 
     menu.addSeparator();
@@ -335,28 +335,28 @@ void FileItem::onContextMenuRequested(const QPoint& point) {
     cutAction->setShortcut(QKeySequence("Ctrl+X"));
     cutAction->setShortcutVisibleInContextMenu(true);
     cutAction->setDisabled(!textCursor().hasSelection());
-    connect(cutAction, SIGNAL(triggered()), this, SLOT(onContextMenuCutPlain()));
+    connect(cutAction, &QAction::triggered, this, &FileItem::onContextMenuCutPlain);
     menu.addAction(cutAction);
 
     QAction* copyAction = new QAction(Icons::copy(), "&Copy");
     copyAction->setShortcut(QKeySequence("Ctrl+C"));
     copyAction->setShortcutVisibleInContextMenu(true);
     copyAction->setDisabled(!textCursor().hasSelection());
-    connect(copyAction, SIGNAL(triggered()), this, SLOT(onContextMenuCopyPlain()));
+    connect(copyAction, &QAction::triggered, this, &FileItem::onContextMenuCopyPlain);
     menu.addAction(copyAction);
 
     QAction* pasteAction = new QAction(Icons::paste(), "&Paste");
     pasteAction->setShortcut(QKeySequence("Ctrl+V"));
     pasteAction->setShortcutVisibleInContextMenu(true);
     pasteAction->setDisabled(!Clipboard::hasText());
-    connect(pasteAction, SIGNAL(triggered()), this, SLOT(onContextMenuPastePlain()));
+    connect(pasteAction, &QAction::triggered, this, &FileItem::onContextMenuPastePlain);
     menu.addAction(pasteAction);
 
     QAction* deleteAction = new QAction("&Delete");
     deleteAction->setShortcut(QKeySequence("Delete"));
     deleteAction->setShortcutVisibleInContextMenu(true);
     deleteAction->setDisabled(!textCursor().hasSelection());
-    connect(deleteAction, SIGNAL(triggered()), this, SLOT(onContextMenuDelete()));
+    connect(deleteAction, &QAction::triggered, this, &FileItem::onContextMenuDelete);
     menu.addAction(deleteAction);
 
     menu.addSeparator();
@@ -364,7 +364,7 @@ void FileItem::onContextMenuRequested(const QPoint& point) {
     QAction* selectAllAction = new QAction("Select &All");
     selectAllAction->setShortcut(QKeySequence("Ctrl+A"));
     selectAllAction->setShortcutVisibleInContextMenu(true);
-    connect(selectAllAction, SIGNAL(triggered()), this, SLOT(onContextMenuSelectAll()));
+    connect(selectAllAction, &QAction::triggered, this, &FileItem::onContextMenuSelectAll);
     menu.addAction(selectAllAction);
 
     menu.addSeparator();
@@ -372,7 +372,7 @@ void FileItem::onContextMenuRequested(const QPoint& point) {
     QAction* insertDateTimeAction = new QAction("Insert &Time/Date");
     insertDateTimeAction->setShortcut(QKeySequence("F5"));
     insertDateTimeAction->setShortcutVisibleInContextMenu(true);
-    connect(insertDateTimeAction, SIGNAL(triggered()), this, SLOT(onContextMenuInsertTime()));
+    connect(insertDateTimeAction, &QAction::triggered, this, &FileItem::onContextMenuInsertTime);
     menu.addAction(insertDateTimeAction);
 
     menu.exec(this->mapToGlobal(point));

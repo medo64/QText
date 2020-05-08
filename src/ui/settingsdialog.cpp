@@ -16,7 +16,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) : QDialog(parent), ui(new Ui::Se
     _oldMinimizeToTray = Settings::minimizeToTray();
     _oldShowInTaskbar = Settings::showInTaskbar();
 
-    connect(ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), this,  SLOT(onButtonClicked(QAbstractButton*)));
+    connect(ui->buttonBox, &QDialogButtonBox::clicked, this,  &SettingsDialog::onButtonClicked);
     reset();
 }
 

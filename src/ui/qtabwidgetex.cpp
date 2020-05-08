@@ -7,7 +7,7 @@ QTabWidgetEx::QTabWidgetEx(QWidget* parent)
     QTabBarEx* bar = new QTabBarEx();
     this->setTabBar(bar);
 
-    connect(bar, SIGNAL(tabMoved(int, int)), SLOT(onTabMoved(int, int)));
+    connect(bar, &QTabBarEx::tabMoved, this, &QTabWidgetEx::onTabMoved);
 }
 
 
