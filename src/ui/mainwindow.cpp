@@ -42,12 +42,12 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
 
     { //tray
         _tray = new QSystemTrayIcon(this);
-        connect(_tray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(onTrayActivate(QSystemTrayIcon::ActivationReason)));
+        connect(_tray, &QSystemTrayIcon::activated, this, &MainWindow::onTrayActivate);
 
         QMenu* trayMenu = new QMenu(this);
-        auto defaultAction = trayMenu->addAction("&Show", this, SLOT(onTrayShow()));
+        auto defaultAction = trayMenu->addAction("&Show", this, &MainWindow::onTrayShow);
         trayMenu->addSeparator();
-        trayMenu->addAction("&Quit", this, SLOT(onAppQuit()));
+        trayMenu->addAction("&Quit", this, &MainWindow::onAppQuit);
 
         auto font = defaultAction->font();
         font.setBold(true);
@@ -66,58 +66,58 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     { //hotkey
         _hotkey = new Hotkey(this);
         _hotkey->registerHotkey(Settings::hotkey());
-        connect(_hotkey, SIGNAL(activated()), this, SLOT(onTrayShow()));
+        connect(_hotkey, &Hotkey::activated, this, &MainWindow::onTrayShow);
     }
 
     { //single instance
-        connect(SingleInstance::instance(), SIGNAL(newInstanceDetected()), this, SLOT(onTrayShow()));
+        connect(SingleInstance::instance(), &SingleInstance::newInstanceDetected, this, &MainWindow::onTrayShow);
     }
 
     { //toolbar setup
         ui->actionNew->setIcon(Icons::newFile());
-        connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(onFileNew()));
+        connect(ui->actionNew, &QAction::triggered, this, &MainWindow::onFileNew);
 
         ui->actionSave->setIcon(Icons::saveFile());
-        connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(onFileSave()));
+        connect(ui->actionSave, &QAction::triggered, this, &MainWindow::onFileSave);
 
         ui->actionRename->setIcon(Icons::renameFile());
-        connect(ui->actionRename, SIGNAL(triggered()), this, SLOT(onFileRename()));
+        connect(ui->actionRename, &QAction::triggered, this, &MainWindow::onFileRename);
 
         ui->actionDelete->setIcon(Icons::deleteFile());
-        connect(ui->actionDelete, SIGNAL(triggered()), this, SLOT(onFileDelete()));
+        connect(ui->actionDelete, &QAction::triggered, this, &MainWindow::onFileDelete);
 
         ui->actionPrint->setIcon(Icons::printFile());
-        connect(ui->actionPrint, SIGNAL(triggered()), this, SLOT(onFilePrint()));
+        connect(ui->actionPrint, &QAction::triggered, this, &MainWindow::onFilePrint);
 
         ui->actionPrintPreview->setIcon(Icons::printPreviewFile());
-        connect(ui->actionPrintPreview, SIGNAL(triggered()), this, SLOT(onFilePrintPreview()));
+        connect(ui->actionPrintPreview, &QAction::triggered, this, &MainWindow::onFilePrintPreview);
 
         ui->actionPrintToPdf->setIcon(Icons::printToPdfFile());
-        connect(ui->actionPrintToPdf, SIGNAL(triggered()), this, SLOT(onFilePrintToPdf()));
+        connect(ui->actionPrintToPdf, &QAction::triggered, this, &MainWindow::onFilePrintToPdf);
 
         ui->actionCut->setIcon(Icons::cut());
-        connect(ui->actionCut, SIGNAL(triggered()), this, SLOT(onTextCut()));
+        connect(ui->actionCut, &QAction::triggered, this, &MainWindow::onTextCut);
 
         ui->actionCopy->setIcon(Icons::copy());
-        connect(ui->actionCopy, SIGNAL(triggered()), this, SLOT(onTextCopy()));
+        connect(ui->actionCopy, &QAction::triggered, this, &MainWindow::onTextCopy);
 
         ui->actionPaste->setIcon(Icons::paste());
-        connect(ui->actionPaste, SIGNAL(triggered()), this, SLOT(onTextPaste()));
+        connect(ui->actionPaste, &QAction::triggered, this, &MainWindow::onTextPaste);
 
         ui->actionUndo->setIcon(Icons::undo());
-        connect(ui->actionUndo, SIGNAL(triggered()), this, SLOT(onTextUndo()));
+        connect(ui->actionUndo, &QAction::triggered, this, &MainWindow::onTextUndo);
 
         ui->actionRedo->setIcon(Icons::redo());
-        connect(ui->actionRedo, SIGNAL(triggered()), this, SLOT(onTextRedo()));
+        connect(ui->actionRedo, &QAction::triggered, this, &MainWindow::onTextRedo);
 
         ui->actionFind->setIcon(Icons::find());
-        connect(ui->actionFind, SIGNAL(triggered()), this, SLOT(onFind()));
+        connect(ui->actionFind, &QAction::triggered, this, &MainWindow::onFind);
 
         ui->actionFindNext->setIcon(Icons::findNext());
-        connect(ui->actionFindNext, SIGNAL(triggered()), this, SLOT(onFindNext()));
+        connect(ui->actionFindNext, &QAction::triggered, this, &MainWindow::onFindNext);
 
         ui->actionGoto->setIcon(Icons::gotoIcon());
-        connect(ui->actionGoto, SIGNAL(triggered()), this, SLOT(onGoto()));
+        connect(ui->actionGoto, &QAction::triggered, this, &MainWindow::onGoto);
     }
 
     { //print button menu
@@ -125,7 +125,7 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
         _printButton->setIcon(Icons::printFile());
         _printButton->setPopupMode(QToolButton::MenuButtonPopup);
         _printButton->setMenu(new QMenu());
-        connect(_printButton, SIGNAL(clicked()), this, SLOT(onFilePrint()));
+        connect(_printButton, &QToolButton::clicked, this, &MainWindow::onFilePrint);
 
         _printButton->menu()->addAction(ui->actionPrint);
         _printButton->menu()->addAction(ui->actionPrintPreview);
@@ -144,17 +144,17 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
         _folderButton->setPopupMode(QToolButton::MenuButtonPopup);
         _folderButton->setMenu(new QMenu());
         ui->mainToolBar->addWidget(_folderButton);
-        connect(_folderButton, SIGNAL(clicked()), this, SLOT(onFolderSetup()));
-        connect(_folderButton->menu(), SIGNAL(aboutToShow()), this, SLOT(onFolderMenuShow()));
+        connect(_folderButton, &QToolButton::clicked, this, &MainWindow::onFolderSetup);
+        connect(_folderButton->menu(), &QMenu::aboutToShow, this, &MainWindow::onFolderMenuShow);
 
         onFolderMenuSelect(); //setup folder select menu button
         onTabChanged(); //update toolbar & focus
-        connect(ui->actionReopen, SIGNAL(triggered()), this, SLOT(onFileReopen()));
-        connect(ui->actionOpenWithDefaultApplication, SIGNAL(triggered()), this, SLOT(onOpenWithDefaultApplication()));
-        connect(ui->actionOpenWithVisualStudioCode, SIGNAL(triggered()), this, SLOT(onOpenWithVisualStudioCode()));
-        connect(ui->actionShowContainingDirectory, SIGNAL(triggered()), this, SLOT(onShowContainingDirectory()));
-        connect(ui->actionShowContainingDirectoryOnly, SIGNAL(triggered()), this, SLOT(onShowContainingDirectoryOnly()));
-        connect(ui->actionCopyContainingPath, SIGNAL(triggered()), this, SLOT(onCopyContainingPath()));
+        connect(ui->actionReopen, &QAction::triggered, this, &MainWindow::onFileReopen);
+        connect(ui->actionOpenWithDefaultApplication,  &QAction::triggered, this, &MainWindow::onOpenWithDefaultApplication);
+        connect(ui->actionOpenWithVisualStudioCode,  &QAction::triggered, this, &MainWindow::onOpenWithVisualStudioCode);
+        connect(ui->actionShowContainingDirectory,  &QAction::triggered, this, &MainWindow::onShowContainingDirectory);
+        connect(ui->actionShowContainingDirectoryOnly,  &QAction::triggered, this, &MainWindow::onShowContainingDirectoryOnly);
+        connect(ui->actionCopyContainingPath,  &QAction::triggered, this, &MainWindow::onCopyContainingPath);
     }
 
     { //app button menu
@@ -162,34 +162,34 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
         _appButton->setIcon(Icons::settings());
         _appButton->setPopupMode(QToolButton::MenuButtonPopup);
         _appButton->setMenu(new QMenu());
-        connect(_appButton, SIGNAL(clicked()), this, SLOT(onAppSettings()));
+        connect(_appButton, &QToolButton::clicked, this, &MainWindow::onAppSettings);
 
         QAction* appSettingsAction = new QAction("&Settings");
-        connect(appSettingsAction, SIGNAL(triggered()), this, SLOT(onAppSettings()));
+        connect(appSettingsAction, &QAction::triggered, this, &MainWindow::onAppSettings);
         _appButton->menu()->addAction(appSettingsAction);
 
         QAction* appAboutAction = new QAction("&About");
-        connect(appAboutAction, SIGNAL(triggered()), this, SLOT(onAppAbout()));
+        connect(appAboutAction, &QAction::triggered, this, &MainWindow::onAppAbout);
         _appButton->menu()->addAction(appAboutAction);
 
         _appButton->menu()->addSeparator();
 
         QAction* appQuitAction = new QAction("&Quit");
-        connect(appQuitAction, SIGNAL(triggered()), this, SLOT(onAppQuit()));
+        connect(appQuitAction, &QAction::triggered, this, &MainWindow::onAppQuit);
         _appButton->menu()->addAction(appQuitAction);
     }
     ui->mainToolBar->addWidget(_appButton);
 
     //tabs
     ui->tabWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->tabWidget, SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(onTabMenuRequested(const QPoint&)));
+    connect(ui->tabWidget, &QTabWidget::customContextMenuRequested, this, &MainWindow::onTabMenuRequested);
     ui->tabWidget->tabBar()->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->tabWidget->tabBar(), SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(onTabMenuRequested(const QPoint&)));
-    connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(onTabChanged()));
-    connect(ui->tabWidget, SIGNAL(tabMoved(int, int)), SLOT(onTabMoved(int, int)));
+    connect(ui->tabWidget->tabBar(), &QTabBar::customContextMenuRequested, this, &MainWindow::onTabMenuRequested);
+    connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainWindow::onTabChanged);
+    connect(ui->tabWidget, &QTabWidgetEx::tabMoved, this, &MainWindow::onTabMoved);
 
     //clipboard
-    connect(QApplication::clipboard(), SIGNAL(dataChanged()), SLOT(onTextStateChanged()));
+    connect(QApplication::clipboard(), &QClipboard::dataChanged, this, &MainWindow::onTextStateChanged);
 
     //State
     State::load(this);
@@ -496,7 +496,7 @@ void MainWindow::onFilePrintPreview() {
     QPrintPreviewDialog dialog(&printer, this, Qt::Dialog | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
     Helpers::setupResizableDialog(&dialog);
     dialog.setWindowTitle("Print Preview: " + file->getTitle());
-    connect(&dialog, SIGNAL(paintRequested(QPrinter*)), file, SLOT(printPreview(QPrinter*)));
+    connect(&dialog, &QPrintPreviewDialog::paintRequested, file, &FileItem::printPreview);
     dialog.showMaximized();
 
     QApplication::restoreOverrideCursor();
@@ -604,7 +604,7 @@ void MainWindow::onFolderMenuShow() {
         folderAction->setData(folder->getKey());
         folderAction->setDisabled(folder == _folder);
         if (!folder->isPrimary()) { folderAction->setFont(italicFont); }
-        connect(folderAction, SIGNAL(triggered()), this, SLOT(onFolderMenuSelect()));
+        connect(folderAction, &QAction::triggered, this, &MainWindow::onFolderMenuSelect);
         _folderButton->menu()->addAction(folderAction);
     }
 }
@@ -836,12 +836,12 @@ void MainWindow::selectFolder(FolderItem* selectedFolder) {
         for (int i = 0; i < _folder->fileCount(); i++) {
             auto file = _folder->getFile(i);
             ui->tabWidget->addTab(file, file->getTitle());
-            QObject::connect(file, SIGNAL(titleChanged(FileItem*)), this, SLOT(onFileTitleChanged(FileItem*)));
-            QObject::connect(file, SIGNAL(modificationChanged(FileItem*, bool)), this, SLOT(onFileModificationChanged(FileItem*, bool)));
-            QObject::connect(file, SIGNAL(activated(FileItem*)), this, SLOT(onFileActivated(FileItem*)));
-            QObject::connect(file, SIGNAL(cursorPositionChanged()), this, SLOT(onTextStateChanged()));
-            QObject::connect(file->document(), SIGNAL(undoAvailable(bool)), this, SLOT(onTextStateChanged()));
-            QObject::connect(file->document(), SIGNAL(redoAvailable(bool)), this, SLOT(onTextStateChanged()));
+            QObject::connect(file, &FileItem::titleChanged, this, &MainWindow::onFileTitleChanged);
+            QObject::connect(file, &FileItem::modificationChanged, this, &MainWindow::onFileModificationChanged);
+            QObject::connect(file, &FileItem::activated, this, &MainWindow::onFileActivated);
+            QObject::connect(file, &FileItem::cursorPositionChanged, this, &MainWindow::onTextStateChanged);
+            QObject::connect(file->document(), &QTextDocument::undoAvailable, this, &MainWindow::onTextStateChanged);
+            QObject::connect(file->document(), &QTextDocument::redoAvailable, this, &MainWindow::onTextStateChanged);
         }
         ui->tabWidget->blockSignals(false);
 
