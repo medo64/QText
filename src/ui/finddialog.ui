@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>139</height>
+    <height>143</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,31 +25,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="2">
-    <widget class="QComboBox" name="comboSearch"/>
-   </item>
-   <item row="1" column="2">
-    <widget class="QCheckBox" name="checkMatchCase">
-     <property name="text">
-      <string>Match case</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="2">
-    <widget class="QCheckBox" name="checkWholeWord">
-     <property name="text">
-      <string>Whole word</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="2">
-    <widget class="QCheckBox" name="checkUseRegEx">
-     <property name="text">
-      <string>Regular expression</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="2">
+   <item row="5" column="2">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -65,13 +41,70 @@
      </property>
     </widget>
    </item>
+   <item row="0" column="2">
+    <widget class="QComboBox" name="comboSearch"/>
+   </item>
+   <item row="1" column="2">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QCheckBox" name="checkMatchCase">
+         <property name="text">
+          <string>&amp;Match case</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkWholeWord">
+         <property name="text">
+          <string>&amp;Whole word</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkUseRegEx">
+         <property name="text">
+          <string>&amp;Regular expression</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QRadioButton" name="radioCurrentFile">
+         <property name="text">
+          <string>Current &amp;file</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioCurrentFolder">
+         <property name="text">
+          <string>&amp;Current folder</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioAllFolders">
+         <property name="text">
+          <string>&amp;All folders</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
   </layout>
  </widget>
  <tabstops>
   <tabstop>comboSearch</tabstop>
-  <tabstop>checkMatchCase</tabstop>
-  <tabstop>checkWholeWord</tabstop>
-  <tabstop>checkUseRegEx</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources>

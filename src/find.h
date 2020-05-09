@@ -8,13 +8,21 @@
 class Find {
 
     public:
-        static void setup(Storage* storage, QString text, bool matchCase, bool wholeWord, bool useRegEx);
+        typedef enum {
+           CurrentFile   = 0,
+           CurrentFolder = 1,
+           AllFolders    = 2,
+        } SearchScope;
+
+    public:
+        static void setup(Storage* storage, QString text, bool matchCase, bool wholeWord, bool useRegEx, Find::SearchScope searchScope);
         static FileItem* findNext(FileItem* currentFile, bool backward = false);
         static bool hasText();
         static QString lastText();
         static bool lastMatchCase();
         static bool lastWholeWord();
         static bool lastUseRegEx();
+        static SearchScope lastSearchScope();
 
     private:
         static QList<FileItem*> fileList(FileItem* pivotFile, bool backward = false);
@@ -25,6 +33,7 @@ class Find {
         static FileItem* _firstMatchFile;
         static QTextCursor _firstMatchCursor;
         static bool _firstMatchBackward;
+        static SearchScope _findScope;
 
 };
 

@@ -11,9 +11,10 @@ bool Find::_findUseRegEx;
 FileItem* Find::_firstMatchFile = nullptr;
 QTextCursor Find::_firstMatchCursor;
 bool Find::_firstMatchBackward;
+Find::SearchScope Find::_findScope = Find::SearchScope::AllFolders;
 
 
-void Find::setup(Storage* storage, QString text, bool matchCase, bool wholeWord, bool useRegEx) {
+void Find::setup(Storage* storage, QString text, bool matchCase, bool wholeWord, bool useRegEx, Find::SearchScope searchScope) {
     _storage = storage;
 
     _findText = text;
@@ -25,6 +26,8 @@ void Find::setup(Storage* storage, QString text, bool matchCase, bool wholeWord,
     _firstMatchFile = nullptr;
     _firstMatchCursor = QTextCursor();
     _firstMatchBackward = false;
+
+    _findScope = searchScope;
 }
 
 FileItem* Find::findNext(FileItem* currentFile, bool backward) {
@@ -65,34 +68,41 @@ FileItem* Find::findNext(FileItem* currentFile, bool backward) {
 QList<FileItem*> Find::fileList(FileItem* pivotFile, bool backward) {
     QList<FileItem*> items;
 
-    bool foundPivot = false;
-    int insertLocation = 0;
-    for (int i = 0; i < _storage->folderCount(); i++) {
-        FolderItem* folder = _storage->getFolder(i);
-        for (int j = 0; j < folder->fileCount(); j++) {
-            FileItem* file = folder->getFile(j);
-            if (backward) { //if we're ordering them backward
-                if (foundPivot) {
-                    items.insert(insertLocation, file);
+    if (_findScope == Find::SearchScope::CurrentFile) {
+        items.append(pivotFile);
+        items.append(pivotFile);
+    } else {
+        bool foundPivot = false;
+        int insertLocation = 0;
+        for (int i = 0; i < _storage->folderCount(); i++) {
+            FolderItem* folder = _storage->getFolder(i);
+            if ((_findScope == Find::SearchScope::CurrentFolder) && (folder != pivotFile->getFolder())) { continue; }
+
+            for (int j = 0; j < folder->fileCount(); j++) {
+                FileItem* file = folder->getFile(j);
+                if (backward) { //if we're ordering them backward
+                    if (foundPivot) {
+                        items.insert(insertLocation, file);
+                    } else {
+                        items.insert(0, file);
+                        insertLocation++;
+                    }
+                    if (file == pivotFile) { foundPivot = true; }
                 } else {
-                    items.insert(0, file);
-                    insertLocation++;
-                }
-                if (file == pivotFile) { foundPivot = true; }
-            } else {
-                if (file == pivotFile) { foundPivot = true; }
-                if (foundPivot) { //insert to the front of the list
-                    items.insert(insertLocation, file);
-                    insertLocation++;
-                } else {
-                    items.append(file);
+                    if (file == pivotFile) { foundPivot = true; }
+                    if (foundPivot) { //insert to the front of the list
+                        items.insert(insertLocation, file);
+                        insertLocation++;
+                     } else {
+                        items.append(file);
+                    }
                 }
             }
         }
-    }
 
-    if (foundPivot) { //add pivot file again at the end to allow checking before the first cursor
-        items.append(items[0]);
+        if (foundPivot) { //add pivot file again at the end to allow checking before the first cursor
+            items.append(items[0]);
+        }
     }
 
     return items;
@@ -117,4 +127,8 @@ bool Find::lastWholeWord() {
 
 bool Find::lastUseRegEx() {
     return _findUseRegEx;
+}
+
+Find::SearchScope Find::lastSearchScope() {
+    return _findScope;
 }

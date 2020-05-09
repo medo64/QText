@@ -5,11 +5,12 @@
 #include "finddialog.h"
 #include "ui_finddialog.h"
 
-FindDialog::FindDialog(QWidget *parent, QString searchText, bool matchCase, bool wholeWord, bool useRegEx) : QDialog(parent), ui(new Ui::FindDialog) {
+FindDialog::FindDialog(QWidget *parent) : QDialog(parent), ui(new Ui::FindDialog) {
     ui->setupUi(this);
     Helpers::setupFixedSizeDialog(this);
 
     auto terms = Config::stateReadMany("SearchTerms");
+    ui->comboSearch->setInsertPolicy(QComboBox::NoInsert);
     for (auto term : terms) {
         ui->comboSearch->addItem(decomposeTerm(term), term);
     }
@@ -18,13 +19,7 @@ FindDialog::FindDialog(QWidget *parent, QString searchText, bool matchCase, bool
     ui->comboSearch->setCompleter(static_cast<QCompleter*>(nullptr));
     ui->comboSearch->setFocus();
 
-    if (searchText.length() > 0) {
-        ui->comboSearch->lineEdit()->selectAll();
-        ui->comboSearch->setEditText(searchText);
-        ui->checkMatchCase->setChecked(matchCase);
-        ui->checkWholeWord->setChecked(wholeWord);
-        ui->checkUseRegEx->setChecked(useRegEx);
-    } else if (ui->comboSearch->count() > 0) {
+    if (ui->comboSearch->count() > 0) {
         ui->comboSearch->setCurrentIndex(ui->comboSearch->count() - 1);
         onHistorySelected();
     }
@@ -43,7 +38,7 @@ FindDialog::~FindDialog() {
 
 void FindDialog::accept() {
     auto text = searchText();
-    auto term = composeTerm(text, matchCase(), wholeWord(), useRegEx());
+    auto term = composeTerm(text, matchCase(), wholeWord(), useRegEx(), searchScope());
 
     auto terms = Config::stateReadMany("SearchTerms");
     for (int i = terms.count() - 1; i >= 0; i--) {
@@ -75,6 +70,15 @@ bool FindDialog::useRegEx() {
     return ui->checkUseRegEx->isChecked();
 }
 
+Find::SearchScope FindDialog::searchScope() {
+    if (ui->radioCurrentFile->isChecked()) {
+        return Find::SearchScope::CurrentFile;
+    } else if (ui->radioCurrentFolder->isChecked()) {
+        return Find::SearchScope::CurrentFolder;
+    } else {
+        return Find::SearchScope::AllFolders;
+    }
+}
 
 void FindDialog::onStateChanged() {
     auto text = ui->comboSearch->lineEdit()->text();
@@ -108,37 +112,61 @@ void FindDialog::onStateChanged() {
 void FindDialog::onHistorySelected() {
     auto term = ui->comboSearch->currentData().toString();
     bool matchCase, wholeWord, useRegEx;
-    decomposeTerm(term, &matchCase, &wholeWord, &useRegEx);
+    Find::SearchScope searchScope;
+    decomposeTerm(term, &matchCase, &wholeWord, &useRegEx, &searchScope);
     ui->checkMatchCase->setChecked(matchCase);
     ui->checkWholeWord->setChecked(wholeWord);
     ui->checkUseRegEx->setChecked(useRegEx);
+    switch (searchScope) {
+        case Find::SearchScope::CurrentFile:   ui->radioCurrentFile->setChecked(true);   break;
+        case Find::SearchScope::CurrentFolder: ui->radioCurrentFolder->setChecked(true); break;
+        default:                               ui->radioAllFolders->setChecked(true);    break;
+    }
 }
 
 
-QString FindDialog::composeTerm(QString text, bool matchCase, bool wholeWord, bool useRegEx) {
+QString FindDialog::composeTerm(QString text, bool matchCase, bool wholeWord, bool useRegEx, Find::SearchScope searchScope) {
     auto flags = 0;
     if (matchCase) { flags |= 0x01; }
     if (wholeWord) { flags |= 0x02; }
-    if (useRegEx) { flags |= 0x04; }
-    return text + "\f" + QString::number(flags);
+    if (useRegEx)  { flags |= 0x04; }
+    switch (searchScope) {
+        case Find::SearchScope::CurrentFile:   flags |= 0x10; break;
+        case Find::SearchScope::CurrentFolder: flags |= 0x20; break;
+        case Find::SearchScope::AllFolders:    flags |= 0x40; break;
+    }
+    return text + "\f" + QString::number(flags, 16);
 }
 
-QString FindDialog::decomposeTerm(QString term, bool* matchCase, bool* wholeWord, bool* useRegEx) {
+QString FindDialog::decomposeTerm(QString term, bool* matchCase, bool* wholeWord, bool* useRegEx, Find::SearchScope* searhScope) {
     auto parts = term.split("\f");
     if (parts.length() == 2) {
-        auto flags = parts[1].toInt();
-        *matchCase = ((flags & 0x01) == 0x01);
-        *wholeWord = ((flags & 0x02) == 0x02);
-        *useRegEx = ((flags & 0x04) == 0x04);
-    } else {
-        *matchCase = false;
-        *wholeWord = false;
-        *useRegEx = false;
+        bool ok;
+        auto flags = parts[1].toInt(&ok, 16);
+        if (ok) {
+            *matchCase = ((flags & 0x01) == 0x01);
+            *wholeWord = ((flags & 0x02) == 0x02);
+            *useRegEx = ((flags & 0x04) == 0x04);
+            if ((flags & 0x10) == 0x10) {
+                *searhScope = Find::SearchScope::CurrentFile;
+            } else if ((flags & 0x20) == 0x20) {
+                *searhScope = Find::SearchScope::CurrentFolder;
+            } else {
+                *searhScope = Find::SearchScope::AllFolders;
+            }
+            return parts[0];
+        }
     }
+
+    *matchCase = false;
+    *wholeWord = false;
+    *useRegEx = false;
+    *searhScope = Find::SearchScope::AllFolders;
     return parts[0];
 }
 
 QString FindDialog::decomposeTerm(QString term) {
     bool matchCase, wholeWord, useRegEx;
-    return decomposeTerm(term, &matchCase, &wholeWord, &useRegEx);
+    Find::SearchScope searchScope;
+    return decomposeTerm(term, &matchCase, &wholeWord, &useRegEx, &searchScope);
 }
