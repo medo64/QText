@@ -42,11 +42,13 @@ FindDialog::~FindDialog() {
 }
 
 void FindDialog::accept() {
-    auto term = composeTerm(searchText(), matchCase(), wholeWord(), useRegEx());
+    auto text = searchText();
+    auto term = composeTerm(text, matchCase(), wholeWord(), useRegEx());
 
     auto terms = Config::stateReadMany("SearchTerms");
     for (int i = terms.count() - 1; i >= 0; i--) {
-        if (terms[i] == term) { terms.removeAt(i); }
+        auto termText = decomposeTerm(terms[i]);
+        if (termText == text) { terms.removeAt(i); }
     }
     terms.append(term);
 
