@@ -5,7 +5,7 @@
 #include <QtTest>
 
 class Test_Helpers : public QObject {
-    Q_OBJECT
+        Q_OBJECT
 
     private slots:
         void encodeTitle_colon();

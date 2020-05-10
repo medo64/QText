@@ -3,7 +3,7 @@
 #include "ui_filenamedialog.h"
 #include "helpers.h"
 
-FileNameDialog::FileNameDialog(QWidget *parent) : QDialog(parent), ui(new Ui::FileNameDialog) {
+FileNameDialog::FileNameDialog(QWidget* parent) : QDialog(parent), ui(new Ui::FileNameDialog) {
     ui->setupUi(this);
     Helpers::setupFixedSizeDialog(this);
 
@@ -13,7 +13,7 @@ FileNameDialog::FileNameDialog(QWidget *parent) : QDialog(parent), ui(new Ui::Fi
     onTextChanged(ui->textFileName->text());
 }
 
-FileNameDialog::FileNameDialog(QWidget *parent, FolderItem* folder) : FileNameDialog(parent) {
+FileNameDialog::FileNameDialog(QWidget* parent, FolderItem* folder) : FileNameDialog(parent) {
     _folder = folder;
     _file = nullptr;
 
@@ -27,7 +27,7 @@ FileNameDialog::FileNameDialog(QWidget *parent, FolderItem* folder) : FileNameDi
     ui->textFileName->setText(newFileTitle);
 }
 
-FileNameDialog::FileNameDialog(QWidget *parent, FileItem* file) : FileNameDialog(parent) {
+FileNameDialog::FileNameDialog(QWidget* parent, FileItem* file) : FileNameDialog(parent) {
     _folder = file->getFolder();
     _file = file;
 
@@ -44,7 +44,7 @@ QString FileNameDialog::getTitle() {
 }
 
 
-void FileNameDialog::onTextChanged(const QString &text) {
+void FileNameDialog::onTextChanged(const QString& text) {
     if (text.length() == 0) {
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
     } else {

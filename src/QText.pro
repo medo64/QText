@@ -108,7 +108,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     qtext.qrc
 
-DISTFILES +=
+DISTFILES += \
+    .astylerc
 
 
 Test {

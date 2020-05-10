@@ -9,9 +9,9 @@ class Find {
 
     public:
         typedef enum {
-           CurrentFile   = 0,
-           CurrentFolder = 1,
-           AllFolders    = 2,
+            CurrentFile   = 0,
+            CurrentFolder = 1,
+            AllFolders    = 2,
         } SearchScope;
 
     public:

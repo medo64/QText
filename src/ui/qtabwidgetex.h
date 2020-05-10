@@ -5,7 +5,7 @@
 #include <QWidget>
 
 class QTabWidgetEx : public QTabWidget {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         QTabWidgetEx(QWidget* parent = nullptr);

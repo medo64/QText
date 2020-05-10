@@ -32,7 +32,7 @@ void Find::setup(Storage* storage, QString text, bool matchCase, bool wholeWord,
 
 FileItem* Find::findNext(FileItem* currentFile, bool backward) {
     bool firstFile = true;
-    for(auto file : fileList(currentFile, backward)) {
+    for (auto file : fileList(currentFile, backward)) {
         auto cursor = file->textCursor();
         if (!firstFile) { cursor.movePosition(backward ? QTextCursor::End : QTextCursor::Start); }
         auto flags = backward ? _findFlags | QTextDocument::FindBackward : _findFlags;
@@ -93,7 +93,7 @@ QList<FileItem*> Find::fileList(FileItem* pivotFile, bool backward) {
                     if (foundPivot) { //insert to the front of the list
                         items.insert(insertLocation, file);
                         insertLocation++;
-                     } else {
+                    } else {
                         items.append(file);
                     }
                 }

@@ -39,23 +39,23 @@ FoldersDialog::~FoldersDialog() {
     delete ui;
 }
 
-void FoldersDialog::hideEvent(QHideEvent *event) {
+void FoldersDialog::hideEvent(QHideEvent* event) {
     State::save(this);
     QWidget::hideEvent(event);
 }
 
-void FoldersDialog::keyPressEvent(QKeyEvent *event) {
+void FoldersDialog::keyPressEvent(QKeyEvent* event) {
     auto data = static_cast<uint>(event->key()) | event->modifiers();
     switch (data) {
-        case Qt::Key_Escape: {
+        case Qt::Key_Escape:
             close();
-        } break;
+            break;
 
-        case Qt::AltModifier | Qt::Key_F8: {
+        case Qt::AltModifier | Qt::Key_F8:
             if (Helpers::openWithVSCodeAvailable()) {
                 Helpers::openDirectoriesWithVSCode(Settings::dataPaths());
             }
-        } break;
+            break;
     }
 }
 
@@ -109,7 +109,7 @@ void FoldersDialog::onItemChanged(QListWidgetItem* item) {
         QVariant data = item->data(Qt::UserRole);
         FolderItem* folder = static_cast<FolderItem*>(data.value<void*>());
         if (!folder->rename(item->text())) {
-           item->setText(folder->getTitle()); //restore text if rename was unsuccessful
+            item->setText(folder->getTitle()); //restore text if rename was unsuccessful
         }
     }
 }

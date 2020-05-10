@@ -16,21 +16,21 @@ namespace Ui {
 }
 
 class MainWindow : public QMainWindow {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         explicit MainWindow(Storage* storage);
         ~MainWindow();
 
     protected:
-        void closeEvent(QCloseEvent *event);
-        void changeEvent(QEvent *event);
-        void keyPressEvent(QKeyEvent *event);
+        void closeEvent(QCloseEvent* event);
+        void changeEvent(QEvent* event);
+        void keyPressEvent(QKeyEvent* event);
 
     private:
-        Ui::MainWindow *ui;
+        Ui::MainWindow* ui;
         Storage* _storage = nullptr;
-        FolderItem* _folder =nullptr;
+        FolderItem* _folder = nullptr;
         QSystemTrayIcon* _tray = nullptr;
         QToolButton* _printButton = nullptr;
         QToolButton* _folderButton = nullptr;

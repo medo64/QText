@@ -13,7 +13,7 @@ namespace Ui {
 }
 
 class FoldersDialog : public QDialog {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         explicit FoldersDialog(QWidget* parent, Storage* storage, FolderItem* selectedFolder);
@@ -21,8 +21,8 @@ class FoldersDialog : public QDialog {
         FolderItem* selectedFolder();
 
     protected:
-        void keyPressEvent(QKeyEvent *event);
-        void hideEvent(QHideEvent *event);
+        void keyPressEvent(QKeyEvent* event);
+        void hideEvent(QHideEvent* event);
 
     private:
         Ui::FoldersDialog* ui;

@@ -9,10 +9,10 @@ namespace Ui {
 }
 
 class FindDialog : public QDialog {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        explicit FindDialog(QWidget *parent);
+        explicit FindDialog(QWidget* parent);
         ~FindDialog();
         QString searchText();
         bool matchCase();
@@ -24,7 +24,7 @@ class FindDialog : public QDialog {
         void accept() override;
 
     private:
-        Ui::FindDialog *ui;
+        Ui::FindDialog* ui;
         QString composeTerm(QString text, bool matchCase, bool wholeWord, bool useRegEx, Find::SearchScope searchScope);
         QString decomposeTerm(QString term, bool* matchCase, bool* wholeWord, bool* useRegEx, Find::SearchScope* searchScope);
         QString decomposeTerm(QString term);

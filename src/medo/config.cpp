@@ -361,8 +361,8 @@ bool Config::read(QString key, bool defaultValue) {
             || (text.compare("+", Qt::CaseInsensitive) == 0)) {
         return true;
     } else if ((text.compare("false", Qt::CaseInsensitive) == 0) || (text.compare("no", Qt::CaseInsensitive) == 0)
-            || (text.compare("F", Qt::CaseInsensitive) == 0) || (text.compare("N", Qt::CaseInsensitive) == 0)
-            || (text.compare("-", Qt::CaseInsensitive) == 0)) {
+               || (text.compare("F", Qt::CaseInsensitive) == 0) || (text.compare("N", Qt::CaseInsensitive) == 0)
+               || (text.compare("-", Qt::CaseInsensitive) == 0)) {
         return false;
     } else {
         bool isOK; long long value = text.toLongLong(&isOK);
@@ -432,7 +432,7 @@ QStringList Config::readMany(QString key) {
 
 QStringList Config::readMany(QString key, QStringList defaultValues) {
     QStringList values = readMany(key);
-    return (values.length() > 0)? values : defaultValues;
+    return (values.length() > 0) ? values : defaultValues;
 }
 
 void Config::writeMany(QString key, QStringList values) {
@@ -490,8 +490,8 @@ bool Config::stateRead(QString key, bool defaultValue) {
             || (text.compare("+", Qt::CaseInsensitive) == 0)) {
         return true;
     } else if ((text.compare("false", Qt::CaseInsensitive) == 0) || (text.compare("no", Qt::CaseInsensitive) == 0)
-            || (text.compare("F", Qt::CaseInsensitive) == 0) || (text.compare("N", Qt::CaseInsensitive) == 0)
-            || (text.compare("-", Qt::CaseInsensitive) == 0)) {
+               || (text.compare("F", Qt::CaseInsensitive) == 0) || (text.compare("N", Qt::CaseInsensitive) == 0)
+               || (text.compare("-", Qt::CaseInsensitive) == 0)) {
         return false;
     } else {
         bool isOK; long long value = text.toLongLong(&isOK);
@@ -560,7 +560,7 @@ QStringList Config::stateReadMany(QString key) {
 
 QStringList Config::stateReadMany(QString key, QStringList defaultValues) {
     QStringList values = stateReadMany(key);
-    return (values.length() > 0)? values : defaultValues;
+    return (values.length() > 0) ? values : defaultValues;
 }
 
 void Config::stateWriteMany(QString key, QStringList values) {
@@ -619,7 +619,7 @@ Config::ConfigFile::ConfigFile(QString filePath) {
             bool lineEndingDetermined = false;
 
             QChar prevChar = '\0';
-            for (QChar ch: fileContent) {
+            for (QChar ch : fileContent) {
                 if (ch == '\n') {
                     if (prevChar == '\r') { //CRLF pair
                         if (!lineEndingDetermined) {
@@ -658,7 +658,7 @@ Config::ConfigFile::ConfigFile(QString filePath) {
 
 #ifdef QT_DEBUG
     qDebug().noquote() << "[Config]" << configurationFilePath();
-    for(LineData line: _lines) {
+    for (LineData line : _lines) {
         QString key = line.getKey();
         QString value = line.getValue();
         if (!key.isNull() && !key.isEmpty()) {
@@ -684,7 +684,7 @@ void Config::ConfigFile::processLine(QString lineText) {
 
     ProcessState state = ProcessState::Default;
     ProcessState prevState = ProcessState::Default;
-    for (QChar ch: lineText) {
+    for (QChar ch : lineText) {
         switch (state) {
             case ProcessState::Default:
                 if (ch.isSpace()) {
@@ -849,8 +849,8 @@ void Config::ConfigFile::processLine(QString lineText) {
 
 bool Config::ConfigFile::save() {
     QString content;
-    for(int i=0; i<_lines.length(); i++) {
-        if (i>0) { content += _lineEnding; }
+    for (int i = 0; i < _lines.length(); i++) {
+        if (i > 0) { content += _lineEnding; }
         content.append(_lines[i].toString());
     }
 
@@ -875,7 +875,7 @@ QString Config::ConfigFile::readOne(QString key) {
     }
 
     QStringList values;
-    for(int i=0; i<_lines.length(); i++) {
+    for (int i = 0; i < _lines.length(); i++) {
         LineData line = _lines[i];
         if (key.compare(line.getKey(), Qt::CaseInsensitive) == 0) {
             values.append(line.getValue());
@@ -895,7 +895,7 @@ QStringList Config::ConfigFile::readMany(QString key) {
     }
 
     QStringList values = QStringList();
-    for(int i=0; i<_lines.length(); i++) {
+    for (int i = 0; i < _lines.length(); i++) {
         LineData line = _lines[i];
         if (key.compare(line.getKey(), Qt::CaseInsensitive) == 0) {
             values.push_back(line.getValue());
@@ -911,7 +911,7 @@ void Config::ConfigFile::writeOne(QString key, QString value) {
     _cache.remove(key.toUpper()); //invalidate cache and deal with it during read
 
     int index = -1;
-    for(int i=0; i<_lines.length(); i++) {
+    for (int i = 0; i < _lines.length(); i++) {
         LineData line = _lines[i];
         if (key.compare(line.getKey(), Qt::CaseInsensitive) == 0) {
             index = i; //last key takes precedence
@@ -948,7 +948,7 @@ void Config::ConfigFile::writeMany(QString key, QStringList values) {
 
     int lastIndex = -1;
     LineData lastLine;
-    for (int i = _lines.length() - 1; i>=0; i--) { //find insertion point
+    for (int i = _lines.length() - 1; i >= 0; i--) { //find insertion point
         LineData line = _lines[i];
         if (key.compare(line.getKey(), Qt::CaseInsensitive) == 0) {
             if (lastLine.isEmpty()) {
@@ -963,7 +963,7 @@ void Config::ConfigFile::writeMany(QString key, QStringList values) {
 
     if (lastIndex >= 0) {
         bool hasLines = (_lines.length() > 0);
-        for(QString value: values) {
+        for (QString value : values) {
             LineData* templateLine;
             if (!lastLine.isEmpty()) {
                 templateLine = &lastLine;
@@ -978,16 +978,16 @@ void Config::ConfigFile::writeMany(QString key, QStringList values) {
     } else {
         bool hasLines = (_lines.length() > 0);
         if (!hasLines) {
-            for(QString value: values) {
+            for (QString value : values) {
                 _lines.push_back(LineData(nullptr, key, value));
             }
             _lines.push_back(LineData());
         } else if (!_lines[_lines.length() - 1].isEmpty()) {
-            for(QString value: values) {
+            for (QString value : values) {
                 _lines.push_back(LineData(&_lines[0], key, value));
             }
         } else {
-            for(QString value: values) {
+            for (QString value : values) {
                 _lines.insert(_lines.length() - 1, LineData(&_lines[0], key, value));
             }
         }
@@ -1000,7 +1000,7 @@ void Config::ConfigFile::removeMany(QString key) {
     QMutexLocker locker(&_cacheMutex);
     _cache.remove(key.toUpper()); //invalidate cache
 
-    for(int i=_lines.length()-1; i>=0; i--) {
+    for (int i = _lines.length() - 1; i >= 0; i--) {
         LineData line = _lines[i];
         if (key.compare(line.getKey(), Qt::CaseInsensitive) == 0) {
             _lines.removeAt(i);
@@ -1103,7 +1103,7 @@ QString Config::ConfigFile::LineData::toString() {
 }
 
 void Config::ConfigFile::LineData::escapeIntoStringBuilder(QString* sb, QString text, bool isKey) {
-    for (int i=0; i < text.length(); i++) {
+    for (int i = 0; i < text.length(); i++) {
         QChar ch = text[i];
         switch (ch.unicode()) {
             case '\\': sb->append("\\\\"); break;

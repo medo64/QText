@@ -281,10 +281,10 @@ bool Helpers::openDirectoriesWithVSCode(QStringList directoryPaths) {
 #endif
 
     QFile executableFile(executablePath);
-    if (!executableFile.exists()) return false;
+    if (!executableFile.exists()) { return false; }
 
     QStringList params;
-    for(QString directoryPath : directoryPaths) {
+    for (QString directoryPath : directoryPaths) {
         params += QDir::toNativeSeparators(directoryPath);
     }
     return  QProcess::startDetached(executablePath, params);

@@ -8,7 +8,7 @@ namespace Ui {
 }
 
 class InsertTimeDialog : public QDialog {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         explicit InsertTimeDialog(QWidget* parent = nullptr);

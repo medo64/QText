@@ -52,7 +52,7 @@ void Test_Config::verifyTestFile(QString testFileName, QString actualFileName) {
     if (expectedFile.open(QFile::ReadOnly)) {
         QTextStream in(&expectedFile);
         in.setCodec("UTF-8");
-        while(!in.atEnd()) {
+        while (!in.atEnd()) {
             expectedFileLines.append(in.readLine());
         }
     } else {
@@ -64,14 +64,14 @@ void Test_Config::verifyTestFile(QString testFileName, QString actualFileName) {
     if (actualFile.open(QFile::ReadOnly)) {
         QTextStream in(&actualFile);
         in.setCodec("UTF-8");
-        while(!in.atEnd()) {
+        while (!in.atEnd()) {
             actualFileLines.append(in.readLine());
         }
     } else {
         QFAIL("Cannot open config file!");
     }
 
-    for (int i=0; i<std::min(actualFileLines.length(), expectedFileLines.length()); i++) {
+    for (int i = 0; i < std::min(actualFileLines.length(), expectedFileLines.length()); i++) {
         QCOMPARE(actualFileLines[i], expectedFileLines[i]);
     }
 

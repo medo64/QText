@@ -4,7 +4,7 @@
 #include "medo/state.h"
 #include "helpers.h"
 
-GotoDialog::GotoDialog(QWidget *parent, Storage* storage) : QDialog(parent), ui(new Ui::GotoDialog) {
+GotoDialog::GotoDialog(QWidget* parent, Storage* storage) : QDialog(parent), ui(new Ui::GotoDialog) {
     ui->setupUi(this);
     Helpers::setupResizableDialog(this);
     ui->textSearch->installEventFilter(this);
@@ -36,16 +36,16 @@ GotoDialog::~GotoDialog() {
     delete ui;
 }
 
-void GotoDialog::hideEvent(QHideEvent *event) {
+void GotoDialog::hideEvent(QHideEvent* event) {
     State::save(this);
     QWidget::hideEvent(event);
 }
 
 bool GotoDialog::eventFilter(QObject* obj, QEvent* event) {
     if (event->type() == QEvent::KeyPress) {
-        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        switch(keyEvent->key()) {
-            case Qt::Key_Up: {
+        QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
+        switch (keyEvent->key()) {
+            case Qt::Key_Up:
                 if (ui->listWidget->currentRow() >= 0) {
                     if (ui->listWidget->currentRow() > 0) {
                         ui->listWidget->setCurrentRow(ui->listWidget->currentRow() - 1);
@@ -53,9 +53,9 @@ bool GotoDialog::eventFilter(QObject* obj, QEvent* event) {
                 } else if (ui->listWidget->count() > 0) {
                     ui->listWidget->setCurrentRow(0);
                 }
-            } return true;
+                return true;
 
-            case Qt::Key_Down: {
+            case Qt::Key_Down:
                 if (ui->listWidget->currentRow() >= 0) {
                     if (ui->listWidget->currentRow() < ui->listWidget->count() - 1) {
                         ui->listWidget->setCurrentRow(ui->listWidget->currentRow() + 1);
@@ -63,7 +63,7 @@ bool GotoDialog::eventFilter(QObject* obj, QEvent* event) {
                 } else if (ui->listWidget->count() > 0) {
                     ui->listWidget->setCurrentRow(0);
                 }
-            } return true;
+                return true;
         }
     }
     return QObject::eventFilter(obj, event);
@@ -102,7 +102,7 @@ void GotoDialog::onTextEdited(const QString& text) {
                 auto file = folder->getFile(j);
                 auto fileTitle = file->getTitle();
                 if (fileTitle.contains(text, Qt::CaseInsensitive)) {
-                    QString newTitle = fileTitle + " " + (i>0 ? "(in " + folderTitle + ")" : folderTitle);
+                    QString newTitle = fileTitle + " " + (i > 0 ? "(in " + folderTitle + ")" : folderTitle);
                     QListWidgetItem* item = new QListWidgetItem(_fileIcon, newTitle);
                     item->setData(Qt::UserRole, folder->getKey() + '\0' + file->getKey());
                     items.push_back(item);
@@ -111,7 +111,7 @@ void GotoDialog::onTextEdited(const QString& text) {
         }
     }
 
-    std::sort(items.begin(), items.end(), [this] (const QListWidgetItem* item1, const QListWidgetItem* item2) {
+    std::sort(items.begin(), items.end(), [this] (const QListWidgetItem * item1, const QListWidgetItem * item2) {
         auto title = ui->textSearch->text();
         auto title1 = item1->text();
         auto title2 = item2->text();

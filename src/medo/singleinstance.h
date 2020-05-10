@@ -13,7 +13,7 @@
 namespace Medo { class SingleInstance; }
 
 class SingleInstance : public QObject {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
 

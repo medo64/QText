@@ -12,7 +12,7 @@
 class FolderItem;
 
 class FileItem : public QTextEdit {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         FileItem(FolderItem* folder, QString fileName);
@@ -30,7 +30,7 @@ class FileItem : public QTextEdit {
         bool save();
 
     protected:
-        bool event(QEvent *event);
+        bool event(QEvent* event);
         void focusInEvent(QFocusEvent* e);
         void focusOutEvent(QFocusEvent* e);
         void wheelEvent(QWheelEvent* e);
@@ -50,7 +50,7 @@ class FileItem : public QTextEdit {
         void modificationChanged(FileItem* file, bool isModified);
 
     public slots:
-        void printPreview(QPrinter *printer);
+        void printPreview(QPrinter* printer);
 
     private slots:
         void onModificationChanged(bool changed);

@@ -15,7 +15,7 @@
 namespace Medo { class Hotkey; }
 
 class Hotkey : public QObject, QAbstractNativeEventFilter {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
 

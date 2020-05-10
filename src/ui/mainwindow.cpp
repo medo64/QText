@@ -36,101 +36,95 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
 
     _storage = storage;
 
-    { //application icon
-        this->setWindowIcon(Icons::app());
+    //application icon
+    this->setWindowIcon(Icons::app());
+
+    //tray
+    _tray = new QSystemTrayIcon(this);
+    connect(_tray, &QSystemTrayIcon::activated, this, &MainWindow::onTrayActivate);
+
+    QMenu* trayMenu = new QMenu(this);
+    auto defaultAction = trayMenu->addAction("&Show", this, &MainWindow::onTrayShow);
+    trayMenu->addSeparator();
+    trayMenu->addAction("&Quit", this, &MainWindow::onAppQuit);
+
+    auto font = defaultAction->font();
+    font.setBold(true);
+    defaultAction->setFont(font);
+    _tray->setContextMenu(trayMenu);
+    _tray->setIcon(Settings::colorTrayIcon() ? Icons::trayColor() : Icons::trayWhite());
+    auto hotkeyText = Settings::hotkey().toString(QKeySequence::PortableText);
+    if (hotkeyText.length() > 0) {
+        _tray->setToolTip( + "Access notes from tray or press " + hotkeyText + " hotkey.");
+    } else {
+        _tray->setToolTip( + "Access notes from tray.");
     }
+    _tray->show();
 
-    { //tray
-        _tray = new QSystemTrayIcon(this);
-        connect(_tray, &QSystemTrayIcon::activated, this, &MainWindow::onTrayActivate);
+    //hotkey
+    _hotkey = new Hotkey(this);
+    _hotkey->registerHotkey(Settings::hotkey());
+    connect(_hotkey, &Hotkey::activated, this, &MainWindow::onTrayShow);
 
-        QMenu* trayMenu = new QMenu(this);
-        auto defaultAction = trayMenu->addAction("&Show", this, &MainWindow::onTrayShow);
-        trayMenu->addSeparator();
-        trayMenu->addAction("&Quit", this, &MainWindow::onAppQuit);
+    //single instance
+    connect(SingleInstance::instance(), &SingleInstance::newInstanceDetected, this, &MainWindow::onTrayShow);
 
-        auto font = defaultAction->font();
-        font.setBold(true);
-        defaultAction->setFont(font);
-        _tray->setContextMenu(trayMenu);
-        _tray->setIcon(Settings::colorTrayIcon() ? Icons::trayColor() : Icons::trayWhite());
-        auto hotkeyText = Settings::hotkey().toString(QKeySequence::PortableText);
-        if (hotkeyText.length() > 0) {
-            _tray->setToolTip( + "Access notes from tray or press " + hotkeyText + " hotkey.");
-        } else {
-            _tray->setToolTip( + "Access notes from tray.");
-        }
-        _tray->show();
-    }
+    //toolbar setup
+    ui->actionNew->setIcon(Icons::newFile());
+    connect(ui->actionNew, &QAction::triggered, this, &MainWindow::onFileNew);
 
-    { //hotkey
-        _hotkey = new Hotkey(this);
-        _hotkey->registerHotkey(Settings::hotkey());
-        connect(_hotkey, &Hotkey::activated, this, &MainWindow::onTrayShow);
-    }
+    ui->actionSave->setIcon(Icons::saveFile());
+    connect(ui->actionSave, &QAction::triggered, this, &MainWindow::onFileSave);
 
-    { //single instance
-        connect(SingleInstance::instance(), &SingleInstance::newInstanceDetected, this, &MainWindow::onTrayShow);
-    }
+    ui->actionRename->setIcon(Icons::renameFile());
+    connect(ui->actionRename, &QAction::triggered, this, &MainWindow::onFileRename);
 
-    { //toolbar setup
-        ui->actionNew->setIcon(Icons::newFile());
-        connect(ui->actionNew, &QAction::triggered, this, &MainWindow::onFileNew);
+    ui->actionDelete->setIcon(Icons::deleteFile());
+    connect(ui->actionDelete, &QAction::triggered, this, &MainWindow::onFileDelete);
 
-        ui->actionSave->setIcon(Icons::saveFile());
-        connect(ui->actionSave, &QAction::triggered, this, &MainWindow::onFileSave);
+    ui->actionPrint->setIcon(Icons::printFile());
+    connect(ui->actionPrint, &QAction::triggered, this, &MainWindow::onFilePrint);
 
-        ui->actionRename->setIcon(Icons::renameFile());
-        connect(ui->actionRename, &QAction::triggered, this, &MainWindow::onFileRename);
+    ui->actionPrintPreview->setIcon(Icons::printPreviewFile());
+    connect(ui->actionPrintPreview, &QAction::triggered, this, &MainWindow::onFilePrintPreview);
 
-        ui->actionDelete->setIcon(Icons::deleteFile());
-        connect(ui->actionDelete, &QAction::triggered, this, &MainWindow::onFileDelete);
+    ui->actionPrintToPdf->setIcon(Icons::printToPdfFile());
+    connect(ui->actionPrintToPdf, &QAction::triggered, this, &MainWindow::onFilePrintToPdf);
 
-        ui->actionPrint->setIcon(Icons::printFile());
-        connect(ui->actionPrint, &QAction::triggered, this, &MainWindow::onFilePrint);
+    ui->actionCut->setIcon(Icons::cut());
+    connect(ui->actionCut, &QAction::triggered, this, &MainWindow::onTextCut);
 
-        ui->actionPrintPreview->setIcon(Icons::printPreviewFile());
-        connect(ui->actionPrintPreview, &QAction::triggered, this, &MainWindow::onFilePrintPreview);
+    ui->actionCopy->setIcon(Icons::copy());
+    connect(ui->actionCopy, &QAction::triggered, this, &MainWindow::onTextCopy);
 
-        ui->actionPrintToPdf->setIcon(Icons::printToPdfFile());
-        connect(ui->actionPrintToPdf, &QAction::triggered, this, &MainWindow::onFilePrintToPdf);
+    ui->actionPaste->setIcon(Icons::paste());
+    connect(ui->actionPaste, &QAction::triggered, this, &MainWindow::onTextPaste);
 
-        ui->actionCut->setIcon(Icons::cut());
-        connect(ui->actionCut, &QAction::triggered, this, &MainWindow::onTextCut);
+    ui->actionUndo->setIcon(Icons::undo());
+    connect(ui->actionUndo, &QAction::triggered, this, &MainWindow::onTextUndo);
 
-        ui->actionCopy->setIcon(Icons::copy());
-        connect(ui->actionCopy, &QAction::triggered, this, &MainWindow::onTextCopy);
+    ui->actionRedo->setIcon(Icons::redo());
+    connect(ui->actionRedo, &QAction::triggered, this, &MainWindow::onTextRedo);
 
-        ui->actionPaste->setIcon(Icons::paste());
-        connect(ui->actionPaste, &QAction::triggered, this, &MainWindow::onTextPaste);
+    ui->actionFind->setIcon(Icons::find());
+    connect(ui->actionFind, &QAction::triggered, this, &MainWindow::onFind);
 
-        ui->actionUndo->setIcon(Icons::undo());
-        connect(ui->actionUndo, &QAction::triggered, this, &MainWindow::onTextUndo);
+    ui->actionFindNext->setIcon(Icons::findNext());
+    connect(ui->actionFindNext, &QAction::triggered, this, &MainWindow::onFindNext);
 
-        ui->actionRedo->setIcon(Icons::redo());
-        connect(ui->actionRedo, &QAction::triggered, this, &MainWindow::onTextRedo);
+    ui->actionGoto->setIcon(Icons::gotoIcon());
+    connect(ui->actionGoto, &QAction::triggered, this, &MainWindow::onGoto);
 
-        ui->actionFind->setIcon(Icons::find());
-        connect(ui->actionFind, &QAction::triggered, this, &MainWindow::onFind);
+    //print button menu
+    _printButton = new QToolButton();
+    _printButton->setIcon(Icons::printFile());
+    _printButton->setPopupMode(QToolButton::MenuButtonPopup);
+    _printButton->setMenu(new QMenu());
+    connect(_printButton, &QToolButton::clicked, this, &MainWindow::onFilePrint);
 
-        ui->actionFindNext->setIcon(Icons::findNext());
-        connect(ui->actionFindNext, &QAction::triggered, this, &MainWindow::onFindNext);
-
-        ui->actionGoto->setIcon(Icons::gotoIcon());
-        connect(ui->actionGoto, &QAction::triggered, this, &MainWindow::onGoto);
-    }
-
-    { //print button menu
-        _printButton = new QToolButton();
-        _printButton->setIcon(Icons::printFile());
-        _printButton->setPopupMode(QToolButton::MenuButtonPopup);
-        _printButton->setMenu(new QMenu());
-        connect(_printButton, &QToolButton::clicked, this, &MainWindow::onFilePrint);
-
-        _printButton->menu()->addAction(ui->actionPrint);
-        _printButton->menu()->addAction(ui->actionPrintPreview);
-        _printButton->menu()->addAction(ui->actionPrintToPdf);
-    }
+    _printButton->menu()->addAction(ui->actionPrint);
+    _printButton->menu()->addAction(ui->actionPrintPreview);
+    _printButton->menu()->addAction(ui->actionPrintToPdf);
     ui->mainToolBar->insertWidget(ui->mainToolBar->actions()[3], _printButton);
 
     //align-right
@@ -139,45 +133,44 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     spacerWidget->setVisible(true);
     ui->mainToolBar->addWidget(spacerWidget);
 
-    { //folder button menu
-        _folderButton = new QToolButton();
-        _folderButton->setPopupMode(QToolButton::MenuButtonPopup);
-        _folderButton->setMenu(new QMenu());
-        ui->mainToolBar->addWidget(_folderButton);
-        connect(_folderButton, &QToolButton::clicked, this, &MainWindow::onFolderSetup);
-        connect(_folderButton->menu(), &QMenu::aboutToShow, this, &MainWindow::onFolderMenuShow);
+    //folder button menu
+    _folderButton = new QToolButton();
+    _folderButton->setPopupMode(QToolButton::MenuButtonPopup);
+    _folderButton->setMenu(new QMenu());
+    ui->mainToolBar->addWidget(_folderButton);
+    connect(_folderButton, &QToolButton::clicked, this, &MainWindow::onFolderSetup);
+    connect(_folderButton->menu(), &QMenu::aboutToShow, this, &MainWindow::onFolderMenuShow);
 
-        onFolderMenuSelect(); //setup folder select menu button
-        onTabChanged(); //update toolbar & focus
-        connect(ui->actionReopen, &QAction::triggered, this, &MainWindow::onFileReopen);
-        connect(ui->actionOpenWithDefaultApplication,  &QAction::triggered, this, &MainWindow::onOpenWithDefaultApplication);
-        connect(ui->actionOpenWithVisualStudioCode,  &QAction::triggered, this, &MainWindow::onOpenWithVisualStudioCode);
-        connect(ui->actionShowContainingDirectory,  &QAction::triggered, this, &MainWindow::onShowContainingDirectory);
-        connect(ui->actionShowContainingDirectoryOnly,  &QAction::triggered, this, &MainWindow::onShowContainingDirectoryOnly);
-        connect(ui->actionCopyContainingPath,  &QAction::triggered, this, &MainWindow::onCopyContainingPath);
-    }
+    onFolderMenuSelect(); //setup folder select menu button
+    onTabChanged(); //update toolbar & focus
+    connect(ui->actionReopen, &QAction::triggered, this, &MainWindow::onFileReopen);
+    connect(ui->actionOpenWithDefaultApplication,  &QAction::triggered, this, &MainWindow::onOpenWithDefaultApplication);
+    connect(ui->actionOpenWithVisualStudioCode,  &QAction::triggered, this, &MainWindow::onOpenWithVisualStudioCode);
+    connect(ui->actionShowContainingDirectory,  &QAction::triggered, this, &MainWindow::onShowContainingDirectory);
+    connect(ui->actionShowContainingDirectoryOnly,  &QAction::triggered, this, &MainWindow::onShowContainingDirectoryOnly);
+    connect(ui->actionCopyContainingPath,  &QAction::triggered, this, &MainWindow::onCopyContainingPath);
 
-    { //app button menu
-        _appButton = new QToolButton();
-        _appButton->setIcon(Icons::settings());
-        _appButton->setPopupMode(QToolButton::MenuButtonPopup);
-        _appButton->setMenu(new QMenu());
-        connect(_appButton, &QToolButton::clicked, this, &MainWindow::onAppSettings);
+    //app button menu
+    _appButton = new QToolButton();
+    _appButton->setIcon(Icons::settings());
+    _appButton->setPopupMode(QToolButton::MenuButtonPopup);
+    _appButton->setMenu(new QMenu());
+    connect(_appButton, &QToolButton::clicked, this, &MainWindow::onAppSettings);
 
-        QAction* appSettingsAction = new QAction("&Settings");
-        connect(appSettingsAction, &QAction::triggered, this, &MainWindow::onAppSettings);
-        _appButton->menu()->addAction(appSettingsAction);
+    QAction* appSettingsAction = new QAction("&Settings");
+    connect(appSettingsAction, &QAction::triggered, this, &MainWindow::onAppSettings);
+    _appButton->menu()->addAction(appSettingsAction);
 
-        QAction* appAboutAction = new QAction("&About");
-        connect(appAboutAction, &QAction::triggered, this, &MainWindow::onAppAbout);
-        _appButton->menu()->addAction(appAboutAction);
+    QAction* appAboutAction = new QAction("&About");
+    connect(appAboutAction, &QAction::triggered, this, &MainWindow::onAppAbout);
+    _appButton->menu()->addAction(appAboutAction);
 
-        _appButton->menu()->addSeparator();
+    _appButton->menu()->addSeparator();
 
-        QAction* appQuitAction = new QAction("&Quit");
-        connect(appQuitAction, &QAction::triggered, this, &MainWindow::onAppQuit);
-        _appButton->menu()->addAction(appQuitAction);
-    }
+    QAction* appQuitAction = new QAction("&Quit");
+    connect(appQuitAction, &QAction::triggered, this, &MainWindow::onAppQuit);
+    _appButton->menu()->addAction(appQuitAction);
+
     ui->mainToolBar->addWidget(_appButton);
 
     //tabs
@@ -194,21 +187,20 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     //State
     State::load(this);
 
-    { //show shortcuts in context menu
-        for(QAction* action : findChildren<QAction*>()) {
-            action->setShortcutVisibleInContextMenu(true);
+    //show shortcuts in context menu
+    for (QAction* action : findChildren<QAction*>()) {
+        action->setShortcutVisibleInContextMenu(true);
+    }
+
+    //show shortcut in tooltip
+    for (QAction* action : ui->mainToolBar->actions()) {
+        auto shortcut = action->shortcut();
+        if (!shortcut.isEmpty()) {
+            action->setToolTip(action->toolTip() + "\n(" + shortcut.toString() + ")");
         }
     }
 
-    { //show shortcut in tooltip
-        for(QAction* action : ui->mainToolBar->actions()) {
-            auto shortcut = action->shortcut();
-            if (!shortcut.isEmpty()) {
-                action->setToolTip(action->toolTip() + "\n(" + shortcut.toString() + ")");
-            }
-        }
-    }
-
+    //settings
     if (Settings::alwaysOnTop()) { setWindowFlag(Qt::WindowStaysOnTopHint); } //always on top cannot be set dynamically :(
     applySettings();
 
@@ -227,7 +219,7 @@ MainWindow::~MainWindow() {
 }
 
 
-void MainWindow::changeEvent(QEvent *event) {
+void MainWindow::changeEvent(QEvent* event) {
     if (event->type() == QEvent::WindowStateChange) {
         if (isMinimized() && Settings::minimizeToTray()) {
             this->hide();
@@ -236,7 +228,7 @@ void MainWindow::changeEvent(QEvent *event) {
     return QMainWindow::changeEvent(event);
 }
 
-void MainWindow::closeEvent(QCloseEvent *event) {
+void MainWindow::closeEvent(QCloseEvent* event) {
     State::save(this);
     if (event->spontaneous()) {
         if (event->type() == QEvent::Close) {
@@ -249,23 +241,23 @@ void MainWindow::closeEvent(QCloseEvent *event) {
     }
 }
 
-void MainWindow::keyPressEvent(QKeyEvent *event) {
+void MainWindow::keyPressEvent(QKeyEvent* event) {
     auto data = static_cast<uint>(event->key()) | event->modifiers();
-    switch(data) {
+    switch (data) {
         case Qt::Key_Escape:
-        case Qt::ControlModifier | Qt::Key_F4: {
+        case Qt::ControlModifier | Qt::Key_F4:
             State::save(this);
             this->hide();
 #ifdef QT_DEBUG //close immediately for easier debugging
             QCoreApplication::exit(0);
 #endif
-        } break;
+            break;
 
-        case Qt::ShiftModifier | Qt::Key_F3: {
+        case Qt::ShiftModifier | Qt::Key_F3:
             onFindNext(true);
-        } break;
+            break;
 
-        case Qt::AltModifier | Qt::Key_F8: {
+        case Qt::AltModifier | Qt::Key_F8:
             if (Helpers::openWithVSCodeAvailable()) {
                 if (ui->tabWidget->count() > 0) {
                     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
@@ -274,67 +266,67 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
                     Helpers::openDirectoryWithVSCode(_folder);
                 }
             }
-        } break;
+            break;
 
 
-        case Qt::ControlModifier | Qt::Key_O: {
+        case Qt::ControlModifier | Qt::Key_O:
             _folderButton->showMenu();
-        } break;
+            break;
 
-        case Qt::ControlModifier | Qt::AltModifier | Qt::Key_C: {
+        case Qt::ControlModifier | Qt::AltModifier | Qt::Key_C:
             onCopyContainingPath();
-        } break;
+            break;
 
-        case Qt::AltModifier | Qt::Key_1: {
+        case Qt::AltModifier | Qt::Key_1:
             if (ui->tabWidget->count() >= 1) { ui->tabWidget->setCurrentIndex(0); }
-        } break;
+            break;
 
-        case Qt::AltModifier | Qt::Key_2: {
+        case Qt::AltModifier | Qt::Key_2:
             if (ui->tabWidget->count() >= 2) { ui->tabWidget->setCurrentIndex(1); }
-        } break;
+            break;
 
-        case Qt::AltModifier | Qt::Key_3: {
+        case Qt::AltModifier | Qt::Key_3:
             if (ui->tabWidget->count() >= 3) { ui->tabWidget->setCurrentIndex(2); }
-        } break;
+            break;
 
-        case Qt::AltModifier | Qt::Key_4: {
+        case Qt::AltModifier | Qt::Key_4:
             if (ui->tabWidget->count() >= 4) { ui->tabWidget->setCurrentIndex(3); }
-        } break;
+            break;
 
-        case Qt::AltModifier | Qt::Key_5: {
+        case Qt::AltModifier | Qt::Key_5:
             if (ui->tabWidget->count() >= 5) { ui->tabWidget->setCurrentIndex(4); }
-        } break;
+            break;
 
-        case Qt::AltModifier | Qt::Key_6: {
+        case Qt::AltModifier | Qt::Key_6:
             if (ui->tabWidget->count() >= 6) { ui->tabWidget->setCurrentIndex(5); }
-        } break;
+            break;
 
-        case Qt::AltModifier | Qt::Key_7: {
+        case Qt::AltModifier | Qt::Key_7:
             if (ui->tabWidget->count() >= 7) { ui->tabWidget->setCurrentIndex(6); }
-        } break;
+            break;
 
-        case Qt::AltModifier | Qt::Key_8: {
+        case Qt::AltModifier | Qt::Key_8:
             if (ui->tabWidget->count() >= 8) { ui->tabWidget->setCurrentIndex(7); }
-        } break;
+            break;
 
-        case Qt::AltModifier | Qt::Key_9: {
+        case Qt::AltModifier | Qt::Key_9:
             if (ui->tabWidget->count() >= 9) { ui->tabWidget->setCurrentIndex(8); }
-        } break;
+            break;
 
-        case Qt::AltModifier | Qt::Key_0: {
+        case Qt::AltModifier | Qt::Key_0:
             if (ui->tabWidget->count() >= 10) { ui->tabWidget->setCurrentIndex(9); }
-        } break;
+            break;
 
-        case Qt::AltModifier | Qt::Key_Left: {
+        case Qt::AltModifier | Qt::Key_Left:
             if (ui->tabWidget->currentIndex() > 0) { ui->tabWidget->setCurrentIndex(ui->tabWidget->currentIndex() - 1); }
-        } break;
+            break;
 
-        case Qt::AltModifier | Qt::Key_Right: {
+        case Qt::AltModifier | Qt::Key_Right:
             if (ui->tabWidget->currentIndex() < ui->tabWidget->count() - 1) { ui->tabWidget->setCurrentIndex(ui->tabWidget->currentIndex() + 1); }
-        } break;
+            break;
 
         case Qt::AltModifier | Qt::Key_Up:
-        case Qt::AltModifier | Qt::Key_PageUp: {
+        case Qt::AltModifier | Qt::Key_PageUp:
             for (int i = 1; i < _storage->folderCount(); i++) {
                 auto folder = _storage->getFolder(i);
                 if (folder->getKey().compare(_folder->getKey(), Qt::CaseSensitive) == 0) {
@@ -343,10 +335,10 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
                     break;
                 }
             }
-        } break;
+            break;
 
         case Qt::AltModifier | Qt::Key_Down:
-        case Qt::AltModifier | Qt::Key_PageDown: {
+        case Qt::AltModifier | Qt::Key_PageDown:
             for (int i = 0; i < _storage->folderCount() - 1; i++) {
                 auto folder = _storage->getFolder(i);
                 if (folder->getKey().compare(_folder->getKey(), Qt::CaseSensitive) == 0) {
@@ -355,29 +347,29 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
                     break;
                 }
             }
-        } break;
+            break;
 
-        case Qt::AltModifier | Qt::Key_Home: {
+        case Qt::AltModifier | Qt::Key_Home:
             selectFolder(_storage->getBaseFolder()->getKey());
-        } break;
+            break;
 
-        case Qt::AltModifier | Qt::Key_End: {
+        case Qt::AltModifier | Qt::Key_End:
             _folderButton->showMenu();
-        } break;
+            break;
 
-        case Qt::ShiftModifier | Qt::AltModifier | Qt::Key_Left: {
+        case Qt::ShiftModifier | Qt::AltModifier | Qt::Key_Left:
             if (ui->tabWidget->currentIndex() > 0) {
                 QTabBarEx* tabbar = dynamic_cast<QTabBarEx*>(ui->tabWidget->tabBar());
                 tabbar->moveTab(ui->tabWidget->currentIndex(), ui->tabWidget->currentIndex() - 1);
             }
-        } break;
+            break;
 
-        case Qt::ShiftModifier | Qt::AltModifier | Qt::Key_Right: {
+        case Qt::ShiftModifier | Qt::AltModifier | Qt::Key_Right:
             if (ui->tabWidget->currentIndex() < ui->tabWidget->count() - 1) {
                 QTabBarEx* tabbar = dynamic_cast<QTabBarEx*>(ui->tabWidget->tabBar());
                 tabbar->moveTab(ui->tabWidget->currentIndex(), ui->tabWidget->currentIndex() + 1);
             }
-        } break;
+            break;
 
         default: QMainWindow::keyPressEvent(event);
     }
@@ -407,8 +399,7 @@ void MainWindow::onFileActivated(FileItem* file) {
 void MainWindow::onFileNew() {
     auto dialog = new FileNameDialog(this, _folder);
     switch (dialog->exec()) {
-        case QDialog::Accepted:
-            {
+        case QDialog::Accepted: {
                 auto newTitle = dialog->getTitle();
                 auto file = _folder->newFile(newTitle);
                 auto index = ui->tabWidget->addTab(file, file->getTitle());
@@ -438,8 +429,7 @@ void MainWindow::onFileRename() {
 
     auto dialog = new FileNameDialog(this, file);
     switch (dialog->exec()) {
-        case QDialog::Accepted:
-            {
+        case QDialog::Accepted: {
                 auto newTitle = dialog->getTitle();
                 file->setTitle(newTitle);
                 ui->tabWidget->setTabText(tabIndex, newTitle);
@@ -577,10 +567,10 @@ void MainWindow::onFindNext(bool backward) {
 void MainWindow::onGoto() {
     auto dialog = new GotoDialog(this, _storage);
     switch (dialog->exec()) {
-        case QDialog::Accepted: {
-                selectFolder(dialog->FolderKey);
-                if (dialog->FileKey.length() > 0) { selectFile(dialog->FileKey); }
-            } break;
+        case QDialog::Accepted:
+            selectFolder(dialog->FolderKey);
+            if (dialog->FileKey.length() > 0) { selectFile(dialog->FileKey); }
+            break;
         default:
             break;
     }
@@ -598,7 +588,7 @@ void MainWindow::onFolderMenuShow() {
     italicFont.setItalic(true);
 
     _folderButton->menu()->clear();
-    for(int i = 0; i < _storage->folderCount(); i++) {
+    for (int i = 0; i < _storage->folderCount(); i++) {
         auto folder = _storage->getFolder(i);
         QAction* folderAction = new QAction(folder->getTitle());
         folderAction->setData(folder->getKey());
@@ -610,7 +600,7 @@ void MainWindow::onFolderMenuShow() {
 }
 
 void MainWindow::onFolderMenuSelect() {
-    QAction *action = qobject_cast<QAction *>(sender());
+    QAction* action = qobject_cast<QAction*>(sender());
 
     if (action != nullptr) {
         auto key = action->data().value<QString>();
@@ -666,11 +656,11 @@ void MainWindow::onCopyContainingPath() {
 void MainWindow::onAppSettings() {
     auto dialog = new SettingsDialog(this);
     switch (dialog->exec()) {
-        case QDialog::Accepted: {
+        case QDialog::Accepted:
             applySettings(dialog->changedShowInTaskbar);
             this->show(); //to show window after setWindowFlag
             this->activateWindow();
-        } break;
+            break;
 
         default:
             break;
@@ -697,12 +687,12 @@ void MainWindow::onAppQuit() {
     QCoreApplication::exit(0);
 }
 
-void MainWindow::onTabMenuRequested(const QPoint &point) {
+void MainWindow::onTabMenuRequested(const QPoint& point) {
     if (point.isNull()) { return; }
 
     auto tabbar = ui->tabWidget->tabBar();
     auto tabIndex = tabbar->tabAt(point);
-    FileItem *file = nullptr;
+    FileItem* file = nullptr;
     if (tabIndex >= 0) {
         ui->tabWidget->setCurrentIndex(tabIndex);
         file = dynamic_cast<FileItem*>(ui->tabWidget->widget(tabIndex));

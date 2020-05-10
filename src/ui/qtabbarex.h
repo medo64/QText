@@ -7,10 +7,10 @@
 #include <QTabBar>
 
 class QTabBarEx : public QTabBar {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        QTabBarEx(QWidget *parent = nullptr);
+        QTabBarEx(QWidget* parent = nullptr);
         void moveTab(int from, int to);
 
     protected:

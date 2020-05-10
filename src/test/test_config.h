@@ -5,7 +5,7 @@
 #include <QtTest>
 
 class Test_Config : public QObject {
-    Q_OBJECT
+        Q_OBJECT
 
     private:
         void setup(QString applicationName, QString organizationName);

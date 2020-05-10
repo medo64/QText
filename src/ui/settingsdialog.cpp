@@ -7,7 +7,7 @@
 #include "settings.h"
 #include "setup.h"
 
-SettingsDialog::SettingsDialog(QWidget *parent) : QDialog(parent), ui(new Ui::SettingsDialog) {
+SettingsDialog::SettingsDialog(QWidget* parent) : QDialog(parent), ui(new Ui::SettingsDialog) {
     ui->setupUi(this);
     Helpers::setupFixedSizeDialog(this);
 
@@ -25,24 +25,24 @@ SettingsDialog::~SettingsDialog() {
 }
 
 
-void SettingsDialog::keyPressEvent(QKeyEvent *event) {
+void SettingsDialog::keyPressEvent(QKeyEvent* event) {
     auto data = static_cast<uint>(event->key()) | event->modifiers();
     switch (data) {
-        case Qt::Key_Escape: {
+        case Qt::Key_Escape:
             close();
-        } break;
+            break;
 
-        case Qt::Key_F8: {
+        case Qt::Key_F8:
             Helpers::showInFileManager(QString(), Config::configurationFile());
-        } break;
+            break;
 
-        case Qt::ShiftModifier | Qt::Key_F8: {
+        case Qt::ShiftModifier | Qt::Key_F8:
             if (Helpers::openWithVSCodeAvailable()) {
                 Helpers::openFileWithVSCode(Config::configurationFile());
             } else {
                 Helpers::openWithDefaultApplication(Config::configurationFile());
             }
-        } break;
+            break;
     }
 }
 

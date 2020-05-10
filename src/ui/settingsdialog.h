@@ -9,10 +9,10 @@ namespace Ui {
 }
 
 class SettingsDialog : public QDialog {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        explicit SettingsDialog(QWidget *parent = nullptr);
+        explicit SettingsDialog(QWidget* parent = nullptr);
         ~SettingsDialog();
         bool changedAlwaysOnTop;
         bool changedAutostart;
@@ -20,11 +20,11 @@ class SettingsDialog : public QDialog {
         bool changedShowInTaskbar;
 
     protected:
-        void keyPressEvent(QKeyEvent *event);
+        void keyPressEvent(QKeyEvent* event);
         void accept();
 
     private:
-        Ui::SettingsDialog *ui;
+        Ui::SettingsDialog* ui;
         void reset();
         void restoreDefaults();
         bool _oldAlwaysOnTop;

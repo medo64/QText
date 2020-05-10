@@ -12,8 +12,8 @@ Storage::Storage(const QStringList paths) {
 
         auto rootFolder = new FolderItem(nullptr, index, cleanedPath, nullptr);
         _folders.push_back(rootFolder);
-        QStringList directories = rootDirectory.entryList(QDir::Dirs|QDir::NoDotAndDotDot, QDir::SortFlag::Name);
-        for(QString directory : directories) {
+        QStringList directories = rootDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::SortFlag::Name);
+        for (QString directory : directories) {
             auto folder = new FolderItem(rootFolder, index, cleanedPath, directory);
             _folders.push_back(folder);
         }
@@ -76,7 +76,7 @@ bool Storage::deleteFolder(FolderItem* folder) {
 
 
 void Storage::sortFolders() {
-    std::sort(_folders.begin(), _folders.end(), [] (FolderItem* item1, FolderItem* item2) {
+    std::sort(_folders.begin(), _folders.end(), [] (FolderItem * item1, FolderItem * item2) {
         int index1 = item1->getPathIndex();
         int index2 = item2->getPathIndex();
         if (index1 == index2) { //both items are same level, just compare alphabetically

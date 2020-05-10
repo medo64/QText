@@ -100,10 +100,10 @@ bool FileItem::load() {
     QString path = getPath();
     QFile file(path);
     if (file.exists()) {
-        if(file.open(QIODevice::ReadOnly)) {
+        if (file.open(QIODevice::ReadOnly)) {
             QTextStream in(&file);
             QString contents = in.readAll();
-            QTextDocument *document = new QTextDocument(this);
+            QTextDocument* document = new QTextDocument(this);
             if (isHtml()) {
                 document->setHtml(contents);
             } else {
@@ -123,7 +123,7 @@ bool FileItem::load() {
             fileValid = false;
         }
     } else { //create a new one
-        if(file.open(QIODevice::WriteOnly)) {
+        if (file.open(QIODevice::WriteOnly)) {
             file.close();
             this->document()->setModified(false);
             emit titleChanged(this);
@@ -160,7 +160,7 @@ bool FileItem::save() {
 
     QString path = getPath();
     QFile file(path);
-    if(file.open(QIODevice::WriteOnly)) {
+    if (file.open(QIODevice::WriteOnly)) {
         QTextStream out(&file);
         out << contents;
         file.close();
@@ -175,7 +175,7 @@ bool FileItem::save() {
 }
 
 
-bool FileItem::event(QEvent *event) {
+bool FileItem::event(QEvent* event) {
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent* e = static_cast<QKeyEvent*>(event);
         if ((e->key() == Qt::Key_Return) && (e->modifiers() != Qt::NoModifier)) { //allow enter with any modifier
@@ -190,18 +190,18 @@ bool FileItem::event(QEvent *event) {
             onContextMenuRedo();
             return true;
         } else if (((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_X))
-                || ((e->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) && (e->key() == Qt::Key_X))
-                || ((e->modifiers() == Qt::ShiftModifier) && (e->key() == Qt::Key_Delete))) {
+                   || ((e->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) && (e->key() == Qt::Key_X))
+                   || ((e->modifiers() == Qt::ShiftModifier) && (e->key() == Qt::Key_Delete))) {
             onContextMenuCutPlain();
             return true;
         } else if (((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_C))
-                || ((e->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) && (e->key() == Qt::Key_C))
-                || ((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_Insert))) {
+                   || ((e->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) && (e->key() == Qt::Key_C))
+                   || ((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_Insert))) {
             onContextMenuCopyPlain();
             return true;
         } else if (((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_V))
-                || ((e->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) && (e->key() == Qt::Key_V))
-                || ((e->modifiers() == Qt::ShiftModifier) && (e->key() == Qt::Key_Insert))) {
+                   || ((e->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) && (e->key() == Qt::Key_V))
+                   || ((e->modifiers() == Qt::ShiftModifier) && (e->key() == Qt::Key_Insert))) {
             onContextMenuPastePlain();
             return true;
         } else if ((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_A)) {
@@ -277,8 +277,8 @@ QString FileItem::getPath() {
 }
 
 
-void FileItem::printPreview(QPrinter *printer) {
-     print(printer);
+void FileItem::printPreview(QPrinter* printer) {
+    print(printer);
 }
 
 

@@ -5,7 +5,7 @@
 #include "../helpers.h"
 #include "../settings.h"
 
-InsertTimeDialog::InsertTimeDialog(QWidget *parent) : QDialog(parent), ui(new Ui::InsertTimeDialog) {
+InsertTimeDialog::InsertTimeDialog(QWidget* parent) : QDialog(parent), ui(new Ui::InsertTimeDialog) {
     ui->setupUi(this);
     Helpers::setupFixedSizeDialog(this);
 

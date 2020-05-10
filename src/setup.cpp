@@ -64,7 +64,7 @@ bool Setup::nativeAutostartCheck() {
 #elif defined(Q_OS_LINUX)
 
 void Setup::nativeAutostartAdd() {
-    QDir autostartDirectory(QDir::cleanPath(QDir::homePath() +"/.config/autostart"));
+    QDir autostartDirectory(QDir::cleanPath(QDir::homePath() + "/.config/autostart"));
     if (!autostartDirectory.exists()) { autostartDirectory.mkpath("."); }
     QString autostartFile = QDir::cleanPath(autostartDirectory.path() + "/qtext.desktop");
     QString execLine = QCoreApplication::applicationFilePath() + " --hide";
@@ -83,14 +83,14 @@ void Setup::nativeAutostartAdd() {
 }
 
 void Setup::nativeAutostartRemove() {
-    QDir autostartDirectory(QDir::cleanPath(QDir::homePath() +"/.config/autostart"));
+    QDir autostartDirectory(QDir::cleanPath(QDir::homePath() + "/.config/autostart"));
     if (!autostartDirectory.exists()) { autostartDirectory.mkpath("."); }
     QString autostartFile = QDir::cleanPath(autostartDirectory.path() + "/qtext.desktop");
     QFile::remove(autostartFile);
 }
 
 bool Setup::nativeAutostartCheck() {
-    QDir autostartDirectory(QDir::cleanPath(QDir::homePath() +"/.config/autostart"));
+    QDir autostartDirectory(QDir::cleanPath(QDir::homePath() + "/.config/autostart"));
     if (!autostartDirectory.exists()) { autostartDirectory.mkpath("."); }
     QString autostartFile = QDir::cleanPath(autostartDirectory.path() + "/qtext.desktop");
     QString execLine = QCoreApplication::applicationFilePath() + " --hide";
@@ -99,13 +99,13 @@ bool Setup::nativeAutostartCheck() {
     if (file.open(QIODevice::ReadOnly)) {
         QTextStream stream(&file);
         while (!stream.atEnd()) {
-           QString line = stream.readLine();
-           if (line.startsWith("Exec=")) {
-               QStringList parts = line.split("=");
-               QString execLineFound = parts[1].trimmed();
-               if (execLine.compare(execLineFound, Qt::CaseSensitive) == 0) { return true; }
-               break;
-           }
+            QString line = stream.readLine();
+            if (line.startsWith("Exec=")) {
+                QStringList parts = line.split("=");
+                QString execLineFound = parts[1].trimmed();
+                if (execLine.compare(execLineFound, Qt::CaseSensitive) == 0) { return true; }
+                break;
+            }
         }
     }
     return false;

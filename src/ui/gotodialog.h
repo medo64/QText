@@ -11,21 +11,21 @@ namespace Ui {
 }
 
 class GotoDialog : public QDialog {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        explicit GotoDialog(QWidget *parent = nullptr,  Storage* storage = nullptr);
+        explicit GotoDialog(QWidget* parent = nullptr,  Storage* storage = nullptr);
         ~GotoDialog();
         QString FolderKey;
         QString FileKey;
 
     protected:
         void accept();
-        void hideEvent(QHideEvent *event);
+        void hideEvent(QHideEvent* event);
 
     private:
         bool eventFilter(QObject* obj, QEvent* event);
-        Ui::GotoDialog *ui;
+        Ui::GotoDialog* ui;
         Storage* _storage = nullptr;
         QIcon _folderIcon;
         QIcon _fileIcon;

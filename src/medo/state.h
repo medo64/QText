@@ -14,7 +14,7 @@
 namespace Medo { class State; }
 
 class State  : public QObject {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
 

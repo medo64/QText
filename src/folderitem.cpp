@@ -15,7 +15,7 @@ FolderItem::FolderItem(FolderItem* rootFolder, const int pathIndex, const QStrin
     QDir directory = path;
 
     QStringList files = directory.entryList(QStringList() << "*.txt" << "*.html", QDir::Files);
-    for(QString fileName : files) {
+    for (QString fileName : files) {
         _files.push_back(new FileItem(this, fileName));
     }
 
@@ -96,7 +96,7 @@ FileItem* FolderItem::newFile(QString title) {
 }
 
 bool FolderItem::deleteFile(FileItem* file) {
-    for(auto item = _files.begin(); item != _files.end(); item++) {
+    for (auto item = _files.begin(); item != _files.end(); item++) {
         FileItem* iFile = *item;
         if (iFile->getPath().compare(file->getPath(), Qt::CaseSensitive) == 0) {
             QFile::remove(iFile->getPath());
@@ -161,7 +161,7 @@ void FolderItem::saveOrdering() {
 
 void FolderItem::loadOrdering() {
     QStringList ordering = Config::stateReadMany("Order!" + this->getKey());
-    std::sort(_files.begin(), _files.end(), [ordering] (FileItem* item1, FileItem* item2) {
+    std::sort(_files.begin(), _files.end(), [ordering] (FileItem * item1, FileItem * item2) {
         QString key1 = item1->getKey();
         QString key2 = item2->getKey();
         int index1 = ordering.indexOf(key1);

@@ -3,7 +3,7 @@
 #include <QMouseEvent>
 #include "qtabbarex.h"
 
-QTabBarEx::QTabBarEx(QWidget *parent)
+QTabBarEx::QTabBarEx(QWidget* parent)
     : QTabBar(parent) {
 
 }

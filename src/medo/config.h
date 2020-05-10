@@ -272,9 +272,9 @@ class Config {
 
     private:
         typedef enum {
-           UNKNOWN  = -1,
-           FALSE    = 0,
-           TRUE     = 1,
+            UNKNOWN  = -1,
+            FALSE    = 0,
+            TRUE     = 1,
         } PortableStatus;
 
     private:
