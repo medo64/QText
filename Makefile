@@ -91,16 +91,22 @@ package: dist
 	@cp -r package/deb/DEBIAN $(PACKAGE_DIR)/
 	@cp -r package/deb/usr $(PACKAGE_DIR)/
 	@mkdir -p $(PACKAGE_DIR)/usr/share/icons/hicolor/16x16/apps/
+	@mkdir -p $(PACKAGE_DIR)/usr/share/icons/hicolor/24x24/apps/
 	@mkdir -p $(PACKAGE_DIR)/usr/share/icons/hicolor/32x32/apps/
 	@mkdir -p $(PACKAGE_DIR)/usr/share/icons/hicolor/48x48/apps/
 	@mkdir -p $(PACKAGE_DIR)/usr/share/icons/hicolor/64x64/apps/
+	@mkdir -p $(PACKAGE_DIR)/usr/share/icons/hicolor/96x96/apps/
 	@mkdir -p $(PACKAGE_DIR)/usr/share/icons/hicolor/128x128/apps/
+	@mkdir -p $(PACKAGE_DIR)/usr/share/icons/hicolor/192x192/apps/
 	@mkdir -p $(PACKAGE_DIR)/usr/share/icons/hicolor/256x256/apps/
 	@cp src/icons/16x16/app.png $(PACKAGE_DIR)/usr/share/icons/hicolor/16x16/apps/qtext.png
+	@cp src/icons/24x24/app.png $(PACKAGE_DIR)/usr/share/icons/hicolor/24x24/apps/qtext.png
 	@cp src/icons/32x32/app.png $(PACKAGE_DIR)/usr/share/icons/hicolor/32x32/apps/qtext.png
 	@cp src/icons/48x48/app.png $(PACKAGE_DIR)/usr/share/icons/hicolor/48x48/apps/qtext.png
 	@cp src/icons/64x64/app.png $(PACKAGE_DIR)/usr/share/icons/hicolor/64x64/apps/qtext.png
+	@cp src/icons/96x96/app.png $(PACKAGE_DIR)/usr/share/icons/hicolor/96x96/apps/qtext.png
 	@cp src/icons/128x128/app.png $(PACKAGE_DIR)/usr/share/icons/hicolor/128x128/apps/qtext.png
+	@cp src/icons/192x192/app.png $(PACKAGE_DIR)/usr/share/icons/hicolor/192x192/apps/qtext.png
 	@cp src/icons/256x256/app.png $(PACKAGE_DIR)/usr/share/icons/hicolor/256x256/apps/qtext.png
 	@sed -i "s/MAJOR.MINOR.PATCH/$(DIST_VERSION)/" $(PACKAGE_DIR)/DEBIAN/control
 	@sed -i "s/ARCHITECTURE/$(DEB_BUILD_ARCH)/" $(PACKAGE_DIR)/DEBIAN/control

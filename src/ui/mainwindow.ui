@@ -24,7 +24,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>QText.ico</normaloff>QText.ico</iconset>
+    <normaloff>app.ico</normaloff>app.ico</iconset>
   </property>
   <property name="iconSize">
    <size>

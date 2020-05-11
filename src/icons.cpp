@@ -3,37 +3,36 @@
 QIcon Icons::app() {
     QIcon icon;
     icon.addFile(":icons/16x16/app.png", QSize(16, 16));
+    icon.addFile(":icons/24x24/app.png", QSize(24, 24));
     icon.addFile(":icons/32x32/app.png", QSize(32, 32));
     icon.addFile(":icons/48x48/app.png", QSize(48, 48));
     icon.addFile(":icons/64x64/app.png", QSize(64, 64));
+    icon.addFile(":icons/96x96/app.png", QSize(96, 96));
+    icon.addFile(":icons/128x128/app.png", QSize(128, 128));
     return icon;
 }
 
 QIcon Icons::appMono() {
     QIcon icon;
     icon.addFile(":icons/16x16/appMono.png", QSize(16, 16));
+    icon.addFile(":icons/24x24/appMono.png", QSize(24, 24));
     icon.addFile(":icons/32x32/appMono.png", QSize(32, 32));
     icon.addFile(":icons/48x48/appMono.png", QSize(48, 48));
     icon.addFile(":icons/64x64/appMono.png", QSize(64, 64));
+    icon.addFile(":icons/96x96/appMono.png", QSize(96, 96));
+    icon.addFile(":icons/128x128/appMono.png", QSize(128, 128));
     return icon;
 }
 
-
-QIcon Icons::trayColor() {
+QIcon Icons::appWhite() {
     QIcon icon;
-    icon.addFile(":icons/16x16/trayColor.png", QSize(16, 16));
-    icon.addFile(":icons/32x32/trayColor.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/trayColor.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/trayColor.png", QSize(64, 64));
-    return icon;
-}
-
-QIcon Icons::trayWhite() {
-    QIcon icon;
-    icon.addFile(":icons/16x16/trayWhite.png", QSize(16, 16));
-    icon.addFile(":icons/32x32/trayWhite.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/trayWhite.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/trayWhite.png", QSize(64, 64));
+    icon.addFile(":icons/16x16/appWhite.png", QSize(16, 16));
+    icon.addFile(":icons/24x24/appWhite.png", QSize(24, 24));
+    icon.addFile(":icons/32x32/appWhite.png", QSize(32, 32));
+    icon.addFile(":icons/48x48/appWhite.png", QSize(48, 48));
+    icon.addFile(":icons/64x64/appWhite.png", QSize(64, 64));
+    icon.addFile(":icons/96x96/appWhite.png", QSize(96, 96));
+    icon.addFile(":icons/128x128/appWhite.png", QSize(128, 128));
     return icon;
 }
 

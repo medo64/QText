@@ -52,7 +52,7 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     font.setBold(true);
     defaultAction->setFont(font);
     _tray->setContextMenu(trayMenu);
-    _tray->setIcon(Settings::colorTrayIcon() ? Icons::trayColor() : Icons::trayWhite());
+    _tray->setIcon(Settings::colorTrayIcon() ? Icons::app() : Icons::appWhite());
     auto hotkeyText = Settings::hotkey().toString(QKeySequence::PortableText);
     if (hotkeyText.length() > 0) {
         _tray->setToolTip( + "Access notes from tray or press " + hotkeyText + " hotkey.");
