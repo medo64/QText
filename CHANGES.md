@@ -1,6 +1,12 @@
 ## Release Notes ##
 
 
+### 0.1.10 [2020-05-10] ###
+
+* More search options
+* Updated icons
+
+
 ### 0.1.9 [2020-04-21] ###
 
 * Fixed search bugs
