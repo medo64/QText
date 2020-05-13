@@ -73,6 +73,23 @@ void Settings::setDataPaths(QStringList newPaths) {
 }
 
 
+Settings::DeletionStyle Settings::deletionSyle() {
+    int value = Config::read("DeletionStyle", defaultDeletionStyle());
+    switch (value) {
+        case Settings::DeletionStyle::Overwrite: return Settings::DeletionStyle::Overwrite;
+        default: return Settings::DeletionStyle::Delete;
+    }
+}
+
+Settings::DeletionStyle Settings::defaultDeletionStyle() {
+    return Settings::DeletionStyle::Delete;
+}
+
+void Settings::setDeletionStyle(Settings::DeletionStyle newDeletionStyle) {
+    Config::write("DeletionStyle", newDeletionStyle);
+}
+
+
 QKeySequence Settings::hotkey() {
     QString hotkeyText = Config::read("Hotkey", "");
     if (hotkeyText.length() > 0) {

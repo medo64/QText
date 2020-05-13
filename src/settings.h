@@ -7,6 +7,12 @@
 class Settings {
 
     public:
+        typedef enum {
+            Delete    = 1,
+            Overwrite = 2,
+        } DeletionStyle;
+
+    public:
 
         static bool alwaysOnTop();
         static bool defaultAlwaysOnTop();
@@ -27,6 +33,10 @@ class Settings {
         static QString dataPath2();
         static QString defaultDataPath2();
         static void setDataPath2(QString newPath);
+
+        static DeletionStyle deletionSyle();
+        static DeletionStyle defaultDeletionStyle();
+        static void setDeletionStyle(DeletionStyle newDeletionStyle);
 
         static QKeySequence hotkey();
         static QKeySequence defaultHotkey();

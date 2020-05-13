@@ -3,6 +3,7 @@
 #include "folderitem.h"
 #include "helpers.h"
 #include <QDir>
+#include <QRandomGenerator>
 #include <QString>
 
 FolderItem::FolderItem(FolderItem* rootFolder, const int pathIndex, const QString directoryPath, const QString directoryName) {
@@ -95,11 +96,26 @@ FileItem* FolderItem::newFile(QString title) {
     return file;
 }
 
-bool FolderItem::deleteFile(FileItem* file) {
+bool FolderItem::deleteFile(FileItem* file, Settings::DeletionStyle deletionStyle) {
     for (auto item = _files.begin(); item != _files.end(); item++) {
         FileItem* iFile = *item;
         if (iFile->getPath().compare(file->getPath(), Qt::CaseSensitive) == 0) {
-            QFile::remove(iFile->getPath());
+            if (deletionStyle == Settings::DeletionStyle::Overwrite) {
+                QFile osFile(iFile->getPath());
+                int length = osFile.size();
+                osFile.open(QIODevice::WriteOnly | QIODevice::Unbuffered);
+                int size = ((length + 4095) / 4096) * 4096; //round size up to the nearest 4K
+                char buffer[size];
+                QRandomGenerator rnd;
+                for (auto i = 0; i < static_cast<int>(sizeof(buffer)); i += 4) {
+                    qint32 n = rnd.generate();
+                    memcpy(&buffer[i], &n, 4);
+                }
+                osFile.seek(0);
+                osFile.write(buffer, sizeof(buffer));
+                osFile.flush();
+                osFile.remove();
+            }
             _files.erase(item);
             saveOrdering();
             return true;

@@ -3,6 +3,7 @@
 
 #include <QString>
 #include "fileitem.h"
+#include "settings.h"
 
 class FileItem;
 
@@ -21,7 +22,7 @@ class FolderItem {
         int fileCount();
         FileItem* getFile(int index);
         FileItem* newFile(QString title);
-        bool deleteFile(FileItem* file);
+        bool deleteFile(FileItem* file, Settings::DeletionStyle deletionStyle);
         bool saveAll();
         bool fileExists(QString title);
         bool moveFile(int from, int to);

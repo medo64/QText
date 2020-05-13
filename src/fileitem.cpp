@@ -163,6 +163,7 @@ bool FileItem::save() {
     if (file.open(QIODevice::WriteOnly)) {
         QTextStream out(&file);
         out << contents;
+        out.flush();
         file.close();
         this->document()->setModified(false);
         QFileInfo info(file);

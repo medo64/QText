@@ -452,7 +452,7 @@ void MainWindow::onFileDelete() {
     msgBox.setDefaultButton(QMessageBox::Yes);
     if (file->isEmpty() || (msgBox.exec() == QMessageBox::Yes)) {
         file->deleteLater();
-        _folder->deleteFile(file);
+        _folder->deleteFile(file, Settings::deletionSyle());
     }
 }
 
