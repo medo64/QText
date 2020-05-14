@@ -100,8 +100,8 @@ bool FolderItem::deleteFile(FileItem* file, Settings::DeletionStyle deletionStyl
     for (auto item = _files.begin(); item != _files.end(); item++) {
         FileItem* iFile = *item;
         if (iFile->getPath().compare(file->getPath(), Qt::CaseSensitive) == 0) {
+            QFile osFile(iFile->getPath());
             if (deletionStyle == Settings::DeletionStyle::Overwrite) {
-                QFile osFile(iFile->getPath());
                 int length = osFile.size();
                 osFile.open(QIODevice::WriteOnly | QIODevice::Unbuffered);
                 int size = ((length + 4095) / 4096) * 4096; //round size up to the nearest 4K
@@ -114,8 +114,8 @@ bool FolderItem::deleteFile(FileItem* file, Settings::DeletionStyle deletionStyl
                 osFile.seek(0);
                 osFile.write(buffer, sizeof(buffer));
                 osFile.flush();
-                osFile.remove();
             }
+            osFile.remove();
             _files.erase(item);
             saveOrdering();
             return true;
