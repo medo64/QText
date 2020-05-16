@@ -4,13 +4,15 @@
 #include <QString>
 #include "fileitem.h"
 #include "settings.h"
+#include "storagemonitorthread.h"
 
 class FileItem;
+class Storage;
 
 class FolderItem {
 
     public:
-        FolderItem(FolderItem* rootFolder, const int pathIndex, const QString directoryBase, const QString directoryName); //prefix differentiates between DataPath and DataPath2
+        FolderItem(Storage* storage, FolderItem* rootFolder, const int pathIndex, const QString directoryBase, const QString directoryName);
         FolderItem* getRootFolder();
         QString getKey();
         QString getPath();
@@ -26,8 +28,14 @@ class FolderItem {
         bool saveAll();
         bool fileExists(QString title);
         bool moveFile(int from, int to);
+        StorageMonitorThread* monitor();
+
+    public:
+        void addItem(FileItem* file);
+        void removeItem(int index);
 
     private:
+        Storage* _storage;
         FolderItem* _rootFolder;
         QString _directoryPath;
         QString _directoryName;

@@ -212,6 +212,9 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     //determine last used folder
     selectFolder(storage->getBaseFolder()->getKey()); //default folder
     selectFolder(Settings::lastFolder());
+
+    //storage updates
+    connect(_storage, &Storage::updatedFolder, this, &MainWindow::onUpdatedFolder);
 }
 
 MainWindow::~MainWindow() {
@@ -862,5 +865,12 @@ void MainWindow::applySettings(bool applyShowInTaskbar) {
         } else {
             setWindowFlag(Qt::Tool, false);
         }
+    }
+}
+
+
+void MainWindow::onUpdatedFolder(FolderItem* folder) {
+    if (folder == _folder) {
+        selectFolder(folder); //refresh current folder
     }
 }

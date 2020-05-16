@@ -43,6 +43,7 @@ CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 CONFIG += c++11
 
 SOURCES += \
+        storagemonitorthread.cpp \
         ui/filenamedialog.cpp \
         ui/finddialog.cpp \
         ui/foldersdialog.cpp \
@@ -68,6 +69,7 @@ SOURCES += \
         storage.cpp
 
 HEADERS += \
+        storagemonitorthread.h \
         ui/filenamedialog.h \
         ui/finddialog.h \
         ui/foldersdialog.h \

@@ -3,12 +3,12 @@
 #include <QFileInfo>
 #include <QMenu>
 #include <QTextDocumentFragment>
+#include "ui/inserttimedialog.h"
 #include "clipboard.h"
+#include "fileitem.h"
 #include "helpers.h"
 #include "icons.h"
 #include "settings.h"
-#include "fileitem.h"
-#include "ui/inserttimedialog.h"
 
 FileItem::FileItem(FolderItem* folder, QString fileName)
     : QTextEdit(nullptr) {
@@ -55,6 +55,8 @@ QString FileItem::getTitle() {
 }
 
 void FileItem::setTitle(QString newTitle) {
+    _folder->monitor()->stopMonitoring();
+
     save();
     if (newTitle == getTitle()) { return; } //no change
 
@@ -69,6 +71,8 @@ void FileItem::setTitle(QString newTitle) {
         _fileName = newFileName;
         emit titleChanged(this);
     }
+
+    _folder->monitor()->continueMonitoring();
 }
 
 bool FileItem::isHtml() {

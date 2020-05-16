@@ -78,6 +78,7 @@ class MainWindow : public QMainWindow {
         void onTrayActivate(QSystemTrayIcon::ActivationReason reason);
         void onTrayShow();
         void onAppQuit();
+        void onUpdatedFolder(FolderItem* folder);
 
 };
 

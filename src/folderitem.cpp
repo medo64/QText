@@ -1,12 +1,14 @@
+#include <QDir>
+#include <QRandomGenerator>
+#include <QString>
 #include "medo/config.h"
 #include "fileitem.h"
 #include "folderitem.h"
 #include "helpers.h"
-#include <QDir>
-#include <QRandomGenerator>
-#include <QString>
+#include "storage.h"
 
-FolderItem::FolderItem(FolderItem* rootFolder, const int pathIndex, const QString directoryPath, const QString directoryName) {
+FolderItem::FolderItem(Storage* storage, FolderItem* rootFolder, const int pathIndex, const QString directoryPath, const QString directoryName) {
+    _storage = storage;
     _rootFolder = rootFolder;
     _directoryPath = directoryPath;
     _directoryName = directoryName;
@@ -17,7 +19,7 @@ FolderItem::FolderItem(FolderItem* rootFolder, const int pathIndex, const QStrin
 
     QStringList files = directory.entryList(QStringList() << "*.txt" << "*.html", QDir::Files);
     for (QString fileName : files) {
-        _files.push_back(new FileItem(this, fileName));
+        addItem(new FileItem(this, fileName));
     }
 
     loadOrdering();
@@ -57,6 +59,9 @@ QString FolderItem::getTitle() {
 }
 
 bool FolderItem::rename(QString newTitle) {
+    _storage->monitor()->stopMonitoring();
+
+    bool result = false;
     if (newTitle.isEmpty()) { return false; }
     QString newName = Helpers::getFolderNameFromTitle(newTitle);
     if (newName.compare(_directoryName, Qt::CaseSensitive) == 0) { return false; }
@@ -66,10 +71,11 @@ bool FolderItem::rename(QString newTitle) {
         cleanOrdering();
         _directoryName = newName;
         saveOrdering();
-        return true;
-    } else {
-        return false;
+        result = true;
     }
+
+    _storage->monitor()->continueMonitoring();
+    return result;
 }
 
 bool FolderItem::isRoot() {
@@ -90,13 +96,20 @@ FileItem* FolderItem::getFile(int index) {
 }
 
 FileItem* FolderItem::newFile(QString title) {
+    _storage->monitor()->stopMonitoring();
+
     auto file = new FileItem(this, Helpers::getFileNameFromTitle(title) + ".txt");
     _files.push_back(file);
     saveOrdering();
+
+    _storage->monitor()->continueMonitoring();
     return file;
 }
 
 bool FolderItem::deleteFile(FileItem* file, Settings::DeletionStyle deletionStyle) {
+    _storage->monitor()->stopMonitoring();
+
+    bool result = false;
     for (auto item = _files.begin(); item != _files.end(); item++) {
         FileItem* iFile = *item;
         if (iFile->getPath().compare(file->getPath(), Qt::CaseSensitive) == 0) {
@@ -118,10 +131,14 @@ bool FolderItem::deleteFile(FileItem* file, Settings::DeletionStyle deletionStyl
             osFile.remove();
             _files.erase(item);
             saveOrdering();
-            return true;
+
+            result = true;
+            break;
         }
     }
-    return false;
+
+    _storage->monitor()->continueMonitoring();
+    return result;
 }
 
 
@@ -154,12 +171,33 @@ QString FolderItem::getPath() {
 }
 
 bool FolderItem::moveFile(int from, int to) {
-    if ((from < 0) || (from >= _files.count())) { return false; }
-    if ((to < 0) || (to >= _files.count())) { return false; }
-    if (from == to) { return false; }
-    _files.move(from, to);
-    saveOrdering();
-    return true;
+    _storage->monitor()->stopMonitoring();
+
+    bool result = false;
+    if ((from < 0) || (from >= _files.count())) { //source outside of range
+    } else if ((to < 0) || (to >= _files.count())) { //destination outside of range
+    } else if (from == to) { //same position
+    } else { //all ok
+        _files.move(from, to);
+        saveOrdering();
+        result = true;
+    }
+
+    _storage->monitor()->continueMonitoring();
+    return result;
+}
+
+StorageMonitorThread* FolderItem::monitor() {
+    return _storage->monitor();
+}
+
+
+void FolderItem::addItem(FileItem* file) {
+    _files.append(file);
+}
+
+void FolderItem::removeItem(int index) {
+    _files.removeAt(index);
 }
 
 
