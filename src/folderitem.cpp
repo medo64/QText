@@ -151,8 +151,7 @@ bool FolderItem::fileExists(QString title) {
 
 bool FolderItem::saveAll() {
     bool allSaved = true;
-    for (int i = 0; i < fileCount(); i++) {
-        auto file = fileAt(i);
+    for (FileItem* file : _files) {
         if (file->isModified()) {
             allSaved &= file->save();
         }

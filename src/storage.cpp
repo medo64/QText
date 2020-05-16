@@ -48,7 +48,7 @@ FolderItem* Storage::baseFolder() {
 
 
 FolderItem* Storage::newFolder(QString proposedTitle) {
-    _monitor->stopMonitoring();
+    monitor()->stopMonitoring();
 
     FolderItem* newFolder = nullptr;
     FolderItem* rootFolder = baseFolder();
@@ -69,12 +69,12 @@ FolderItem* Storage::newFolder(QString proposedTitle) {
         title = proposedTitle + " (" + QString::number(i) + ")"; //add number before trying again
     }
 
-    _monitor->continueMonitoring();
+    monitor()->continueMonitoring();
     return newFolder;
 }
 
 bool Storage::deleteFolder(FolderItem* folder) {
-    _monitor->stopMonitoring();
+    monitor()->stopMonitoring();
 
     bool result = false;
     for (int i = 0; i < _folders.count(); i++) {
@@ -90,7 +90,7 @@ bool Storage::deleteFolder(FolderItem* folder) {
         }
     }
 
-    _monitor->continueMonitoring();
+    monitor()->continueMonitoring();
     return result;
 }
 
