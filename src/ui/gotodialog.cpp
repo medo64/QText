@@ -89,8 +89,7 @@ void GotoDialog::onTextEdited(const QString& text) {
         item->setData(Qt::UserRole, folder->name());
         items.push_back(item);
     } else {
-        for (int i = 0; i < _storage->folderCount(); i++) {
-            auto folder = _storage->folderAt(i);
+        for (FolderItem* folder : *_storage) {
             auto folderTitle = folder->title();
             if (folderTitle.contains(text, Qt::CaseInsensitive)) {
                 QListWidgetItem* item = new QListWidgetItem(_folderIcon, folderTitle);
@@ -98,11 +97,10 @@ void GotoDialog::onTextEdited(const QString& text) {
                 items.push_back(item);
             }
 
-            for (int j = 0; j < folder->fileCount(); j++) {
-                auto file = folder->fileAt(j);
+            for (FileItem* file : *folder) {
                 auto fileTitle = file->title();
                 if (fileTitle.contains(text, Qt::CaseInsensitive)) {
-                    QString newTitle = fileTitle + " " + (i > 0 ? "(in " + folderTitle + ")" : folderTitle);
+                    QString newTitle = fileTitle + " " + (!folder->isPrimary() ? "(in " + folderTitle + ")" : folderTitle);
                     QListWidgetItem* item = new QListWidgetItem(_fileIcon, newTitle);
                     item->setData(Qt::UserRole, folder->name() + '\0' + file->name());
                     items.push_back(item);

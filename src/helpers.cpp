@@ -63,8 +63,7 @@ bool Helpers::isValidTitleChar(QChar ch) {
  */
 QString Helpers::getFSNameFromTitle(QString fsTitle, bool isFolder) {
     QString name = "";
-    for (int i = 0; i < fsTitle.size(); ++i) {
-        QChar ch = fsTitle.at(i);
+    for (QChar ch : fsTitle) {
         if (!isValidTitleChar(ch)) {
             name.append("~");
             name.append(QString("%1").arg(ch.unicode(), 2, 16, QChar('0')));
@@ -100,9 +99,7 @@ QString Helpers::getFSTitleFromName(QString fsName) {
     QString title = "";
     QString sbDecode = "";
     bool inEncoded = false;
-    for (int i = 0; i < fsName.size(); ++i) {
-        QChar ch = fsName.at(i);
-
+    for (QChar ch : fsName) {
         if (inEncoded) {
             if (ch == '~') { //end decode
                 if (sbDecode.length() == 2) { //could be

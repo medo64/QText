@@ -591,8 +591,7 @@ void MainWindow::onFolderMenuShow() {
     italicFont.setItalic(true);
 
     _folderButton->menu()->clear();
-    for (int i = 0; i < _storage->folderCount(); i++) {
-        auto folder = _storage->folderAt(i);
+    for (FolderItem* folder : *_storage) {
         QAction* folderAction = new QAction(folder->title());
         folderAction->setData(folder->name());
         folderAction->setDisabled(folder == _folder);

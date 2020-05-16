@@ -49,8 +49,7 @@ void FileNameDialog::onTextChanged(const QString& text) {
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
     } else {
         bool foundMatch = false;
-        for (int i = 0; i < _folder->fileCount(); i++) {
-            FileItem* iFile = _folder->fileAt(i);
+        for (FileItem* iFile : *_folder) {
             if (_file == iFile) {
                 if (text.compare(iFile->title(), Qt::CaseSensitive) == 0) { foundMatch = true; break; }
             } else {

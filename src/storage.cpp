@@ -172,8 +172,7 @@ void Storage::onFileAdded(QString folderPath, QString fileName) {
     }
 
     if (folder != nullptr) {
-        for (int i = 0; i < folder->fileCount(); i++ ) { //find duplicates
-            FileItem* file = folder->fileAt(i);
+        for (FileItem* file : *folder) { //find duplicates
             if (file->name() == fileName) { return; } //already there
         }
 

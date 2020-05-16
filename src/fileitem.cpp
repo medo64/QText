@@ -44,8 +44,7 @@ QString FileItem::name() {
 
 QString FileItem::title() {
     QString extensions[] { ".txt", ".html" };
-    for (int i = 0; i < extensions->length(); i++) {
-        auto extension = extensions[i];
+    for (QString extension : extensions) {
         if (_fileName.endsWith(extension, Qt::CaseInsensitive)) {
             auto fileNameWithoutExtension = _fileName.left(_fileName.length() - extension.length());
             return Helpers::getFileTitleFromName(fileNameWithoutExtension);

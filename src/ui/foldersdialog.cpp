@@ -133,8 +133,7 @@ FolderItem* FoldersDialog::selectedFolder() {
 void FoldersDialog::fillList() {
     QFont italicFont = ui->listWidget->font();
     italicFont.setItalic(true);
-    for (int i = 0; i < _storage->folderCount(); i++) {
-        FolderItem* folder = _storage->folderAt(i);
+    for (FolderItem* folder : *_storage) {
         QListWidgetItem* item = new QListWidgetItem();
         item->setText(folder->title());
         if (!folder->isPrimary()) { item->setFont(italicFont); }
