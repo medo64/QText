@@ -17,10 +17,10 @@ class FileItem : public QTextEdit {
     public:
         FileItem(FolderItem* folder, QString fileName);
         ~FileItem();
-        FolderItem* getFolder();
-        QString getKey();
-        QString getPath();
-        QString getTitle();
+        FolderItem* folder();
+        QString name();
+        QString path();
+        QString title();
         void setTitle(QString newTitle);
         bool isPlain();
         bool isHtml();

@@ -34,15 +34,15 @@ FileItem::~FileItem() {
 }
 
 
-FolderItem* FileItem::getFolder() {
+FolderItem* FileItem::folder() {
     return _folder;
 }
 
-QString FileItem::getKey() {
+QString FileItem::name() {
     return _fileName;
 }
 
-QString FileItem::getTitle() {
+QString FileItem::title() {
     QString extensions[] { ".txt", ".html" };
     for (int i = 0; i < extensions->length(); i++) {
         auto extension = extensions[i];
@@ -58,11 +58,11 @@ void FileItem::setTitle(QString newTitle) {
     _folder->monitor()->stopMonitoring();
 
     save();
-    if (newTitle == getTitle()) { return; } //no change
+    if (newTitle == title()) { return; } //no change
 
-    QString curPath = getPath();
+    QString curPath = path();
     QString newFileName = Helpers::getFileNameFromTitle(newTitle) + (isHtml() ? ".html" : ".txt");
-    QString newPath = QDir::cleanPath(_folder->getPath() + QDir::separator() + newFileName);
+    QString newPath = QDir::cleanPath(_folder->path() + QDir::separator() + newFileName);
 
     QFile curFile(curPath);
     QFile newFile(newPath);
@@ -76,13 +76,11 @@ void FileItem::setTitle(QString newTitle) {
 }
 
 bool FileItem::isHtml() {
-    QString path = getPath();
-    return path.endsWith(".html", Qt::CaseInsensitive);
+    return path().endsWith(".html", Qt::CaseInsensitive);
 }
 
 bool FileItem::isPlain() {
-    QString path = getPath();
-    return path.endsWith(".txt", Qt::CaseInsensitive);
+    return path().endsWith(".txt", Qt::CaseInsensitive);
 }
 
 bool FileItem::isModified() {
@@ -95,14 +93,13 @@ bool FileItem::isEmpty() {
 
 
 bool FileItem::load() {
-    qDebug() << "load()" << getPath();
+    qDebug() << "load()" << path();
 
     if (_timerSavePending != nullptr) { _timerSavePending->stop(); }
     this->blockSignals(true);
 
     bool fileValid;
-    QString path = getPath();
-    QFile file(path);
+    QFile file(path());
     if (file.exists()) {
         if (file.open(QIODevice::ReadOnly)) {
             QTextStream in(&file);
@@ -122,8 +119,8 @@ bool FileItem::load() {
         } else {
             this->setReadOnly(true);
             this->setStyleSheet("QTextEdit { background-color: red; color: white; }");
-            this->setText(file.errorString() + "\n" + path);
-            qDebug() << "load()" << getPath() << "error:" << file.errorString();
+            this->setText(file.errorString() + "\n" + path());
+            qDebug() << "load()" << path() << "error:" << file.errorString();
             fileValid = false;
         }
     } else { //create a new one
@@ -135,8 +132,8 @@ bool FileItem::load() {
         } else {
             this->setReadOnly(true);
             this->setStyleSheet("QTextEdit { background-color: red; color: white; }");
-            this->setText(file.errorString() + "\n" + path);
-            qDebug() << "new()" << getPath() << "error:" << file.errorString();
+            this->setText(file.errorString() + "\n" + path());
+            qDebug() << "new()" << path() << "error:" << file.errorString();
             fileValid = false;
         }
     }
@@ -151,7 +148,7 @@ bool FileItem::load() {
 }
 
 bool FileItem::save() {
-    qDebug() << "save()" << getPath();
+    qDebug() << "save()" << path();
 
     if (_timerSavePending != nullptr) { _timerSavePending->stop(); }
 
@@ -162,8 +159,7 @@ bool FileItem::save() {
         contents = this->document()->toPlainText();
     }
 
-    QString path = getPath();
-    QFile file(path);
+    QFile file(path());
     if (file.open(QIODevice::WriteOnly)) {
         QTextStream out(&file);
         out << contents;
@@ -174,7 +170,7 @@ bool FileItem::save() {
         _modificationTime = info.lastModified(); //remember modification time to avoid reload
         return true;
     } else {
-        qDebug() << "save()" << getPath() << "error:" << file.errorString();
+        qDebug() << "save()" << path() << "error:" << file.errorString();
         return false;
     }
 }
@@ -224,9 +220,8 @@ bool FileItem::event(QEvent* event) {
 }
 
 void FileItem::focusInEvent(QFocusEvent* e) {
-    qDebug().nospace() << "focusInEvent(" << QVariant::fromValue(e->reason()).toString() << ") " << getPath();
-    QString path = getPath();
-    QFile file(path);
+    qDebug().nospace() << "focusInEvent(" << QVariant::fromValue(e->reason()).toString() << ") " << path();
+    QFile file(path());
     if (file.exists()) {
         QFileInfo info(file);
         if (_modificationTime != info.lastModified()) { load(); }
@@ -247,7 +242,7 @@ void FileItem::focusInEvent(QFocusEvent* e) {
 }
 
 void FileItem::focusOutEvent(QFocusEvent* e) {
-    qDebug().nospace() << "focusOutEvent(" << QVariant::fromValue(e->reason()).toString() << ") " << getPath();
+    qDebug().nospace() << "focusOutEvent(" << QVariant::fromValue(e->reason()).toString() << ") " << path();
     QTextEdit::focusOutEvent(e);
     if (this->document()->isModified()) { save(); }
 }
@@ -277,8 +272,8 @@ void FileItem::wheelEvent(QWheelEvent* e) {
 }
 
 
-QString FileItem::getPath() {
-    return QDir::cleanPath(_folder->getPath() + QDir::separator() + _fileName);
+QString FileItem::path() {
+    return QDir::cleanPath(_folder->path() + QDir::separator() + _fileName);
 }
 
 
@@ -288,7 +283,7 @@ void FileItem::printPreview(QPrinter* printer) {
 
 
 void FileItem::onModificationChanged(bool changed) {
-    qDebug().nospace() << "onModificationChanged(" << changed << ")" << getPath();
+    qDebug().nospace() << "onModificationChanged(" << changed << ")" << path();
 
     emit modificationChanged(this, changed);
 
@@ -310,7 +305,7 @@ void FileItem::onModificationChanged(bool changed) {
 }
 
 void FileItem::onSavePendingTimeout() {
-    qDebug() << "onSavePendingTimeout()" << getPath();
+    qDebug() << "onSavePendingTimeout()" << path();
     if (this->document()->isModified()) { save(); }
 }
 

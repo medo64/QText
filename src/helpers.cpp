@@ -199,7 +199,7 @@ bool Helpers::openWithDefaultApplication(QString filePath) {
  * \param file File.
  */
 bool Helpers::openFileWithVSCode(FileItem* file) {
-    return openFileWithVSCode(file->getPath());
+    return openFileWithVSCode(file->path());
 }
 
 /*!
@@ -237,12 +237,12 @@ bool Helpers::openDirectoryWithVSCode(FileItem* file) {
     QFile executableFile(executablePath);
     if (!executableFile.exists()) { return false; }
 
-    auto folder = file->getFolder();
-    auto rootFolder = folder->isRoot() ? folder : folder->getRootFolder();
+    auto folder = file->folder();
+    auto rootFolder = folder->isRoot() ? folder : folder->rootFolder();
 
     QStringList params;
-    params += QDir::toNativeSeparators(rootFolder->getPath());
-    params += QDir::toNativeSeparators(file->getPath());
+    params += QDir::toNativeSeparators(rootFolder->path());
+    params += QDir::toNativeSeparators(file->path());
     return  QProcess::startDetached(executablePath, params);
 }
 
@@ -261,10 +261,10 @@ bool Helpers::openDirectoryWithVSCode(FolderItem* folder) {
     QFile executableFile(executablePath);
     if (!executableFile.exists()) { return false; }
 
-    auto rootFolder = folder->isRoot() ? folder : folder->getRootFolder();
+    auto rootFolder = folder->isRoot() ? folder : folder->rootFolder();
 
     QStringList params;
-    params += QDir::toNativeSeparators(rootFolder->getPath());
+    params += QDir::toNativeSeparators(rootFolder->path());
     return  QProcess::startDetached(executablePath, params);
 }
 

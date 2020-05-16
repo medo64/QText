@@ -11,12 +11,16 @@ class Storage : public QObject {
     public:
         Storage(const QStringList paths);
         int folderCount();
-        FolderItem* getFolder(int index);
-        FolderItem* getBaseFolder();
-        QString getPath();
+        FolderItem* folderAt(int index);
+        FolderItem* baseFolder();
+        QString path();
         FolderItem* newFolder(QString title);
         bool deleteFolder(FolderItem* folder);
         StorageMonitorThread* monitor();
+
+    public:
+        void addItem(FolderItem* item);
+        void removeItemAt(int index);
 
     private:
         QVector<FolderItem*> _folders;

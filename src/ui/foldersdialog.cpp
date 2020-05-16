@@ -89,7 +89,7 @@ void FoldersDialog::onDelete() {
             msgBox.setDefaultButton(QMessageBox::No);
             if (msgBox.exec() != QMessageBox::Yes) { return; }
         }
-        if (_selectedFolder == folder) { _selectedFolder = _storage->getBaseFolder(); }
+        if (_selectedFolder == folder) { _selectedFolder = _storage->baseFolder(); }
         if (_storage->deleteFolder(folder)) {
             QListWidgetItem* itemToDelete = ui->listWidget->takeItem(ui->listWidget->currentRow());
             delete itemToDelete;
@@ -109,7 +109,7 @@ void FoldersDialog::onItemChanged(QListWidgetItem* item) {
         QVariant data = item->data(Qt::UserRole);
         FolderItem* folder = static_cast<FolderItem*>(data.value<void*>());
         if (!folder->rename(item->text())) {
-            item->setText(folder->getTitle()); //restore text if rename was unsuccessful
+            item->setText(folder->title()); //restore text if rename was unsuccessful
         }
     }
 }
@@ -134,9 +134,9 @@ void FoldersDialog::fillList() {
     QFont italicFont = ui->listWidget->font();
     italicFont.setItalic(true);
     for (int i = 0; i < _storage->folderCount(); i++) {
-        FolderItem* folder = _storage->getFolder(i);
+        FolderItem* folder = _storage->folderAt(i);
         QListWidgetItem* item = new QListWidgetItem();
-        item->setText(folder->getTitle());
+        item->setText(folder->title());
         if (!folder->isPrimary()) { item->setFont(italicFont); }
         item->setData(Qt::UserRole, QVariant::fromValue(static_cast<void*>(folder)));
         if (!folder->isRoot()) { item->setFlags(item->flags() | Qt::ItemIsEditable); }

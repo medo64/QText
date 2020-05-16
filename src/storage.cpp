@@ -16,11 +16,11 @@ Storage::Storage(const QStringList paths) {
         QString cleanedPath = rootDirectory.path();
 
         auto rootFolder = new FolderItem(this, nullptr, index, cleanedPath, nullptr);
-        _folders.push_back(rootFolder);
+        addItem(rootFolder);
         QStringList directories = rootDirectory.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::SortFlag::Name);
         for (QString directory : directories) {
             auto folder = new FolderItem(this, rootFolder, index, cleanedPath, directory);
-            _folders.push_back(folder);
+            addItem(folder);
         }
 
         index++;
@@ -38,11 +38,11 @@ int Storage::folderCount() {
     return _folders.size();
 }
 
-FolderItem* Storage::getFolder(int index) {
+FolderItem* Storage::folderAt(int index) {
     return _folders.at(index);
 }
 
-FolderItem* Storage::getBaseFolder() {
+FolderItem* Storage::baseFolder() {
     return _folders.at(0);
 }
 
@@ -51,8 +51,8 @@ FolderItem* Storage::newFolder(QString proposedTitle) {
     _monitor->stopMonitoring();
 
     FolderItem* newFolder = nullptr;
-    FolderItem* rootFolder = getBaseFolder();
-    QString rootPath = rootFolder->getPath();
+    FolderItem* rootFolder = baseFolder();
+    QString rootPath = rootFolder->path();
     QString title = proposedTitle;
     for (int i = 2; i < 100; i++) { //repeat until 100 is reached
         QString dirName = Helpers::getFileNameFromTitle(title);
@@ -60,7 +60,7 @@ FolderItem* Storage::newFolder(QString proposedTitle) {
         if (!dir.exists()) { //found one that doesn't exist - use this
             if (dir.mkpath(".")) {
                 FolderItem* folder = new FolderItem(this, rootFolder, 0, rootPath, dirName);
-                _folders.push_back(folder);
+                addItem(folder);
                 sortFolders();
                 newFolder = folder; //set only if directory can be created
             }
@@ -81,9 +81,9 @@ bool Storage::deleteFolder(FolderItem* folder) {
         FolderItem* iFolder = _folders[i];
         if (iFolder->isRoot()) { continue; } //skip root folders
         if (iFolder == folder) {
-            QDir directory(iFolder->getPath());
+            QDir directory(iFolder->path());
             if (directory.removeRecursively()) {
-                _folders.removeAt(i);
+                removeItemAt(i);
                 result = true;
                 break;
             }
@@ -99,12 +99,21 @@ StorageMonitorThread* Storage::monitor() {
 }
 
 
+void Storage::addItem(FolderItem* item) {
+    _folders.append(item);
+}
+
+void Storage::removeItemAt(int index) {
+    _folders.removeAt(index);
+}
+
+
 void Storage::sortFolders() {
     std::sort(_folders.begin(), _folders.end(), [] (FolderItem * item1, FolderItem * item2) {
-        int index1 = item1->getPathIndex();
-        int index2 = item2->getPathIndex();
+        int index1 = item1->pathIndex();
+        int index2 = item2->pathIndex();
         if (index1 == index2) { //both items are same level, just compare alphabetically
-            return item1->getTitle().compare(item2->getTitle(), Qt::CaseInsensitive) < 0;
+            return item1->title().compare(item2->title(), Qt::CaseInsensitive) < 0;
         } else { //different levels
             return (index1 < index2);
         }
@@ -114,7 +123,7 @@ void Storage::sortFolders() {
 
 void Storage::onDirectoryAdded(QString folderPath) {
     for (FolderItem* folder : _folders) { //find duplicates
-        if (folder->getPath() == folderPath) { return; } //already there
+        if (folder->path() == folderPath) { return; } //already there
     }
 
     FolderItem* rootFolder = nullptr;
@@ -122,15 +131,15 @@ void Storage::onDirectoryAdded(QString folderPath) {
     auto rootPath = folderInfo.dir().path();
     for (FolderItem* folder : _folders) { //find root folder
         if (!folder->isRoot()) { continue; }
-        if (folder->getPath() == rootPath) {
+        if (folder->path() == rootPath) {
             rootFolder = folder;
             break;
         }
     }
 
     if (rootFolder != nullptr) { //create new item
-        qDebug().noquote().nospace() << "[StorageMonitorThread] onDirectoryAdded(\"" << rootFolder->getPath() << "\", \"" << folderInfo.fileName() << "\")";
-        auto folder = new FolderItem(this, rootFolder, rootFolder->getPathIndex(), rootFolder->getPath(), folderInfo.fileName());
+        qDebug().noquote().nospace() << "[StorageMonitorThread] onDirectoryAdded(\"" << rootFolder->path() << "\", \"" << folderInfo.fileName() << "\")";
+        auto folder = new FolderItem(this, rootFolder, rootFolder->pathIndex(), rootFolder->path(), folderInfo.fileName());
         _folders.append(folder);
         sortFolders();
 
@@ -141,9 +150,9 @@ void Storage::onDirectoryAdded(QString folderPath) {
 void Storage::onDirectoryRemoved(QString folderPath) {
     for (int i = 0; i < _folders.count(); i++) { //find item
         FolderItem* iFolder = _folders[i];
-        QString iFolderPath = iFolder->getPath();
+        QString iFolderPath = iFolder->path();
         if (iFolderPath == folderPath) { //remove item
-            _folders.removeAt(i);
+            removeItemAt(i);
 
             QFileInfo iFolderInfo = iFolderPath;
             qDebug().noquote().nospace() << "[StorageMonitorThread] onDirectoryRemoved(\"" << iFolderInfo.dir().path() << "\", \"" << iFolderInfo.fileName() << "\")";
@@ -156,7 +165,7 @@ void Storage::onDirectoryRemoved(QString folderPath) {
 void Storage::onFileAdded(QString folderPath, QString fileName) {
     FolderItem* folder = nullptr;
     for (FolderItem* iFolder : _folders) { //find owner folder
-        if (iFolder->getPath() == folderPath) {
+        if (iFolder->path() == folderPath) {
             folder = iFolder;
             break;
         }
@@ -164,13 +173,13 @@ void Storage::onFileAdded(QString folderPath, QString fileName) {
 
     if (folder != nullptr) {
         for (int i = 0; i < folder->fileCount(); i++ ) { //find duplicates
-            FileItem* file = folder->getFile(i);
-            if (file->getKey() == fileName) { return; } //already there
+            FileItem* file = folder->fileAt(i);
+            if (file->name() == fileName) { return; } //already there
         }
 
         folder->addItem(new FileItem(folder, fileName)); //add item
 
-        qDebug().noquote().nospace() << "[StorageMonitorThread] onFileAdded(\"" << folder->getPath() << "\", \"" << fileName << "\")";
+        qDebug().noquote().nospace() << "[StorageMonitorThread] onFileAdded(\"" << folder->path() << "\", \"" << fileName << "\")";
         emit updatedFolder(folder);
     }
 }
@@ -178,7 +187,7 @@ void Storage::onFileAdded(QString folderPath, QString fileName) {
 void Storage::onFileRemoved(QString folderPath, QString fileName) {
     FolderItem* folder = nullptr;
     for (FolderItem* iFolder : _folders) { //find owner folder
-        if (iFolder->getPath() == folderPath) {
+        if (iFolder->path() == folderPath) {
             folder = iFolder;
             break;
         }
@@ -186,10 +195,10 @@ void Storage::onFileRemoved(QString folderPath, QString fileName) {
 
     if (folder != nullptr) {
         for (int i = 0; i < folder->fileCount(); i++) { //find item
-            FileItem* iFile = folder->getFile(i);
-            QString iFileName = iFile->getKey();
+            FileItem* iFile = folder->fileAt(i);
+            QString iFileName = iFile->name();
             if (iFileName == fileName) { //remove item
-                folder->removeItem(i);
+                folder->removeItemAt(i);
 
                 qDebug().noquote().nospace() << "[StorageMonitorThread] onFileRemoved(\"" << folderPath << "\", \"" << fileName << "\")";
                 emit updatedFolder(folder);

@@ -210,7 +210,7 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     }
 
     //determine last used folder
-    selectFolder(storage->getBaseFolder()->getKey()); //default folder
+    selectFolder(storage->baseFolder()->name()); //default folder
     selectFolder(Settings::lastFolder());
 
     //storage updates
@@ -331,10 +331,10 @@ void MainWindow::keyPressEvent(QKeyEvent* event) {
         case Qt::AltModifier | Qt::Key_Up:
         case Qt::AltModifier | Qt::Key_PageUp:
             for (int i = 1; i < _storage->folderCount(); i++) {
-                auto folder = _storage->getFolder(i);
-                if (folder->getKey().compare(_folder->getKey(), Qt::CaseSensitive) == 0) {
-                    auto newFolder = _storage->getFolder(i - 1);
-                    selectFolder(newFolder->getKey());
+                auto folder = _storage->folderAt(i);
+                if (folder->name().compare(_folder->name(), Qt::CaseSensitive) == 0) {
+                    auto newFolder = _storage->folderAt(i - 1);
+                    selectFolder(newFolder->name());
                     break;
                 }
             }
@@ -343,17 +343,17 @@ void MainWindow::keyPressEvent(QKeyEvent* event) {
         case Qt::AltModifier | Qt::Key_Down:
         case Qt::AltModifier | Qt::Key_PageDown:
             for (int i = 0; i < _storage->folderCount() - 1; i++) {
-                auto folder = _storage->getFolder(i);
-                if (folder->getKey().compare(_folder->getKey(), Qt::CaseSensitive) == 0) {
-                    auto newFolder = _storage->getFolder(i + 1);
-                    selectFolder(newFolder->getKey());
+                auto folder = _storage->folderAt(i);
+                if (folder->name().compare(_folder->name(), Qt::CaseSensitive) == 0) {
+                    auto newFolder = _storage->folderAt(i + 1);
+                    selectFolder(newFolder->name());
                     break;
                 }
             }
             break;
 
         case Qt::AltModifier | Qt::Key_Home:
-            selectFolder(_storage->getBaseFolder()->getKey());
+            selectFolder(_storage->baseFolder()->name());
             break;
 
         case Qt::AltModifier | Qt::Key_End:
@@ -382,10 +382,10 @@ void MainWindow::keyPressEvent(QKeyEvent* event) {
 void MainWindow::onFileModificationChanged(FileItem* file, bool isModified) {
     auto tabIndex = ui->tabWidget->indexOf(file);
     if (isModified) {
-        ui->tabWidget->setTabText(tabIndex, file->getTitle() + "*");
+        ui->tabWidget->setTabText(tabIndex, file->title() + "*");
         ui->actionSave->setDisabled(false);
     } else {
-        ui->tabWidget->setTabText(tabIndex, file->getTitle());
+        ui->tabWidget->setTabText(tabIndex, file->title());
         ui->actionSave->setDisabled(true);
     }
 }
@@ -405,7 +405,7 @@ void MainWindow::onFileNew() {
         case QDialog::Accepted: {
                 auto newTitle = dialog->getTitle();
                 auto file = _folder->newFile(newTitle);
-                auto index = ui->tabWidget->addTab(file, file->getTitle());
+                auto index = ui->tabWidget->addTab(file, file->title());
                 ui->tabWidget->setCurrentIndex(index);
             }
             break;
@@ -450,7 +450,7 @@ void MainWindow::onFileDelete() {
     QMessageBox msgBox;
     msgBox.setIcon(QMessageBox::Question);
     msgBox.setText("The document has been modified");
-    msgBox.setInformativeText("Do you really want to delete " + file->getTitle() + "?");
+    msgBox.setInformativeText("Do you really want to delete " + file->title() + "?");
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     msgBox.setDefaultButton(QMessageBox::Yes);
     if (file->isEmpty() || (msgBox.exec() == QMessageBox::Yes)) {
@@ -466,7 +466,7 @@ void MainWindow::onFilePrint() {
 
     QPrintDialog dialog(&printer, this);
     Helpers::setupResizableDialog(&dialog);
-    dialog.setWindowTitle("Print: " + file->getTitle());
+    dialog.setWindowTitle("Print: " + file->title());
     if (file->textCursor().hasSelection()) {
         dialog.addEnabledOption(QAbstractPrintDialog::PrintSelection);
         dialog.setPrintRange(QAbstractPrintDialog::Selection); //make selection default
@@ -488,7 +488,7 @@ void MainWindow::onFilePrintPreview() {
 
     QPrintPreviewDialog dialog(&printer, this, Qt::Dialog | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
     Helpers::setupResizableDialog(&dialog);
-    dialog.setWindowTitle("Print Preview: " + file->getTitle());
+    dialog.setWindowTitle("Print Preview: " + file->title());
     connect(&dialog, &QPrintPreviewDialog::paintRequested, file, &FileItem::printPreview);
     dialog.showMaximized();
 
@@ -557,10 +557,10 @@ void MainWindow::onFindNext(bool backward) {
         auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
         auto nextFile = Find::findNext(file, backward);
         if ((nextFile != nullptr) && (nextFile != file)) {
-            FolderItem* folder = file->getFolder();
-            FolderItem* nextFolder = nextFile->getFolder();
+            FolderItem* folder = file->folder();
+            FolderItem* nextFolder = nextFile->folder();
             if (folder != nextFolder) { selectFolder(nextFolder); }
-            selectFile(nextFile->getKey());
+            selectFile(nextFile->name());
         }
     } else {
         onFind(); //show dialog if no text
@@ -592,9 +592,9 @@ void MainWindow::onFolderMenuShow() {
 
     _folderButton->menu()->clear();
     for (int i = 0; i < _storage->folderCount(); i++) {
-        auto folder = _storage->getFolder(i);
-        QAction* folderAction = new QAction(folder->getTitle());
-        folderAction->setData(folder->getKey());
+        auto folder = _storage->folderAt(i);
+        QAction* folderAction = new QAction(folder->title());
+        folderAction->setData(folder->name());
         folderAction->setDisabled(folder == _folder);
         if (!folder->isPrimary()) { folderAction->setFont(italicFont); }
         connect(folderAction, &QAction::triggered, this, &MainWindow::onFolderMenuSelect);
@@ -609,7 +609,7 @@ void MainWindow::onFolderMenuSelect() {
         auto key = action->data().value<QString>();
         selectFolder(key);
 
-        auto lastFileKey = Settings::lastFile(_folder->getKey());
+        auto lastFileKey = Settings::lastFile(_folder->name());
         selectFile(lastFileKey);
     }
 }
@@ -618,7 +618,7 @@ void MainWindow::onFolderMenuSelect() {
 void MainWindow::onOpenWithDefaultApplication() {
     if (ui->tabWidget->currentWidget() != nullptr) {
         auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-        Helpers::openWithDefaultApplication(file->getPath());
+        Helpers::openWithDefaultApplication(file->path());
     }
 }
 
@@ -636,23 +636,23 @@ void onShowContainingDirectory2(QString directoryPath, QString filePath) {
 void MainWindow::onShowContainingDirectory() {
     if (ui->tabWidget->currentWidget() != nullptr) {
         auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-        onShowContainingDirectory2(_folder->getPath(), file->getPath());
+        onShowContainingDirectory2(_folder->path(), file->path());
     } else {
-        onShowContainingDirectory2(_folder->getPath(), nullptr);
+        onShowContainingDirectory2(_folder->path(), nullptr);
     }
 }
 
 void MainWindow::onShowContainingDirectoryOnly() {
-    onShowContainingDirectory2(_folder->getPath(), nullptr);
+    onShowContainingDirectory2(_folder->path(), nullptr);
 }
 
 
 void MainWindow::onCopyContainingPath() {
     if (ui->tabWidget->currentWidget() != nullptr) {
         auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-        Clipboard::setText(QDir::toNativeSeparators(file->getPath()));
+        Clipboard::setText(QDir::toNativeSeparators(file->path()));
     } else {
-        Clipboard::setText(QDir::toNativeSeparators(_folder->getPath()));
+        Clipboard::setText(QDir::toNativeSeparators(_folder->path()));
     }
 }
 
@@ -742,7 +742,7 @@ void MainWindow::onTabChanged() {
 
     if (exists) {
         file->setFocus();
-        Settings::setLastFile(_folder->getKey(), file->getKey());
+        Settings::setLastFile(_folder->name(), file->name());
     }
 }
 
@@ -793,16 +793,16 @@ void MainWindow::selectFolder(QString folderKey) {
     FolderItem* selectedFolder = nullptr;
 
     for (int i = 0; i < _storage->folderCount(); i++) {
-        auto folder = _storage->getFolder(i);
-        if (folder->getKey().compare(folderKey, Qt::CaseSensitive) == 0) {
+        auto folder = _storage->folderAt(i);
+        if (folder->name().compare(folderKey, Qt::CaseSensitive) == 0) {
             selectedFolder = folder;
             break;
         }
     }
     if (selectedFolder == nullptr) { //try case-insensitive match
         for (int i = 0; i < _storage->folderCount(); i++) {
-            auto folder = _storage->getFolder(i);
-            if (folder->getKey().compare(folderKey, Qt::CaseInsensitive) == 0) {
+            auto folder = _storage->folderAt(i);
+            if (folder->name().compare(folderKey, Qt::CaseInsensitive) == 0) {
                 selectedFolder = folder;
                 break;
             }
@@ -820,15 +820,15 @@ void MainWindow::selectFolder(FolderItem* selectedFolder) {
         QFont italicFont = _folderButton->menu()->font();
         italicFont.setItalic(true);
 
-        _folderButton->setText(_folder->getTitle() + " ");
+        _folderButton->setText(_folder->title() + " ");
         _folderButton->setFont(!_folder->isPrimary() ? italicFont : _folderButton->menu()->font());
-        Settings::setLastFolder(_folder->getKey());
+        Settings::setLastFolder(_folder->name());
 
         ui->tabWidget->blockSignals(true);
         ui->tabWidget->clear();
         for (int i = 0; i < _folder->fileCount(); i++) {
-            auto file = _folder->getFile(i);
-            ui->tabWidget->addTab(file, file->getTitle());
+            auto file = _folder->fileAt(i);
+            ui->tabWidget->addTab(file, file->title());
             QObject::connect(file, &FileItem::titleChanged, this, &MainWindow::onFileTitleChanged);
             QObject::connect(file, &FileItem::modificationChanged, this, &MainWindow::onFileModificationChanged);
             QObject::connect(file, &FileItem::activated, this, &MainWindow::onFileActivated);
@@ -839,7 +839,7 @@ void MainWindow::selectFolder(FolderItem* selectedFolder) {
         ui->tabWidget->blockSignals(false);
 
         if (_folder->fileCount() > 0) {
-            selectFile(Settings::lastFile(_folder->getKey()));
+            selectFile(Settings::lastFile(_folder->name()));
         } else {
             onTabChanged(); //just to refresh disabled buttons
         }
@@ -847,10 +847,10 @@ void MainWindow::selectFolder(FolderItem* selectedFolder) {
 }
 
 void MainWindow::selectFile(QString fileKey) {
-    qDebug().nospace() << "selectFile(" << fileKey << ") " << _folder->getKey();
+    qDebug().nospace() << "selectFile(" << fileKey << ") " << _folder->name();
     for (int i = 0; i < ui->tabWidget->count() ; i++) {
         auto file = dynamic_cast<FileItem*>(ui->tabWidget->widget(i));
-        if (file->getKey().compare(fileKey, Qt::CaseInsensitive) == 0) {
+        if (file->name().compare(fileKey, Qt::CaseInsensitive) == 0) {
             ui->tabWidget->setCurrentIndex(i);
             onTabChanged();
             break;

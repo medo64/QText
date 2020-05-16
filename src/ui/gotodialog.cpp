@@ -84,27 +84,27 @@ void GotoDialog::onTextEdited(const QString& text) {
     QList<QListWidgetItem*> items;
 
     if (text.length() == 0) {
-        auto folder = _storage->getFolder(0);
-        QListWidgetItem* item = new QListWidgetItem(_folderIcon, folder->getTitle());
-        item->setData(Qt::UserRole, folder->getKey());
+        auto folder = _storage->folderAt(0);
+        QListWidgetItem* item = new QListWidgetItem(_folderIcon, folder->title());
+        item->setData(Qt::UserRole, folder->name());
         items.push_back(item);
     } else {
         for (int i = 0; i < _storage->folderCount(); i++) {
-            auto folder = _storage->getFolder(i);
-            auto folderTitle = folder->getTitle();
+            auto folder = _storage->folderAt(i);
+            auto folderTitle = folder->title();
             if (folderTitle.contains(text, Qt::CaseInsensitive)) {
                 QListWidgetItem* item = new QListWidgetItem(_folderIcon, folderTitle);
-                item->setData(Qt::UserRole, folder->getKey());
+                item->setData(Qt::UserRole, folder->name());
                 items.push_back(item);
             }
 
             for (int j = 0; j < folder->fileCount(); j++) {
-                auto file = folder->getFile(j);
-                auto fileTitle = file->getTitle();
+                auto file = folder->fileAt(j);
+                auto fileTitle = file->title();
                 if (fileTitle.contains(text, Qt::CaseInsensitive)) {
                     QString newTitle = fileTitle + " " + (i > 0 ? "(in " + folderTitle + ")" : folderTitle);
                     QListWidgetItem* item = new QListWidgetItem(_fileIcon, newTitle);
-                    item->setData(Qt::UserRole, folder->getKey() + '\0' + file->getKey());
+                    item->setData(Qt::UserRole, folder->name() + '\0' + file->name());
                     items.push_back(item);
                 }
             }

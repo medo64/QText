@@ -14,8 +14,7 @@ FolderItem::FolderItem(Storage* storage, FolderItem* rootFolder, const int pathI
     _directoryName = directoryName;
     _pathIndex = pathIndex;
 
-    QString path = getPath();
-    QDir directory = path;
+    QDir directory = path();
 
     QStringList files = directory.entryList(QStringList() << "*.txt" << "*.html", QDir::Files);
     for (QString fileName : files) {
@@ -26,11 +25,11 @@ FolderItem::FolderItem(Storage* storage, FolderItem* rootFolder, const int pathI
 }
 
 
-FolderItem* FolderItem::getRootFolder() {
+FolderItem* FolderItem::rootFolder() {
     return _rootFolder;
 }
 
-QString FolderItem::getKey() {
+QString FolderItem::name() {
     if (_pathIndex > 0) {
         return QString::number(_pathIndex + 1) + "/" + ((_directoryName == nullptr) ? "" : _directoryName);
     } else {
@@ -38,11 +37,11 @@ QString FolderItem::getKey() {
     }
 }
 
-int FolderItem::getPathIndex() {
+int FolderItem::pathIndex() {
     return _pathIndex;
 }
 
-QString FolderItem::getTitle() {
+QString FolderItem::title() {
     if (_directoryName == nullptr) {
         QFileInfo path = _directoryPath;
         QString dirName = path.fileName();
@@ -91,7 +90,7 @@ int FolderItem::fileCount() {
     return _files.size();
 }
 
-FileItem* FolderItem::getFile(int index) {
+FileItem* FolderItem::fileAt(int index) {
     return _files.at(index);
 }
 
@@ -99,7 +98,7 @@ FileItem* FolderItem::newFile(QString title) {
     _storage->monitor()->stopMonitoring();
 
     auto file = new FileItem(this, Helpers::getFileNameFromTitle(title) + ".txt");
-    _files.push_back(file);
+    addItem(file);
     saveOrdering();
 
     _storage->monitor()->continueMonitoring();
@@ -112,8 +111,8 @@ bool FolderItem::deleteFile(FileItem* file, Settings::DeletionStyle deletionStyl
     bool result = false;
     for (auto item = _files.begin(); item != _files.end(); item++) {
         FileItem* iFile = *item;
-        if (iFile->getPath().compare(file->getPath(), Qt::CaseSensitive) == 0) {
-            QFile osFile(iFile->getPath());
+        if (iFile->path().compare(file->path(), Qt::CaseSensitive) == 0) {
+            QFile osFile(iFile->path());
             if (deletionStyle == Settings::DeletionStyle::Overwrite) {
                 int length = osFile.size();
                 osFile.open(QIODevice::WriteOnly | QIODevice::Unbuffered);
@@ -144,7 +143,7 @@ bool FolderItem::deleteFile(FileItem* file, Settings::DeletionStyle deletionStyl
 
 bool FolderItem::fileExists(QString title) {
     for (auto file : _files) {
-        if (file->getTitle().compare(title, Qt::CaseInsensitive) == 0) { return true; }
+        if (file->title().compare(title, Qt::CaseInsensitive) == 0) { return true; }
     }
     return false;
 }
@@ -153,7 +152,7 @@ bool FolderItem::fileExists(QString title) {
 bool FolderItem::saveAll() {
     bool allSaved = true;
     for (int i = 0; i < fileCount(); i++) {
-        auto file = getFile(i);
+        auto file = fileAt(i);
         if (file->isModified()) {
             allSaved &= file->save();
         }
@@ -162,7 +161,7 @@ bool FolderItem::saveAll() {
 }
 
 
-QString FolderItem::getPath() {
+QString FolderItem::path() {
     if (_directoryName == nullptr) {
         return QDir::cleanPath(_directoryPath);
     } else {
@@ -192,32 +191,32 @@ StorageMonitorThread* FolderItem::monitor() {
 }
 
 
-void FolderItem::addItem(FileItem* file) {
-    _files.append(file);
+void FolderItem::addItem(FileItem* item) {
+    _files.append(item);
 }
 
-void FolderItem::removeItem(int index) {
+void FolderItem::removeItemAt(int index) {
     _files.removeAt(index);
 }
 
 
 void FolderItem::cleanOrdering() {
-    Config::stateWriteMany("Order!" + this->getKey(), QStringList());
+    Config::stateWriteMany("Order!" + this->name(), QStringList());
 }
 
 void FolderItem::saveOrdering() {
     QStringList orderList;
     for (auto file : _files) {
-        orderList.append(file->getKey());
+        orderList.append(file->name());
     }
-    Config::stateWriteMany("Order!" + this->getKey(), orderList);
+    Config::stateWriteMany("Order!" + this->name(), orderList);
 }
 
 void FolderItem::loadOrdering() {
-    QStringList ordering = Config::stateReadMany("Order!" + this->getKey());
+    QStringList ordering = Config::stateReadMany("Order!" + this->name());
     std::sort(_files.begin(), _files.end(), [ordering] (FileItem * item1, FileItem * item2) {
-        QString key1 = item1->getKey();
-        QString key2 = item2->getKey();
+        QString key1 = item1->name();
+        QString key2 = item2->name();
         int index1 = ordering.indexOf(key1);
         int index2 = ordering.indexOf(key2);
         if ((index1 == -1) && (index2 == -1)) { //both items are new, just compare alphabetically

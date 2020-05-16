@@ -28,10 +28,10 @@ FileNameDialog::FileNameDialog(QWidget* parent, FolderItem* folder) : FileNameDi
 }
 
 FileNameDialog::FileNameDialog(QWidget* parent, FileItem* file) : FileNameDialog(parent) {
-    _folder = file->getFolder();
+    _folder = file->folder();
     _file = file;
 
-    ui->textFileName->setText(file->getTitle());
+    ui->textFileName->setText(file->title());
 }
 
 FileNameDialog::~FileNameDialog() {
@@ -50,11 +50,11 @@ void FileNameDialog::onTextChanged(const QString& text) {
     } else {
         bool foundMatch = false;
         for (int i = 0; i < _folder->fileCount(); i++) {
-            FileItem* iFile = _folder->getFile(i);
+            FileItem* iFile = _folder->fileAt(i);
             if (_file == iFile) {
-                if (text.compare(iFile->getTitle(), Qt::CaseSensitive) == 0) { foundMatch = true; break; }
+                if (text.compare(iFile->title(), Qt::CaseSensitive) == 0) { foundMatch = true; break; }
             } else {
-                if (text.compare(iFile->getTitle(), Qt::CaseInsensitive) == 0) { foundMatch = true; break; }
+                if (text.compare(iFile->title(), Qt::CaseInsensitive) == 0) { foundMatch = true; break; }
             }
         }
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(!foundMatch);

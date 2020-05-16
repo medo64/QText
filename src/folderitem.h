@@ -13,16 +13,16 @@ class FolderItem {
 
     public:
         FolderItem(Storage* storage, FolderItem* rootFolder, const int pathIndex, const QString directoryBase, const QString directoryName);
-        FolderItem* getRootFolder();
-        QString getKey();
-        QString getPath();
-        int getPathIndex();
-        QString getTitle();
+        FolderItem* rootFolder();
+        QString name();
+        QString path();
+        int pathIndex();
+        QString title();
         bool rename(QString newTitle);
         bool isRoot();
         bool isPrimary();
         int fileCount();
-        FileItem* getFile(int index);
+        FileItem* fileAt(int index);
         FileItem* newFile(QString title);
         bool deleteFile(FileItem* file, Settings::DeletionStyle deletionStyle);
         bool saveAll();
@@ -31,8 +31,8 @@ class FolderItem {
         StorageMonitorThread* monitor();
 
     public:
-        void addItem(FileItem* file);
-        void removeItem(int index);
+        void addItem(FileItem* item);
+        void removeItemAt(int index);
 
     private:
         Storage* _storage;

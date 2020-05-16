@@ -75,11 +75,11 @@ QList<FileItem*> Find::fileList(FileItem* pivotFile, bool backward) {
         bool foundPivot = false;
         int insertLocation = 0;
         for (int i = 0; i < _storage->folderCount(); i++) {
-            FolderItem* folder = _storage->getFolder(i);
-            if ((_findScope == Find::SearchScope::CurrentFolder) && (folder != pivotFile->getFolder())) { continue; }
+            FolderItem* folder = _storage->folderAt(i);
+            if ((_findScope == Find::SearchScope::CurrentFolder) && (folder != pivotFile->folder())) { continue; }
 
             for (int j = 0; j < folder->fileCount(); j++) {
-                FileItem* file = folder->getFile(j);
+                FileItem* file = folder->fileAt(j);
                 if (backward) { //if we're ordering them backward
                     if (foundPivot) {
                         items.insert(insertLocation, file);

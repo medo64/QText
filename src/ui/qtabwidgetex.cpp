@@ -13,8 +13,8 @@ QTabWidgetEx::QTabWidgetEx(QWidget* parent)
 
 void QTabWidgetEx::onTabMoved(int from, int to) {
     auto fileFrom = dynamic_cast<FileItem*>(this->widget(from));
-    this->setTabText(from, fileFrom->getTitle());
+    this->setTabText(from, fileFrom->title());
     auto fileTo = dynamic_cast<FileItem*>(this->widget(to));
-    this->setTabText(to, fileTo->getTitle());
+    this->setTabText(to, fileTo->title());
     emit tabMoved(from, to);
 }
