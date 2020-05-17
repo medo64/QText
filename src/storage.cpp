@@ -138,7 +138,7 @@ void Storage::onDirectoryAdded(QString folderPath) {
     }
 
     if (rootFolder != nullptr) { //create new item
-        qDebug().noquote().nospace() << "[StorageMonitorThread] onDirectoryAdded(\"" << rootFolder->path() << "\", \"" << folderInfo.fileName() << "\")";
+        qDebug().noquote().nospace() << "[StorageMonitorThread] onDirectoryAdded(\"" << rootFolder->path() << "\", \"" << folderInfo.fileName() << "\") #" << QThread::currentThreadId();
         auto folder = new FolderItem(this, rootFolder, rootFolder->pathIndex(), rootFolder->path(), folderInfo.fileName());
         _folders.append(folder);
         sortFolders();
@@ -155,7 +155,7 @@ void Storage::onDirectoryRemoved(QString folderPath) {
             removeItemAt(i);
 
             QFileInfo iFolderInfo = iFolderPath;
-            qDebug().noquote().nospace() << "[StorageMonitorThread] onDirectoryRemoved(\"" << iFolderInfo.dir().path() << "\", \"" << iFolderInfo.fileName() << "\")";
+            qDebug().noquote().nospace() << "[StorageMonitorThread] onDirectoryRemoved(\"" << iFolderInfo.dir().path() << "\", \"" << iFolderInfo.fileName() << "\") #" << QThread::currentThreadId();
             emit updatedFolder(nullptr);
             break;
         }
@@ -178,7 +178,7 @@ void Storage::onFileAdded(QString folderPath, QString fileName) {
 
         folder->addItem(new FileItem(folder, fileName)); //add item
 
-        qDebug().noquote().nospace() << "[StorageMonitorThread] onFileAdded(\"" << folder->path() << "\", \"" << fileName << "\")";
+        qDebug().noquote().nospace() << "[StorageMonitorThread] onFileAdded(\"" << folder->path() << "\", \"" << fileName << "\") #" << QThread::currentThreadId();
         emit updatedFolder(folder);
     }
 }
@@ -199,7 +199,7 @@ void Storage::onFileRemoved(QString folderPath, QString fileName) {
             if (iFileName == fileName) { //remove item
                 folder->removeItemAt(i);
 
-                qDebug().noquote().nospace() << "[StorageMonitorThread] onFileRemoved(\"" << folderPath << "\", \"" << fileName << "\")";
+                qDebug().noquote().nospace() << "[StorageMonitorThread] onFileRemoved(\"" << folderPath << "\", \"" << fileName << "\") #" << QThread::currentThreadId();
                 emit updatedFolder(folder);
                 break;
             }

@@ -5,6 +5,7 @@
 StorageMonitorThread::StorageMonitorThread(QStringList paths) {
     _paths = paths;
     this->setPriority(LowPriority);
+    this->setObjectName("StorageMonitor");
     this->start();
 }
 
@@ -14,18 +15,18 @@ StorageMonitorThread::~StorageMonitorThread() {
 
 
 void StorageMonitorThread::continueMonitoring() {
-    qDebug().noquote().nospace() << "[StorageMonitorThread] continueMonitoring()";
+    qDebug().noquote().nospace() << "[StorageMonitorThread] continueMonitoring() #" << QThread::currentThreadId();
     _mutex.lock();
     _prevPaths.clear();
-    if (_isMonitoring) { qWarning().noquote().nospace() << "W: [StorageMonitorThread] Already monitoring"; }
+    if (_isMonitoring) { qWarning().noquote().nospace() << "W: [StorageMonitorThread] Already monitoring #" << QThread::currentThreadId(); }
     _isMonitoring = true;
     _mutex.unlock();
 }
 
 void StorageMonitorThread::stopMonitoring() {
-    qDebug().noquote().nospace() << "[StorageMonitorThread] stopMonitoring()";
+    qDebug().noquote().nospace() << "[StorageMonitorThread] stopMonitoring() #" << QThread::currentThreadId();
     _mutex.lock();
-    if (!_isMonitoring) { qWarning().noquote().nospace() << "W: [StorageMonitorThread] Already not monitoring"; }
+    if (!_isMonitoring) { qWarning().noquote().nospace() << "W: [StorageMonitorThread] Already not monitoring #" << QThread::currentThreadId(); }
     _isMonitoring = false;
     _mutex.unlock();
 }
@@ -72,7 +73,7 @@ void StorageMonitorThread::run() {
 
             //emit signals
             for (QString path : removedDirs) {
-                qDebug().noquote().nospace() << "[StorageMonitorThread] directoryRemoved(\"" << path << "\")";
+                qDebug().noquote().nospace() << "[StorageMonitorThread] directoryRemoved(\"" << path << "\") #" << QThread::currentThreadId();
                 emit directoryRemoved(path);
             }
             for (QString path : removedFiles) {
@@ -80,12 +81,12 @@ void StorageMonitorThread::run() {
                 QString dirPath = QDir::cleanPath(file.dir().path());
                 QString fileName = file.fileName();
                 if (!removedDirs.contains(dirPath)) { //filter out files where folder was removed
-                    qDebug().noquote().nospace() << "[StorageMonitorThread] fileRemoved(\"" << dirPath << "\", \"" << fileName << "\")";
+                    qDebug().noquote().nospace() << "[StorageMonitorThread] fileRemoved(\"" << dirPath << "\", \"" << fileName << "\") #" << QThread::currentThreadId();
                     emit fileRemoved(dirPath, fileName);
                 }
             }
             for (QString path : addedDirs) {
-                qDebug().noquote().nospace() << "[StorageMonitorThread] directoryAdded(\"" << path << "\")";
+                qDebug().noquote().nospace() << "[StorageMonitorThread] directoryAdded(\"" << path << "\") #" << QThread::currentThreadId();
                 emit directoryAdded(path);
             }
             for (QString path : addedFiles) {
@@ -93,7 +94,7 @@ void StorageMonitorThread::run() {
                 QString dirPath = QDir::cleanPath(file.dir().path());
                 QString fileName = file.fileName();
                 if (!addedDirs.contains(dirPath)) { //filter out files where folder was added
-                    qDebug().noquote().nospace() << "[StorageMonitorThread] fileAdded(\"" << dirPath << "\", \"" << fileName << "\")";
+                    qDebug().noquote().nospace() << "[StorageMonitorThread] fileAdded(\"" << dirPath << "\", \"" << fileName << "\") #" << QThread::currentThreadId();
                     emit fileAdded(dirPath, fileName);
                 }
             }
