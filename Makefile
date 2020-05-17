@@ -86,7 +86,9 @@ test: src/QText.pro
 	-@rm -r build/test 2>/dev/null || true
 	@mkdir -p build/test
 	@cd build/test ; qmake -qt=qt5 CONFIG+=test ../../src/QText.pro ; make
-	@build/test/qtexttests
+	@build/test/qtexttests \
+        | GREP_COLOR='01;31' grep --color=always -e '^FAIL! ' -e '^' \
+        | GREP_COLOR='01;32' grep --color=always -e '^PASS ' -e '^'
 
 
 package: dist
