@@ -85,7 +85,7 @@ test: src/QText.pro
 	$(if $(findstring 0,$(HAS_X11EXTRAS)),,$(error X11 extras not found, consider installing 'libqt5x11extras5-dev' package))
 	-@rm -r build/test 2>/dev/null || true
 	@mkdir -p build/test
-	@cd build/test ; qmake -qt=qt5 CONFIG+=Test ../../src/QText.pro ; make
+	@cd build/test ; qmake -qt=qt5 CONFIG+=test ../../src/QText.pro ; make
 	@build/test/qtexttests
 
 

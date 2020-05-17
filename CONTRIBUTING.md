@@ -22,20 +22,30 @@ To build executables, one can use `make`:
     make clean
     make
 
+To build debian package:
+
+    make clean
+    make package
+
 
 #### Windows
 
 To build project under Windows, in adition to Qt Creator with MinGW compiler,
 one also needs Git Bash to execute build script:
 
-    ./WinBuild.sh
+    ./WinMake.sh
+
+To make package you need InnoSetup application and executing build script with
+`package` argument:
+
+    ./WinMake.sh package
 
 
 ### Running Unit Tests
 
 To run unit tests, you will need to create a new build configuration. To do so
 go to Projects and use Add button to add it. Under qmake build configuration add
-`CONFIG+=Test` in Additional arguments. If you press Run, it will now execute
+`CONFIG+=test` in Additional arguments. If you press Run, it will now execute
 all test cases.
 
 

@@ -114,7 +114,7 @@ DISTFILES += \
     .astylerc
 
 
-Test {
+test {
     QT += testlib
     QT -= gui
 
