@@ -23,9 +23,8 @@ class Storage : public QObject {
         void removeItemAt(int index);
 
     public:
-        typedef typename QTypedArrayData<FolderItem*>::const_iterator const_iterator;
-        inline const_iterator begin() const Q_DECL_NOTHROW { return _folders.constBegin(); }
-        inline const_iterator end() const Q_DECL_NOTHROW { return _folders.constEnd(); }
+        inline QVector<FolderItem*>::const_iterator begin() const { return _folders.constBegin(); }
+        inline QVector<FolderItem*>::const_iterator end() const { return _folders.constEnd(); }
 
     private:
         QVector<FolderItem*> _folders;

@@ -35,9 +35,8 @@ class FolderItem {
         void removeItemAt(int index);
 
     public:
-        typedef typename QTypedArrayData<FileItem*>::const_iterator const_iterator;
-        inline const_iterator begin() const Q_DECL_NOTHROW { return _files.constBegin(); }
-        inline const_iterator end() const Q_DECL_NOTHROW { return _files.constEnd(); }
+        inline QVector<FileItem*>::const_iterator begin() const { return _files.constBegin(); }
+        inline QVector<FileItem*>::const_iterator end() const { return _files.constEnd(); }
 
     private:
         Storage* _storage;
