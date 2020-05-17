@@ -1,4 +1,4 @@
-.PHONY: all clean distclean install uninstall dist release debug package preview
+.PHONY: all clean distclean install uninstall dist release debug test package preview
 
 ifeq ($(PREFIX),)
     PREFIX := /usr/local/
@@ -65,6 +65,7 @@ release: src/QText.pro
 	$(if $(findstring 0,$(HAS_QMAKE)),,$(error No 'qmake' in path, consider installing 'qtbase5-dev' package))
 	$(if $(findstring 0,$(HAS_X11EXTRAS)),,$(error X11 extras not found, consider installing 'libqt5x11extras5-dev' package))
 	$(if $(findstring 0,$(HAS_UNCOMMITTED)),,$(warning Uncommitted changes present))
+	-@rm -r build/releases 2>/dev/null || true
 	@mkdir -p build/release
 	@cd build/release ; qmake -qt=qt5 CONFIG+=release ../../src/QText.pro ; make
 	@mkdir -p bin/
@@ -73,10 +74,19 @@ release: src/QText.pro
 debug: src/QText.pro
 	$(if $(findstring 0,$(HAS_QMAKE)),,$(error No 'qmake' in path, consider installing 'qtbase5-dev' package))
 	$(if $(findstring 0,$(HAS_X11EXTRAS)),,$(error X11 extras not found, consider installing 'libqt5x11extras5-dev' package))
+	-@rm -r build/debug 2>/dev/null || true
 	@mkdir -p build/debug
 	@cd build/debug ; qmake -qt=qt5 CONFIG+=debug ../../src/QText.pro ; make
 	@mkdir -p bin/
 	@cp build/debug/qtext bin/qtext
+
+test: src/QText.pro
+	$(if $(findstring 0,$(HAS_QMAKE)),,$(error No 'qmake' in path, consider installing 'qtbase5-dev' package))
+	$(if $(findstring 0,$(HAS_X11EXTRAS)),,$(error X11 extras not found, consider installing 'libqt5x11extras5-dev' package))
+	-@rm -r build/test 2>/dev/null || true
+	@mkdir -p build/test
+	@cd build/test ; qmake -qt=qt5 CONFIG+=Test ../../src/QText.pro ; make
+	@build/test/qtexttests
 
 
 package: dist

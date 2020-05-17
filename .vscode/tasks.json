@@ -33,6 +33,22 @@
         },
 
         {
+            "label": "test",
+            "type": "shell",
+            "command": "make",
+            "args": [ "test" ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            }
+        },
+
+        {
             "label": "launch",
             "type": "process",
             "command": "bin/qtext",
