@@ -1,5 +1,4 @@
-#ifndef QTABBAREX_H
-#define QTABBAREX_H
+#pragma once
 
 #include <QElapsedTimer>
 #include <QMouseEvent>
@@ -28,5 +27,3 @@ class QTabBarEx : public QTabBar {
         void tabMoved(int from, int to);
 
 };
-
-#endif // QTABBAREX_H

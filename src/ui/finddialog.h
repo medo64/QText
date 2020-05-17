@@ -1,5 +1,4 @@
-#ifndef FINDDIALOG_H
-#define FINDDIALOG_H
+#pragma once
 
 #include <QDialog>
 #include "find.h"
@@ -34,5 +33,3 @@ class FindDialog : public QDialog {
         void onHistorySelected();
 
 };
-
-#endif // FINDDIALOG_H

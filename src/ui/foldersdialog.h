@@ -1,5 +1,4 @@
-#ifndef FOLDERSDIALOG_H
-#define FOLDERSDIALOG_H
+#pragma once
 
 #include <QAbstractButton>
 #include <QPushButton>
@@ -40,5 +39,3 @@ class FoldersDialog : public QDialog {
         void onItemDoubleClicked(QListWidgetItem* item);
 
 };
-
-#endif // FOLDERSDIALOG_H

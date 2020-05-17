@@ -1,5 +1,4 @@
-#ifndef HELPERS_H
-#define HELPERS_H
+#pragma once
 
 #include <QString>
 #include <QWidget>
@@ -31,5 +30,3 @@ class Helpers {
         static QString getFSTitleFromName(QString fsName);
 
 };
-
-#endif // HELPERS_H

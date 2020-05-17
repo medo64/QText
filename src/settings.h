@@ -1,5 +1,4 @@
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#pragma once
 
 #include <QKeySequence>
 #include <QString>
@@ -77,5 +76,3 @@ class Settings {
         static void setSetupCompleted(bool newSetupCompleted);
 
 };
-
-#endif // SETTINGS_H

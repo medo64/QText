@@ -1,5 +1,4 @@
-#ifndef FIND_H
-#define FIND_H
+#pragma once
 
 #include <QList>
 #include <QString>
@@ -36,5 +35,3 @@ class Find {
         static SearchScope _findScope;
 
 };
-
-#endif // FIND_H

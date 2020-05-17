@@ -3,8 +3,7 @@
 // 2020-05-07: Changed signal/slot call
 // 2019-07-06: Initial version
 
-#ifndef MEDO_SINGLEINSTANCE_H
-#define MEDO_SINGLEINSTANCE_H
+#pragma once
 
 #include <QLocalServer>
 #include <QMutex>
@@ -46,5 +45,3 @@ class SingleInstance : public QObject {
         void onNewConnection();
 
 };
-
-#endif // MEDO_SINGLEINSTANCE_H

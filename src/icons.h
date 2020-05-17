@@ -1,5 +1,4 @@
-#ifndef ICONS_H
-#define ICONS_H
+#pragma once
 
 #include <QIcon>
 
@@ -33,5 +32,3 @@ class Icons {
         static QIcon settings();
 
 };
-
-#endif // ICONS_H

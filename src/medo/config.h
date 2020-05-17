@@ -10,8 +10,7 @@
 //             Added option to set paths manually
 // 2020-03-15: If QApplication hasn't bee initializesd, assume installed on Linux
 
-#ifndef MEDO_CONFIG_H
-#define MEDO_CONFIG_H
+#pragma once
 
 #include <QHash>
 #include <QMutex>
@@ -366,5 +365,3 @@ class Config {
         static ConfigFile* _stateFile;
 
 };
-
-#endif // MEDO_CONFIG_H

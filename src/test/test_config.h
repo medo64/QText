@@ -1,5 +1,4 @@
-#ifndef TEST_CONFIG_H
-#define TEST_CONFIG_H
+#pragma once
 
 #include <QObject>
 #include <QtTest>
@@ -59,5 +58,3 @@ class Test_Config : public QObject {
         void caseInsensitiveWrites();
 
 };
-
-#endif // TEST_CONFIG_H

@@ -1,5 +1,4 @@
-#ifndef FILEITEM_H
-#define FILEITEM_H
+#pragma once
 
 #include <QDateTime>
 #include <QFocusEvent>
@@ -66,5 +65,3 @@ class FileItem : public QTextEdit {
         void onContextMenuInsertTime();
 
 };
-
-#endif // FILEITEM_H

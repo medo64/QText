@@ -1,5 +1,4 @@
-#ifndef STORAGE_H
-#define STORAGE_H
+#pragma once
 
 #include <QString>
 #include "folderitem.h"
@@ -41,5 +40,3 @@ class Storage : public QObject {
         void updatedFolder(FolderItem* folder);
 
 };
-
-#endif // STORAGE_H

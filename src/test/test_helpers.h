@@ -1,5 +1,4 @@
-#ifndef TEST_HELPERS_H
-#define TEST_HELPERS_H
+#pragma once
 
 #include <QObject>
 #include <QtTest>
@@ -40,5 +39,3 @@ class Test_Helpers : public QObject {
         void decodeTitle_accidental5();
 
 };
-
-#endif // TEST_HELPERS_H

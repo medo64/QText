@@ -1,5 +1,4 @@
-#ifndef GOTODIALOG_H
-#define GOTODIALOG_H
+#pragma once
 
 #include <QDialog>
 #include <QIcon>
@@ -36,5 +35,3 @@ class GotoDialog : public QDialog {
         void onItemActivated();
 
 };
-
-#endif // GOTODIALOG_H

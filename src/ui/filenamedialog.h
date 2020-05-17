@@ -1,5 +1,4 @@
-#ifndef FILENAMEDIALOG_H
-#define FILENAMEDIALOG_H
+#pragma once
 
 #include "folderitem.h"
 #include <QDialog>
@@ -29,5 +28,3 @@ class FileNameDialog : public QDialog {
         void onTextChanged(const QString& text);
 
 };
-
-#endif // FILENAMEDIALOG_H

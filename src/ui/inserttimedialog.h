@@ -1,5 +1,4 @@
-#ifndef INSERTTIMEDIALOG_H
-#define INSERTTIMEDIALOG_H
+#pragma once
 
 #include <QDialog>
 
@@ -28,5 +27,3 @@ class InsertTimeDialog : public QDialog {
         void onUpdateExampleTimeout();
 
 };
-
-#endif // INSERTTIMEDIALOG_H

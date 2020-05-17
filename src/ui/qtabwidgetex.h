@@ -1,5 +1,4 @@
-#ifndef QTABWIDGETEX_H
-#define QTABWIDGETEX_H
+#pragma once
 
 #include <QTabWidget>
 #include <QWidget>
@@ -17,5 +16,3 @@ class QTabWidgetEx : public QTabWidget {
         void tabMoved(int from, int to);
 
 };
-
-#endif // QTABWIDGETEX_H

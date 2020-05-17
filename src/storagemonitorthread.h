@@ -1,5 +1,4 @@
-#ifndef STORAGEMONITORTHREAD_H
-#define STORAGEMONITORTHREAD_H
+#pragma once
 
 #include <QMutex>
 #include <QString>
@@ -30,5 +29,3 @@ class StorageMonitorThread : public QThread {
         void fileRemoved(QString folderPath, QString fileName);
 
 };
-
-#endif // STORAGEMONITORTHREAD_H

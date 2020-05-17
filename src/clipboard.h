@@ -1,5 +1,4 @@
-#ifndef CLIPBOARD_H
-#define CLIPBOARD_H
+#pragma once
 
 #include <QApplication>
 #include <QClipboard>
@@ -15,5 +14,3 @@ class Clipboard {
         static bool pasteText(QTextCursor cursor);
 
 };
-
-#endif // CLIPBOARD_H

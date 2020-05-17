@@ -1,5 +1,4 @@
-#ifndef SETUP_H
-#define SETUP_H
+#pragma once
 
 class Setup {
 
@@ -13,5 +12,3 @@ class Setup {
         static bool nativeAutostartCheck();
 
 };
-
-#endif // SETUP_H

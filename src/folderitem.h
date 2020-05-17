@@ -1,5 +1,4 @@
-#ifndef FOLDERITEM_H
-#define FOLDERITEM_H
+#pragma once
 
 #include <QString>
 #include "fileitem.h"
@@ -50,5 +49,3 @@ class FolderItem {
         void loadOrdering();
 
 };
-
-#endif // FOLDERITEM_H

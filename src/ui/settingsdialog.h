@@ -1,5 +1,4 @@
-#ifndef SETTINGSDIALOG_H
-#define SETTINGSDIALOG_H
+#pragma once
 
 #include <QAbstractButton>
 #include <QDialog>
@@ -37,5 +36,3 @@ class SettingsDialog : public QDialog {
         void onButtonClicked(QAbstractButton* button);
 
 };
-
-#endif // SETTINGSDIALOG_H
