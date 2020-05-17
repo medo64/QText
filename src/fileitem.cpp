@@ -18,6 +18,7 @@ FileItem::FileItem(FolderItem* folder, QString fileName)
     this->setLineWrapMode(Settings::wordWrap() ? QTextEdit::WidgetWidth : QTextEdit::NoWrap);
     this->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
     this->setAcceptRichText(false);
+    this->setFrameStyle(QFrame::NoFrame);
 
     load();
 
