@@ -116,5 +116,12 @@
         <file>icons/48x48/findNext.png</file>
         <file>icons/64x64/find.png</file>
         <file>icons/64x64/findNext.png</file>
+        <file>icons/16x16/appDebug.png</file>
+        <file>icons/24x24/appDebug.png</file>
+        <file>icons/32x32/appDebug.png</file>
+        <file>icons/48x48/appDebug.png</file>
+        <file>icons/64x64/appDebug.png</file>
+        <file>icons/96x96/appDebug.png</file>
+        <file>icons/128x128/appDebug.png</file>
     </qresource>
 </RCC>
