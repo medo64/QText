@@ -1,6 +1,11 @@
 ## Release Notes ##
 
 
+### 0.1.11 [2020-05-17] ###
+
+* Added file system update checks
+
+
 ### 0.1.10 [2020-05-10] ###
 
 * More search options
