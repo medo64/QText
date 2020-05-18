@@ -7,7 +7,8 @@
             "command": "make",
             "args": [ "all" ],
             "windows": {
-                "command": ".\\WinBuild.sh"
+                "command": "bash -c './WinMake.sh'",
+                "args": [ ]
             },
             "group": {
                 "kind": "build",
@@ -37,6 +38,10 @@
             "type": "shell",
             "command": "make",
             "args": [ "test" ],
+            "windows": {
+                "command": "bash -c './WinMake.sh test'",
+                "args": [ ]
+            },
             "group": {
                 "kind": "test",
                 "isDefault": true
