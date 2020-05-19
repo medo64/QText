@@ -21,7 +21,8 @@ Simple note taking program.
 | `Ctrl+F`          | Find text                                               |
 | `Ctrl+G`          | Find folder or file by name                             |
 | `Ctrl+N`          | New file                                                |
-| `Ctrl+O`          | Select folder                                           |
+| `Ctrl+O`          | Show folder menu                                        |
+| `Ctrl+Shift+O`    | Show folder edit dialog                                 |
 | `Ctrl+P`          | Print                                                   |
 | `Ctrl+Shift+P`    | Print preview                                           |
 | `Ctrl+Alt+R`      | Show containing directory                               |

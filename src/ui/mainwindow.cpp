@@ -270,10 +270,12 @@ void MainWindow::keyPressEvent(QKeyEvent* event) {
             break;
 
         case Qt::Key_F4:
+        case Qt::ControlModifier | Qt::Key_O:
             _folderButton->showMenu();
             break;
 
         case Qt::ShiftModifier | Qt::Key_F4:
+        case Qt::ControlModifier | Qt::ShiftModifier  | Qt::Key_O:
             _folderButton->click();
             break;
 
@@ -286,11 +288,6 @@ void MainWindow::keyPressEvent(QKeyEvent* event) {
                     Helpers::openDirectoryWithVSCode(_folder);
                 }
             }
-            break;
-
-
-        case Qt::ControlModifier | Qt::Key_O:
-            _folderButton->showMenu();
             break;
 
         case Qt::ControlModifier | Qt::AltModifier | Qt::Key_C:
