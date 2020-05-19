@@ -249,6 +249,7 @@ void MainWindow::keyPressEvent(QKeyEvent* event) {
     switch (data) {
         case Qt::Key_Escape:
         case Qt::ControlModifier | Qt::Key_F4:
+        case Qt::ControlModifier | Qt::Key_W:
             State::save(this);
             this->hide();
 #ifdef QT_DEBUG //close immediately for easier debugging
@@ -256,8 +257,24 @@ void MainWindow::keyPressEvent(QKeyEvent* event) {
 #endif
             break;
 
+        case Qt::Key_F1:
+            _appButton->showMenu();
+            break;
+
+        case Qt::ShiftModifier | Qt::Key_F1:
+            _appButton->click();
+            break;
+
         case Qt::ShiftModifier | Qt::Key_F3:
             onFindNext(true);
+            break;
+
+        case Qt::Key_F4:
+            _folderButton->showMenu();
+            break;
+
+        case Qt::ShiftModifier | Qt::Key_F4:
+            _folderButton->click();
             break;
 
         case Qt::AltModifier | Qt::Key_F8:

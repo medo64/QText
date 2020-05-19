@@ -8,9 +8,13 @@ Simple note taking program.
 
 | Key               | Description                                             |
 |-------------------|---------------------------------------------------------|
+| `F1`              | Show application menu                                   |
+| `Shift+F1`        | Show settings                                           |
 | `F2`              | Rename file                                             |
 | `F3`              | Find next text match                                    |
 | `Shift+F3`        | Find previous text match                                |
+| `F4`              | Show folder menu                                        |
+| `Shift+F4`        | Show folder edit dialog                                 |
 | `F5`              | Insert time and date                                    |
 | `Alt+F8`          | Show file and/or directory in Visual Studio Code        |
 | `Ctrl+C`          | Copy text                                               |
