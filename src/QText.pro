@@ -41,6 +41,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
 CONFIG += c++11
+QMAKE_CXXFLAGS_WARN_ON += -Wshadow
 
 SOURCES += \
         storagemonitorthread.cpp \

@@ -45,8 +45,8 @@ void FoldersDialog::hideEvent(QHideEvent* event) {
 }
 
 void FoldersDialog::keyPressEvent(QKeyEvent* event) {
-    auto data = static_cast<uint>(event->key()) | event->modifiers();
-    switch (data) {
+    auto keyData = static_cast<uint>(event->key()) | event->modifiers();
+    switch (keyData) {
         case Qt::Key_Escape:
             close();
             break;
@@ -79,8 +79,8 @@ void FoldersDialog::onRename() {
 void FoldersDialog::onDelete() {
     QListWidgetItem* item = ui->listWidget->currentItem();
     if (item != nullptr) {
-        QVariant data = item->data(Qt::UserRole);
-        FolderItem* folder = static_cast<FolderItem*>(data.value<void*>());
+        QVariant itemData = item->data(Qt::UserRole);
+        FolderItem* folder = static_cast<FolderItem*>(itemData.value<void*>());
         if (folder->fileCount() > 0) {
             QMessageBox msgBox(this);
             msgBox.setText("This folder is not empty!");
@@ -106,8 +106,8 @@ void FoldersDialog::onCurrentItemChanged(QListWidgetItem* current) {
 
 void FoldersDialog::onItemChanged(QListWidgetItem* item) {
     if (item != nullptr) {
-        QVariant data = item->data(Qt::UserRole);
-        FolderItem* folder = static_cast<FolderItem*>(data.value<void*>());
+        QVariant itemData = item->data(Qt::UserRole);
+        FolderItem* folder = static_cast<FolderItem*>(itemData.value<void*>());
         if (!folder->rename(item->text())) {
             item->setText(folder->title()); //restore text if rename was unsuccessful
         }
@@ -116,8 +116,8 @@ void FoldersDialog::onItemChanged(QListWidgetItem* item) {
 
 void FoldersDialog::onItemDoubleClicked(QListWidgetItem* item) {
     if (item != nullptr) {
-        QVariant data = item->data(Qt::UserRole);
-        _selectedFolder = static_cast<FolderItem*>(data.value<void*>());
+        QVariant userData = item->data(Qt::UserRole);
+        _selectedFolder = static_cast<FolderItem*>(userData.value<void*>());
         accept();
     } else {
         close();

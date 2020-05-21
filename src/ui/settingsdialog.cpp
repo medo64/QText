@@ -26,8 +26,8 @@ SettingsDialog::~SettingsDialog() {
 
 
 void SettingsDialog::keyPressEvent(QKeyEvent* event) {
-    auto data = static_cast<uint>(event->key()) | event->modifiers();
-    switch (data) {
+    auto keyData = static_cast<uint>(event->key()) | event->modifiers();
+    switch (keyData) {
         case Qt::Key_Escape:
             close();
             break;
