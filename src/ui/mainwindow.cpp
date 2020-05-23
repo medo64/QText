@@ -414,13 +414,14 @@ void MainWindow::onFileActivated(FileItem* file) {
 
 
 void MainWindow::onFileNew() {
+    auto currentFile = (ui->tabWidget->currentWidget() != nullptr) ? dynamic_cast<FileItem*>(ui->tabWidget->currentWidget()) : nullptr;
     auto dialog = new FileNameDialog(this, _folder);
     switch (dialog->exec()) {
         case QDialog::Accepted: {
                 auto newTitle = dialog->getTitle();
-                auto file = _folder->newFile(newTitle);
-                auto index = ui->tabWidget->addTab(file, file->title());
-                ui->tabWidget->setCurrentIndex(index);
+                auto file = _folder->newFile(newTitle, currentFile);
+                selectFolder(_folder); //to refresh folder
+                selectFile(file);
             }
             break;
         default:
@@ -801,13 +802,13 @@ void MainWindow::onTrayShow() {
     this->activateWindow(); //workaround for Windows
 }
 
-void MainWindow::selectFolder(QString folderKey) {
-    qDebug().nospace() << "selectFolder(" << folderKey << ") ";
+void MainWindow::selectFolder(QString folderName) {
+    qDebug().nospace() << "selectFolder(" << folderName << ") ";
     FolderItem* selectedFolder = nullptr;
 
     for (int i = 0; i < _storage->folderCount(); i++) {
         auto folder = _storage->folderAt(i);
-        if (folder->name().compare(folderKey, Qt::CaseSensitive) == 0) {
+        if (folder->name().compare(folderName, Qt::CaseSensitive) == 0) {
             selectedFolder = folder;
             break;
         }
@@ -815,7 +816,7 @@ void MainWindow::selectFolder(QString folderKey) {
     if (selectedFolder == nullptr) { //try case-insensitive match
         for (int i = 0; i < _storage->folderCount(); i++) {
             auto folder = _storage->folderAt(i);
-            if (folder->name().compare(folderKey, Qt::CaseInsensitive) == 0) {
+            if (folder->name().compare(folderName, Qt::CaseInsensitive) == 0) {
                 selectedFolder = folder;
                 break;
             }
@@ -859,15 +860,21 @@ void MainWindow::selectFolder(FolderItem* selectedFolder) {
     }
 }
 
-void MainWindow::selectFile(QString fileKey) {
-    qDebug().nospace() << "selectFile(" << fileKey << ") " << _folder->name();
+void MainWindow::selectFile(QString fileName) {
+    qDebug().nospace() << "selectFile(" << fileName << ") " << _folder->name();
     for (int i = 0; i < ui->tabWidget->count() ; i++) {
         auto file = dynamic_cast<FileItem*>(ui->tabWidget->widget(i));
-        if (file->name().compare(fileKey, Qt::CaseInsensitive) == 0) {
+        if (file->name().compare(fileName, Qt::CaseInsensitive) == 0) {
             ui->tabWidget->setCurrentIndex(i);
             onTabChanged();
             break;
         }
+    }
+}
+
+void MainWindow::selectFile(FileItem* file) {
+    if (file != nullptr) {
+        selectFile(file->name());
     }
 }
 

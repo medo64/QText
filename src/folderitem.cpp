@@ -94,11 +94,15 @@ FileItem* FolderItem::fileAt(int index) {
     return _files.at(index);
 }
 
-FileItem* FolderItem::newFile(QString title) {
+FileItem* FolderItem::newFile(QString title, FileItem* afterItem) {
     _storage->monitor()->stopMonitoring();
 
     auto file = new FileItem(this, Helpers::getFileNameFromTitle(title) + ".txt");
-    addItem(file);
+    if (afterItem == nullptr) {
+        addItem(file);
+    } else {
+        addItemAfter(file, afterItem);
+    }
     saveOrdering();
 
     _storage->monitor()->continueMonitoring();
@@ -192,6 +196,16 @@ StorageMonitorThread* FolderItem::monitor() {
 
 void FolderItem::addItem(FileItem* item) {
     _files.append(item);
+}
+
+void FolderItem::addItemAfter(FileItem* item, FileItem* afterItem) {
+    for (auto i = 0; i < _files.count(); i++) {
+        if (_files[i] == afterItem) {
+            _files.insert(i + 1, item);
+            return;
+        }
+    }
+    addItem(item); //only if matching afterItem is never found
 }
 
 void FolderItem::removeItemAt(int index) {

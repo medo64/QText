@@ -36,9 +36,10 @@ class MainWindow : public QMainWindow {
         QToolButton* _appButton = nullptr;
         Hotkey* _hotkey = nullptr;
         void applySettings(bool applyShowInTaskbar = true);
-        void selectFolder(QString folderKey);
+        void selectFolder(QString folderName);
         void selectFolder(FolderItem* folder);
-        void selectFile(QString fileKey);
+        void selectFile(QString fileName);
+        void selectFile(FileItem* file);
 
     private slots:
         void onFileActivated(FileItem* file);

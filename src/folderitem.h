@@ -22,7 +22,7 @@ class FolderItem {
         bool isPrimary();
         int fileCount();
         FileItem* fileAt(int index);
-        FileItem* newFile(QString title);
+        FileItem* newFile(QString title, FileItem* afterItem);
         bool deleteFile(FileItem* file, Settings::DeletionStyle deletionStyle);
         bool saveAll();
         bool fileExists(QString title);
@@ -31,6 +31,7 @@ class FolderItem {
 
     public:
         void addItem(FileItem* item);
+        void addItemAfter(FileItem* item, FileItem* afterItem);
         void removeItemAt(int index);
 
     public:
