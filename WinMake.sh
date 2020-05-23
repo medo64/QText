@@ -1,5 +1,10 @@
 #!/bin/bash
 
+QT_PATH='/c/Qt'
+CERTIFICATE_THUMBPRINT="026184de8dbf52fdcbae75fd6b1a7d9ce4310e5d"
+TIMESTAMP_URL="http://timestamp.comodoca.com/rfc3161"
+
+
 if [ -t 1 ]; then
     ESCAPE_RESET="\E[0m"
     ESCAPE_WARNING="\E[33;1m"
@@ -30,7 +35,6 @@ DIST_NAME='qtext'
 DIST_VERSION=`grep VERSION src/QText.pro | head -1 | cut -d'=' -f2 | awk '{print $$1}' | tr -d '"'`
 
 
-QT_PATH='/c/Qt'
 CMD_QMAKE=`ls $QT_PATH/**/**/bin/qmake.exe | sort | tail -1`
 CMD_MAKE=`ls $QT_PATH/Tools/**/bin/mingw32-make.exe | sort | tail -1`
 
@@ -44,6 +48,36 @@ if [[ ! -f "$CMD_MAKE" ]]; then
     echo -e "${ESCAPE_ERROR}Cannot find make!${ESCAPE_RESET}" >&2
     exit 1
 fi
+
+
+CMD_CERTUTIL=`command -v certutil`
+if [[ ! -f "$CMD_CERTUTIL" ]]; then
+    echo -e "${ESCAPE_WARNING}Cannot find certutil!${ESCAPE_RESET}" >&2
+    CERTIFICATE_THUMBPRINT=""
+elif [[ "$CERTIFICATE_THUMBPRINT" == "" ]]; then
+    echo -e "${ESCAPE_WARNING}No signing certificate thumbprint!${ESCAPE_RESET}" >&2
+else
+    $CMD_CERTUTIL -silent -verifystore -user My $CERTIFICATE_THUMBPRINT > /dev/null
+    if [[ $? -ne 0 ]]; then
+        echo -e "${ESCAPE_WARNING}Cannot validate certificate thumbprint!${ESCAPE_RESET}" >&2
+        CERTIFICATE_THUMBPRINT=""
+    fi
+fi
+
+CMD_SIGNTOOL=""
+for SIGNTOOL_PATH in "/c/Program Files (x86)/Microsoft SDKs/ClickOnce/SignTool/signtool.exe" \
+            "/c/Program Files (x86)/Windows Kits/10/App Certification Kit/signtool.exe" \
+            "/c/Program Files (x86)/Windows Kits/10/bin/x86/signtool.exe"; do
+    if [[ -f "$SIGNTOOL_PATH" ]]; then
+        CMD_SIGNTOOL="$SIGNTOOL_PATH"
+        break
+    fi
+done
+
+if [[ ! -f "$CMD_SIGNTOOL" ]]; then
+    echo -e "${ESCAPE_WARNING}Cannot find signtool!${ESCAPE_RESET}" >&2
+fi
+
 
 HAS_UNCOMMITTED_RESULT=`git diff --quiet ; echo $?`
 
@@ -82,6 +116,15 @@ case $BUILD in
         cp $QMAKE_DIR/Qt5PrintSupport.dll ../bin/
         cp $QMAKE_DIR/Qt5Widgets.dll      ../bin/
 
+        if [[ "$CERTIFICATE_THUMBPRINT" != "" ]]; then
+            echo
+            if [[ "$TIMESTAMP_URL" != "" ]]; then
+                "$CMD_SIGNTOOL" sign -s "My" -sha1 $CERTIFICATE_THUMBPRINT -tr $TIMESTAMP_URL -v ../bin/QText.exe
+            else
+                "$CMD_SIGNTOOL" sign -s "My" -sha1 $CERTIFICATE_THUMBPRINT -v ../bin/QText.exe
+            fi
+        fi
+
         if [[ $HAS_UNCOMMITTED_RESULT -ne 0 ]] && [[ "$BUILD" == 'release' ]]; then
             echo -e "${ESCAPE_WARNING}Uncommitted changes present.${ESCAPE_RESET}" >&2
         fi
@@ -101,7 +144,19 @@ case $BUILD in
             cd ..
             "$INNOSETUP_PATH" package/win/QText.iss
             if [[ $? -eq 0 ]]; then
-                echo -e "${ESCAPE_RESULT}Package created.${ESCAPE_RESET}" >&2
+                LAST_PACKAGE=`ls -t dist/*.exe | head -1`
+
+                if [[ "$CERTIFICATE_THUMBPRINT" != "" ]]; then
+                    echo
+                    if [[ "$TIMESTAMP_URL" != "" ]]; then
+                        "$CMD_SIGNTOOL" sign -s "My" -sha1 $CERTIFICATE_THUMBPRINT -tr $TIMESTAMP_URL -v $LAST_PACKAGE
+                    else
+                        "$CMD_SIGNTOOL" sign -s "My" -sha1 $CERTIFICATE_THUMBPRINT -v $LAST_PACKAGE
+                    fi
+                fi
+
+                echo
+                echo -e "${ESCAPE_RESULT}Package created ($LAST_PACKAGE).${ESCAPE_RESET}" >&2
             else
                 echo -e "${ESCAPE_ERROR}Packaging failed!${ESCAPE_RESET}" >&2
                 exit 1
