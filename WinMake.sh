@@ -29,16 +29,18 @@ esac
 DIST_NAME='qtext'
 DIST_VERSION=`grep VERSION src/QText.pro | head -1 | cut -d'=' -f2 | awk '{print $$1}' | tr -d '"'`
 
-QT_PATH='/c/Qt'
-QMAKE_PATH=`ls $QT_PATH/**/**/bin/qmake.exe | sort | tail -1`
-MAKE_PATH=`ls $QT_PATH/Tools/**/bin/mingw32-make.exe | sort | tail -1`
 
-if [[ ! -f "$QMAKE_PATH" ]]; then
+QT_PATH='/c/Qt'
+CMD_QMAKE=`ls $QT_PATH/**/**/bin/qmake.exe | sort | tail -1`
+CMD_MAKE=`ls $QT_PATH/Tools/**/bin/mingw32-make.exe | sort | tail -1`
+
+if [[ ! -f "$CMD_QMAKE" ]]; then
     echo -e "${ESCAPE_ERROR}Cannot find qmake!${ESCAPE_RESET}" >&2
     exit 1
 fi
+QMAKE_DIR=`dirname $CMD_QMAKE`
 
-if [[ ! -f "$MAKE_PATH" ]]; then
+if [[ ! -f "$CMD_MAKE" ]]; then
     echo -e "${ESCAPE_ERROR}Cannot find make!${ESCAPE_RESET}" >&2
     exit 1
 fi
@@ -50,34 +52,35 @@ rm -R build/ 2> /dev/null
 mkdir -p build
 cd build
 
-PATH=$PATH:`dirname $MAKE_PATH`
+PATH=$PATH:`dirname $CMD_MAKE`
 
-$QMAKE_PATH -spec win32-g++ CONFIG+=$BUILD ../src/QText.pro
+$CMD_QMAKE -spec win32-g++ CONFIG+=$BUILD ../src/QText.pro
 if [[ $? -ne 0 ]]; then
     echo -e "${ESCAPE_ERROR}QMake failed!${ESCAPE_RESET}" >&2
     exit 1
 fi
 
-$MAKE_PATH -f Makefile
+$CMD_MAKE -f Makefile
 if [[ $? -ne 0 ]]; then
     echo -e "${ESCAPE_ERROR}Make failed!${ESCAPE_RESET}" >&2
     exit 1
 fi
+
 
 case $BUILD in
     'release')
         rm ../bin/* 2> /dev/null
         mkdir -p ../bin
 
-        cp release/qtext.exe ../bin/QText.exe
-        cp `dirname $QMAKE_PATH`/libgcc_s_seh-1.dll ../bin/
-        cp `dirname $QMAKE_PATH`/libstdc++-6.dll ../bin/
-        cp `dirname $QMAKE_PATH`/libwinpthread-1.dll ../bin/
-        cp `dirname $QMAKE_PATH`/Qt5Core.dll ../bin/
-        cp `dirname $QMAKE_PATH`/Qt5Gui.dll ../bin/
-        cp `dirname $QMAKE_PATH`/Qt5Network.dll ../bin/
-        cp `dirname $QMAKE_PATH`/Qt5PrintSupport.dll ../bin/
-        cp `dirname $QMAKE_PATH`/Qt5Widgets.dll ../bin/
+        cp release/qtext.exe              ../bin/QText.exe
+        cp $QMAKE_DIR/libgcc_s_seh-1.dll  ../bin/
+        cp $QMAKE_DIR/libstdc++-6.dll     ../bin/
+        cp $QMAKE_DIR/libwinpthread-1.dll ../bin/
+        cp $QMAKE_DIR/Qt5Core.dll         ../bin/
+        cp $QMAKE_DIR/Qt5Gui.dll          ../bin/
+        cp $QMAKE_DIR/Qt5Network.dll      ../bin/
+        cp $QMAKE_DIR/Qt5PrintSupport.dll ../bin/
+        cp $QMAKE_DIR/Qt5Widgets.dll      ../bin/
 
         if [[ $HAS_UNCOMMITTED_RESULT -ne 0 ]] && [[ "$BUILD" == 'release' ]]; then
             echo -e "${ESCAPE_WARNING}Uncommitted changes present.${ESCAPE_RESET}" >&2
@@ -110,29 +113,29 @@ case $BUILD in
         rm ../bin/* 2> /dev/null
         mkdir -p ../bin
 
-        cp debug/qtext.exe ../bin/QText.exe
-        cp `dirname $QMAKE_PATH`/libgcc_s_seh-1.dll ../bin/
-        cp `dirname $QMAKE_PATH`/libstdc++-6.dll ../bin/
-        cp `dirname $QMAKE_PATH`/libwinpthread-1.dll ../bin/
-        cp `dirname $QMAKE_PATH`/Qt5Cored.dll ../bin/
-        cp `dirname $QMAKE_PATH`/Qt5Guid.dll ../bin/
-        cp `dirname $QMAKE_PATH`/Qt5Networkd.dll ../bin/
-        cp `dirname $QMAKE_PATH`/Qt5PrintSupportd.dll ../bin/
-        cp `dirname $QMAKE_PATH`/Qt5Widgetsd.dll ../bin/
+        cp debug/qtext.exe                 ../bin/QText.exe
+        cp $QMAKE_DIR/libgcc_s_seh-1.dll   ../bin/
+        cp $QMAKE_DIR/libstdc++-6.dll      ../bin/
+        cp $QMAKE_DIR/libwinpthread-1.dll  ../bin/
+        cp $QMAKE_DIR/Qt5Cored.dll         ../bin/
+        cp $QMAKE_DIR/Qt5Guid.dll          ../bin/
+        cp $QMAKE_DIR/Qt5Networkd.dll      ../bin/
+        cp $QMAKE_DIR/Qt5PrintSupportd.dll ../bin/
+        cp $QMAKE_DIR/Qt5Widgetsd.dll      ../bin/
 
         echo -e "${ESCAPE_RESULT}Debug build completed.${ESCAPE_RESET}" >&2
         ;;
 
     'test')
-        cp `dirname $QMAKE_PATH`/libgcc_s_seh-1.dll release/
-        cp `dirname $QMAKE_PATH`/libstdc++-6.dll release/
-        cp `dirname $QMAKE_PATH`/libwinpthread-1.dll release/
-        cp `dirname $QMAKE_PATH`/Qt5Core.dll release/
-        cp `dirname $QMAKE_PATH`/Qt5Gui.dll release/
-        cp `dirname $QMAKE_PATH`/Qt5Network.dll release/
-        cp `dirname $QMAKE_PATH`/Qt5PrintSupport.dll release/
-        cp `dirname $QMAKE_PATH`/Qt5Test.dll release/
-        cp `dirname $QMAKE_PATH`/Qt5Widgets.dll release/
+        cp $QMAKE_DIR/libgcc_s_seh-1.dll  release/
+        cp $QMAKE_DIR/libstdc++-6.dll     release/
+        cp $QMAKE_DIR/libwinpthread-1.dll release/
+        cp $QMAKE_DIR/Qt5Core.dll         release/
+        cp $QMAKE_DIR/Qt5Gui.dll          release/
+        cp $QMAKE_DIR/Qt5Network.dll      release/
+        cp $QMAKE_DIR/Qt5PrintSupport.dll release/
+        cp $QMAKE_DIR/Qt5Test.dll         release/
+        cp $QMAKE_DIR/Qt5Widgets.dll      release/
 
         echo
         cd release
