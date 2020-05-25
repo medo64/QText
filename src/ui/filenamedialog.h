@@ -1,9 +1,9 @@
 #pragma once
 
-#include "folderitem.h"
 #include <QDialog>
 #include <QString>
 #include <QWidget>
+#include "storage/folderitem.h"
 
 namespace Ui {
     class FileNameDialog;

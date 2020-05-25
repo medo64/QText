@@ -2,8 +2,8 @@
 
 #include <QString>
 #include <QWidget>
-#include "fileitem.h"
-#include "folderitem.h"
+#include "storage/fileitem.h"
+#include "storage/folderitem.h"
 
 class Helpers {
 

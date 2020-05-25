@@ -3,7 +3,7 @@
 #include <QDialog>
 #include <QIcon>
 #include <QListWidget>
-#include "storage.h"
+#include "storage/storage.h"
 
 namespace Ui {
     class GotoDialog;

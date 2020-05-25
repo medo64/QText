@@ -2,10 +2,10 @@
 #include <QRandomGenerator>
 #include <QString>
 #include "medo/config.h"
-#include "fileitem.h"
-#include "folderitem.h"
+#include "storage/fileitem.h"
+#include "storage/folderitem.h"
+#include "storage/storage.h"
 #include "helpers.h"
-#include "storage.h"
 
 FolderItem::FolderItem(Storage* storage, FolderItem* rootFolder, const int pathIndex, const QString directoryPath, const QString directoryName) {
     _storage = storage;

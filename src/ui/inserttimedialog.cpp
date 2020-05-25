@@ -2,8 +2,8 @@
 #include <QTimer>
 #include "inserttimedialog.h"
 #include "ui_inserttimedialog.h"
-#include "../helpers.h"
-#include "../settings.h"
+#include "helpers.h"
+#include "settings.h"
 
 InsertTimeDialog::InsertTimeDialog(QWidget* parent) : QDialog(parent), ui(new Ui::InsertTimeDialog) {
     ui->setupUi(this);

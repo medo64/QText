@@ -4,10 +4,8 @@
 #include <QMainWindow>
 #include <QToolButton>
 #include <QSystemTrayIcon>
-
-#include "storage.h"
-
 #include "medo/hotkey.h"
+#include "storage/storage.h"
 
 
 namespace Ui {

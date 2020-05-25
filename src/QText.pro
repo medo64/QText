@@ -48,7 +48,6 @@ QMAKE_CXXFLAGS_WARN_ON += -Wdouble-promotion
 
 
 SOURCES += \
-        storagemonitorthread.cpp \
         ui/filenamedialog.cpp \
         ui/finddialog.cpp \
         ui/foldersdialog.cpp \
@@ -62,19 +61,19 @@ SOURCES += \
         medo/hotkey.cpp \
         medo/singleinstance.cpp \
         medo/state.cpp \
+        storage/fileitem.cpp \
+        storage/folderitem.cpp \
+        storage/storage.cpp \
+        storage/storagemonitorthread.cpp \
         clipboard.cpp \
-        fileitem.cpp \
         find.cpp \
-        folderitem.cpp \
         helpers.cpp \
         icons.cpp \
         main.cpp \
         settings.cpp \
-        setup.cpp \
-        storage.cpp
+        setup.cpp
 
 HEADERS += \
-        storagemonitorthread.h \
         ui/filenamedialog.h \
         ui/finddialog.h \
         ui/foldersdialog.h \
@@ -88,15 +87,16 @@ HEADERS += \
         medo/hotkey.h \
         medo/singleinstance.h \
         medo/state.h \
+        storage/fileitem.h \
+        storage/folderitem.h \
+        storage/storage.h \
+        storage/storagemonitorthread.h \
         clipboard.h \
-        fileitem.h \
         find.h \
-        folderitem.h \
         helpers.h \
         icons.h \
         settings.h \
-        setup.h \
-        storage.h
+        setup.h
 
 FORMS += \
         ui/filenamedialog.ui \

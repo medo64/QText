@@ -4,8 +4,8 @@
 #include <QPushButton>
 #include <QDialog>
 #include <QListWidgetItem>
-#include <folderitem.h>
-#include <storage.h>
+#include "storage/folderitem.h"
+#include "storage/storage.h"
 
 namespace Ui {
     class FoldersDialog;

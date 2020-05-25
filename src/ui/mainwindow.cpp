@@ -15,7 +15,7 @@
 #include "icons.h"
 #include "qtabbarex.h"
 #include "settings.h"
-#include "storage.h"
+#include "storage/storage.h"
 
 #include "medo/config.h"
 #include "medo/singleinstance.h"
