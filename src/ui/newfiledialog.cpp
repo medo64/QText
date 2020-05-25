@@ -1,7 +1,8 @@
 #include <QPushButton>
-#include "newfiledialog.h"
-#include "ui_newfiledialog.h"
 #include "helpers.h"
+#include "newfiledialog.h"
+#include "settings.h"
+#include "ui_newfiledialog.h"
 
 NewFileDialog::NewFileDialog(QWidget* parent, FolderItem* folder) : QDialog(parent), ui(new Ui::NewFileDialog) {
     ui->setupUi(this);
@@ -17,6 +18,12 @@ NewFileDialog::NewFileDialog(QWidget* parent, FolderItem* folder) : QDialog(pare
         newFileTitle = QString("%1 (%2)").arg(baseFileTitle, QString::number(index));
     }
     ui->textTitle->setText(newFileTitle);
+
+    switch (Settings::defaultFileType()) {
+        case FileType::Html:     ui->radioHtml->setChecked(true);     break;
+        case FileType::Markdown: ui->radioMarkdown->setChecked(true); break;
+        default:                 ui->radioPlain->setChecked(true);    break;
+    }
 
     connect(ui->textTitle, &QLineEdit::textChanged, this, &NewFileDialog::onChanged);
     connect(ui->radioPlain, &QRadioButton::toggled, this, &NewFileDialog::onChanged);

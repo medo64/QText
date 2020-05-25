@@ -73,6 +73,31 @@ void Settings::setDataPaths(QStringList newPaths) {
 }
 
 
+
+FileType Settings::defaultFileType() {
+    QString value = Config::read("DefaultFileType", "Plain");
+    if ((value.compare("Html", Qt::CaseInsensitive) == 0) || (value.contains("html", Qt::CaseInsensitive))) {
+        return FileType::Html;
+    } else if ((value.compare("Markdown", Qt::CaseInsensitive) == 0) || (value.contains("md", Qt::CaseInsensitive))) {
+        return FileType::Markdown;
+    } else {
+        return FileType::Plain;
+    }
+}
+
+FileType Settings::defaultDefaultFileType() {
+    return FileType::Plain;
+}
+
+void Settings::setDefaultFileType(FileType newDefaultFileType) {
+    switch (newDefaultFileType) {
+        case FileType::Html:     Config::write("DefaultFileType", "Html");     break;
+        case FileType::Markdown: Config::write("DefaultFileType", "Markdown"); break;
+        default:                 Config::write("DefaultFileType", "Plain");    break;
+    }
+}
+
+
 Settings::DeletionStyle Settings::deletionSyle() {
     int value = Config::read("DeletionStyle", defaultDeletionStyle());
     switch (value) {

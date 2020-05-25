@@ -2,6 +2,7 @@
 
 #include <QKeySequence>
 #include <QString>
+#include "storage/filetype.h"
 
 class Settings {
 
@@ -32,6 +33,10 @@ class Settings {
         static QString dataPath2();
         static QString defaultDataPath2();
         static void setDataPath2(QString newPath);
+
+        static FileType defaultFileType();
+        static FileType defaultDefaultFileType();
+        static void setDefaultFileType(FileType newDefaultFileType);
 
         static DeletionStyle deletionSyle();
         static DeletionStyle defaultDeletionStyle();
