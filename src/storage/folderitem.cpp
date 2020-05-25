@@ -16,7 +16,7 @@ FolderItem::FolderItem(Storage* storage, FolderItem* rootFolder, const int pathI
 
     QDir directory = path();
 
-    QStringList files = directory.entryList(QStringList() << "*.txt" << "*.html", QDir::Files);
+    QStringList files = directory.entryList(Storage::supportedExtensionFilters(), QDir::Files);
     for (QString fileName : files) {
         addItem(new FileItem(this, fileName));
     }

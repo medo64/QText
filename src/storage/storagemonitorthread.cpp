@@ -1,5 +1,6 @@
 #include <QDebug>
 #include <QDir>
+#include "storage.h"
 #include "storagemonitorthread.h"
 
 StorageMonitorThread::StorageMonitorThread(QStringList paths) {
@@ -116,7 +117,7 @@ QStringList StorageMonitorThread::findPaths(QString rootPath, int depth) {
 
         list.append(rootDirectoryPath);
 
-        for (QString fileName : rootDirectory.entryList(QStringList() << "*.txt" << "*.html", QDir::Files, QDir::SortFlag::Name)) {
+        for (QString fileName : rootDirectory.entryList(Storage::supportedExtensionFilters(), QDir::Files, QDir::SortFlag::Name)) {
             list.append(rootDirectoryPath + fileName);
         }
 

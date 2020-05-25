@@ -18,6 +18,10 @@ class Storage : public QObject {
         StorageMonitorThread* monitor();
 
     public:
+        static QStringList supportedExtensions();
+        static QStringList supportedExtensionFilters();
+
+    public:
         void addItem(FolderItem* item);
         void removeItemAt(int index);
 

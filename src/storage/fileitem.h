@@ -14,6 +14,14 @@ class FileItem : public QTextEdit {
         Q_OBJECT
 
     public:
+        typedef enum {
+            Plain    = 0,
+            Markdown = 1,
+            Html     = 2,
+        } FileType;
+
+
+    public:
         FileItem(FolderItem* folder, QString fileName);
         ~FileItem();
         FolderItem* folder();
@@ -21,9 +29,8 @@ class FileItem : public QTextEdit {
         QString path();
         QString title();
         void setTitle(QString newTitle);
-        bool isPlain();
-        bool isMarkdown();
-        bool isHtml();
+        FileType type();
+        QString typeExtension();
         bool isModified();
         bool isEmpty();
         bool load();

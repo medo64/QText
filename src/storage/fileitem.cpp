@@ -9,6 +9,7 @@
 #include "helpers.h"
 #include "icons.h"
 #include "settings.h"
+#include "storage.h"
 
 FileItem::FileItem(FolderItem* folder, QString fileName)
     : QTextEdit(nullptr) {
@@ -44,8 +45,7 @@ QString FileItem::name() {
 }
 
 QString FileItem::title() {
-    QString extensions[] { ".txt", ".html" };
-    for (QString extension : extensions) {
+    for (QString extension : Storage::supportedExtensions()) {
         if (_fileName.endsWith(extension, Qt::CaseInsensitive)) {
             auto fileNameWithoutExtension = _fileName.left(_fileName.length() - extension.length());
             return Helpers::getFileTitleFromName(fileNameWithoutExtension);
@@ -61,7 +61,7 @@ void FileItem::setTitle(QString newTitle) {
     if (newTitle == title()) { return; } //no change
 
     QString curPath = path();
-    QString newFileName = Helpers::getFileNameFromTitle(newTitle) + (isHtml() ? ".html" : ".txt");
+    QString newFileName = Helpers::getFileNameFromTitle(newTitle) + typeExtension();
     QString newPath = QDir::cleanPath(_folder->path() + QDir::separator() + newFileName);
 
     QFile curFile(curPath);
@@ -75,16 +75,23 @@ void FileItem::setTitle(QString newTitle) {
     _folder->monitor()->continueMonitoring();
 }
 
-bool FileItem::isPlain() {
-    return path().endsWith(".txt", Qt::CaseInsensitive);
+FileItem::FileType FileItem::type() {
+    QFileInfo file(path());
+    if (file.suffix() == "html") {
+        return FileType::Html;
+    } else if (file.suffix() == "md") {
+        return FileType::Markdown;
+    } else {
+        return FileType::Plain;
+    }
 }
 
-bool FileItem::isMarkdown() {
-    return path().endsWith(".md", Qt::CaseInsensitive);
-}
-
-bool FileItem::isHtml() {
-    return path().endsWith(".html", Qt::CaseInsensitive);
+QString FileItem::typeExtension() {
+    switch (type()) {
+        case FileItem::FileType::Html: return ".html";
+        case FileItem::FileType::Markdown: return ".md";
+        default: return ".txt";
+    }
 }
 
 bool FileItem::isModified() {
@@ -109,10 +116,16 @@ bool FileItem::load() {
             QTextStream in(&file);
             QString contents = in.readAll();
             QTextDocument* document = new QTextDocument(this);
-            if (isHtml()) {
-                document->setHtml(contents);
-            } else {
-                document->setPlainText(contents);
+            switch (type()) {
+                case FileItem::FileType::Html:
+                    document->setHtml(contents);
+                    break;
+                case FileItem::FileType::Markdown:
+                    document->setMarkdown(contents);
+                    break;
+                default:
+                    document->setPlainText(contents);
+                    break;
             }
             file.close();
             this->setDocument(document);
@@ -157,10 +170,16 @@ bool FileItem::save() {
     if (_timerSavePending != nullptr) { _timerSavePending->stop(); }
 
     QString contents;
-    if (isHtml()) {
-        contents = this->document()->toHtml();
-    } else {
-        contents = this->document()->toPlainText();
+    switch (type()) {
+        case FileItem::FileType::Html:
+            contents = this->document()->toHtml();
+            break;
+        case FileItem::FileType::Markdown:
+            contents = this->document()->toMarkdown();
+            break;
+        default:
+            contents = this->document()->toPlainText();
+            break;
     }
 
     QFile file(path());

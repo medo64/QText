@@ -21,14 +21,18 @@ int QTabWidgetEx::addTab(QWidget* widget, const QString& text) {
         QColor color = tabBar->tabTextColor(index);
         bool isDark = ((color.red() + color.green() + color.blue()) / 3) < 64;
         QColor newColor;
-        if (item->isHtml()) { //blue
-            newColor = isDark ? QColor(color.red(), color.green(), 128)
-                       : QColor(color.red() * 0.75, color.green() * 0.75, color.blue());
-        } else if (item->isMarkdown()) { //green
-            newColor = isDark ? QColor(color.red(), 96, color.blue())
-                       : QColor(color.red() * 0.75, color.green(), color.blue() * 0.75);
-        } else { //leave it alone
-            newColor = color;
+        switch (item->type()) {
+            case FileItem::FileType::Html: //blue
+                newColor = isDark ? QColor(color.red(), color.green(), 128)
+                           : QColor(color.red() * 0.75, color.green() * 0.75, color.blue());
+                break;
+            case FileItem::FileType::Markdown: //green
+                newColor = isDark ? QColor(color.red(), 96, color.blue())
+                           : QColor(color.red() * 0.75, color.green(), color.blue() * 0.75);
+                break;
+            default:
+                newColor = color;
+                break;
         }
         this->tabBar()->setTabTextColor(index, newColor);
     }
