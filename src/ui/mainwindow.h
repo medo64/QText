@@ -56,6 +56,10 @@ class MainWindow : public QMainWindow {
         void onTextPaste();
         void onTextUndo();
         void onTextRedo();
+        void onTextFontBold();
+        void onTextFontItalic();
+        void onTextFontUnderline();
+        void onTextFontStrikethrough();
         void onFind();
         void onFindNext(bool backward = false);
         void onGoto();

@@ -94,6 +94,11 @@
    <addaction name="actionUndo"/>
    <addaction name="actionRedo"/>
    <addaction name="separator"/>
+   <addaction name="actionFontBold"/>
+   <addaction name="actionFontItalic"/>
+   <addaction name="actionFontUnderline"/>
+   <addaction name="actionFontStrikethrough"/>
+   <addaction name="separator"/>
    <addaction name="actionFind"/>
    <addaction name="actionFindNext"/>
    <addaction name="separator"/>
@@ -327,7 +332,7 @@
   </action>
   <action name="actionPrintPreview">
    <property name="icon">
-    <iconset resource="../qtext.qrc">
+    <iconset>
      <normaloff>:/icons/16x16/print-preview.png</normaloff>:/icons/16x16/print-preview.png</iconset>
    </property>
    <property name="text">
@@ -342,7 +347,7 @@
   </action>
   <action name="actionPrintToPdf">
    <property name="icon">
-    <iconset resource="../qtext.qrc">
+    <iconset>
      <normaloff>:/icons/16x16/print-pdf.png</normaloff>:/icons/16x16/print-pdf.png</iconset>
    </property>
    <property name="text">
@@ -380,6 +385,66 @@
    </property>
    <property name="shortcut">
     <string>F3</string>
+   </property>
+  </action>
+  <action name="actionFontBold">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/bold.png</normaloff>:/icons/16x16/bold.png</iconset>
+   </property>
+   <property name="text">
+    <string>Bold</string>
+   </property>
+   <property name="toolTip">
+    <string>Make text bold</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+B</string>
+   </property>
+  </action>
+  <action name="actionFontItalic">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/italic.png</normaloff>:/icons/16x16/italic.png</iconset>
+   </property>
+   <property name="text">
+    <string>Italic</string>
+   </property>
+   <property name="toolTip">
+    <string>Make text italic</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="actionFontUnderline">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/underline.png</normaloff>:/icons/16x16/underline.png</iconset>
+   </property>
+   <property name="text">
+    <string>Underline</string>
+   </property>
+   <property name="toolTip">
+    <string>Make text underlined</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+U</string>
+   </property>
+  </action>
+  <action name="actionFontStrikethrough">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/strikethrough.png</normaloff>:/icons/16x16/strikethrough.png</iconset>
+   </property>
+   <property name="text">
+    <string>Strikethrough</string>
+   </property>
+   <property name="toolTip">
+    <string>Strikes out the text</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+X</string>
    </property>
   </action>
  </widget>

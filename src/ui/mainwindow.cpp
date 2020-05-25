@@ -107,6 +107,18 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     ui->actionRedo->setIcon(Icons::redo());
     connect(ui->actionRedo, &QAction::triggered, this, &MainWindow::onTextRedo);
 
+    ui->actionFontBold->setIcon(Icons::fontBold());
+    connect(ui->actionFontBold, &QAction::triggered, this, &MainWindow::onTextFontBold);
+
+    ui->actionFontItalic->setIcon(Icons::fontItalic());
+    connect(ui->actionFontItalic, &QAction::triggered, this, &MainWindow::onTextFontItalic);
+
+    ui->actionFontUnderline->setIcon(Icons::fontUnderline());
+    connect(ui->actionFontUnderline, &QAction::triggered, this, &MainWindow::onTextFontUnderline);
+
+    ui->actionFontStrikethrough->setIcon(Icons::fontStrikethrough());
+    connect(ui->actionFontStrikethrough, &QAction::triggered, this, &MainWindow::onTextFontStrikethrough);
+
     ui->actionFind->setIcon(Icons::find());
     connect(ui->actionFind, &QAction::triggered, this, &MainWindow::onFind);
 
@@ -550,6 +562,40 @@ void MainWindow::onTextRedo() {
     file->document()->redo();
 }
 
+void MainWindow::onTextFontBold() {
+    auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+    if (file->textCursor().charFormat().fontWeight() != QFont::Bold) {
+        QTextCharFormat format;
+        format.setFontWeight(QFont::Bold);
+        file->textCursor().mergeCharFormat(format);
+    } else {
+        QTextCharFormat format;
+        format.setFontWeight(QFont::Normal);
+        file->textCursor().mergeCharFormat(format);
+    }
+}
+
+void MainWindow::onTextFontItalic() {
+    auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+    QTextCharFormat format;
+    format.setFontItalic(!file->textCursor().charFormat().fontItalic());
+    file->textCursor().mergeCharFormat(format);
+}
+
+void MainWindow::onTextFontUnderline() {
+    auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+    QTextCharFormat format;
+    format.setFontUnderline(!file->textCursor().charFormat().fontUnderline());
+    file->textCursor().mergeCharFormat(format);
+}
+
+void MainWindow::onTextFontStrikethrough() {
+    auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+    QTextCharFormat format;
+    format.setFontStrikeOut(!file->textCursor().charFormat().fontStrikeOut());
+    file->textCursor().mergeCharFormat(format);
+}
+
 void MainWindow::onFind() {
     auto dialog = new FindDialog(this);
     if (dialog->exec() == QDialog::Accepted) {
@@ -778,13 +824,24 @@ void MainWindow::onTextStateChanged() {
     bool isUndoAvailable = (document != nullptr) ? document->isUndoAvailable() : false;
     bool isRedoAvailable = (document != nullptr) ? document->isRedoAvailable() : false;
 
+    bool hasFontOperations = hasFile && (file->type() != FileType::Plain);
+
     bool isClipboardTextAvailable = hasFile ? Clipboard::hasText() : false;
+
+    ui->actionFontBold->setVisible(hasFontOperations);
+    ui->actionFontItalic->setVisible(hasFontOperations);
+    ui->actionFontUnderline->setVisible(hasFontOperations);
+    ui->actionFontStrikethrough->setVisible(hasFontOperations);
 
     ui->actionCut->setDisabled(!isSelectionAvailable);
     ui->actionCopy->setDisabled(!isSelectionAvailable);
     ui->actionPaste->setDisabled(!isClipboardTextAvailable);
     ui->actionUndo->setDisabled(!isUndoAvailable);
     ui->actionRedo->setDisabled(!isRedoAvailable);
+    ui->actionFontBold->setDisabled(!isSelectionAvailable);
+    ui->actionFontItalic->setDisabled(!isSelectionAvailable);
+    ui->actionFontUnderline->setDisabled(!isSelectionAvailable);
+    ui->actionFontStrikethrough->setDisabled(!isSelectionAvailable);
     ui->actionFind->setDisabled(!hasFile);
     ui->actionFindNext->setDisabled(!hasFile);
 }

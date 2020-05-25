@@ -24,6 +24,11 @@ class Icons {
         static QIcon undo();
         static QIcon redo();
 
+        static QIcon fontBold();
+        static QIcon fontItalic();
+        static QIcon fontUnderline();
+        static QIcon fontStrikethrough();
+
         static QIcon find();
         static QIcon findNext();
 

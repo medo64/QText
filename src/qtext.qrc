@@ -123,5 +123,25 @@
         <file>icons/64x64/appDebug.png</file>
         <file>icons/96x96/appDebug.png</file>
         <file>icons/128x128/appDebug.png</file>
+        <file>icons/16x16/bold.png</file>
+        <file>icons/24x24/bold.png</file>
+        <file>icons/32x32/bold.png</file>
+        <file>icons/48x48/bold.png</file>
+        <file>icons/64x64/bold.png</file>
+        <file>icons/16x16/italic.png</file>
+        <file>icons/24x24/italic.png</file>
+        <file>icons/32x32/italic.png</file>
+        <file>icons/48x48/italic.png</file>
+        <file>icons/64x64/italic.png</file>
+        <file>icons/16x16/underline.png</file>
+        <file>icons/24x24/underline.png</file>
+        <file>icons/32x32/underline.png</file>
+        <file>icons/48x48/underline.png</file>
+        <file>icons/64x64/underline.png</file>
+        <file>icons/16x16/strikethrough.png</file>
+        <file>icons/24x24/strikethrough.png</file>
+        <file>icons/32x32/strikethrough.png</file>
+        <file>icons/48x48/strikethrough.png</file>
+        <file>icons/64x64/strikethrough.png</file>
     </qresource>
 </RCC>

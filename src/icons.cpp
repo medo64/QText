@@ -170,6 +170,47 @@ QIcon Icons::redo() {
 }
 
 
+QIcon Icons::fontBold() {
+    QIcon icon;
+    icon.addFile(":icons/16x16/bold.png", QSize(16, 16));
+    icon.addFile(":icons/24x24/bold.png", QSize(24, 24));
+    icon.addFile(":icons/32x32/bold.png", QSize(32, 32));
+    icon.addFile(":icons/48x48/bold.png", QSize(48, 48));
+    icon.addFile(":icons/64x64/bold.png", QSize(64, 64));
+    return icon;
+}
+
+QIcon Icons::fontItalic() {
+    QIcon icon;
+    icon.addFile(":icons/16x16/italic.png", QSize(16, 16));
+    icon.addFile(":icons/24x24/italic.png", QSize(24, 24));
+    icon.addFile(":icons/32x32/italic.png", QSize(32, 32));
+    icon.addFile(":icons/48x48/italic.png", QSize(48, 48));
+    icon.addFile(":icons/64x64/italic.png", QSize(64, 64));
+    return icon;
+}
+
+QIcon Icons::fontUnderline() {
+    QIcon icon;
+    icon.addFile(":icons/16x16/underline.png", QSize(16, 16));
+    icon.addFile(":icons/24x24/underline.png", QSize(24, 24));
+    icon.addFile(":icons/32x32/underline.png", QSize(32, 32));
+    icon.addFile(":icons/48x48/underline.png", QSize(48, 48));
+    icon.addFile(":icons/64x64/underline.png", QSize(64, 64));
+    return icon;
+}
+
+QIcon Icons::fontStrikethrough() {
+    QIcon icon;
+    icon.addFile(":icons/16x16/strikethrough.png", QSize(16, 16));
+    icon.addFile(":icons/24x24/strikethrough.png", QSize(24, 24));
+    icon.addFile(":icons/32x32/strikethrough.png", QSize(32, 32));
+    icon.addFile(":icons/48x48/strikethrough.png", QSize(48, 48));
+    icon.addFile(":icons/64x64/strikethrough.png", QSize(64, 64));
+    return icon;
+}
+
+
 QIcon Icons::find() {
     QIcon icon;
     icon.addFile(":icons/16x16/find.png", QSize(16, 16));
