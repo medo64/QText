@@ -674,7 +674,7 @@ void MainWindow::onAppSettings() {
     auto dialog = new SettingsDialog(this);
     switch (dialog->exec()) {
         case QDialog::Accepted:
-            applySettings(dialog->changedShowInTaskbar());
+            applySettings(dialog->changedShowInTaskbar(), dialog->changedTabTextColorPerType());
             this->show(); //to show window after setWindowFlag
             this->activateWindow();
             break;
@@ -888,13 +888,16 @@ void MainWindow::selectFile(FileItem* file) {
     }
 }
 
-void MainWindow::applySettings(bool applyShowInTaskbar) {
+void MainWindow::applySettings(bool applyShowInTaskbar, bool applyTabTextColorPerType) {
     if (applyShowInTaskbar) {
         if (!Settings::showInTaskbar()) {
             setWindowFlag(Qt::Tool);
         } else {
             setWindowFlag(Qt::Tool, false);
         }
+    }
+    if (applyTabTextColorPerType) {
+        selectFolder(_folder);
     }
 }
 

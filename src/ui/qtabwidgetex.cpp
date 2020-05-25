@@ -11,6 +11,32 @@ QTabWidgetEx::QTabWidgetEx(QWidget* parent)
 }
 
 
+int QTabWidgetEx::addTab(QWidget* widget, const QString& text) {
+    FileItem* item = dynamic_cast<FileItem*>(widget);
+
+    QTabBar* tabBar = this->tabBar();
+    int index = QTabWidget::addTab(widget, text);
+
+    if (Settings::tabTextColorPerType()) { //playing with color
+        QColor color = tabBar->tabTextColor(index);
+        bool isDark = ((color.red() + color.green() + color.blue()) / 3) < 64;
+        QColor newColor;
+        if (item->isHtml()) { //blue
+            newColor = isDark ? QColor(color.red(), color.green(), 128)
+                       : QColor(color.red() * 0.75, color.green() * 0.75, color.blue());
+        } else if (item->isMarkdown()) { //green
+            newColor = isDark ? QColor(color.red(), 96, color.blue())
+                       : QColor(color.red() * 0.75, color.green(), color.blue() * 0.75);
+        } else { //leave it alone
+            newColor = color;
+        }
+        this->tabBar()->setTabTextColor(index, newColor);
+    }
+
+    return index;
+}
+
+
 void QTabWidgetEx::onTabMoved(int from, int to) {
     auto fileFrom = dynamic_cast<FileItem*>(this->widget(from));
     this->setTabText(from, fileFrom->title());

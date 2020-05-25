@@ -22,6 +22,7 @@ class FileItem : public QTextEdit {
         QString title();
         void setTitle(QString newTitle);
         bool isPlain();
+        bool isMarkdown();
         bool isHtml();
         bool isModified();
         bool isEmpty();

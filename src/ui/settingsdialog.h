@@ -17,6 +17,7 @@ class SettingsDialog : public QDialog {
         bool changedAutostart() const { return _changedAutostart; }
         bool changedMinimizeToTray() const { return _changedMinimizeToTray; }
         bool changedShowInTaskbar() const { return _changedShowInTaskbar; }
+        bool changedTabTextColorPerType() const { return _changedTabTextColorPerType; }
 
     protected:
         void keyPressEvent(QKeyEvent* event);
@@ -30,10 +31,12 @@ class SettingsDialog : public QDialog {
         bool _changedAutostart;
         bool _changedMinimizeToTray;
         bool _changedShowInTaskbar;
+        bool _changedTabTextColorPerType;
         bool _oldAlwaysOnTop;
         bool _oldAutostart;
         bool _oldMinimizeToTray;
         bool _oldShowInTaskbar;
+        bool _oldTabTextColorPerType;
 
 
     private slots:

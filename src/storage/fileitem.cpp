@@ -75,12 +75,16 @@ void FileItem::setTitle(QString newTitle) {
     _folder->monitor()->continueMonitoring();
 }
 
-bool FileItem::isHtml() {
-    return path().endsWith(".html", Qt::CaseInsensitive);
-}
-
 bool FileItem::isPlain() {
     return path().endsWith(".txt", Qt::CaseInsensitive);
+}
+
+bool FileItem::isMarkdown() {
+    return path().endsWith(".md", Qt::CaseInsensitive);
+}
+
+bool FileItem::isHtml() {
+    return path().endsWith(".html", Qt::CaseInsensitive);
 }
 
 bool FileItem::isModified() {

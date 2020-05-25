@@ -153,6 +153,19 @@ void Settings::setShowInTaskbar(bool newShowInTaskbar) {
 }
 
 
+bool Settings::tabTextColorPerType() {
+    return Config::read("TabTextColorPerType", defaultTabTextColorPerType());
+}
+
+bool Settings::defaultTabTextColorPerType() {
+    return false;
+}
+
+void Settings::setTabTextColorPerType(bool newTabTextColorPerType) {
+    Config::write("TabTextColorPerType", newTabTextColorPerType);
+}
+
+
 int Settings::tabWidth() {
     return std::min(std::max(Config::read("TabWidth", defaultTabWidth()), 2), 16);
 }

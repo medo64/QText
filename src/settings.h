@@ -53,6 +53,10 @@ class Settings {
         static bool defaultShowInTaskbar();
         static void setShowInTaskbar(bool newShowInTaskbar);
 
+        static bool tabTextColorPerType();
+        static bool defaultTabTextColorPerType();
+        static void setTabTextColorPerType(bool newTabTextColorPerType);
+
         static int tabWidth();
         static int defaultTabWidth();
         static void setTabWidth(int newTabWidth);

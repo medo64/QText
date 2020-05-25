@@ -15,6 +15,7 @@ SettingsDialog::SettingsDialog(QWidget* parent) : QDialog(parent), ui(new Ui::Se
     _oldAutostart = Setup::autostart();
     _oldMinimizeToTray = Settings::minimizeToTray();
     _oldShowInTaskbar = Settings::showInTaskbar();
+    _oldTabTextColorPerType = Settings::tabTextColorPerType();
 
     connect(ui->buttonBox, &QDialogButtonBox::clicked, this,  &SettingsDialog::onButtonClicked);
     reset();
@@ -60,6 +61,7 @@ void SettingsDialog::reset() {
     ui->checkboxAutostart->setChecked(_oldAutostart);
     ui->checkboxMinimizeToTray->setChecked(_oldMinimizeToTray);
     ui->checkboxShowInTaskbar->setChecked(_oldShowInTaskbar);
+    ui->checkboxTabTextColorPerType->setChecked(_oldTabTextColorPerType);
 }
 
 void SettingsDialog::restoreDefaults() {
@@ -67,6 +69,7 @@ void SettingsDialog::restoreDefaults() {
     ui->checkboxAutostart->setChecked(true);
     ui->checkboxMinimizeToTray->setChecked(Settings::defaultMinimizeToTray());
     ui->checkboxShowInTaskbar->setChecked(Settings::defaultShowInTaskbar());
+    ui->checkboxTabTextColorPerType->setChecked(Settings::defaultTabTextColorPerType());
 }
 
 void SettingsDialog::accept() {
@@ -85,6 +88,10 @@ void SettingsDialog::accept() {
     bool newShowInTaskbar = (ui->checkboxShowInTaskbar->checkState() == Qt::Checked);
     _changedShowInTaskbar = newShowInTaskbar != _oldShowInTaskbar;
     if (_changedShowInTaskbar) { Settings::setShowInTaskbar(newShowInTaskbar); }
+
+    bool newTabTextColorPerType = (ui->checkboxTabTextColorPerType->checkState() == Qt::Checked);
+    _changedTabTextColorPerType = newTabTextColorPerType != _oldTabTextColorPerType;
+    if (_changedTabTextColorPerType) { Settings::setTabTextColorPerType(newTabTextColorPerType); }
 
     QDialog::accept();
 }

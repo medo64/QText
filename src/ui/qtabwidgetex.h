@@ -8,6 +8,7 @@ class QTabWidgetEx : public QTabWidget {
 
     public:
         QTabWidgetEx(QWidget* parent = nullptr);
+        int addTab(QWidget* widget, const QString& text);
 
     private slots:
         void onTabMoved(int from, int to);
