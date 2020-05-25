@@ -14,6 +14,10 @@ class StorageMonitorThread : public QThread {
         void continueMonitoring();
         void stopMonitoring();
 
+    public:
+        StorageMonitorThread(const StorageMonitorThread&) = delete;
+        void operator=(const StorageMonitorThread&) = delete;
+
     private:
         QMutex _mutex;
         bool _isMonitoring = true;

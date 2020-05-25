@@ -28,6 +28,10 @@ class FileItem : public QTextEdit {
         bool load();
         bool save();
 
+    public:
+        FileItem(const FileItem&) = delete;
+        void operator=(const FileItem&) = delete;
+
     protected:
         bool event(QEvent* event);
         void focusInEvent(QFocusEvent* e);

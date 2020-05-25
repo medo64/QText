@@ -38,6 +38,10 @@ class FolderItem {
         inline QVector<FileItem*>::const_iterator begin() const { return _files.constBegin(); }
         inline QVector<FileItem*>::const_iterator end() const { return _files.constEnd(); }
 
+    public:
+        FolderItem(const FolderItem&) = delete;
+        void operator=(const FolderItem&) = delete;
+
     private:
         Storage* _storage;
         FolderItem* _rootFolder;

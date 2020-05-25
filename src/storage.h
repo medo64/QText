@@ -25,6 +25,10 @@ class Storage : public QObject {
         inline QVector<FolderItem*>::const_iterator begin() const { return _folders.constBegin(); }
         inline QVector<FolderItem*>::const_iterator end() const { return _folders.constEnd(); }
 
+    public:
+        Storage(const Storage&) = delete;
+        void operator=(const Storage&) = delete;
+
     private:
         QVector<FolderItem*> _folders;
         StorageMonitorThread* _monitor;
