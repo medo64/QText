@@ -8,11 +8,7 @@
 InsertTimeDialog::InsertTimeDialog(QWidget* parent) : QDialog(parent), ui(new Ui::InsertTimeDialog) {
     ui->setupUi(this);
     Helpers::setupFixedSizeDialog(this);
-
     Helpers::setReadonlyPalette(ui->exampleText);
-    //QPalette readOnlyPalette = ui->exampleText->palette();
-    //readOnlyPalette.setColor(QPalette::Base, ui->exampleText->palette().color(QPalette::Window));
-    //ui->exampleText->setPalette(readOnlyPalette);
 
     ui->formatText->setText(Settings::timeFormat());
 
