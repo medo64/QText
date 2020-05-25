@@ -76,10 +76,10 @@ void Settings::setDataPaths(QStringList newPaths) {
 
 FileType Settings::defaultFileType() {
     QString value = Config::read("DefaultFileType", "Plain");
-    if ((value.compare("Html", Qt::CaseInsensitive) == 0) || (value.contains("html", Qt::CaseInsensitive))) {
-        return FileType::Html;
-    } else if ((value.compare("Markdown", Qt::CaseInsensitive) == 0) || (value.contains("md", Qt::CaseInsensitive))) {
+    if ((value.compare("Markdown", Qt::CaseInsensitive) == 0) || (value.contains("md", Qt::CaseInsensitive))) {
         return FileType::Markdown;
+    } else if ((value.compare("Html", Qt::CaseInsensitive) == 0) || (value.contains("html", Qt::CaseInsensitive))) {
+        return FileType::Html;
     } else {
         return FileType::Plain;
     }
@@ -91,8 +91,8 @@ FileType Settings::defaultDefaultFileType() {
 
 void Settings::setDefaultFileType(FileType newDefaultFileType) {
     switch (newDefaultFileType) {
-        case FileType::Html:     Config::write("DefaultFileType", "Html");     break;
         case FileType::Markdown: Config::write("DefaultFileType", "Markdown"); break;
+        case FileType::Html:     Config::write("DefaultFileType", "Html");     break;
         default:                 Config::write("DefaultFileType", "Plain");    break;
     }
 }
@@ -162,6 +162,23 @@ int Settings::defaultQuickSaveInterval() {
 
 void Settings::setQuickSaveInterval(int newQuickSaveInterval) {
     Config::write("QuickSaveInterval", newQuickSaveInterval);
+}
+
+
+bool Settings::showMarkdown() {
+    return Config::read("ShowMarkdown", defaultShowMarkdown());
+}
+
+bool Settings::defaultShowMarkdown() {
+#ifndef QT_DEBUG
+    return false;
+#else
+    return true; //show markdown by default in debug builds
+#endif
+}
+
+void Settings::setShowMarkdown(bool newShowMarkdown) {
+    Config::write("ShowMarkdown", newShowMarkdown);
 }
 
 

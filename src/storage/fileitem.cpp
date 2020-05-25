@@ -77,10 +77,10 @@ void FileItem::setTitle(QString newTitle) {
 
 FileType FileItem::type() {
     QFileInfo file(path());
-    if (file.suffix() == "html") {
-        return FileType::Html;
-    } else if (file.suffix() == "md") {
+    if (file.suffix() == "md") {
         return FileType::Markdown;
+    } else  if (file.suffix() == "html") {
+        return FileType::Html;
     } else {
         return FileType::Plain;
     }
@@ -88,8 +88,8 @@ FileType FileItem::type() {
 
 QString FileItem::extension() {
     switch (type()) {
-        case FileType::Html: return ".html";
         case FileType::Markdown: return ".md";
+        case FileType::Html: return ".html";
         default: return ".txt";
     }
 }
@@ -117,11 +117,11 @@ bool FileItem::load() {
             QString contents = in.readAll();
             QTextDocument* document = new QTextDocument(this);
             switch (type()) {
-                case FileType::Html:
-                    document->setHtml(contents);
-                    break;
                 case FileType::Markdown:
                     document->setMarkdown(contents);
+                    break;
+                case FileType::Html:
+                    document->setHtml(contents);
                     break;
                 default:
                     document->setPlainText(contents);
@@ -171,11 +171,11 @@ bool FileItem::save() {
 
     QString contents;
     switch (type()) {
-        case FileType::Html:
-            contents = this->document()->toHtml();
-            break;
         case FileType::Markdown:
             contents = this->document()->toMarkdown();
+            break;
+        case FileType::Html:
+            contents = this->document()->toHtml();
             break;
         default:
             contents = this->document()->toPlainText();

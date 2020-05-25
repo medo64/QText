@@ -49,6 +49,12 @@
    </item>
    <item row="1" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <property name="spacing">
+      <number>12</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
      <item>
       <widget class="QRadioButton" name="radioPlain">
        <property name="text">
@@ -60,6 +66,13 @@
       </widget>
      </item>
      <item>
+      <widget class="QRadioButton" name="radioHtml">
+       <property name="text">
+        <string>Html</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QRadioButton" name="radioMarkdown">
        <property name="text">
         <string>Markdown</string>
@@ -67,11 +80,17 @@
       </widget>
      </item>
      <item>
-      <widget class="QRadioButton" name="radioHtml">
-       <property name="text">
-        <string>Html</string>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
-      </widget>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>

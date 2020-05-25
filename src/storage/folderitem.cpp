@@ -99,8 +99,8 @@ FileItem* FolderItem::newFile(QString title, FileType type, FileItem* afterItem)
 
     FileItem* file;
     switch (type) {
-        case FileType::Html:     file = new FileItem(this, Helpers::getFileNameFromTitle(title) + ".html"); break;
         case FileType::Markdown: file = new FileItem(this, Helpers::getFileNameFromTitle(title) + ".md");   break;
+        case FileType::Html:     file = new FileItem(this, Helpers::getFileNameFromTitle(title) + ".html"); break;
         default:                 file = new FileItem(this, Helpers::getFileNameFromTitle(title) + ".txt");  break;
     }
 
