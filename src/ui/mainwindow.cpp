@@ -21,10 +21,11 @@
 #include "medo/singleinstance.h"
 #include "medo/state.h"
 
-#include "filenamedialog.h"
 #include "finddialog.h"
 #include "foldersdialog.h"
 #include "gotodialog.h"
+#include "newfiledialog.h"
+#include "renamefiledialog.h"
 #include "settingsdialog.h"
 
 #include "mainwindow.h"
@@ -415,17 +416,12 @@ void MainWindow::onFileActivated(FileItem* file) {
 
 void MainWindow::onFileNew() {
     auto currentFile = (ui->tabWidget->currentWidget() != nullptr) ? dynamic_cast<FileItem*>(ui->tabWidget->currentWidget()) : nullptr;
-    auto dialog = new FileNameDialog(this, _folder);
-    switch (dialog->exec()) {
-        case QDialog::Accepted: {
-                auto newTitle = dialog->title();
-                auto file = _folder->newFile(newTitle, currentFile);
-                selectFolder(_folder); //to refresh folder
-                selectFile(file);
-            }
-            break;
-        default:
-            break;
+    auto dialog = new NewFileDialog(this, _folder);
+    if (dialog->exec() == QDialog::Accepted) {
+        auto newTitle = dialog->title();
+        auto file = _folder->newFile(newTitle, dialog->type(), currentFile);
+        selectFolder(_folder); //to refresh folder
+        selectFile(file);
     }
 }
 
@@ -445,17 +441,12 @@ void MainWindow::onFileRename() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
     auto tabIndex = ui->tabWidget->currentIndex();
 
-    auto dialog = new FileNameDialog(this, file);
-    switch (dialog->exec()) {
-        case QDialog::Accepted: {
-                auto newTitle = dialog->title();
-                file->setTitle(newTitle);
-                ui->tabWidget->setTabText(tabIndex, newTitle);
-                file->setFocus();
-            }
-            break;
-        default:
-            break;
+    auto dialog = new RenameFileDialog(this, file);
+    if (dialog->exec() == QDialog::Accepted) {
+        auto newTitle = dialog->title();
+        file->setTitle(newTitle);
+        ui->tabWidget->setTabText(tabIndex, newTitle);
+        file->setFocus();
     }
 }
 

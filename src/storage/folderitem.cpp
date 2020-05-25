@@ -94,10 +94,16 @@ FileItem* FolderItem::fileAt(int index) {
     return _files.at(index);
 }
 
-FileItem* FolderItem::newFile(QString title, FileItem* afterItem) {
+FileItem* FolderItem::newFile(QString title, FileType type, FileItem* afterItem) {
     _storage->monitor()->stopMonitoring();
 
-    auto file = new FileItem(this, Helpers::getFileNameFromTitle(title) + ".txt");
+    FileItem* file;
+    switch (type) {
+        case FileType::Html:     file = new FileItem(this, Helpers::getFileNameFromTitle(title) + ".html"); break;
+        case FileType::Markdown: file = new FileItem(this, Helpers::getFileNameFromTitle(title) + ".md");   break;
+        default:                 file = new FileItem(this, Helpers::getFileNameFromTitle(title) + ".txt");  break;
+    }
+
     if (afterItem == nullptr) {
         addItem(file);
     } else {

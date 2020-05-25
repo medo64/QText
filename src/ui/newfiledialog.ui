@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>FileNameDialog</class>
- <widget class="QDialog" name="FileNameDialog">
+ <class>NewFileDialog</class>
+ <widget class="QDialog" name="NewFileDialog">
   <property name="windowModality">
    <enum>Qt::WindowModal</enum>
   </property>
@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>300</width>
-    <height>79</height>
+    <height>95</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -33,11 +33,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="textFileName"/>
+      <widget class="QLineEdit" name="textTitle"/>
      </item>
     </layout>
    </item>
-   <item row="1" column="0">
+   <item row="2" column="0">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -47,6 +47,34 @@
      </property>
     </widget>
    </item>
+   <item row="1" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QRadioButton" name="radioPlain">
+       <property name="text">
+        <string>Plain</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioMarkdown">
+       <property name="text">
+        <string>Markdown</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioHtml">
+       <property name="text">
+        <string>Html</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
   </layout>
  </widget>
  <resources/>
@@ -54,7 +82,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>FileNameDialog</receiver>
+   <receiver>NewFileDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -70,7 +98,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>FileNameDialog</receiver>
+   <receiver>NewFileDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

@@ -6,20 +6,13 @@
 #include <QString>
 #include <QTextEdit>
 #include <QTimer>
+#include "filetype.h"
 #include "folderitem.h"
 
 class FolderItem;
 
 class FileItem : public QTextEdit {
         Q_OBJECT
-
-    public:
-        typedef enum {
-            Plain    = 0,
-            Markdown = 1,
-            Html     = 2,
-        } FileType;
-
 
     public:
         FileItem(FolderItem* folder, QString fileName);
@@ -30,7 +23,7 @@ class FileItem : public QTextEdit {
         QString title();
         void setTitle(QString newTitle);
         FileType type();
-        QString typeExtension();
+        QString extension();
         bool isModified();
         bool isEmpty();
         bool load();
@@ -51,7 +44,6 @@ class FileItem : public QTextEdit {
         QString _fileName;
         QTextEdit* _editor = nullptr;
         QTimer* _timerSavePending = nullptr;
-        void setIsModified(bool isModified);
         QDateTime _modificationTime;
         int zoomAmount = 0;
 

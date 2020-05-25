@@ -2,6 +2,7 @@
 
 #include <QString>
 #include "fileitem.h"
+#include "filetype.h"
 #include "settings.h"
 #include "storagemonitorthread.h"
 
@@ -22,7 +23,7 @@ class FolderItem {
         bool isPrimary();
         int fileCount();
         FileItem* fileAt(int index);
-        FileItem* newFile(QString title, FileItem* afterItem);
+        FileItem* newFile(QString title, FileType type, FileItem* afterItem);
         bool deleteFile(FileItem* file, Settings::DeletionStyle deletionStyle);
         bool saveAll();
         bool fileExists(QString title);

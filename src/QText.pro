@@ -48,15 +48,16 @@ QMAKE_CXXFLAGS_WARN_ON += -Wdouble-promotion
 
 
 SOURCES += \
-        ui/filenamedialog.cpp \
         ui/finddialog.cpp \
         ui/foldersdialog.cpp \
         ui/gotodialog.cpp \
         ui/inserttimedialog.cpp \
         ui/settingsdialog.cpp \
         ui/mainwindow.cpp \
+        ui/newfiledialog.cpp \
         ui/qtabbarex.cpp \
         ui/qtabwidgetex.cpp \
+        ui/renamefiledialog.cpp \
         medo/config.cpp \
         medo/hotkey.cpp \
         medo/singleinstance.cpp \
@@ -74,15 +75,17 @@ SOURCES += \
         setup.cpp
 
 HEADERS += \
-        ui/filenamedialog.h \
+        storage/filetype.h \
         ui/finddialog.h \
         ui/foldersdialog.h \
         ui/gotodialog.h \
         ui/inserttimedialog.h \
         ui/settingsdialog.h \
         ui/mainwindow.h \
+        ui/newfiledialog.h \
         ui/qtabbarex.h \
         ui/qtabwidgetex.h \
+        ui/renamefiledialog.h \
         medo/config.h \
         medo/hotkey.h \
         medo/singleinstance.h \
@@ -99,11 +102,12 @@ HEADERS += \
         setup.h
 
 FORMS += \
-        ui/filenamedialog.ui \
         ui/finddialog.ui \
         ui/foldersdialog.ui \
         ui/gotodialog.ui \
         ui/inserttimedialog.ui \
+        ui/newfiledialog.ui \
+        ui/renamefiledialog.ui \
         ui/settingsdialog.ui \
         ui/mainwindow.ui
 

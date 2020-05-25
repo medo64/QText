@@ -61,7 +61,7 @@ void FileItem::setTitle(QString newTitle) {
     if (newTitle == title()) { return; } //no change
 
     QString curPath = path();
-    QString newFileName = Helpers::getFileNameFromTitle(newTitle) + typeExtension();
+    QString newFileName = Helpers::getFileNameFromTitle(newTitle) + extension();
     QString newPath = QDir::cleanPath(_folder->path() + QDir::separator() + newFileName);
 
     QFile curFile(curPath);
@@ -75,7 +75,7 @@ void FileItem::setTitle(QString newTitle) {
     _folder->monitor()->continueMonitoring();
 }
 
-FileItem::FileType FileItem::type() {
+FileType FileItem::type() {
     QFileInfo file(path());
     if (file.suffix() == "html") {
         return FileType::Html;
@@ -86,10 +86,10 @@ FileItem::FileType FileItem::type() {
     }
 }
 
-QString FileItem::typeExtension() {
+QString FileItem::extension() {
     switch (type()) {
-        case FileItem::FileType::Html: return ".html";
-        case FileItem::FileType::Markdown: return ".md";
+        case FileType::Html: return ".html";
+        case FileType::Markdown: return ".md";
         default: return ".txt";
     }
 }
@@ -117,10 +117,10 @@ bool FileItem::load() {
             QString contents = in.readAll();
             QTextDocument* document = new QTextDocument(this);
             switch (type()) {
-                case FileItem::FileType::Html:
+                case FileType::Html:
                     document->setHtml(contents);
                     break;
-                case FileItem::FileType::Markdown:
+                case FileType::Markdown:
                     document->setMarkdown(contents);
                     break;
                 default:
@@ -171,10 +171,10 @@ bool FileItem::save() {
 
     QString contents;
     switch (type()) {
-        case FileItem::FileType::Html:
+        case FileType::Html:
             contents = this->document()->toHtml();
             break;
-        case FileItem::FileType::Markdown:
+        case FileType::Markdown:
             contents = this->document()->toMarkdown();
             break;
         default:
