@@ -410,6 +410,6 @@ void FileItem::onContextMenuInsertTime() {
     auto dialog = new InsertTimeDialog(this);
     if (dialog->exec() == QDialog::Accepted) {
         textCursor().removeSelectedText();
-        textCursor().insertText(dialog->FormattedTime + "\n");
+        textCursor().insertText(dialog->formattedTime() + "\n");
     }
 }

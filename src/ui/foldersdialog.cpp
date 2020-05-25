@@ -125,11 +125,6 @@ void FoldersDialog::onItemDoubleClicked(QListWidgetItem* item) {
 }
 
 
-FolderItem* FoldersDialog::selectedFolder() {
-    return _selectedFolder;
-}
-
-
 void FoldersDialog::fillList() {
     QFont italicFont = ui->listWidget->font();
     italicFont.setItalic(true);

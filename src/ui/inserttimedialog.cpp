@@ -31,7 +31,7 @@ InsertTimeDialog::~InsertTimeDialog() {
 void InsertTimeDialog::accept() {
     Settings::setTimeFormat(ui->formatText->text());
 
-    this->FormattedTime = getFormattedText(ui->formatText->text());
+    _formattedTime = getFormattedText(ui->formatText->text());
     QDialog::accept();
 }
 

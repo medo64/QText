@@ -17,7 +17,7 @@ class FoldersDialog : public QDialog {
     public:
         explicit FoldersDialog(QWidget* parent, Storage* storage, FolderItem* selectedFolder);
         ~FoldersDialog();
-        FolderItem* selectedFolder();
+        FolderItem* selectedFolder() const { return _selectedFolder; }
 
     protected:
         void keyPressEvent(QKeyEvent* event);
@@ -31,6 +31,8 @@ class FoldersDialog : public QDialog {
         Storage* _storage = nullptr;
         FolderItem* _selectedFolder = nullptr;
         void fillList();
+
+    private slots:
         void onNew();
         void onRename();
         void onDelete();

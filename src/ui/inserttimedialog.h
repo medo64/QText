@@ -12,13 +12,14 @@ class InsertTimeDialog : public QDialog {
     public:
         explicit InsertTimeDialog(QWidget* parent = nullptr);
         ~InsertTimeDialog();
-        QString FormattedTime;
+        QString formattedTime() const { return _formattedTime; }
 
     protected:
         void accept();
 
     private:
         Ui::InsertTimeDialog* ui;
+        QString _formattedTime;
         QTimer* updateExample = nullptr;
         QString getFormattedText(QString format = QString());
 

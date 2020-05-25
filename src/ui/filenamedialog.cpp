@@ -39,7 +39,7 @@ FileNameDialog::~FileNameDialog() {
 }
 
 
-QString FileNameDialog::getTitle() {
+QString FileNameDialog::title() {
     return ui->textFileName->text();
 }
 

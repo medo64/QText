@@ -13,10 +13,10 @@ class SettingsDialog : public QDialog {
     public:
         explicit SettingsDialog(QWidget* parent = nullptr);
         ~SettingsDialog();
-        bool changedAlwaysOnTop;
-        bool changedAutostart;
-        bool changedMinimizeToTray;
-        bool changedShowInTaskbar;
+        bool changedAlwaysOnTop() const { return _changedAlwaysOnTop; }
+        bool changedAutostart() const { return _changedAutostart; }
+        bool changedMinimizeToTray() const { return _changedMinimizeToTray; }
+        bool changedShowInTaskbar() const { return _changedShowInTaskbar; }
 
     protected:
         void keyPressEvent(QKeyEvent* event);
@@ -26,6 +26,10 @@ class SettingsDialog : public QDialog {
         Ui::SettingsDialog* ui;
         void reset();
         void restoreDefaults();
+        bool _changedAlwaysOnTop;
+        bool _changedAutostart;
+        bool _changedMinimizeToTray;
+        bool _changedShowInTaskbar;
         bool _oldAlwaysOnTop;
         bool _oldAutostart;
         bool _oldMinimizeToTray;

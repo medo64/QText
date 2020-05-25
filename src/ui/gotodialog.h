@@ -15,16 +15,18 @@ class GotoDialog : public QDialog {
     public:
         explicit GotoDialog(QWidget* parent = nullptr,  Storage* storage = nullptr);
         ~GotoDialog();
-        QString FolderKey;
-        QString FileKey;
+        QString folderKey() const { return _folderKey; }
+        QString fileKey() const { return _fileKey; }
 
     protected:
         void accept();
         void hideEvent(QHideEvent* event);
 
     private:
-        bool eventFilter(QObject* obj, QEvent* event);
         Ui::GotoDialog* ui;
+        bool eventFilter(QObject* obj, QEvent* event);
+        QString _folderKey;
+        QString _fileKey;
         Storage* _storage = nullptr;
         QIcon _folderIcon;
         QIcon _fileIcon;

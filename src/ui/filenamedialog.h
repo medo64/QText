@@ -16,11 +16,15 @@ class FileNameDialog : public QDialog {
         explicit FileNameDialog(QWidget* parent, FolderItem* folder);
         explicit FileNameDialog(QWidget* parent, FileItem* file);
         ~FileNameDialog();
-        QString getTitle();
+
+    public:
+        QString title();
 
     private:
         explicit FileNameDialog(QWidget* parent);
         Ui::FileNameDialog* ui;
+
+    private:
         FolderItem* _folder = nullptr; //used for new file
         FileItem* _file = nullptr; //used for rename - empty when new
 

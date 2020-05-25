@@ -418,7 +418,7 @@ void MainWindow::onFileNew() {
     auto dialog = new FileNameDialog(this, _folder);
     switch (dialog->exec()) {
         case QDialog::Accepted: {
-                auto newTitle = dialog->getTitle();
+                auto newTitle = dialog->title();
                 auto file = _folder->newFile(newTitle, currentFile);
                 selectFolder(_folder); //to refresh folder
                 selectFile(file);
@@ -448,7 +448,7 @@ void MainWindow::onFileRename() {
     auto dialog = new FileNameDialog(this, file);
     switch (dialog->exec()) {
         case QDialog::Accepted: {
-                auto newTitle = dialog->getTitle();
+                auto newTitle = dialog->title();
                 file->setTitle(newTitle);
                 ui->tabWidget->setTabText(tabIndex, newTitle);
                 file->setFocus();
@@ -586,8 +586,8 @@ void MainWindow::onGoto() {
     auto dialog = new GotoDialog(this, _storage);
     switch (dialog->exec()) {
         case QDialog::Accepted:
-            selectFolder(dialog->FolderKey);
-            if (dialog->FileKey.length() > 0) { selectFile(dialog->FileKey); }
+            selectFolder(dialog->folderKey());
+            if (dialog->fileKey().length() > 0) { selectFile(dialog->fileKey()); }
             break;
         default:
             break;
@@ -674,7 +674,7 @@ void MainWindow::onAppSettings() {
     auto dialog = new SettingsDialog(this);
     switch (dialog->exec()) {
         case QDialog::Accepted:
-            applySettings(dialog->changedShowInTaskbar);
+            applySettings(dialog->changedShowInTaskbar());
             this->show(); //to show window after setWindowFlag
             this->activateWindow();
             break;

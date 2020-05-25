@@ -73,8 +73,8 @@ void GotoDialog::accept() {
     if (ui->listWidget->selectedItems().count() > 0) {
         auto selectedItem = ui->listWidget->selectedItems().first();
         auto keys = selectedItem->data(Qt::UserRole).toString().split('\0');
-        FolderKey = keys[0];
-        FileKey = (keys.count() == 2) ? keys[1] : "";
+        _folderKey = keys[0];
+        _fileKey = (keys.count() == 2) ? keys[1] : "";
         QDialog::accept();
     }
 }

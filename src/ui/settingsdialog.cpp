@@ -71,20 +71,20 @@ void SettingsDialog::restoreDefaults() {
 
 void SettingsDialog::accept() {
     bool newAlwaysOnTop = (ui->checkboxAlwaysOnTop->checkState() == Qt::Checked);
-    changedAlwaysOnTop = newAlwaysOnTop != _oldAlwaysOnTop;
-    if (changedAlwaysOnTop) { Settings::setAlwaysOnTop(newAlwaysOnTop); }
+    _changedAlwaysOnTop = newAlwaysOnTop != _oldAlwaysOnTop;
+    if (_changedAlwaysOnTop) { Settings::setAlwaysOnTop(newAlwaysOnTop); }
 
     bool newAutostart = (ui->checkboxAutostart->checkState() == Qt::Checked);
-    changedAutostart = newAutostart != _oldAutostart;
-    if (changedAutostart) { Setup::setAutostart(newAutostart); }
+    _changedAutostart = newAutostart != _oldAutostart;
+    if (_changedAutostart) { Setup::setAutostart(newAutostart); }
 
     bool newMinimizeToTray = (ui->checkboxMinimizeToTray->checkState() == Qt::Checked);
-    changedMinimizeToTray = newMinimizeToTray != _oldMinimizeToTray;
-    if (changedMinimizeToTray) { Settings::setMinimizeToTray(newMinimizeToTray); }
+    _changedMinimizeToTray = newMinimizeToTray != _oldMinimizeToTray;
+    if (_changedMinimizeToTray) { Settings::setMinimizeToTray(newMinimizeToTray); }
 
     bool newShowInTaskbar = (ui->checkboxShowInTaskbar->checkState() == Qt::Checked);
-    changedShowInTaskbar = newShowInTaskbar != _oldShowInTaskbar;
-    if (changedShowInTaskbar) { Settings::setShowInTaskbar(newShowInTaskbar); }
+    _changedShowInTaskbar = newShowInTaskbar != _oldShowInTaskbar;
+    if (_changedShowInTaskbar) { Settings::setShowInTaskbar(newShowInTaskbar); }
 
     QDialog::accept();
 }

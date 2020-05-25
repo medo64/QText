@@ -13,6 +13,8 @@ class FindDialog : public QDialog {
     public:
         explicit FindDialog(QWidget* parent);
         ~FindDialog();
+
+    public:
         QString searchText();
         bool matchCase();
         bool wholeWord();
@@ -24,6 +26,8 @@ class FindDialog : public QDialog {
 
     private:
         Ui::FindDialog* ui;
+
+    private:
         QString composeTerm(QString text, bool matchCase, bool wholeWord, bool useRegEx, Find::SearchScope searchScope);
         QString decomposeTerm(QString term, bool* matchCase, bool* wholeWord, bool* useRegEx, Find::SearchScope* searchScope);
         QString decomposeTerm(QString term);
