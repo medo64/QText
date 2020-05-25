@@ -694,7 +694,17 @@ void MainWindow::onAppAbout() {
 #ifdef QT_DEBUG
     description.append("\nDEBUG");
 #endif
-    description.append("\n\nQt "); description.append(APP_QT_VERSION);
+    description.append("\n\nQt ");
+
+    QString runtimeVersion = qVersion();
+    QString compileVersion = APP_QT_VERSION;
+    description.append(runtimeVersion);
+    if (runtimeVersion != compileVersion) {
+        description.append(" / ");
+        description.append(compileVersion);
+    }
+    description.append("\n" + QSysInfo::prettyProductName());
+    description.append("\n" + QSysInfo::kernelType() + " " + QSysInfo::kernelVersion());
     QMessageBox::about(this, "About",  description);
 }
 
