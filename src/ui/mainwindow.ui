@@ -388,6 +388,9 @@
    </property>
   </action>
   <action name="actionFontBold">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../qtext.qrc">
      <normaloff>:/icons/16x16/bold.png</normaloff>:/icons/16x16/bold.png</iconset>
@@ -403,6 +406,9 @@
    </property>
   </action>
   <action name="actionFontItalic">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../qtext.qrc">
      <normaloff>:/icons/16x16/italic.png</normaloff>:/icons/16x16/italic.png</iconset>
@@ -418,6 +424,9 @@
    </property>
   </action>
   <action name="actionFontUnderline">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../qtext.qrc">
      <normaloff>:/icons/16x16/underline.png</normaloff>:/icons/16x16/underline.png</iconset>
@@ -433,6 +442,9 @@
    </property>
   </action>
   <action name="actionFontStrikethrough">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../qtext.qrc">
      <normaloff>:/icons/16x16/strikethrough.png</normaloff>:/icons/16x16/strikethrough.png</iconset>

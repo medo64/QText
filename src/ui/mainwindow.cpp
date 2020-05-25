@@ -853,6 +853,10 @@ void MainWindow::onTextStateChanged() {
     bool isRedoAvailable = (document != nullptr) ? document->isRedoAvailable() : false;
 
     bool hasFontOperations = hasFile && (file->type() != FileType::Plain);
+    bool isSelectionFontBold = hasFile && (file->textCursor().charFormat().fontWeight() == QFont::Bold);
+    bool isSelectionFontItalic = hasFile && file->textCursor().charFormat().fontItalic();
+    bool isSelectionFontUnderline = hasFile && file->textCursor().charFormat().fontUnderline();
+    bool isSelectionFontStrikethrough = hasFile && file->textCursor().charFormat().fontStrikeOut();
 
     bool isClipboardTextAvailable = hasFile ? Clipboard::hasText() : false;
 
@@ -868,6 +872,11 @@ void MainWindow::onTextStateChanged() {
     ui->actionRedo->setDisabled(!isRedoAvailable);
     ui->actionFind->setDisabled(!hasFile);
     ui->actionFindNext->setDisabled(!hasFile);
+
+    ui->actionFontBold->setChecked(isSelectionFontBold);
+    ui->actionFontItalic->setChecked(isSelectionFontItalic);
+    ui->actionFontUnderline->setChecked(isSelectionFontUnderline);
+    ui->actionFontStrikethrough->setChecked(isSelectionFontStrikethrough);
 }
 
 void MainWindow::onTrayActivate(QSystemTrayIcon::ActivationReason reason) {
@@ -928,6 +937,7 @@ void MainWindow::selectFolder(FolderItem* selectedFolder) {
             QObject::connect(file, &FileItem::titleChanged, this, &MainWindow::onFileTitleChanged);
             QObject::connect(file, &FileItem::modificationChanged, this, &MainWindow::onFileModificationChanged);
             QObject::connect(file, &FileItem::activated, this, &MainWindow::onFileActivated);
+            QObject::connect(file, &FileItem::currentCharFormatChanged, this, &MainWindow::onTextStateChanged);
             QObject::connect(file, &FileItem::cursorPositionChanged, this, &MainWindow::onTextStateChanged);
             QObject::connect(file->document(), &QTextDocument::undoAvailable, this, &MainWindow::onTextStateChanged);
             QObject::connect(file->document(), &QTextDocument::redoAvailable, this, &MainWindow::onTextStateChanged);
