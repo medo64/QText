@@ -8,10 +8,6 @@ bool Settings::alwaysOnTop() {
     return Config::read("AlwaysOnTop", defaultAlwaysOnTop());
 }
 
-bool Settings::defaultAlwaysOnTop() {
-    return false;
-}
-
 void Settings::setAlwaysOnTop(bool newAlwaysOnTop) {
     Config::write("AlwaysOnTop", newAlwaysOnTop);
 }
@@ -25,10 +21,6 @@ int Settings::clearUndoInterval() {
     return value;
 }
 
-int Settings::defaultClearUndoInterval() {
-    return 15 * 60; //15 minutes
-}
-
 void Settings::setClearUndoInterval(int newClearUndoInterval) {
     Config::write("ClearUndoInterval", newClearUndoInterval);
 }
@@ -36,14 +28,6 @@ void Settings::setClearUndoInterval(int newClearUndoInterval) {
 
 bool Settings::colorTrayIcon() {
     return Config::read("ColorTrayIcon", defaultColorTrayIcon());
-}
-
-bool Settings::defaultColorTrayIcon() {
-    if ((QSysInfo::kernelType() == "winnt") && (QSysInfo::productVersion() == "10")) {
-        return false; //white icon
-    } else {
-        return true; //color icon
-    }
 }
 
 void Settings::setColorTrayIcon(bool newColorTrayIcon) {
@@ -58,10 +42,6 @@ QStringList Settings::dataPaths() {
         if (path.length() > 0) { cleanedPaths.append(QDir::cleanPath(path)); }
     }
     return (cleanedPaths.length() > 0) ? cleanedPaths : defaultDataPaths();
-}
-
-QStringList Settings::defaultDataPaths() {
-    return QStringList(Config::dataDirectory());
 }
 
 void Settings::setDataPaths(QStringList newPaths) {
@@ -85,10 +65,6 @@ FileType Settings::defaultFileType() {
     }
 }
 
-FileType Settings::defaultDefaultFileType() {
-    return FileType::Plain;
-}
-
 void Settings::setDefaultFileType(FileType newDefaultFileType) {
     switch (newDefaultFileType) {
         case FileType::Markdown: Config::write("DefaultFileType", "Markdown"); break;
@@ -106,10 +82,6 @@ Settings::DeletionStyle Settings::deletionSyle() {
     }
 }
 
-Settings::DeletionStyle Settings::defaultDeletionStyle() {
-    return Settings::DeletionStyle::Delete;
-}
-
 void Settings::setDeletionStyle(Settings::DeletionStyle newDeletionStyle) {
     Config::write("DeletionStyle", newDeletionStyle);
 }
@@ -124,11 +96,6 @@ QKeySequence Settings::hotkey() {
     return  defaultHotkey();
 }
 
-QKeySequence Settings::defaultHotkey() {
-    QKeySequence defaultHotkey { "Ctrl+Shift+Q" };
-    return  defaultHotkey;
-}
-
 void Settings::setHotkey(QKeySequence newHotkey) {
     QString hotkeyText { newHotkey.toString(QKeySequence::PortableText) };
     Config::write("DataPath", hotkeyText);
@@ -137,10 +104,6 @@ void Settings::setHotkey(QKeySequence newHotkey) {
 
 bool Settings::minimizeToTray() {
     return Config::read("MinimizeToTray", defaultMinimizeToTray());
-}
-
-bool Settings::defaultMinimizeToTray() {
-    return true;
 }
 
 void Settings::setMinimizeToTray(bool newMinimizeToTray) {
@@ -156,29 +119,8 @@ int Settings::quickSaveInterval() {
     return value;
 }
 
-int Settings::defaultQuickSaveInterval() {
-    return 2500;
-}
-
 void Settings::setQuickSaveInterval(int newQuickSaveInterval) {
     Config::write("QuickSaveInterval", newQuickSaveInterval);
-}
-
-
-bool Settings::showMarkdown() {
-    return Config::read("ShowMarkdown", defaultShowMarkdown());
-}
-
-bool Settings::defaultShowMarkdown() {
-#ifndef QT_DEBUG
-    return false;
-#else
-    return true; //show markdown by default in debug builds
-#endif
-}
-
-void Settings::setShowMarkdown(bool newShowMarkdown) {
-    Config::write("ShowMarkdown", newShowMarkdown);
 }
 
 
@@ -186,21 +128,22 @@ bool Settings::showInTaskbar() {
     return Config::read("ShowInTaskbar", defaultShowInTaskbar());
 }
 
-bool Settings::defaultShowInTaskbar() {
-    return true;
-}
-
 void Settings::setShowInTaskbar(bool newShowInTaskbar) {
     Config::write("ShowInTaskbar", newShowInTaskbar);
 }
 
 
-bool Settings::tabTextColorPerType() {
-    return Config::read("TabTextColorPerType", defaultTabTextColorPerType());
+bool Settings::showMarkdown() {
+    return Config::read("ShowMarkdown", defaultShowMarkdown());
 }
 
-bool Settings::defaultTabTextColorPerType() {
-    return false;
+void Settings::setShowMarkdown(bool newShowMarkdown) {
+    Config::write("ShowMarkdown", newShowMarkdown);
+}
+
+
+bool Settings::tabTextColorPerType() {
+    return Config::read("TabTextColorPerType", defaultTabTextColorPerType());
 }
 
 void Settings::setTabTextColorPerType(bool newTabTextColorPerType) {
@@ -212,10 +155,6 @@ int Settings::tabWidth() {
     return std::min(std::max(Config::read("TabWidth", defaultTabWidth()), 2), 16);
 }
 
-int Settings::defaultTabWidth() {
-    return 4;
-}
-
 void Settings::setTabWidth(int newTabWidth) {
     Config::write("TabWidth", std::min(std::max(newTabWidth, 2), 16));
 }
@@ -225,10 +164,6 @@ QString Settings::timeFormat() {
     return Config::read("TimeFormat", defaultTimeFormat());
 }
 
-QString Settings::defaultTimeFormat() {
-    return QString();
-}
-
 void Settings::setTimeFormat(QString newTimeFormat) {
     Config::write("TimeFormat", newTimeFormat);
 }
@@ -236,10 +171,6 @@ void Settings::setTimeFormat(QString newTimeFormat) {
 
 bool Settings::wordWrap() {
     return Config::read("WordWrap", defaultWordWrap());
-}
-
-bool Settings::defaultWordWrap() {
-    return true;
 }
 
 void Settings::setWordWrap(bool newWordWrap) {

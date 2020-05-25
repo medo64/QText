@@ -2,6 +2,7 @@
 
 #include <QKeySequence>
 #include <QString>
+#include "medo/config.h"
 #include "storage/filetype.h"
 
 class Settings {
@@ -15,69 +16,76 @@ class Settings {
     public:
 
         static bool alwaysOnTop();
-        static bool defaultAlwaysOnTop();
         static void setAlwaysOnTop(bool newAlwaysOnTop);
+        static bool defaultAlwaysOnTop() { return false; }
 
         static int clearUndoInterval();
-        static int defaultClearUndoInterval();
         static void setClearUndoInterval(int newClearUndoInterval);
+        static int defaultClearUndoInterval() { return 15 * 60; } //15 minutes
 
         static bool colorTrayIcon();
-        static bool defaultColorTrayIcon();
         static void setColorTrayIcon(bool newColorTrayIcon);
+        static bool defaultColorTrayIcon() {
+            if ((QSysInfo::kernelType() == "winnt") && (QSysInfo::productVersion() == "10")) {
+                return false; //white icon
+            } else {
+                return true; //color icon
+            }
+        }
 
         static QStringList dataPaths();
-        static QStringList defaultDataPaths();
         static void setDataPaths(QStringList newPath);
-
-        static QString dataPath2();
-        static QString defaultDataPath2();
-        static void setDataPath2(QString newPath);
+        static QStringList defaultDataPaths() { return QStringList(Config::dataDirectory()); }
 
         static FileType defaultFileType();
-        static FileType defaultDefaultFileType();
         static void setDefaultFileType(FileType newDefaultFileType);
+        static FileType defaultDefaultFileType() { return FileType::Plain; }
 
         static DeletionStyle deletionSyle();
-        static DeletionStyle defaultDeletionStyle();
         static void setDeletionStyle(DeletionStyle newDeletionStyle);
+        static DeletionStyle defaultDeletionStyle() { return Settings::DeletionStyle::Delete; }
 
         static QKeySequence hotkey();
-        static QKeySequence defaultHotkey();
         static void setHotkey(QKeySequence newHotkey);
+        static QKeySequence defaultHotkey() {
+            QKeySequence defaultHotkey { "Ctrl+Shift+Q" };
+            return  defaultHotkey;
+        }
 
         static bool minimizeToTray();
-        static bool defaultMinimizeToTray();
         static void setMinimizeToTray(bool newMinimizeToTray);
+        static bool defaultMinimizeToTray() { return true; }
 
         static int quickSaveInterval();
-        static int defaultQuickSaveInterval();
         static void setQuickSaveInterval(int newQuickSaveInterval);
+        static int defaultQuickSaveInterval() { return 2500; }
 
         static bool showInTaskbar();
-        static bool defaultShowInTaskbar();
         static void setShowInTaskbar(bool newShowInTaskbar);
+        static bool defaultShowInTaskbar() { return true; }
 
         static bool showMarkdown();
-        static bool defaultShowMarkdown();
         static void setShowMarkdown(bool newShowMarkdown);
+        static bool defaultShowMarkdown() { return false; }
 
         static bool tabTextColorPerType();
-        static bool defaultTabTextColorPerType();
         static void setTabTextColorPerType(bool newTabTextColorPerType);
+        static bool defaultTabTextColorPerType() { return false; }
 
         static int tabWidth();
-        static int defaultTabWidth();
         static void setTabWidth(int newTabWidth);
+        static int defaultTabWidth() { return 4; }
 
         static QString timeFormat();
-        static QString defaultTimeFormat();
         static void setTimeFormat(QString newTimeFormat);
+        static QString defaultTimeFormat() { return QString(); }
 
         static bool wordWrap();
-        static bool defaultWordWrap();
         static void setWordWrap(bool newWordWrap);
+        static bool defaultWordWrap() { return true; }
 
+
+    public:
 
         static QString lastFile(QString folder);
         static void setLastFile(QString folder, QString file);
