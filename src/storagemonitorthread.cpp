@@ -4,9 +4,8 @@
 
 StorageMonitorThread::StorageMonitorThread(QStringList paths) {
     _paths = paths;
-    this->setPriority(LowPriority);
     this->setObjectName("StorageMonitor");
-    this->start();
+    this->start(LowPriority);
 }
 
 StorageMonitorThread::~StorageMonitorThread() {
