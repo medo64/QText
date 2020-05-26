@@ -1,7 +1,7 @@
 #pragma once
 
-typedef enum {
+enum class FileType {
     Plain    = 0,
     Html     = 1,
     Markdown = 2,
-} FileType;
+};

@@ -1,5 +1,6 @@
 /* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
 
+// 2020-05-25: Using strongly typed enums
 // 2020-05-05: Added stateRead/stateWrite for integers, longs, and doubles
 //             Allowing : and = in key name
 // 2020-04-26: Added extra escape sequences
@@ -270,11 +271,11 @@ class Config {
 
 
     private:
-        typedef enum {
-            UNKNOWN  = -1,
-            FALSE    = 0,
-            TRUE     = 1,
-        } PortableStatus;
+        enum class PortableStatus {
+            Unknown = -1,
+            False   = 0,
+            True    = 1,
+        };
 
     private:
         static QMutex _publicAccessMutex; //to ensure multi-threaded access works without conflict
@@ -307,7 +308,7 @@ class Config {
                 QHash<QString, QVariant> _cache;
 
             private:
-                typedef enum {
+                enum class ProcessState {
                     Default,
                     Comment,
                     Key,
@@ -319,7 +320,7 @@ class Config {
                     ValueEscape,
                     ValueEscapeLong,
                     ValueOrComment,
-                } ProcessState;
+                };
 
             private:
                 class LineData {

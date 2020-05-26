@@ -7,11 +7,11 @@
 class Find {
 
     public:
-        typedef enum {
+        enum class SearchScope {
             CurrentFile   = 0,
             CurrentFolder = 1,
             AllFolders    = 2,
-        } SearchScope;
+        };
 
     public:
         static void setup(Storage* storage, QString text, bool matchCase, bool wholeWord, bool useRegEx, Find::SearchScope searchScope);

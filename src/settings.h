@@ -8,10 +8,10 @@
 class Settings {
 
     public:
-        typedef enum {
+        enum class DeletionStyle {
             Delete    = 1,
             Overwrite = 2,
-        } DeletionStyle;
+        };
 
     public:
 

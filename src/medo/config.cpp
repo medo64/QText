@@ -10,7 +10,7 @@ QMutex Config::_publicAccessMutex(QMutex::Recursive);
 QString Config::_configurationFilePath;
 QString Config::_stateFilePath;
 QString Config::_dataDirectoryPath;
-Config::PortableStatus Config::_isPortable(UNKNOWN);
+Config::PortableStatus Config::_isPortable(PortableStatus::Unknown);
 bool Config::_immediateSave(true);
 Config::ConfigFile* Config::_configFile(nullptr);
 Config::ConfigFile* Config::_stateFile(nullptr);
@@ -21,7 +21,7 @@ void Config::reset() {
     _configurationFilePath = QString();
     _stateFilePath = QString();
     _dataDirectoryPath = QString();
-    _isPortable = PortableStatus::UNKNOWN;
+    _isPortable = PortableStatus::Unknown;
     _immediateSave = true;
     resetConfigFile();
     resetStateFile();
@@ -44,11 +44,11 @@ bool Config::save() {
 bool Config::isPortable() {
     QMutexLocker locker(&_publicAccessMutex);
 
-    if (_isPortable == PortableStatus::UNKNOWN) {
+    if (_isPortable == PortableStatus::Unknown) {
         QString exePath = QCoreApplication::applicationFilePath();
         assert(!exePath.isNull()); //fail if QApplication is not initialized in debug mode
         if (exePath.isNull()) { //probably got called before QApplication got initialized, assume installed
-            _isPortable = PortableStatus::FALSE;
+            _isPortable = PortableStatus::False;
             return false;
         }
 
@@ -82,18 +82,18 @@ bool Config::isPortable() {
 
         QFileInfo portableConfigFile (configurationFilePathWhenPortable());
         if (portableConfigFile.exists()) {
-            _isPortable = PortableStatus::TRUE; //force portable if there is a local file
+            _isPortable = PortableStatus::True; //force portable if there is a local file
         } else {
-            _isPortable = !isInstalled ? PortableStatus::TRUE : PortableStatus::FALSE;
+            _isPortable = !isInstalled ? PortableStatus::True : PortableStatus::False;
         }
     }
-    return _isPortable;
+    return (_isPortable == PortableStatus::True);
 }
 
 void Config::setPortable(bool portable) {
     QMutexLocker locker(&_publicAccessMutex);
     reset();
-    _isPortable = portable ? PortableStatus::TRUE : PortableStatus::FALSE;
+    _isPortable = portable ? PortableStatus::True : PortableStatus::False;
 }
 
 

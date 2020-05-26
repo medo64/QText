@@ -75,15 +75,15 @@ void Settings::setDefaultFileType(FileType newDefaultFileType) {
 
 
 Settings::DeletionStyle Settings::deletionSyle() {
-    int value = Config::read("DeletionStyle", defaultDeletionStyle());
+    int value = Config::read("DeletionStyle", static_cast<int>(defaultDeletionStyle()));
     switch (value) {
-        case Settings::DeletionStyle::Overwrite: return Settings::DeletionStyle::Overwrite;
+        case static_cast<int>(Settings::DeletionStyle::Overwrite): return Settings::DeletionStyle::Overwrite;
         default: return Settings::DeletionStyle::Delete;
     }
 }
 
 void Settings::setDeletionStyle(Settings::DeletionStyle newDeletionStyle) {
-    Config::write("DeletionStyle", newDeletionStyle);
+    Config::write("DeletionStyle", static_cast<int>(newDeletionStyle));
 }
 
 
