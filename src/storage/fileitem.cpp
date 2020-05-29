@@ -10,6 +10,7 @@
 #include "icons.h"
 #include "settings.h"
 #include "storage.h"
+#include "storagemonitorlocker.h"
 
 FileItem::FileItem(FolderItem* folder, QString fileName)
     : QTextEdit(nullptr) {
@@ -55,7 +56,7 @@ QString FileItem::title() {
 }
 
 void FileItem::setTitle(QString newTitle) {
-    _folder->monitor()->stopMonitoring();
+    StorageMonitorLocker lockMonitor(_folder->monitor());
 
     save();
     if (newTitle == title()) { return; } //no change
@@ -71,8 +72,6 @@ void FileItem::setTitle(QString newTitle) {
         _fileName = newFileName;
         emit titleChanged(this);
     }
-
-    _folder->monitor()->continueMonitoring();
 }
 
 FileType FileItem::type() {

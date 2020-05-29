@@ -5,14 +5,19 @@
 #include <QStringList>
 #include <QThread>
 
+class StorageMonitorLocker;
 class StorageMonitorThread : public QThread {
         Q_OBJECT
+
+        friend class StorageMonitorLocker;
+    private: //used by StorageMonitorLocker
+        void continueMonitoring();
+        void stopMonitoring();
+
 
     public:
         explicit StorageMonitorThread(QStringList paths);
         ~StorageMonitorThread();
-        void continueMonitoring();
-        void stopMonitoring();
 
     public:
         StorageMonitorThread(const StorageMonitorThread&) = delete;

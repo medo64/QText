@@ -65,6 +65,7 @@ SOURCES += \
         storage/fileitem.cpp \
         storage/folderitem.cpp \
         storage/storage.cpp \
+        storage/storagemonitorlocker.cpp \
         storage/storagemonitorthread.cpp \
         clipboard.cpp \
         find.cpp \
@@ -75,7 +76,6 @@ SOURCES += \
         setup.cpp
 
 HEADERS += \
-        storage/filetype.h \
         ui/finddialog.h \
         ui/foldersdialog.h \
         ui/gotodialog.h \
@@ -91,8 +91,10 @@ HEADERS += \
         medo/singleinstance.h \
         medo/state.h \
         storage/fileitem.h \
+        storage/filetype.h \
         storage/folderitem.h \
         storage/storage.h \
+        storage/storagemonitorlocker.h \
         storage/storagemonitorthread.h \
         clipboard.h \
         find.h \

@@ -5,6 +5,7 @@
 #include "storage/fileitem.h"
 #include "storage/folderitem.h"
 #include "storage/storage.h"
+#include "storage/storagemonitorlocker.h"
 #include "helpers.h"
 
 FolderItem::FolderItem(Storage* storage, FolderItem* rootFolder, const int pathIndex, const QString directoryPath, const QString directoryName) {
@@ -58,9 +59,8 @@ QString FolderItem::title() {
 }
 
 bool FolderItem::rename(QString newTitle) {
-    _storage->monitor()->stopMonitoring();
+    StorageMonitorLocker lockMonitor(monitor());
 
-    bool result = false;
     if (newTitle.isEmpty()) { return false; }
     QString newName = Helpers::getFolderNameFromTitle(newTitle);
     if (newName.compare(_directoryName, Qt::CaseSensitive) == 0) { return false; }
@@ -70,11 +70,10 @@ bool FolderItem::rename(QString newTitle) {
         cleanOrdering();
         _directoryName = newName;
         saveOrdering();
-        result = true;
+        return true;
     }
 
-    _storage->monitor()->continueMonitoring();
-    return result;
+    return false;
 }
 
 bool FolderItem::isRoot() {
@@ -95,7 +94,7 @@ FileItem* FolderItem::fileAt(int index) {
 }
 
 FileItem* FolderItem::newFile(QString title, FileType type, FileItem* afterItem) {
-    _storage->monitor()->stopMonitoring();
+    StorageMonitorLocker lockMonitor(monitor());
 
     FileItem* file;
     switch (type) {
@@ -111,14 +110,12 @@ FileItem* FolderItem::newFile(QString title, FileType type, FileItem* afterItem)
     }
     saveOrdering();
 
-    _storage->monitor()->continueMonitoring();
     return file;
 }
 
 bool FolderItem::deleteFile(FileItem* file, Settings::DeletionStyle deletionStyle) {
-    _storage->monitor()->stopMonitoring();
+    StorageMonitorLocker lockMonitor(monitor());
 
-    bool result = false;
     for (auto item = _files.begin(); item != _files.end(); item++) {
         FileItem* iFile = *item;
         if (iFile->path().compare(file->path(), Qt::CaseSensitive) == 0) {
@@ -141,13 +138,11 @@ bool FolderItem::deleteFile(FileItem* file, Settings::DeletionStyle deletionStyl
             _files.erase(item);
             saveOrdering();
 
-            result = true;
-            break;
+            return true;
         }
     }
 
-    _storage->monitor()->continueMonitoring();
-    return result;
+    return false;
 }
 
 
@@ -179,20 +174,18 @@ QString FolderItem::path() {
 }
 
 bool FolderItem::moveFile(int from, int to) {
-    _storage->monitor()->stopMonitoring();
+    StorageMonitorLocker lockMonitor(monitor());
 
-    bool result = false;
     if ((from < 0) || (from >= _files.count())) { //source outside of range
     } else if ((to < 0) || (to >= _files.count())) { //destination outside of range
     } else if (from == to) { //same position
     } else { //all ok
         _files.move(from, to);
         saveOrdering();
-        result = true;
+        return true;
     }
 
-    _storage->monitor()->continueMonitoring();
-    return result;
+    return false;
 }
 
 StorageMonitorThread* FolderItem::monitor() {

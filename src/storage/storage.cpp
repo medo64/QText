@@ -4,6 +4,7 @@
 #include "folderitem.h"
 #include "helpers.h"
 #include "storage.h"
+#include "storagemonitorlocker.h"
 #include "storagemonitorthread.h"
 
 const QStringList _supportedExtensions = QStringList({".txt", ".md", ".html"});
@@ -51,7 +52,7 @@ FolderItem* Storage::baseFolder() {
 
 
 FolderItem* Storage::newFolder(QString proposedTitle) {
-    monitor()->stopMonitoring();
+    StorageMonitorLocker lockMonitor(monitor());
 
     FolderItem* newFolder = nullptr;
     FolderItem* rootFolder = baseFolder();
@@ -72,14 +73,12 @@ FolderItem* Storage::newFolder(QString proposedTitle) {
         title = proposedTitle + " (" + QString::number(i) + ")"; //add number before trying again
     }
 
-    monitor()->continueMonitoring();
     return newFolder;
 }
 
 bool Storage::deleteFolder(FolderItem* folder) {
-    monitor()->stopMonitoring();
+    StorageMonitorLocker lockMonitor(monitor());
 
-    bool result = false;
     for (int i = 0; i < _folders.count(); i++) {
         FolderItem* iFolder = _folders[i];
         if (iFolder->isRoot()) { continue; } //skip root folders
@@ -87,14 +86,12 @@ bool Storage::deleteFolder(FolderItem* folder) {
             QDir directory(iFolder->path());
             if (directory.removeRecursively()) {
                 removeItemAt(i);
-                result = true;
-                break;
+                return true;
             }
         }
     }
 
-    monitor()->continueMonitoring();
-    return result;
+    return false;
 }
 
 StorageMonitorThread* Storage::monitor() {
