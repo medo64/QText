@@ -92,7 +92,11 @@ void GotoDialog::onTextEdited(const QString& text) {
         for (FolderItem* folder : *_storage) {
             auto folderTitle = folder->title();
             if (folderTitle.contains(text, Qt::CaseInsensitive)) {
-                QListWidgetItem* item = new QListWidgetItem(_folderIcon, folderTitle);
+                QString title = folderTitle;
+                if (!folder->isPrimary() && !folder->isRoot()) {
+                    title += " in " + folder->rootFolder()->title();
+                }
+                QListWidgetItem* item = new QListWidgetItem(_folderIcon, title);
                 item->setData(Qt::UserRole, folder->name());
                 items.push_back(item);
             }
@@ -100,8 +104,14 @@ void GotoDialog::onTextEdited(const QString& text) {
             for (FileItem* file : *folder) {
                 auto fileTitle = file->title();
                 if (fileTitle.contains(text, Qt::CaseInsensitive)) {
-                    QString newTitle = fileTitle + " " + (!folder->isPrimary() ? "(in " + folderTitle + ")" : folderTitle);
-                    QListWidgetItem* item = new QListWidgetItem(_fileIcon, newTitle);
+                    QString title = fileTitle;
+                    if (folder->isPrimary()) {
+                        title += " in " + folder->title();
+                    } else { //secondary data path
+                        title += " in " + folder->title();
+                        if (!folder->isRoot()) { title += " " + folder->rootFolder()->title(); }
+                    }
+                    QListWidgetItem* item = new QListWidgetItem(_fileIcon, title);
                     item->setData(Qt::UserRole, folder->name() + '\0' + file->name());
                     items.push_back(item);
                 }
