@@ -17,17 +17,17 @@ class FileItem : public QTextEdit {
     public:
         FileItem(FolderItem* folder, QString fileName);
         ~FileItem();
-        FolderItem* folder();
-        QString name();
-        QString path();
-        QString title();
+        FolderItem* folder() const;
+        QString name() const;
+        QString path() const;
+        QString title() const;
         void setTitle(QString newTitle);
-        FileType type();
-        QString extension();
-        bool isModified();
-        bool isEmpty();
+        FileType type() const;
+        QString extension() const;
+        bool isModified() const;
+        bool isEmpty() const;
         bool load();
-        bool save();
+        bool save() const;
 
     public:
         FileItem(const FileItem&) = delete;
@@ -44,7 +44,7 @@ class FileItem : public QTextEdit {
         QString _fileName;
         QTextEdit* _editor = nullptr;
         QTimer* _timerSavePending = nullptr;
-        QDateTime _modificationTime;
+        mutable QDateTime _modificationTime;
         int zoomAmount = 0;
 
     signals:

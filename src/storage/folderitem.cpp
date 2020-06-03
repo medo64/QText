@@ -26,11 +26,11 @@ FolderItem::FolderItem(Storage* storage, FolderItem* rootFolder, const int pathI
 }
 
 
-FolderItem* FolderItem::rootFolder() {
+FolderItem* FolderItem::rootFolder() const {
     return _rootFolder;
 }
 
-QString FolderItem::name() {
+QString FolderItem::name() const {
     if (_pathIndex > 0) {
         return QString::number(_pathIndex + 1) + "/" + ((_directoryName == nullptr) ? "" : _directoryName);
     } else {
@@ -38,11 +38,11 @@ QString FolderItem::name() {
     }
 }
 
-int FolderItem::pathIndex() {
+int FolderItem::pathIndex() const {
     return _pathIndex;
 }
 
-QString FolderItem::title() {
+QString FolderItem::title()  const {
     if (_directoryName == nullptr) {
         QFileInfo path = _directoryPath;
         QString dirName = path.fileName();
@@ -76,20 +76,20 @@ bool FolderItem::rename(QString newTitle) {
     return false;
 }
 
-bool FolderItem::isRoot() {
+bool FolderItem::isRoot() const {
     return (_directoryName == nullptr);
 }
 
-bool FolderItem::isPrimary() {
+bool FolderItem::isPrimary() const {
     return (_pathIndex == 0);
 }
 
 
-int FolderItem::fileCount() {
+int FolderItem::fileCount() const {
     return _files.size();
 }
 
-FileItem* FolderItem::fileAt(int index) {
+FileItem* FolderItem::fileAt(int index) const {
     return _files.at(index);
 }
 
@@ -146,7 +146,7 @@ bool FolderItem::deleteFile(FileItem* file, Settings::DeletionStyle deletionStyl
 }
 
 
-bool FolderItem::fileExists(QString title) {
+bool FolderItem::fileExists(QString title) const {
     for (auto file : _files) {
         if (file->title().compare(title, Qt::CaseInsensitive) == 0) { return true; }
     }
@@ -154,7 +154,7 @@ bool FolderItem::fileExists(QString title) {
 }
 
 
-bool FolderItem::saveAll() {
+bool FolderItem::saveAll() const {
     bool allSaved = true;
     for (FileItem* file : _files) {
         if (file->isModified()) {
@@ -165,7 +165,7 @@ bool FolderItem::saveAll() {
 }
 
 
-QString FolderItem::path() {
+QString FolderItem::path() const {
     if (_directoryName == nullptr) {
         return QDir::cleanPath(_directoryPath);
     } else {
@@ -188,7 +188,7 @@ bool FolderItem::moveFile(int from, int to) {
     return false;
 }
 
-StorageMonitorThread* FolderItem::monitor() {
+StorageMonitorThread* FolderItem::monitor() const {
     return _storage->monitor();
 }
 

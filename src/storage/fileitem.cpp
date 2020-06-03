@@ -37,15 +37,15 @@ FileItem::~FileItem() {
 }
 
 
-FolderItem* FileItem::folder() {
+FolderItem* FileItem::folder() const {
     return _folder;
 }
 
-QString FileItem::name() {
+QString FileItem::name() const {
     return _fileName;
 }
 
-QString FileItem::title() {
+QString FileItem::title() const {
     for (QString extension : Storage::supportedExtensions()) {
         if (_fileName.endsWith(extension, Qt::CaseInsensitive)) {
             auto fileNameWithoutExtension = _fileName.left(_fileName.length() - extension.length());
@@ -74,7 +74,7 @@ void FileItem::setTitle(QString newTitle) {
     }
 }
 
-FileType FileItem::type() {
+FileType FileItem::type() const {
     QFileInfo file(path());
     if (file.suffix() == "md") {
         return FileType::Markdown;
@@ -85,7 +85,7 @@ FileType FileItem::type() {
     }
 }
 
-QString FileItem::extension() {
+QString FileItem::extension() const {
     switch (type()) {
         case FileType::Markdown: return ".md";
         case FileType::Html: return ".html";
@@ -93,11 +93,11 @@ QString FileItem::extension() {
     }
 }
 
-bool FileItem::isModified() {
+bool FileItem::isModified() const {
     return this->document()->isModified();
 }
 
-bool FileItem::isEmpty() {
+bool FileItem::isEmpty() const {
     return this->document()->isEmpty();
 }
 
@@ -163,7 +163,7 @@ bool FileItem::load() {
     return fileValid;
 }
 
-bool FileItem::save() {
+bool FileItem::save() const {
     qDebug() << "save()" << path();
 
     if (_timerSavePending != nullptr) { _timerSavePending->stop(); }
@@ -294,7 +294,7 @@ void FileItem::wheelEvent(QWheelEvent* e) {
 }
 
 
-QString FileItem::path() {
+QString FileItem::path() const {
     return QDir::cleanPath(_folder->path() + QDir::separator() + _fileName);
 }
 

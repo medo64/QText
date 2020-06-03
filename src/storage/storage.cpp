@@ -38,15 +38,15 @@ Storage::Storage(const QStringList paths) {
 }
 
 
-int Storage::folderCount() {
+int Storage::folderCount() const {
     return _folders.size();
 }
 
-FolderItem* Storage::folderAt(int index) {
+FolderItem* Storage::folderAt(int index) const {
     return _folders.at(index);
 }
 
-FolderItem* Storage::baseFolder() {
+FolderItem* Storage::baseFolder() const {
     return _folders.at(0);
 }
 
@@ -94,7 +94,7 @@ bool Storage::deleteFolder(FolderItem* folder) {
     return false;
 }
 
-StorageMonitorThread* Storage::monitor() {
+StorageMonitorThread* Storage::monitor() const {
     return _monitor;
 }
 

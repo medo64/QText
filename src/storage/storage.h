@@ -9,13 +9,12 @@ class Storage : public QObject {
 
     public:
         Storage(const QStringList paths);
-        int folderCount();
-        FolderItem* folderAt(int index);
-        FolderItem* baseFolder();
-        QString path();
+        int folderCount() const;
+        FolderItem* folderAt(int index) const;
+        FolderItem* baseFolder() const;
         FolderItem* newFolder(QString title);
         bool deleteFolder(FolderItem* folder);
-        StorageMonitorThread* monitor();
+        StorageMonitorThread* monitor() const;
 
     public:
         static QStringList supportedExtensions();

@@ -13,22 +13,22 @@ class FolderItem {
 
     public:
         FolderItem(Storage* storage, FolderItem* rootFolder, const int pathIndex, const QString directoryBase, const QString directoryName);
-        FolderItem* rootFolder();
-        QString name();
-        QString path();
-        int pathIndex();
-        QString title();
+        FolderItem* rootFolder() const;
+        QString name() const;
+        QString path() const;
+        int pathIndex() const;
+        QString title() const;
         bool rename(QString newTitle);
-        bool isRoot();
-        bool isPrimary();
-        int fileCount();
-        FileItem* fileAt(int index);
+        bool isRoot() const;
+        bool isPrimary() const;
+        int fileCount() const;
+        FileItem* fileAt(int index) const;
         FileItem* newFile(QString title, FileType type, FileItem* afterItem);
         bool deleteFile(FileItem* file, Settings::DeletionStyle deletionStyle);
-        bool saveAll();
-        bool fileExists(QString title);
+        bool saveAll() const;
+        bool fileExists(QString title) const;
         bool moveFile(int from, int to);
-        StorageMonitorThread* monitor();
+        StorageMonitorThread* monitor() const;
 
     public:
         void addItem(FileItem* item);
