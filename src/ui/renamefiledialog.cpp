@@ -22,7 +22,7 @@ RenameFileDialog::~RenameFileDialog() {
 }
 
 
-QString RenameFileDialog::title() {
+QString RenameFileDialog::title() const {
     return ui->textTitle->text();
 }
 

@@ -18,8 +18,8 @@ class NewFileDialog : public QDialog {
         ~NewFileDialog();
 
     public:
-        QString title();
-        FileType type();
+        QString title() const;
+        FileType type() const;
 
     private:
         Ui::NewFileDialog* ui;

@@ -42,11 +42,11 @@ NewFileDialog::~NewFileDialog() {
 }
 
 
-QString NewFileDialog::title() {
+QString NewFileDialog::title() const {
     return ui->textTitle->text();
 }
 
-FileType NewFileDialog::type() {
+FileType NewFileDialog::type() const {
     if (ui->radioMarkdown->isChecked()) {
         return FileType::Markdown;
     } else if (ui->radioHtml->isChecked()) {

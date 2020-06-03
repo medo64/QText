@@ -54,23 +54,23 @@ void FindDialog::accept() {
 }
 
 
-QString FindDialog::searchText() {
+QString FindDialog::searchText() const {
     return ui->comboSearch->lineEdit()->text();
 }
 
-bool FindDialog::matchCase() {
+bool FindDialog::matchCase() const {
     return ui->checkMatchCase->isChecked();
 }
 
-bool FindDialog::wholeWord() {
+bool FindDialog::wholeWord() const {
     return ui->checkWholeWord->isChecked();
 }
 
-bool FindDialog::useRegEx() {
+bool FindDialog::useRegEx() const {
     return ui->checkUseRegEx->isChecked();
 }
 
-Find::SearchScope FindDialog::searchScope() {
+Find::SearchScope FindDialog::searchScope() const {
     if (ui->radioCurrentFile->isChecked()) {
         return Find::SearchScope::CurrentFile;
     } else if (ui->radioCurrentFolder->isChecked()) {

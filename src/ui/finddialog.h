@@ -15,11 +15,11 @@ class FindDialog : public QDialog {
         ~FindDialog();
 
     public:
-        QString searchText();
-        bool matchCase();
-        bool wholeWord();
-        bool useRegEx();
-        Find::SearchScope searchScope();
+        QString searchText() const;
+        bool matchCase() const;
+        bool wholeWord() const;
+        bool useRegEx() const;
+        Find::SearchScope searchScope() const;
 
     protected:
         void accept() override;

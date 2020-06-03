@@ -13,7 +13,7 @@ class RenameFileDialog : public QDialog {
     public:
         explicit RenameFileDialog(QWidget* parent, FileItem* file);
         ~RenameFileDialog();
-        QString title();
+        QString title() const;
 
     private:
         Ui::RenameFileDialog* ui;
