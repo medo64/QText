@@ -51,3 +51,5 @@ Simple note taking program.
 | `Alt+End`         | Show folder selection menu                              |
 | `Alt+PageUp`      | Select previous folder                                  |
 | `Alt+PageDown`    | Select next folder                                      |
+| `Menu`            | Show context menu for text                              |
+| `Shift+Menu`      | Show context menu for file                              |

@@ -401,6 +401,16 @@ void MainWindow::keyPressEvent(QKeyEvent* event) {
             }
             break;
 
+        case Qt::ShiftModifier | Qt::Key_Menu:
+            if (ui->tabWidget->currentIndex() > -1) {
+                QTabBarEx* tabbar = dynamic_cast<QTabBarEx*>(ui->tabWidget->tabBar());
+                auto rect = tabbar->tabRect(ui->tabWidget->currentIndex());
+                auto offset = QApplication::startDragDistance() / 2;
+                auto point = rect.bottomLeft() + QPoint(offset, -offset);
+                onTabMenuRequested(point);
+            }
+            break;
+
         default: QMainWindow::keyPressEvent(event);
     }
 }
