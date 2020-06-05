@@ -223,8 +223,9 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     }
 
     //determine last used folder
-    selectFolder(storage->baseFolder()->name()); //default folder
-    selectFolder(Settings::lastFolder());
+    if (!selectFolder(Settings::lastFolder())) {
+        selectFolder(storage->baseFolder()->name()); //default folder
+    }
 
     //storage updates
     connect(_storage, &Storage::updatedFolder, this, &MainWindow::onUpdatedFolder);
@@ -932,7 +933,7 @@ void MainWindow::onTrayShow() {
     this->activateWindow(); //workaround for Windows
 }
 
-void MainWindow::selectFolder(QString folderName) {
+bool MainWindow::selectFolder(QString folderName) {
     qDebug().nospace() << "selectFolder(" << folderName << ") ";
     FolderItem* selectedFolder = nullptr;
 
@@ -953,10 +954,10 @@ void MainWindow::selectFolder(QString folderName) {
         }
     }
 
-    selectFolder(selectedFolder);
+    return selectFolder(selectedFolder);
 }
 
-void MainWindow::selectFolder(FolderItem* selectedFolder) {
+bool MainWindow::selectFolder(FolderItem* selectedFolder) {
     if (selectedFolder != nullptr) {
         if (_folder != nullptr) { _folder->saveAll(); } //save all files in previous folder / just in case
         _folder = selectedFolder;
@@ -988,7 +989,9 @@ void MainWindow::selectFolder(FolderItem* selectedFolder) {
         } else {
             onTabChanged(); //just to refresh disabled buttons
         }
+        return true;
     }
+    return false;
 }
 
 void MainWindow::selectFile(QString fileName) {
