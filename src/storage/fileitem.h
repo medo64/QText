@@ -66,6 +66,9 @@ class FileItem : public QTextEdit {
         void onContextMenuRequested(const QPoint&);
         void onContextMenuUndo();
         void onContextMenuRedo();
+        void onContextMenuCut();
+        void onContextMenuCopy();
+        void onContextMenuPaste();
         void onContextMenuCutPlain();
         void onContextMenuCopyPlain();
         void onContextMenuPastePlain();

@@ -7,10 +7,14 @@
 class Clipboard {
 
     public:
-        static bool hasText();
-        static bool setText(QString text);
-        static bool cutText(QTextCursor cursor);
-        static bool copyText(QTextCursor cursor);
-        static bool pasteText(QTextCursor cursor);
+        static bool hasPlain();
+        static bool hasHtml();
+        static bool setData(QString plainText, QString htmlText = "");
+        static bool cutPlain(QTextCursor cursor);
+        static bool copyPlain(QTextCursor cursor);
+        static bool pastePlain(QTextCursor cursor);
+        static bool cutHtml(QTextCursor cursor);
+        static bool copyHtml(QTextCursor cursor);
+        static bool pasteHtml(QTextCursor cursor);
 
 };

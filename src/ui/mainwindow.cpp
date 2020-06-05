@@ -550,17 +550,17 @@ void MainWindow::onFilePrintToPdf() {
 
 void MainWindow::onTextCut() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-    Clipboard::cutText(file->textCursor());
+    Clipboard::cutPlain(file->textCursor());
 }
 
 void MainWindow::onTextCopy() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-    Clipboard::copyText(file->textCursor());
+    Clipboard::copyPlain(file->textCursor());
 }
 
 void MainWindow::onTextPaste() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-    Clipboard::pasteText(file->textCursor());
+    Clipboard::pastePlain(file->textCursor());
 }
 
 void MainWindow::onTextUndo() {
@@ -769,9 +769,9 @@ void MainWindow::onShowContainingDirectoryOnly() {
 void MainWindow::onCopyContainingPath() {
     if (ui->tabWidget->currentWidget() != nullptr) {
         auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-        Clipboard::setText(QDir::toNativeSeparators(file->path()));
+        Clipboard::setData(QDir::toNativeSeparators(file->path()));
     } else {
-        Clipboard::setText(QDir::toNativeSeparators(_folder->path()));
+        Clipboard::setData(QDir::toNativeSeparators(_folder->path()));
     }
 }
 
@@ -927,7 +927,7 @@ void MainWindow::onTextStateChanged() {
     bool isSelectionFontUnderline = hasFile && file->textCursor().charFormat().fontUnderline();
     bool isSelectionFontStrikethrough = hasFile && file->textCursor().charFormat().fontStrikeOut();
 
-    bool isClipboardTextAvailable = hasFile ? Clipboard::hasText() : false;
+    bool isClipboardTextAvailable = hasFile ? Clipboard::hasPlain() : false;
 
     ui->actionFontBold->setVisible(hasFontOperations);
     ui->actionFontItalic->setVisible(hasFontOperations);

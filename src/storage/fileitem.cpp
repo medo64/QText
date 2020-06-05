@@ -109,6 +109,7 @@ bool FileItem::setType(FileType newType) {
         _fileName = newFileName;
         save();
         load();
+        document()->clearUndoRedoStacks();
         return true;
     } else {
         return false;
@@ -257,18 +258,24 @@ bool FileItem::event(QEvent* event) {
         } else if ((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_Y)) {
             onContextMenuRedo();
             return true;
-        } else if (((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_X))
-                   || ((e->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) && (e->key() == Qt::Key_X))
+        } else if ((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_X)) {
+            onContextMenuCut();
+            return true;
+        } else if ((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_C)) {
+            onContextMenuCopy();
+            return true;
+        } else if ((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_V)) {
+            onContextMenuPaste();
+            return true;
+        } else if (((e->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) && (e->key() == Qt::Key_X))
                    || ((e->modifiers() == Qt::ShiftModifier) && (e->key() == Qt::Key_Delete))) {
             onContextMenuCutPlain();
             return true;
-        } else if (((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_C))
-                   || ((e->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) && (e->key() == Qt::Key_C))
+        } else if (((e->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) && (e->key() == Qt::Key_C))
                    || ((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_Insert))) {
             onContextMenuCopyPlain();
             return true;
-        } else if (((e->modifiers() == Qt::ControlModifier) && (e->key() == Qt::Key_V))
-                   || ((e->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) && (e->key() == Qt::Key_V))
+        } else if (((e->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) && (e->key() == Qt::Key_V))
                    || ((e->modifiers() == Qt::ShiftModifier) && (e->key() == Qt::Key_Insert))) {
             onContextMenuPastePlain();
             return true;
@@ -402,21 +409,21 @@ void FileItem::onContextMenuRequested(const QPoint& point) {
     cutAction->setShortcut(QKeySequence("Ctrl+X"));
     cutAction->setShortcutVisibleInContextMenu(true);
     cutAction->setDisabled(!textCursor().hasSelection());
-    connect(cutAction, &QAction::triggered, this, &FileItem::onContextMenuCutPlain);
+    connect(cutAction, &QAction::triggered, this, &FileItem::onContextMenuCut);
     menu.addAction(cutAction);
 
     QAction* copyAction = new QAction(Icons::copy(), "&Copy");
     copyAction->setShortcut(QKeySequence("Ctrl+C"));
     copyAction->setShortcutVisibleInContextMenu(true);
     copyAction->setDisabled(!textCursor().hasSelection());
-    connect(copyAction, &QAction::triggered, this, &FileItem::onContextMenuCopyPlain);
+    connect(copyAction, &QAction::triggered, this, &FileItem::onContextMenuCopy);
     menu.addAction(copyAction);
 
     QAction* pasteAction = new QAction(Icons::paste(), "&Paste");
     pasteAction->setShortcut(QKeySequence("Ctrl+V"));
     pasteAction->setShortcutVisibleInContextMenu(true);
-    pasteAction->setDisabled(!Clipboard::hasText());
-    connect(pasteAction, &QAction::triggered, this, &FileItem::onContextMenuPastePlain);
+    pasteAction->setDisabled(!Clipboard::hasPlain());
+    connect(pasteAction, &QAction::triggered, this, &FileItem::onContextMenuPaste);
     menu.addAction(pasteAction);
 
     QAction* deleteAction = new QAction("&Delete");
@@ -453,17 +460,43 @@ void FileItem::onContextMenuRedo() {
     document()->redo();
 }
 
+
+void FileItem::onContextMenuCut() {
+    if (type() == FileType::Html) {
+        Clipboard::cutHtml(textCursor());
+    } else {
+        Clipboard::cutPlain(textCursor());
+    }
+}
+
+void FileItem::onContextMenuCopy() {
+    if (type() == FileType::Html) {
+        Clipboard::copyHtml(textCursor());
+    } else {
+        Clipboard::copyPlain(textCursor());
+    }
+}
+
+void FileItem::onContextMenuPaste() {
+    if (type() == FileType::Html) {
+        Clipboard::pasteHtml(textCursor());
+    } else {
+        Clipboard::pastePlain(textCursor());
+    }
+}
+
 void FileItem::onContextMenuCutPlain() {
-    Clipboard::cutText(textCursor());
+    Clipboard::cutPlain(textCursor());
 }
 
 void FileItem::onContextMenuCopyPlain() {
-    Clipboard::copyText(textCursor());
+    Clipboard::copyPlain(textCursor());
 }
 
 void FileItem::onContextMenuPastePlain() {
-    Clipboard::pasteText(textCursor());
+    Clipboard::pastePlain(textCursor());
 }
+
 
 void FileItem::onContextMenuDelete() {
     textCursor().removeSelectedText();
