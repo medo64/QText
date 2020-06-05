@@ -842,6 +842,19 @@ void MainWindow::onTabMenuRequested(const QPoint& point) {
         menu.addAction(ui->actionReopen);
         menu.addAction(ui->actionSave);
 
+        menu.addSeparator();
+        menu.addAction(ui->actionRename);
+
+        if (_storage->folderCount() > 1) {
+            auto moveMenu = menu.addMenu("Move");
+            for (FolderItem* folder : *_storage) {
+                auto folderAction = moveMenu->addAction(folder->title(), this, &MainWindow::onFolderMove);
+                if (!folder->isPrimary()) { folderAction->setFont(italicFont); }
+                folderAction->setData(folder->key());
+                moveMenu->addAction(folderAction);
+            }
+        }
+
         auto convertMenu = menu.addMenu("Convert");
         auto convertToPlainAction = convertMenu->addAction("To Plain", this, &MainWindow::onFileConvert);
         convertToPlainAction->setEnabled(file->type() != FileType::Plain);
@@ -855,18 +868,7 @@ void MainWindow::onTabMenuRequested(const QPoint& point) {
             convertToMarkdownAction->setData(static_cast<int>(FileType::Markdown));
         }
 
-        if (_storage->folderCount() > 1) {
-            auto moveMenu = menu.addMenu("Move");
-            for (FolderItem* folder : *_storage) {
-                auto folderAction = moveMenu->addAction(folder->title(), this, &MainWindow::onFolderMove);
-                if (!folder->isPrimary()) { folderAction->setFont(italicFont); }
-                folderAction->setData(folder->key());
-                moveMenu->addAction(folderAction);
-            }
-        }
-
         menu.addSeparator();
-        menu.addAction(ui->actionRename);
         menu.addAction(ui->actionDelete);
         menu.addSeparator();
         menu.addAction(ui->actionOpenWithDefaultApplication);
