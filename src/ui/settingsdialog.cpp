@@ -17,6 +17,7 @@ SettingsDialog::SettingsDialog(QWidget* parent) : QDialog(parent), ui(new Ui::Se
     _oldShowInTaskbar = Settings::showInTaskbar();
     _oldShowMarkdown = Settings::showMarkdown();
     _oldTabTextColorPerType = Settings::tabTextColorPerType();
+    _oldUseHtmlByDefault = (Settings::defaultFileType() == FileType::Html); //ignoring markdown
 
     connect(ui->buttonBox, &QDialogButtonBox::clicked, this,  &SettingsDialog::onButtonClicked);
     reset();
@@ -64,6 +65,7 @@ void SettingsDialog::reset() {
     ui->checkboxShowInTaskbar->setChecked(_oldShowInTaskbar);
     ui->checkboxShowMarkdown->setChecked(_oldShowMarkdown);
     ui->checkboxTabTextColorPerType->setChecked(_oldTabTextColorPerType);
+    ui->checkboxUseHtmlByDefault->setChecked(_oldUseHtmlByDefault);
 }
 
 void SettingsDialog::restoreDefaults() {
@@ -73,6 +75,7 @@ void SettingsDialog::restoreDefaults() {
     ui->checkboxShowInTaskbar->setChecked(Settings::defaultShowInTaskbar());
     ui->checkboxShowMarkdown->setChecked(Settings::defaultShowMarkdown());
     ui->checkboxTabTextColorPerType->setChecked(Settings::defaultTabTextColorPerType());
+    ui->checkboxUseHtmlByDefault->setChecked(Settings::defaultFileType() == FileType::Html);
 }
 
 void SettingsDialog::accept() {
@@ -99,6 +102,10 @@ void SettingsDialog::accept() {
     bool newTabTextColorPerType = (ui->checkboxTabTextColorPerType->checkState() == Qt::Checked);
     _changedTabTextColorPerType = newTabTextColorPerType != _oldTabTextColorPerType;
     if (_changedTabTextColorPerType) { Settings::setTabTextColorPerType(newTabTextColorPerType); }
+
+    bool newUseHtmlByDefault = (ui->checkboxUseHtmlByDefault->checkState() == Qt::Checked);
+    _changedUseHtmlByDefault = newUseHtmlByDefault != _oldUseHtmlByDefault;
+    if (_changedUseHtmlByDefault) { Settings::setDefaultFileType(newUseHtmlByDefault ? FileType::Html : FileType::Plain); }
 
     QDialog::accept();
 }

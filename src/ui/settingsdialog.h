@@ -19,6 +19,7 @@ class SettingsDialog : public QDialog {
         bool changedShowInTaskbar() const { return _changedShowInTaskbar; }
         bool changedShowMarkdown() const { return _changedShowMarkdown; }
         bool changedTabTextColorPerType() const { return _changedTabTextColorPerType; }
+        bool changedUseHtmlByDefault() const { return _changedUseHtmlByDefault; }
 
     protected:
         void keyPressEvent(QKeyEvent* event);
@@ -34,13 +35,14 @@ class SettingsDialog : public QDialog {
         bool _changedShowInTaskbar;
         bool _changedShowMarkdown;
         bool _changedTabTextColorPerType;
+        bool _changedUseHtmlByDefault;
         bool _oldAlwaysOnTop;
         bool _oldAutostart;
         bool _oldMinimizeToTray;
         bool _oldShowInTaskbar;
         bool _oldShowMarkdown;
         bool _oldTabTextColorPerType;
-
+        bool _oldUseHtmlByDefault;
 
     private slots:
         void onButtonClicked(QAbstractButton* button);

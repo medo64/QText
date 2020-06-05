@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>450</width>
-    <height>158</height>
+    <height>182</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,6 +24,13 @@
        <string>Behavior</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayoutLookAndFeel">
+       <item>
+        <widget class="QCheckBox" name="checkboxUseHtmlByDefault">
+         <property name="text">
+          <string>Use HTML by default</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QCheckBox" name="checkboxShowInTaskbar">
          <property name="text">
@@ -115,7 +122,7 @@
           <string>Controls if markdown will be shown as one of the file options</string>
          </property>
          <property name="text">
-          <string>Show markdown</string>
+          <string>Show markdown as an option</string>
          </property>
         </widget>
        </item>
