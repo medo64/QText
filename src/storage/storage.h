@@ -18,20 +18,21 @@ class Storage : public QObject {
         StorageMonitorThread* monitor() const;
 
     public:
-        static QStringList supportedExtensions();
-        static QStringList supportedExtensionFilters();
-
-    public:
-        void addItem(FolderItem* item);
-        void removeItemAt(int index);
-
-    public:
         inline QVector<FolderItem*>::const_iterator begin() const { return _folders.constBegin(); }
         inline QVector<FolderItem*>::const_iterator end() const { return _folders.constEnd(); }
 
     public:
         Storage(const Storage&) = delete;
         void operator=(const Storage&) = delete;
+
+    private:
+        friend class FileItem;
+        friend class FolderItem;
+        friend class StorageMonitorThread;
+        static QStringList supportedExtensions();
+        static QStringList supportedExtensionFilters();
+        void addItem(FolderItem* item);
+        void removeItemAt(int index);
 
     private:
         QVector<FolderItem*> _folders;

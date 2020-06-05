@@ -30,13 +30,6 @@ class FolderItem {
         bool saveAll() const;
         bool fileExists(QString title) const;
         bool moveFile(int from, int to);
-        StorageMonitorThread* monitor() const;
-
-    public:
-        void addItem(FileItem* item);
-        void addItemAfter(FileItem* item, FileItem* afterItem);
-        bool removeItem(FileItem* item);
-        void removeItemAt(int index);
 
     public:
         inline QVector<FileItem*>::const_iterator begin() const { return _files.constBegin(); }
@@ -45,6 +38,15 @@ class FolderItem {
     public:
         FolderItem(const FolderItem&) = delete;
         void operator=(const FolderItem&) = delete;
+
+    private:
+        friend class FileItem;
+        friend class Storage;
+        void addItem(FileItem* item);
+        void addItemAfter(FileItem* item, FileItem* afterItem);
+        bool removeItem(FileItem* item);
+        void removeItemAt(int index);
+        Storage* storage() const { return _storage; }
 
     private:
         QUuid _key = QUuid::createUuid();

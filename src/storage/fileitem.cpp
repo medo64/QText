@@ -56,7 +56,7 @@ QString FileItem::title() const {
 }
 
 void FileItem::setTitle(QString newTitle) {
-    StorageMonitorLocker lockMonitor(_folder->monitor());
+    StorageMonitorLocker lockMonitor(_folder->storage()->monitor());
 
     save();
     if (newTitle == title()) { return; } //no change
@@ -202,7 +202,7 @@ bool FileItem::setFolder(FolderItem* newFolder) {
 
     auto fromFile = this->path();
     auto toFile = QDir::cleanPath(newFolder->path() + "/" + this->name());
-    StorageMonitorLocker lockMonitor(_folder->monitor());
+    StorageMonitorLocker lockMonitor(_folder->storage()->monitor());
     if (QDir().rename(fromFile, toFile)) { //only move if rename was possible
         _folder->removeItem(this);
         _folder = newFolder;

@@ -59,7 +59,7 @@ QString FolderItem::title()  const {
 }
 
 bool FolderItem::rename(QString newTitle) {
-    StorageMonitorLocker lockMonitor(monitor());
+    StorageMonitorLocker lockMonitor(_storage->monitor());
 
     if (newTitle.isEmpty()) { return false; }
     QString newName = Helpers::getFolderNameFromTitle(newTitle);
@@ -94,7 +94,7 @@ FileItem* FolderItem::fileAt(int index) const {
 }
 
 FileItem* FolderItem::newFile(QString title, FileType type, FileItem* afterItem) {
-    StorageMonitorLocker lockMonitor(monitor());
+    StorageMonitorLocker lockMonitor(_storage->monitor());
 
     FileItem* file;
     switch (type) {
@@ -114,7 +114,7 @@ FileItem* FolderItem::newFile(QString title, FileType type, FileItem* afterItem)
 }
 
 bool FolderItem::deleteFile(FileItem* file, Settings::DeletionStyle deletionStyle) {
-    StorageMonitorLocker lockMonitor(monitor());
+    StorageMonitorLocker lockMonitor(_storage->monitor());
 
     for (auto item = _files.begin(); item != _files.end(); item++) {
         FileItem* iFile = *item;
@@ -174,7 +174,7 @@ QString FolderItem::path() const {
 }
 
 bool FolderItem::moveFile(int from, int to) {
-    StorageMonitorLocker lockMonitor(monitor());
+    StorageMonitorLocker lockMonitor(_storage->monitor());
 
     if ((from < 0) || (from >= _files.count())) { //source outside of range
     } else if ((to < 0) || (to >= _files.count())) { //destination outside of range
@@ -186,10 +186,6 @@ bool FolderItem::moveFile(int from, int to) {
     }
 
     return false;
-}
-
-StorageMonitorThread* FolderItem::monitor() const {
-    return _storage->monitor();
 }
 
 
