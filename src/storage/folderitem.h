@@ -8,9 +8,26 @@
 #include "storagemonitorthread.h"
 
 class FileItem;
+class FolderItem;
 class Storage;
 
-class FolderItem {
+class FolderItemInternal { //just to keep private variables not visible to friends
+        friend class FolderItem;
+
+    private:
+        QUuid _key = QUuid::createUuid();
+        Storage* _storage;
+        FolderItem* _rootFolder;
+        QString _directoryPath;
+        QString _directoryName;
+        int _pathIndex;
+        QVector<FileItem*> _files;
+
+};
+
+class FolderItem : public FolderItemInternal {
+        friend class FileItem;
+        friend class Storage;
 
     public:
         FolderItem(Storage* storage, FolderItem* rootFolder, const int pathIndex, const QString directoryBase, const QString directoryName);
@@ -40,8 +57,6 @@ class FolderItem {
         void operator=(const FolderItem&) = delete;
 
     private:
-        friend class FileItem;
-        friend class Storage;
         void addItem(FileItem* item);
         void addItemAfter(FileItem* item, FileItem* afterItem);
         bool removeItem(FileItem* item);
@@ -49,13 +64,6 @@ class FolderItem {
         Storage* storage() const { return _storage; }
 
     private:
-        QUuid _key = QUuid::createUuid();
-        Storage* _storage;
-        FolderItem* _rootFolder;
-        QString _directoryPath;
-        QString _directoryName;
-        int _pathIndex;
-        QVector<FileItem*> _files;
         void cleanOrdering();
         void saveOrdering();
         void loadOrdering();

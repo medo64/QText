@@ -4,8 +4,20 @@
 #include "folderitem.h"
 #include "storagemonitorthread.h"
 
-class Storage : public QObject {
+class StorageInternal : public QObject { //just to keep private variables not visible to friends
+        friend class Storage;
+
+    private:
+        QVector<FolderItem*> _folders;
+        StorageMonitorThread* _monitor;
+
+};
+
+class Storage : public StorageInternal {
         Q_OBJECT
+        friend class FileItem;
+        friend class FolderItem;
+        friend class StorageMonitorThread;
 
     public:
         Storage(const QStringList paths);
@@ -26,17 +38,12 @@ class Storage : public QObject {
         void operator=(const Storage&) = delete;
 
     private:
-        friend class FileItem;
-        friend class FolderItem;
-        friend class StorageMonitorThread;
         static QStringList supportedExtensions();
         static QStringList supportedExtensionFilters();
         void addItem(FolderItem* item);
         void removeItemAt(int index);
 
     private:
-        QVector<FolderItem*> _folders;
-        StorageMonitorThread* _monitor;
         void sortFolders();
 
     private slots:
