@@ -121,9 +121,9 @@ bool FolderItem::deleteFile(FileItem* file, DeletionStyle deletionStyle) {
         if (iFile->path().compare(file->path(), Qt::CaseSensitive) == 0) {
             bool deleteSuccessful;
             switch (deletionStyle) {
-                case DeletionStyle::Recycle:   deleteSuccessful = Deletion::recycleFile(file->path()); break;
-                case DeletionStyle::Overwrite: deleteSuccessful = Deletion::overwriteFile(file->path()); break;
-                default:                       deleteSuccessful = Deletion::deleteFile(file->path()); break;
+                case DeletionStyle::Recycle:   deleteSuccessful = Deletion::recycleFile(file); break;
+                case DeletionStyle::Overwrite: deleteSuccessful = Deletion::overwriteFile(file); break;
+                default:                       deleteSuccessful = Deletion::deleteFile(file); break;
             }
             if (deleteSuccessful) {
                 _files.erase(item);

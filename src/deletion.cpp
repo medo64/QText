@@ -12,13 +12,14 @@
     #error "Only Linux and Windows are supported!"
 #endif
 
-bool Deletion::deleteFile(QString path) {
-    QFile osFile(path);
+
+bool Deletion::deleteFile(FileItem* file) {
+    QFile osFile(file->path());
     return osFile.remove();
 }
 
-bool Deletion::overwriteFile(QString path) {
-    QFile osFile(path);
+bool Deletion::overwriteFile(FileItem* file) {
+    QFile osFile(file->path());
     int length = osFile.size();
     osFile.open(QIODevice::WriteOnly | QIODevice::Unbuffered);
     int size = ((length + 4095) / 4096) * 4096; //round size up to the nearest 4K
@@ -34,7 +35,8 @@ bool Deletion::overwriteFile(QString path) {
     return osFile.remove();
 }
 
-bool Deletion::recycleFile(QString path) {
+bool Deletion::recycleFile(FileItem* file) {
+    QString path = file->path();
     QFile osFile(path);
 
 #if defined(Q_OS_WIN)
