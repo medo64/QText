@@ -207,6 +207,16 @@ void FolderItem::addItemAfter(FileItem* item, FileItem* afterItem) {
     addItem(item); //only if matching afterItem is never found
 }
 
+bool FolderItem::removeItem(FileItem* item) {
+    for (auto i = 0; i < _files.count(); i++) {
+        if (_files[i] == item) {
+            _files.remove(i);
+            return true;
+        }
+    }
+    return false;
+}
+
 void FolderItem::removeItemAt(int index) {
     _files.removeAt(index);
 }

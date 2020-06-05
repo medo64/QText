@@ -11,6 +11,7 @@ class Storage : public QObject {
         Storage(const QStringList paths);
         int folderCount() const;
         FolderItem* folderAt(int index) const;
+        FolderItem* folderFromKey(QUuid key) const;
         FolderItem* baseFolder() const;
         FolderItem* newFolder(QString title);
         bool deleteFolder(FolderItem* folder);

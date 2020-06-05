@@ -197,6 +197,21 @@ bool FileItem::save() const {
     }
 }
 
+bool FileItem::setFolder(FolderItem* newFolder) {
+    if (newFolder == nullptr) { return false; }
+
+    auto fromFile = this->path();
+    auto toFile = QDir::cleanPath(newFolder->path() + "/" + this->name());
+    StorageMonitorLocker lockMonitor(_folder->monitor());
+    if (QDir().rename(fromFile, toFile)) { //only move if rename was possible
+        _folder->removeItem(this);
+        _folder = newFolder;
+        newFolder->addItem(this);
+        return true;
+    }
+    return false;
+}
+
 
 bool FileItem::event(QEvent* event) {
     if (event->type() == QEvent::KeyPress) {

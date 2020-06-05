@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QString>
+#include <QUuid>
 #include "fileitem.h"
 #include "filetype.h"
 #include "settings.h"
@@ -14,6 +15,7 @@ class FolderItem {
     public:
         FolderItem(Storage* storage, FolderItem* rootFolder, const int pathIndex, const QString directoryBase, const QString directoryName);
         FolderItem* rootFolder() const;
+        QUuid key() const { return _key; }
         QString name() const;
         QString path() const;
         int pathIndex() const;
@@ -33,6 +35,7 @@ class FolderItem {
     public:
         void addItem(FileItem* item);
         void addItemAfter(FileItem* item, FileItem* afterItem);
+        bool removeItem(FileItem* item);
         void removeItemAt(int index);
 
     public:
@@ -44,6 +47,7 @@ class FolderItem {
         void operator=(const FolderItem&) = delete;
 
     private:
+        QUuid _key = QUuid::createUuid();
         Storage* _storage;
         FolderItem* _rootFolder;
         QString _directoryPath;

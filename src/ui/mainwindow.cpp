@@ -704,6 +704,23 @@ void MainWindow::onFolderMenuSelect() {
 }
 
 
+void MainWindow::onFolderMove() {
+    QAction* action = qobject_cast<QAction*>(sender());
+
+    if ((ui->tabWidget->currentWidget() != nullptr) && (action != nullptr)) {
+        auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+
+        auto key = action->data().value<QUuid>();
+        auto destinationFolder = _storage->folderFromKey(key);
+        if (destinationFolder != nullptr) {
+            if (file->setFolder(destinationFolder)) {
+                ui->tabWidget->removeTab(ui->tabWidget->currentIndex());
+            }
+        }
+    }
+}
+
+
 void MainWindow::onOpenWithDefaultApplication() {
     if (ui->tabWidget->currentWidget() != nullptr) {
         auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
@@ -802,12 +819,24 @@ void MainWindow::onTabMenuRequested(const QPoint& point) {
 
     bool vscodeAvailable = Helpers::openWithVSCodeAvailable();
 
+    QFont italicFont = _folderButton->menu()->font();
+    italicFont.setItalic(true);
+
     QMenu menu(this);
     menu.addAction(ui->actionNew);
     if (file != nullptr) {
         menu.addSeparator();
         menu.addAction(ui->actionReopen);
         menu.addAction(ui->actionSave);
+        if (_storage->folderCount() > 1) {
+            auto moveMenu = menu.addMenu("Move");
+            for (FolderItem* folder : *_storage) {
+                auto folderAction = moveMenu->addAction(folder->title(), this, &MainWindow::onFolderMove);
+                if (!folder->isPrimary()) { folderAction->setFont(italicFont); }
+                folderAction->setData(folder->key());
+                moveMenu->addAction(folderAction);
+            }
+        }
         menu.addSeparator();
         menu.addAction(ui->actionRename);
         menu.addAction(ui->actionDelete);

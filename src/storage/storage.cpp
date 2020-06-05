@@ -46,6 +46,13 @@ FolderItem* Storage::folderAt(int index) const {
     return _folders.at(index);
 }
 
+FolderItem* Storage::folderFromKey(QUuid key) const {
+    for (auto folder : this->_folders) {
+        if (folder->key() == key) { return folder; }
+    }
+    return nullptr;
+}
+
 FolderItem* Storage::baseFolder() const {
     return _folders.at(0);
 }

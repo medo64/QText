@@ -6,6 +6,7 @@
 #include <QString>
 #include <QTextEdit>
 #include <QTimer>
+#include <QUuid>
 #include "filetype.h"
 #include "folderitem.h"
 
@@ -18,6 +19,7 @@ class FileItem : public QTextEdit {
         FileItem(FolderItem* folder, QString fileName);
         ~FileItem();
         FolderItem* folder() const;
+        QUuid key() const { return _key; }
         QString name() const;
         QString path() const;
         QString title() const;
@@ -28,6 +30,7 @@ class FileItem : public QTextEdit {
         bool isEmpty() const;
         bool load();
         bool save() const;
+        bool setFolder(FolderItem* newFolder);
 
     public:
         FileItem(const FileItem&) = delete;
@@ -40,6 +43,7 @@ class FileItem : public QTextEdit {
         void wheelEvent(QWheelEvent* e);
 
     private:
+        QUuid _key = QUuid::createUuid();
         FolderItem* _folder = nullptr;
         QString _fileName;
         QTextEdit* _editor = nullptr;
