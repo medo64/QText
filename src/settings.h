@@ -3,15 +3,10 @@
 #include <QKeySequence>
 #include <QString>
 #include "medo/config.h"
+#include "storage/deletionstyle.h"
 #include "storage/filetype.h"
 
 class Settings {
-
-    public:
-        enum class DeletionStyle {
-            Delete    = 1,
-            Overwrite = 2,
-        };
 
     public:
 
@@ -43,7 +38,7 @@ class Settings {
 
         static DeletionStyle deletionSyle();
         static void setDeletionStyle(DeletionStyle newDeletionStyle);
-        static DeletionStyle defaultDeletionStyle() { return Settings::DeletionStyle::Delete; }
+        static DeletionStyle defaultDeletionStyle() { return DeletionStyle::Delete; }
 
         static bool forcePlainCopyPaste();
         static void setForcePlainCopyPaste(bool newForcePlainCopyPaste);

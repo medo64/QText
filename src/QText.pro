@@ -90,6 +90,7 @@ HEADERS += \
         medo/hotkey.h \
         medo/singleinstance.h \
         medo/state.h \
+        storage/deletionstyle.h \
         storage/fileitem.h \
         storage/filetype.h \
         storage/folderitem.h \

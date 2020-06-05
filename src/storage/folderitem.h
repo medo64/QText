@@ -43,7 +43,7 @@ class FolderItem : public FolderItemInternal {
         int fileCount() const;
         FileItem* fileAt(int index) const;
         FileItem* newFile(QString title, FileType type, FileItem* afterItem);
-        bool deleteFile(FileItem* file, Settings::DeletionStyle deletionStyle);
+        bool deleteFile(FileItem* file, DeletionStyle deletionStyle);
         bool saveAll() const;
         bool fileExists(QString title) const;
         bool moveFile(int from, int to);

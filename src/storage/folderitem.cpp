@@ -113,14 +113,14 @@ FileItem* FolderItem::newFile(QString title, FileType type, FileItem* afterItem)
     return file;
 }
 
-bool FolderItem::deleteFile(FileItem* file, Settings::DeletionStyle deletionStyle) {
+bool FolderItem::deleteFile(FileItem* file, DeletionStyle deletionStyle) {
     StorageMonitorLocker lockMonitor(_storage->monitor());
 
     for (auto item = _files.begin(); item != _files.end(); item++) {
         FileItem* iFile = *item;
         if (iFile->path().compare(file->path(), Qt::CaseSensitive) == 0) {
             QFile osFile(iFile->path());
-            if (deletionStyle == Settings::DeletionStyle::Overwrite) {
+            if (deletionStyle == DeletionStyle::Overwrite) {
                 int length = osFile.size();
                 osFile.open(QIODevice::WriteOnly | QIODevice::Unbuffered);
                 int size = ((length + 4095) / 4096) * 4096; //round size up to the nearest 4K
