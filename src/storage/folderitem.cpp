@@ -131,7 +131,7 @@ bool FolderItem::deleteFile(FileItem* file, DeletionStyle deletionStyle) {
                     memcpy(&buffer[i], &n, 4);
                 }
                 osFile.seek(0);
-                osFile.write(buffer, sizeof(buffer));
+                osFile.write(buffer, length);
                 osFile.flush();
             }
             osFile.remove();
