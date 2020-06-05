@@ -68,6 +68,7 @@ SOURCES += \
         storage/storagemonitorlocker.cpp \
         storage/storagemonitorthread.cpp \
         clipboard.cpp \
+        deletion.cpp \
         find.cpp \
         helpers.cpp \
         icons.cpp \
@@ -98,6 +99,7 @@ HEADERS += \
         storage/storagemonitorlocker.h \
         storage/storagemonitorthread.h \
         clipboard.h \
+        deletion.h \
         find.h \
         helpers.h \
         icons.h \

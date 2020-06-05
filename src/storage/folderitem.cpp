@@ -1,11 +1,11 @@
 #include <QDir>
-#include <QRandomGenerator>
 #include <QString>
 #include "medo/config.h"
 #include "storage/fileitem.h"
 #include "storage/folderitem.h"
 #include "storage/storage.h"
 #include "storage/storagemonitorlocker.h"
+#include "deletion.h"
 #include "helpers.h"
 
 FolderItem::FolderItem(Storage* storage, FolderItem* rootFolder, const int pathIndex, const QString directoryPath, const QString directoryName) {
@@ -119,26 +119,17 @@ bool FolderItem::deleteFile(FileItem* file, DeletionStyle deletionStyle) {
     for (auto item = _files.begin(); item != _files.end(); item++) {
         FileItem* iFile = *item;
         if (iFile->path().compare(file->path(), Qt::CaseSensitive) == 0) {
-            QFile osFile(iFile->path());
-            if (deletionStyle == DeletionStyle::Overwrite) {
-                int length = osFile.size();
-                osFile.open(QIODevice::WriteOnly | QIODevice::Unbuffered);
-                int size = ((length + 4095) / 4096) * 4096; //round size up to the nearest 4K
-                char buffer[size];
-                QRandomGenerator rnd;
-                for (auto i = 0; i < static_cast<int>(sizeof(buffer)); i += 4) {
-                    qint32 n = rnd.generate();
-                    memcpy(&buffer[i], &n, 4);
-                }
-                osFile.seek(0);
-                osFile.write(buffer, length);
-                osFile.flush();
+            bool deleteSuccessful;
+            switch (deletionStyle) {
+                case DeletionStyle::Recycle:   deleteSuccessful = Deletion::recycleFile(file->path()); break;
+                case DeletionStyle::Overwrite: deleteSuccessful = Deletion::overwriteFile(file->path()); break;
+                default:                       deleteSuccessful = Deletion::deleteFile(file->path()); break;
             }
-            osFile.remove();
-            _files.erase(item);
-            saveOrdering();
-
-            return true;
+            if (deleteSuccessful) {
+                _files.erase(item);
+                saveOrdering();
+            }
+            return deleteSuccessful;
         }
     }
 

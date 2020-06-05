@@ -76,7 +76,9 @@ void Settings::setDefaultFileType(FileType newDefaultFileType) {
 
 DeletionStyle Settings::deletionSyle() {
     QString value = Config::read("DeletionStyle", "Delete");
-    if (value.compare("Overwrite", Qt::CaseInsensitive) == 0) {
+    if (value.compare("Recycle", Qt::CaseInsensitive) == 0) {
+        return DeletionStyle::Recycle;
+    } else if (value.compare("Overwrite", Qt::CaseInsensitive) == 0) {
         return DeletionStyle::Overwrite;
     } else {
         return DeletionStyle::Delete;
@@ -85,6 +87,7 @@ DeletionStyle Settings::deletionSyle() {
 
 void Settings::setDeletionStyle(DeletionStyle newDeletionStyle) {
     switch (newDeletionStyle) {
+        case DeletionStyle::Recycle:   Config::write("DeletionStyle", "Recycle"); break;
         case DeletionStyle::Overwrite: Config::write("DeletionStyle", "Overwrite"); break;
         default:                       Config::write("DeletionStyle", "Delete");    break;
     }
