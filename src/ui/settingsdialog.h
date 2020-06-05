@@ -15,6 +15,7 @@ class SettingsDialog : public QDialog {
         ~SettingsDialog();
         bool changedAlwaysOnTop() const { return _changedAlwaysOnTop; }
         bool changedAutostart() const { return _changedAutostart; }
+        bool changedForcePlainCopyPaste() const { return _changedForcePlainCopyPaste; }
         bool changedMinimizeToTray() const { return _changedMinimizeToTray; }
         bool changedShowInTaskbar() const { return _changedShowInTaskbar; }
         bool changedShowMarkdown() const { return _changedShowMarkdown; }
@@ -31,6 +32,7 @@ class SettingsDialog : public QDialog {
         void restoreDefaults();
         bool _changedAlwaysOnTop;
         bool _changedAutostart;
+        bool _changedForcePlainCopyPaste;
         bool _changedMinimizeToTray;
         bool _changedShowInTaskbar;
         bool _changedShowMarkdown;
@@ -38,6 +40,7 @@ class SettingsDialog : public QDialog {
         bool _changedUseHtmlByDefault;
         bool _oldAlwaysOnTop;
         bool _oldAutostart;
+        bool _oldForcePlainCopyPaste;
         bool _oldMinimizeToTray;
         bool _oldShowInTaskbar;
         bool _oldShowMarkdown;

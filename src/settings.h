@@ -45,6 +45,10 @@ class Settings {
         static void setDeletionStyle(DeletionStyle newDeletionStyle);
         static DeletionStyle defaultDeletionStyle() { return Settings::DeletionStyle::Delete; }
 
+        static bool forcePlainCopyPaste();
+        static void setForcePlainCopyPaste(bool newForcePlainCopyPaste);
+        static bool defaultForcePlainCopyPaste() { return false; }
+
         static QKeySequence hotkey();
         static void setHotkey(QKeySequence newHotkey);
         static QKeySequence defaultHotkey() {

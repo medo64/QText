@@ -462,7 +462,7 @@ void FileItem::onContextMenuRedo() {
 
 
 void FileItem::onContextMenuCut() {
-    if (type() == FileType::Html) {
+    if (!Settings::forcePlainCopyPaste()) {
         Clipboard::cutHtml(textCursor());
     } else {
         Clipboard::cutPlain(textCursor());
@@ -470,7 +470,7 @@ void FileItem::onContextMenuCut() {
 }
 
 void FileItem::onContextMenuCopy() {
-    if (type() == FileType::Html) {
+    if (!Settings::forcePlainCopyPaste()) {
         Clipboard::copyHtml(textCursor());
     } else {
         Clipboard::copyPlain(textCursor());
@@ -478,7 +478,7 @@ void FileItem::onContextMenuCopy() {
 }
 
 void FileItem::onContextMenuPaste() {
-    if (type() == FileType::Html) {
+    if (!Settings::forcePlainCopyPaste() && (type() == FileType::Html)) {
         Clipboard::pasteHtml(textCursor());
     } else {
         Clipboard::pastePlain(textCursor());

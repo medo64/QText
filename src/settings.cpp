@@ -87,6 +87,15 @@ void Settings::setDeletionStyle(Settings::DeletionStyle newDeletionStyle) {
 }
 
 
+bool Settings::forcePlainCopyPaste() {
+    return Config::read("ForcePlainCopyPaste", defaultForcePlainCopyPaste());
+}
+
+void Settings::setForcePlainCopyPaste(bool newForcePlainCopyPaste) {
+    Config::write("ForcePlainCopyPaste", newForcePlainCopyPaste);
+}
+
+
 QKeySequence Settings::hotkey() {
     QString hotkeyText = Config::read("Hotkey", "");
     if (hotkeyText.length() > 0) {

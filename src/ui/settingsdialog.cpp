@@ -13,6 +13,7 @@ SettingsDialog::SettingsDialog(QWidget* parent) : QDialog(parent), ui(new Ui::Se
 
     _oldAlwaysOnTop = Settings::alwaysOnTop();
     _oldAutostart = Setup::autostart();
+    _oldForcePlainCopyPaste = Settings::forcePlainCopyPaste();
     _oldMinimizeToTray = Settings::minimizeToTray();
     _oldShowInTaskbar = Settings::showInTaskbar();
     _oldShowMarkdown = Settings::showMarkdown();
@@ -61,6 +62,7 @@ void SettingsDialog::onButtonClicked(QAbstractButton* button) {
 void SettingsDialog::reset() {
     ui->checkboxAlwaysOnTop->setChecked(_oldAlwaysOnTop);
     ui->checkboxAutostart->setChecked(_oldAutostart);
+    ui->checkboxForcePlainCopyPaste->setChecked(_oldForcePlainCopyPaste);
     ui->checkboxMinimizeToTray->setChecked(_oldMinimizeToTray);
     ui->checkboxShowInTaskbar->setChecked(_oldShowInTaskbar);
     ui->checkboxShowMarkdown->setChecked(_oldShowMarkdown);
@@ -71,6 +73,7 @@ void SettingsDialog::reset() {
 void SettingsDialog::restoreDefaults() {
     ui->checkboxAlwaysOnTop->setChecked(Settings::defaultAlwaysOnTop());
     ui->checkboxAutostart->setChecked(true);
+    ui->checkboxForcePlainCopyPaste->setChecked(Settings::defaultForcePlainCopyPaste());
     ui->checkboxMinimizeToTray->setChecked(Settings::defaultMinimizeToTray());
     ui->checkboxShowInTaskbar->setChecked(Settings::defaultShowInTaskbar());
     ui->checkboxShowMarkdown->setChecked(Settings::defaultShowMarkdown());
@@ -86,6 +89,10 @@ void SettingsDialog::accept() {
     bool newAutostart = (ui->checkboxAutostart->checkState() == Qt::Checked);
     _changedAutostart = newAutostart != _oldAutostart;
     if (_changedAutostart) { Setup::setAutostart(newAutostart); }
+
+    bool newForcePlainCopyPaste = (ui->checkboxForcePlainCopyPaste->checkState() == Qt::Checked);
+    _changedForcePlainCopyPaste = newForcePlainCopyPaste != _oldForcePlainCopyPaste;
+    if (_changedForcePlainCopyPaste) { Settings::setForcePlainCopyPaste(newForcePlainCopyPaste); }
 
     bool newMinimizeToTray = (ui->checkboxMinimizeToTray->checkState() == Qt::Checked);
     _changedMinimizeToTray = newMinimizeToTray != _oldMinimizeToTray;
