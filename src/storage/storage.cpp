@@ -7,9 +7,6 @@
 #include "storagemonitorlocker.h"
 #include "storagemonitorthread.h"
 
-const QStringList _supportedExtensions = QStringList({".txt", ".md", ".html"});
-const QStringList _supportedExtensionFilters = QStringList({"*.txt", "*.md", "*.html"});
-
 Storage::Storage(const QStringList paths) {
     _monitor = new StorageMonitorThread(paths);
 
@@ -103,14 +100,6 @@ bool Storage::deleteFolder(FolderItem* folder) {
 
 StorageMonitorThread* Storage::monitor() const {
     return _monitor;
-}
-
-QStringList Storage::supportedExtensions() {
-    return _supportedExtensions;
-}
-
-QStringList Storage::supportedExtensionFilters() {
-    return _supportedExtensionFilters;
 }
 
 

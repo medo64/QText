@@ -98,9 +98,9 @@ FileItem* FolderItem::newFile(QString title, FileType type, FileItem* afterItem)
 
     FileItem* file;
     switch (type) {
-        case FileType::Markdown: file = new FileItem(this, Helpers::getFileNameFromTitle(title) + ".md");   break;
-        case FileType::Html:     file = new FileItem(this, Helpers::getFileNameFromTitle(title) + ".html"); break;
-        default:                 file = new FileItem(this, Helpers::getFileNameFromTitle(title) + ".txt");  break;
+        case FileType::Markdown: file = new FileItem(this, Helpers::getFileNameFromTitle(title) + "." + Storage::markdownSuffix());   break;
+        case FileType::Html:     file = new FileItem(this, Helpers::getFileNameFromTitle(title) + "." + Storage::htmlSuffix()); break;
+        default:                 file = new FileItem(this, Helpers::getFileNameFromTitle(title) + "." + Storage::plainSuffix());  break;
     }
 
     if (afterItem == nullptr) {

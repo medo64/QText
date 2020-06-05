@@ -75,9 +75,9 @@ void FileItem::setTitle(QString newTitle) {
 
 FileType FileItem::type() const {
     QFileInfo file(path());
-    if (file.suffix() == "md") {
+    if (file.suffix() == Storage::markdownSuffix()) {
         return FileType::Markdown;
-    } else  if (file.suffix() == "html") {
+    } else  if (file.suffix() == Storage::htmlSuffix()) {
         return FileType::Html;
     } else {
         return FileType::Plain;
@@ -93,13 +93,13 @@ bool FileItem::setType(FileType newType) {
     QString newFileName;
     switch (newType) {
         case FileType::Markdown:
-            newFileName = oldFile.completeBaseName() + ".md";
+            newFileName = oldFile.completeBaseName() + Storage::markdownSuffix();
             break;
         case FileType::Html:
-            newFileName = oldFile.completeBaseName() + ".html";
+            newFileName = oldFile.completeBaseName() + Storage::htmlSuffix();
             break;
         default:
-            newFileName = oldFile.completeBaseName() + ".txt";
+            newFileName = oldFile.completeBaseName() + Storage::plainSuffix();
             break;
     }
     QString newPath = QDir::cleanPath(oldFile.dir().path() + "/" + newFileName);
@@ -116,11 +116,8 @@ bool FileItem::setType(FileType newType) {
 }
 
 QString FileItem::extension() const {
-    switch (type()) {
-        case FileType::Markdown: return ".md";
-        case FileType::Html: return ".html";
-        default: return ".txt";
-    }
+    QFileInfo fileInfo(_fileName);
+    return "." + fileInfo.suffix();
 }
 
 bool FileItem::isModified() const {

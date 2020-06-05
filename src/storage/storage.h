@@ -4,6 +4,12 @@
 #include "folderitem.h"
 #include "storagemonitorthread.h"
 
+const QString _plainSuffix = "txt";
+const QString _htmlSuffix = "html";
+const QString _markdownSuffix = "md";
+const QStringList _supportedExtensions = QStringList({"." + _plainSuffix, "." + _htmlSuffix, "." + _markdownSuffix});
+const QStringList _supportedExtensionFilters = QStringList({"*." + _plainSuffix, "*." + _htmlSuffix, "*." + _markdownSuffix});
+
 class StorageInternal : public QObject { //just to keep private variables not visible to friends
         friend class Storage;
 
@@ -38,8 +44,11 @@ class Storage : public StorageInternal {
         void operator=(const Storage&) = delete;
 
     private:
-        static QStringList supportedExtensions();
-        static QStringList supportedExtensionFilters();
+        static QString plainSuffix() { return _plainSuffix; };
+        static QString htmlSuffix() { return _htmlSuffix; };
+        static QString markdownSuffix() { return _markdownSuffix; };
+        static QStringList supportedExtensions() { return _supportedExtensions; };
+        static QStringList supportedExtensionFilters() { return _supportedExtensionFilters; };
         void addItem(FolderItem* item);
         void removeItemAt(int index);
 
