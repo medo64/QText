@@ -721,6 +721,18 @@ void MainWindow::onFolderMove() {
     }
 }
 
+void MainWindow::onFileConvert() {
+    QAction* action = qobject_cast<QAction*>(sender());
+
+    if ((ui->tabWidget->currentWidget() != nullptr) && (action != nullptr)) {
+        auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+
+        auto type = static_cast<FileType>(action->data().value<int>());
+        file->setType(type);
+        onTextStateChanged();
+    }
+}
+
 
 void MainWindow::onOpenWithDefaultApplication() {
     if (ui->tabWidget->currentWidget() != nullptr) {
@@ -829,6 +841,20 @@ void MainWindow::onTabMenuRequested(const QPoint& point) {
         menu.addSeparator();
         menu.addAction(ui->actionReopen);
         menu.addAction(ui->actionSave);
+
+        auto convertMenu = menu.addMenu("Convert");
+        auto convertToPlainAction = convertMenu->addAction("To Plain", this, &MainWindow::onFileConvert);
+        convertToPlainAction->setEnabled(file->type() != FileType::Plain);
+        convertToPlainAction->setData(static_cast<int>(FileType::Plain));
+        auto convertToHtmlAction = convertMenu->addAction("To HTML", this, &MainWindow::onFileConvert);
+        convertToHtmlAction->setEnabled(file->type() != FileType::Html);
+        convertToHtmlAction->setData(static_cast<int>(FileType::Html));
+        if (Settings::showMarkdown()) {
+            auto convertToMarkdownAction = convertMenu->addAction("To Markdown", this, &MainWindow::onFileConvert);
+            convertToMarkdownAction->setEnabled(file->type() != FileType::Markdown);
+            convertToMarkdownAction->setData(static_cast<int>(FileType::Markdown));
+        }
+
         if (_storage->folderCount() > 1) {
             auto moveMenu = menu.addMenu("Move");
             for (FolderItem* folder : *_storage) {
@@ -838,6 +864,7 @@ void MainWindow::onTabMenuRequested(const QPoint& point) {
                 moveMenu->addAction(folderAction);
             }
         }
+
         menu.addSeparator();
         menu.addAction(ui->actionRename);
         menu.addAction(ui->actionDelete);

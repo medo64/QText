@@ -25,6 +25,7 @@ class FileItem : public QTextEdit {
         QString title() const;
         void setTitle(QString newTitle);
         FileType type() const;
+        bool setType(FileType newType);
         QString extension() const;
         bool isModified() const;
         bool isEmpty() const;

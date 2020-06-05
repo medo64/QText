@@ -67,6 +67,7 @@ class MainWindow : public QMainWindow {
         void onFolderMenuShow();
         void onFolderMenuSelect();
         void onFolderMove();
+        void onFileConvert();
         void onOpenWithDefaultApplication();
         void onOpenWithVisualStudioCode();
         void onShowContainingDirectory();

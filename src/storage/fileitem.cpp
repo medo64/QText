@@ -19,7 +19,6 @@ FileItem::FileItem(FolderItem* folder, QString fileName)
 
     this->setLineWrapMode(Settings::wordWrap() ? QTextEdit::WidgetWidth : QTextEdit::NoWrap);
     this->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
-    this->setAcceptRichText(false);
     this->setFrameStyle(QFrame::NoFrame);
 
     load();
@@ -85,6 +84,37 @@ FileType FileItem::type() const {
     }
 }
 
+bool FileItem::setType(FileType newType) {
+    if (type() == newType) { return true; } //already that type
+    if (!save()) { return false; } //skip if it cannot be saved
+
+    QString oldPath = path();
+    QFileInfo oldFile(oldPath);
+    QString newFileName;
+    switch (newType) {
+        case FileType::Markdown:
+            newFileName = oldFile.completeBaseName() + ".md";
+            break;
+        case FileType::Html:
+            newFileName = oldFile.completeBaseName() + ".html";
+            break;
+        default:
+            newFileName = oldFile.completeBaseName() + ".txt";
+            break;
+    }
+    QString newPath = QDir::cleanPath(oldFile.dir().path() + "/" + newFileName);
+
+    QDir dir;
+    if (dir.rename(oldPath, newPath)) {
+        _fileName = newFileName;
+        save();
+        load();
+        return true;
+    } else {
+        return false;
+    }
+}
+
 QString FileItem::extension() const {
     switch (type()) {
         case FileType::Markdown: return ".md";
@@ -118,12 +148,15 @@ bool FileItem::load() {
             switch (type()) {
                 case FileType::Markdown:
                     document->setMarkdown(contents);
+                    this->setAcceptRichText(false);
                     break;
                 case FileType::Html:
                     document->setHtml(contents);
+                    this->setAcceptRichText(true);
                     break;
                 default:
                     document->setPlainText(contents);
+                    this->setAcceptRichText(false);
                     break;
             }
             file.close();
