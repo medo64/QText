@@ -59,6 +59,7 @@ SOURCES += \
         ui/qtabwidgetex.cpp \
         ui/renamefiledialog.cpp \
         medo/config.cpp \
+        medo/feedback.cpp \
         medo/hotkey.cpp \
         medo/singleinstance.cpp \
         medo/state.cpp \
@@ -88,6 +89,7 @@ HEADERS += \
         ui/qtabwidgetex.h \
         ui/renamefiledialog.h \
         medo/config.h \
+        medo/feedback.h \
         medo/hotkey.h \
         medo/singleinstance.h \
         medo/state.h \

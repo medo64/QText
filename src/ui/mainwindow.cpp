@@ -18,6 +18,7 @@
 #include "storage/storage.h"
 
 #include "medo/config.h"
+#include "medo/feedback.h"
 #include "medo/singleinstance.h"
 #include "medo/state.h"
 
@@ -173,6 +174,12 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     QAction* appSettingsAction = new QAction("&Settings");
     connect(appSettingsAction, &QAction::triggered, this, &MainWindow::onAppSettings);
     _appButton->menu()->addAction(appSettingsAction);
+
+    _appButton->menu()->addSeparator();
+
+    QAction* appFeedbackAction = new QAction("Send &Feedback");
+    connect(appFeedbackAction, &QAction::triggered, this, &MainWindow::onAppFeedback);
+    _appButton->menu()->addAction(appFeedbackAction);
 
     QAction* appAboutAction = new QAction("&About");
     connect(appAboutAction, &QAction::triggered, this, &MainWindow::onAppAbout);
@@ -787,6 +794,10 @@ void MainWindow::onAppSettings() {
         default:
             break;
     }
+}
+
+void MainWindow::onAppFeedback() {
+    Feedback::showDialog(this, QUrl("https://medo64.com/feedback/"));
 }
 
 void MainWindow::onAppAbout() {

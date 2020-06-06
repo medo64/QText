@@ -74,14 +74,15 @@ class MainWindow : public QMainWindow {
         void onShowContainingDirectoryOnly();
         void onCopyContainingPath();
         void onAppSettings();
+        void onAppFeedback();
         void onAppAbout();
+        void onAppQuit();
         void onTabMenuRequested(const QPoint&);
         void onTabChanged();
         void onTabMoved(int from, int to);
         void onTextStateChanged();
         void onTrayActivate(QSystemTrayIcon::ActivationReason reason);
         void onTrayShow();
-        void onAppQuit();
         void onUpdatedFolder(FolderItem* folder);
 
 };
