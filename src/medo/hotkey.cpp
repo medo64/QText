@@ -25,25 +25,26 @@ Hotkey::~Hotkey() {
 }
 
 
-bool Hotkey::registerHotkey(QKeySequence keySequence) {
+bool Hotkey::registerHotkey(QKeySequence key) {
     if (_isRegistered) {
         qDebug().noquote() << "[Hotkey]" << "Hotkey already registered!";
         return false;
     }
 
-    if (keySequence.count() != 1) {
+    if (key.count() != 1) {
         qDebug().noquote() << "[Hotkey]" << "Must have only one key combination!";
         return false;
     }
 
-    auto key = Qt::Key(keySequence[0] & static_cast<int>(~Qt::KeyboardModifierMask));
-    auto modifiers = Qt::KeyboardModifiers(keySequence[0] & static_cast<int>(Qt::KeyboardModifierMask));
+    auto keyboardKey = Qt::Key(key[0] & static_cast<int>(~Qt::KeyboardModifierMask));
+    auto keyboardModifiers = Qt::KeyboardModifiers(key[0] & static_cast<int>(Qt::KeyboardModifierMask));
 
-    bool successful = nativeRegisterHotkey(key, modifiers);
+    bool successful = nativeRegisterHotkey(keyboardKey, keyboardModifiers);
     if (successful) {
+        _key = key;
         _isRegistered = true;
     } else {
-        qDebug().noquote() << "[Hotkey]" << "Failed to register hotkey (" + keySequence.toString() + ")!";
+        qDebug().noquote().nospace() << "[Hotkey] Failed to register hotkey " << key.toString(QKeySequence::PortableText) << "!";
     }
     return successful;
 }
@@ -58,9 +59,17 @@ bool Hotkey::unregisterHotkey() {
     if (successful) {
         _isRegistered = false;
     } else {
-        qDebug().noquote() << "[Hotkey]" << "Failed to deregister hotkey!";
+        qDebug().noquote() << "[Hotkey]" << "Failed to deregister hotkey" << _key.toString(QKeySequence::PortableText) << "!";
     }
     return successful;
+}
+
+void Hotkey::suspend() {
+    ++suspensionLevel;
+}
+
+void Hotkey::resume() {
+    --suspensionLevel;
 }
 
 
@@ -111,8 +120,14 @@ bool Hotkey::nativeEventFilter(const QByteArray&, void* message, long*) {
     MSG* msg = static_cast<MSG*>(message);
     if (msg->message == WM_HOTKEY) {
         if (msg->wParam == static_cast<WPARAM>(_hotkeyId)) {
-            emit activated();
-            return true;
+            if (suspensionLevel <= 0) {
+                qDebug().noquote() << "[Hotkey]" << "Hotkey" << _key.toString(QKeySequence::PortableText) << "detected";
+                emit activated();
+                return true;
+            } else {
+                qDebug().noquote() << "[Hotkey]" << "Hotkey" << _key.toString(QKeySequence::PortableText) << "ignored";
+                return false;
+            }
         }
     }
     return false;
@@ -189,9 +204,14 @@ bool Hotkey::nativeEventFilter(const QByteArray&, void* message, long*) {
         xcb_keycode_t keyValue = ke->detail;
         uint16_t modValue = ke->state & (XCB_MOD_MASK_SHIFT | XCB_MOD_MASK_CONTROL | XCB_MOD_MASK_1 | XCB_MOD_MASK_4); //xmodmap -pm (to see masks: default 1 Alt, 4 Super)
         if ((_hotkeyMods == modValue) && (_hotkeyKey == keyValue)) {
-            qDebug().noquote() << "[Hotkey]" << "Hotkey detected";
-            emit activated();
-            return true;
+            if (suspensionLevel <= 0) {
+                qDebug().noquote() << "[Hotkey]" << "Hotkey" << _key.toString(QKeySequence::PortableText) << "detected";
+                emit activated();
+                return true;
+            } else {
+                qDebug().noquote() << "[Hotkey]" << "Hotkey" << _key.toString(QKeySequence::PortableText) << "ignored";
+                return false;
+            }
         }
     }
     return false;

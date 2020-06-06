@@ -7,13 +7,16 @@
 #include "settings.h"
 #include "setup.h"
 
-SettingsDialog::SettingsDialog(QWidget* parent) : QDialog(parent), ui(new Ui::SettingsDialog) {
+SettingsDialog::SettingsDialog(QWidget* parent, Hotkey* hotkey) : QDialog(parent), ui(new Ui::SettingsDialog) {
     ui->setupUi(this);
     Helpers::setupFixedSizeDialog(this);
+
+    ui->editHotkey->setHotkey(hotkey, Settings::hotkey());
 
     _oldAlwaysOnTop = Settings::alwaysOnTop();
     _oldAutostart = Setup::autostart();
     _oldForcePlainCopyPaste = Settings::forcePlainCopyPaste();
+    _oldHotkey = Settings::hotkey();
     _oldMinimizeToTray = Settings::minimizeToTray();
     _oldShowInTaskbar = Settings::showInTaskbar();
     _oldShowMarkdown = Settings::showMarkdown();
@@ -63,6 +66,7 @@ void SettingsDialog::reset() {
     ui->checkboxAlwaysOnTop->setChecked(_oldAlwaysOnTop);
     ui->checkboxAutostart->setChecked(_oldAutostart);
     ui->checkboxForcePlainCopyPaste->setChecked(_oldForcePlainCopyPaste);
+    ui->editHotkey->setNewKey(_oldHotkey);
     ui->checkboxMinimizeToTray->setChecked(_oldMinimizeToTray);
     ui->checkboxShowInTaskbar->setChecked(_oldShowInTaskbar);
     ui->checkboxShowMarkdown->setChecked(_oldShowMarkdown);
@@ -74,6 +78,7 @@ void SettingsDialog::restoreDefaults() {
     ui->checkboxAlwaysOnTop->setChecked(Settings::defaultAlwaysOnTop());
     ui->checkboxAutostart->setChecked(true);
     ui->checkboxForcePlainCopyPaste->setChecked(Settings::defaultForcePlainCopyPaste());
+    ui->editHotkey->setNewKey(Settings::defaultHotkey());
     ui->checkboxMinimizeToTray->setChecked(Settings::defaultMinimizeToTray());
     ui->checkboxShowInTaskbar->setChecked(Settings::defaultShowInTaskbar());
     ui->checkboxShowMarkdown->setChecked(Settings::defaultShowMarkdown());
@@ -93,6 +98,10 @@ void SettingsDialog::accept() {
     bool newForcePlainCopyPaste = (ui->checkboxForcePlainCopyPaste->checkState() == Qt::Checked);
     _changedForcePlainCopyPaste = newForcePlainCopyPaste != _oldForcePlainCopyPaste;
     if (_changedForcePlainCopyPaste) { Settings::setForcePlainCopyPaste(newForcePlainCopyPaste); }
+
+    QKeySequence newHotkey = ui->editHotkey->newKey();
+    _changedHotkey = (newHotkey != 0) && (newHotkey != _oldHotkey);
+    if (_changedHotkey) { Settings::setHotkey(newHotkey); }
 
     bool newMinimizeToTray = (ui->checkboxMinimizeToTray->checkState() == Qt::Checked);
     _changedMinimizeToTray = newMinimizeToTray != _oldMinimizeToTray;

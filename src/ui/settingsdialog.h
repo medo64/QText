@@ -1,7 +1,7 @@
 #pragma once
-
 #include <QAbstractButton>
 #include <QDialog>
+#include "medo/hotkey.h"
 
 namespace Ui {
     class SettingsDialog;
@@ -11,11 +11,12 @@ class SettingsDialog : public QDialog {
         Q_OBJECT
 
     public:
-        explicit SettingsDialog(QWidget* parent = nullptr);
+        explicit SettingsDialog(QWidget* parent = nullptr, Hotkey* hotkey = nullptr);
         ~SettingsDialog();
         bool changedAlwaysOnTop() const { return _changedAlwaysOnTop; }
         bool changedAutostart() const { return _changedAutostart; }
         bool changedForcePlainCopyPaste() const { return _changedForcePlainCopyPaste; }
+        bool changedHotkey() const { return _changedHotkey; }
         bool changedMinimizeToTray() const { return _changedMinimizeToTray; }
         bool changedShowInTaskbar() const { return _changedShowInTaskbar; }
         bool changedShowMarkdown() const { return _changedShowMarkdown; }
@@ -33,6 +34,7 @@ class SettingsDialog : public QDialog {
         bool _changedAlwaysOnTop;
         bool _changedAutostart;
         bool _changedForcePlainCopyPaste;
+        bool _changedHotkey;
         bool _changedMinimizeToTray;
         bool _changedShowInTaskbar;
         bool _changedShowMarkdown;
@@ -41,6 +43,7 @@ class SettingsDialog : public QDialog {
         bool _oldAlwaysOnTop;
         bool _oldAutostart;
         bool _oldForcePlainCopyPaste;
+        QKeySequence _oldHotkey;
         bool _oldMinimizeToTray;
         bool _oldShowInTaskbar;
         bool _oldShowMarkdown;

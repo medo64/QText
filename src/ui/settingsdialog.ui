@@ -104,7 +104,21 @@
         </widget>
        </item>
        <item>
-        <spacer name="verticalSpacerSystem">
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QLabel" name="labelHotkey">
+           <property name="text">
+            <string>Hotkey:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="HotkeyEdit" name="editHotkey"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_3">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
@@ -162,6 +176,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>HotkeyEdit</class>
+   <extends>QLineEdit</extends>
+   <header>ui/hotkeyedit.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>

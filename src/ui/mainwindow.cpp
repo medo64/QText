@@ -783,16 +783,15 @@ void MainWindow::onCopyContainingPath() {
 }
 
 void MainWindow::onAppSettings() {
-    auto dialog = new SettingsDialog(this);
-    switch (dialog->exec()) {
-        case QDialog::Accepted:
-            applySettings(dialog->changedShowInTaskbar(), dialog->changedTabTextColorPerType());
-            this->show(); //to show window after setWindowFlag
-            this->activateWindow();
-            break;
-
-        default:
-            break;
+    auto dialog = new SettingsDialog(this, _hotkey);
+    if (dialog->exec() == QDialog::Accepted) {
+        applySettings(dialog->changedShowInTaskbar(), dialog->changedTabTextColorPerType());
+        this->show(); //to show window after setWindowFlag
+        this->activateWindow();
+        if (dialog->changedHotkey()) { //just register again with the new key
+            _hotkey->unregisterHotkey();
+            _hotkey->registerHotkey(Settings::hotkey());
+        }
     }
 }
 

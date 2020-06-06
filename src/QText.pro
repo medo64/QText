@@ -51,6 +51,7 @@ SOURCES += \
         ui/finddialog.cpp \
         ui/foldersdialog.cpp \
         ui/gotodialog.cpp \
+        ui/hotkeyedit.cpp \
         ui/inserttimedialog.cpp \
         ui/settingsdialog.cpp \
         ui/mainwindow.cpp \
@@ -81,6 +82,7 @@ HEADERS += \
         ui/finddialog.h \
         ui/foldersdialog.h \
         ui/gotodialog.h \
+        ui/hotkeyedit.h \
         ui/inserttimedialog.h \
         ui/settingsdialog.h \
         ui/mainwindow.h \

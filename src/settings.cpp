@@ -114,7 +114,7 @@ QKeySequence Settings::hotkey() {
 
 void Settings::setHotkey(QKeySequence newHotkey) {
     QString hotkeyText { newHotkey.toString(QKeySequence::PortableText) };
-    Config::write("DataPath", hotkeyText);
+    Config::write("Hotkey", hotkeyText);
 }
 
 
