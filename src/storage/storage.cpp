@@ -1,5 +1,6 @@
 #include <QDebug>
 #include <QDir>
+#include "deletion.h"
 #include "fileitem.h"
 #include "folderitem.h"
 #include "helpers.h"
@@ -80,18 +81,22 @@ FolderItem* Storage::newFolder(QString proposedTitle) {
     return newFolder;
 }
 
-bool Storage::deleteFolder(FolderItem* folder) {
+bool Storage::deleteFolder(FolderItem* folder, DeletionStyle deletionStyle) {
     StorageMonitorLocker lockMonitor(monitor());
 
     for (int i = 0; i < _folders.count(); i++) {
         FolderItem* iFolder = _folders[i];
-        if (iFolder->isRoot()) { continue; } //skip root folders
         if (iFolder == folder) {
-            QDir directory(iFolder->path());
-            if (directory.removeRecursively()) {
-                removeItemAt(i);
-                return true;
+            bool deleteSuccessful;
+            switch (deletionStyle) {
+                case DeletionStyle::Recycle:   deleteSuccessful = Deletion::recycleFolder(folder); break;
+                case DeletionStyle::Overwrite: deleteSuccessful = Deletion::overwriteFolder(folder); break;
+                default:                       deleteSuccessful = Deletion::deleteFolder(folder); break;
             }
+            if (deleteSuccessful) {
+                removeItemAt(i);
+            }
+            return deleteSuccessful;
         }
     }
 

@@ -98,3 +98,24 @@ bool Deletion::recycleFile(FileItem* file) {
     return osFile.remove();
 #endif
 }
+
+
+bool Deletion::deleteFolder(FolderItem* folder) {
+    if (folder->isRoot()) { return false; } //cannot delete root folders
+    QDir directory(folder->path());
+    return  directory.removeRecursively();
+}
+
+bool Deletion::overwriteFolder(FolderItem* folder) {
+    for (auto file : *folder) {
+        overwriteFile(file);
+    }
+    return deleteFolder(folder);
+}
+
+bool Deletion::recycleFolder(FolderItem* folder) {
+    for (auto file : *folder) {
+        recycleFile(file);
+    }
+    return deleteFolder(folder);
+}

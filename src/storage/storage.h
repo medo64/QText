@@ -32,7 +32,7 @@ class Storage : public StorageInternal {
         FolderItem* folderFromKey(QUuid key) const;
         FolderItem* baseFolder() const;
         FolderItem* newFolder(QString title);
-        bool deleteFolder(FolderItem* folder);
+        bool deleteFolder(FolderItem* folder, DeletionStyle deletionStyle);
         StorageMonitorThread* monitor() const;
 
     public:

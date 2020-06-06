@@ -9,5 +9,8 @@ class Deletion {
         static bool deleteFile(FileItem* file);
         static bool overwriteFile(FileItem* file);
         static bool recycleFile(FileItem* file);
+        static bool deleteFolder(FolderItem* folder);
+        static bool overwriteFolder(FolderItem* folder);
+        static bool recycleFolder(FolderItem* folder);
 
 };

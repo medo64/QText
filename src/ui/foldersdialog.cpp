@@ -90,7 +90,7 @@ void FoldersDialog::onDelete() {
             if (msgBox.exec() != QMessageBox::Yes) { return; }
         }
         if (_selectedFolder == folder) { _selectedFolder = _storage->baseFolder(); }
-        if (_storage->deleteFolder(folder)) {
+        if (_storage->deleteFolder(folder, Settings::deletionSyle())) {
             QListWidgetItem* itemToDelete = ui->listWidget->takeItem(ui->listWidget->currentRow());
             delete itemToDelete;
         }
