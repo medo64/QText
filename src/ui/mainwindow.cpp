@@ -145,13 +145,13 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     QWidget* spacerWidget = new QWidget(this);
     spacerWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     spacerWidget->setVisible(true);
-    ui->mainToolBar->addWidget(spacerWidget);
+    ui->mainToolBar->addWidget(spacerWidget)->setPriority(QAction::HighPriority);
 
     //folder button menu
     _folderButton = new QToolButton();
     _folderButton->setPopupMode(QToolButton::MenuButtonPopup);
     _folderButton->setMenu(new QMenu());
-    ui->mainToolBar->addWidget(_folderButton);
+    ui->mainToolBar->addWidget(_folderButton)->setPriority(QAction::HighPriority);
     connect(_folderButton, &QToolButton::clicked, this, &MainWindow::onFolderSetup);
     connect(_folderButton->menu(), &QMenu::aboutToShow, this, &MainWindow::onFolderMenuShow);
 
@@ -191,7 +191,7 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     connect(appQuitAction, &QAction::triggered, this, &MainWindow::onAppQuit);
     _appButton->menu()->addAction(appQuitAction);
 
-    ui->mainToolBar->addWidget(_appButton);
+    ui->mainToolBar->addWidget(_appButton)->setPriority(QAction::HighPriority);
 
     //tabs
     ui->tabWidget->setContextMenuPolicy(Qt::CustomContextMenu);
