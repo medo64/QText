@@ -14,10 +14,10 @@ class FolderItem;
 
 class FileItem : public QTextEdit {
         Q_OBJECT
+        friend class FolderItem;
+        friend class Storage;
 
     public:
-        FileItem(FolderItem* folder, QString fileName);
-        ~FileItem();
         FolderItem* folder() const;
         QUuid key() const { return _key; }
         QString name() const;
@@ -44,6 +44,8 @@ class FileItem : public QTextEdit {
         void wheelEvent(QWheelEvent* e);
 
     private:
+        FileItem(FolderItem* folder, QString fileName);
+        ~FileItem();
         QUuid _key = QUuid::createUuid();
         FolderItem* _folder = nullptr;
         QString _fileName;

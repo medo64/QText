@@ -30,8 +30,6 @@ class FolderItem : public FolderItemInternal {
         friend class Storage;
 
     public:
-        FolderItem(Storage* storage, FolderItem* rootFolder, const int pathIndex, const QString directoryBase, const QString directoryName);
-        ~FolderItem();
         FolderItem* rootFolder() const;
         QUuid key() const { return _key; }
         QString name() const;
@@ -58,6 +56,8 @@ class FolderItem : public FolderItemInternal {
         void operator=(const FolderItem&) = delete;
 
     private:
+        FolderItem(Storage* storage, FolderItem* rootFolder, const int pathIndex, const QString directoryBase, const QString directoryName);
+        ~FolderItem();
         void addItem(FileItem* item);
         void addItemAfter(FileItem* item, FileItem* afterItem);
         bool removeItem(FileItem* item);
