@@ -11,6 +11,7 @@ StorageMonitorThread::StorageMonitorThread(QStringList paths) {
 
 StorageMonitorThread::~StorageMonitorThread() {
     this->requestInterruption();
+    this->wait();
 }
 
 

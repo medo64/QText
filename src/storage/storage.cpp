@@ -35,6 +35,14 @@ Storage::Storage(const QStringList paths) {
     connect(_monitor, &StorageMonitorThread::fileRemoved, this, &Storage::onFileRemoved);
 }
 
+Storage::~Storage() {
+    delete _monitor;
+    for (auto folder : _folders) {
+        delete folder;
+    }
+    QObject::deleteLater();
+}
+
 
 int Storage::folderCount() const {
     return _folders.size();
@@ -101,6 +109,14 @@ bool Storage::deleteFolder(FolderItem* folder, DeletionStyle deletionStyle) {
     }
 
     return false;
+}
+
+bool Storage::saveAll() {
+    bool allSaved = true;
+    for (auto folder : _folders) {
+        allSaved = allSaved  && folder->saveAll();
+    }
+    return allSaved;
 }
 
 StorageMonitorThread* Storage::monitor() const {

@@ -15,6 +15,7 @@ class SettingsDialog : public QDialog {
         ~SettingsDialog();
         bool changedAlwaysOnTop() const { return _changedAlwaysOnTop; }
         bool changedAutostart() const { return _changedAutostart; }
+        bool changedDataPath() const { return _changedDataPath; }
         bool changedForcePlainCopyPaste() const { return _changedForcePlainCopyPaste; }
         bool changedHotkey() const { return _changedHotkey; }
         bool changedMinimizeToTray() const { return _changedMinimizeToTray; }
@@ -33,6 +34,7 @@ class SettingsDialog : public QDialog {
         void restoreDefaults();
         bool _changedAlwaysOnTop;
         bool _changedAutostart;
+        bool _changedDataPath;
         bool _changedForcePlainCopyPaste;
         bool _changedHotkey;
         bool _changedMinimizeToTray;
@@ -42,6 +44,7 @@ class SettingsDialog : public QDialog {
         bool _changedUseHtmlByDefault;
         bool _oldAlwaysOnTop;
         bool _oldAutostart;
+        QString _oldDataPath;
         bool _oldForcePlainCopyPaste;
         QKeySequence _oldHotkey;
         bool _oldMinimizeToTray;
@@ -52,5 +55,6 @@ class SettingsDialog : public QDialog {
 
     private slots:
         void onButtonClicked(QAbstractButton* button);
+        void onDataPathClicked();
 
 };

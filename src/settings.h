@@ -28,8 +28,11 @@ class Settings {
             }
         }
 
+        static QString dataPath();
+        static void setDataPath(QString newPath);
+        static QString defaultDataPath() { return defaultDataPaths()[0]; }
         static QStringList dataPaths();
-        static void setDataPaths(QStringList newPath);
+        static void setDataPaths(QStringList newPaths);
         static QStringList defaultDataPaths() { return QStringList(Config::dataDirectory()); }
 
         static FileType defaultFileType();

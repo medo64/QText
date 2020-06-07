@@ -35,6 +35,17 @@ void Settings::setColorTrayIcon(bool newColorTrayIcon) {
 }
 
 
+QString Settings::dataPath() { //return only the first directory
+    auto paths = dataPaths();
+    return paths[0];
+}
+
+void Settings::setDataPath(QString newPath) { //set only the first directory, leaving other entries unchanged
+    auto paths = dataPaths();
+    paths[0] = newPath;
+    setDataPaths(paths);
+}
+
 QStringList Settings::dataPaths() {
     QStringList paths = Config::readMany("DataPath", defaultDataPaths());
     QStringList cleanedPaths;

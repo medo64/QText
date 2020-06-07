@@ -25,6 +25,12 @@ FolderItem::FolderItem(Storage* storage, FolderItem* rootFolder, const int pathI
     loadOrdering();
 }
 
+FolderItem::~FolderItem() {
+    for (auto file : _files) {
+        file->deleteLater();
+    }
+}
+
 
 FolderItem* FolderItem::rootFolder() const {
     return _rootFolder;

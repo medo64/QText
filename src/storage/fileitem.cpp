@@ -33,6 +33,7 @@ FileItem::FileItem(FolderItem* folder, QString fileName)
 }
 
 FileItem::~FileItem() {
+    QTextEdit::deleteLater();
 }
 
 

@@ -1,3 +1,4 @@
+#include <QFileDialog>
 #include <QKeyEvent>
 #include <QPushButton>
 #include "settingsdialog.h"
@@ -10,11 +11,13 @@
 SettingsDialog::SettingsDialog(QWidget* parent, Hotkey* hotkey) : QDialog(parent), ui(new Ui::SettingsDialog) {
     ui->setupUi(this);
     Helpers::setupFixedSizeDialog(this);
+    Helpers::setReadonlyPalette(ui->editDataPath);
 
     ui->editHotkey->setHotkey(hotkey, Settings::hotkey());
 
     _oldAlwaysOnTop = Settings::alwaysOnTop();
     _oldAutostart = Setup::autostart();
+    _oldDataPath = Settings::dataPath();
     _oldForcePlainCopyPaste = Settings::forcePlainCopyPaste();
     _oldHotkey = Settings::hotkey();
     _oldMinimizeToTray = Settings::minimizeToTray();
@@ -23,7 +26,9 @@ SettingsDialog::SettingsDialog(QWidget* parent, Hotkey* hotkey) : QDialog(parent
     _oldTabTextColorPerType = Settings::tabTextColorPerType();
     _oldUseHtmlByDefault = (Settings::defaultFileType() == FileType::Html); //ignoring markdown
 
-    connect(ui->buttonBox, &QDialogButtonBox::clicked, this,  &SettingsDialog::onButtonClicked);
+    connect(ui->buttonBox, &QDialogButtonBox::clicked, this, &SettingsDialog::onButtonClicked);
+    connect(ui->buttonDataPath, &QToolButton::clicked, this, &SettingsDialog::onDataPathClicked);
+
     reset();
 }
 
@@ -65,6 +70,7 @@ void SettingsDialog::onButtonClicked(QAbstractButton* button) {
 void SettingsDialog::reset() {
     ui->checkboxAlwaysOnTop->setChecked(_oldAlwaysOnTop);
     ui->checkboxAutostart->setChecked(_oldAutostart);
+    ui->editDataPath->setText(QDir::toNativeSeparators(Settings::dataPath()));
     ui->checkboxForcePlainCopyPaste->setChecked(_oldForcePlainCopyPaste);
     ui->editHotkey->setNewKey(_oldHotkey);
     ui->checkboxMinimizeToTray->setChecked(_oldMinimizeToTray);
@@ -77,6 +83,7 @@ void SettingsDialog::reset() {
 void SettingsDialog::restoreDefaults() {
     ui->checkboxAlwaysOnTop->setChecked(Settings::defaultAlwaysOnTop());
     ui->checkboxAutostart->setChecked(true);
+    ui->editDataPath->setText(QDir::toNativeSeparators(Settings::defaultDataPath()));
     ui->checkboxForcePlainCopyPaste->setChecked(Settings::defaultForcePlainCopyPaste());
     ui->editHotkey->setNewKey(Settings::defaultHotkey());
     ui->checkboxMinimizeToTray->setChecked(Settings::defaultMinimizeToTray());
@@ -94,6 +101,11 @@ void SettingsDialog::accept() {
     bool newAutostart = (ui->checkboxAutostart->checkState() == Qt::Checked);
     _changedAutostart = newAutostart != _oldAutostart;
     if (_changedAutostart) { Setup::setAutostart(newAutostart); }
+
+    QString newDataDirectory = QDir::fromNativeSeparators(ui->editDataPath->text());
+    if (newDataDirectory.isEmpty()) { newDataDirectory = _oldDataPath; } //if empty, just ignore the new one
+    _changedDataPath = newDataDirectory != _oldDataPath;
+    if (_changedDataPath) { Settings::setDataPath(newDataDirectory); }
 
     bool newForcePlainCopyPaste = (ui->checkboxForcePlainCopyPaste->checkState() == Qt::Checked);
     _changedForcePlainCopyPaste = newForcePlainCopyPaste != _oldForcePlainCopyPaste;
@@ -124,4 +136,12 @@ void SettingsDialog::accept() {
     if (_changedUseHtmlByDefault) { Settings::setDefaultFileType(newUseHtmlByDefault ? FileType::Html : FileType::Plain); }
 
     QDialog::accept();
+}
+
+
+void SettingsDialog::onDataPathClicked() {
+    QString newDataPath = QFileDialog::getExistingDirectory(this, "Select data directory", _oldDataPath, QFileDialog::ShowDirsOnly);
+    if (!newDataPath.isNull()) {
+        ui->editDataPath->setText(QDir::toNativeSeparators(newDataPath));
+    }
 }

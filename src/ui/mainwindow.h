@@ -33,7 +33,8 @@ class MainWindow : public QMainWindow {
         QToolButton* _folderButton = nullptr;
         QToolButton* _appButton = nullptr;
         Hotkey* _hotkey = nullptr;
-        void applySettings(bool applyShowInTaskbar = true, bool applyTabTextColorPerType = true);
+        void applySettings() { applySettings(true, true, false, false); }
+        void applySettings(bool applyShowInTaskbar, bool applyTabTextColorPerType, bool applyHotkey, bool applyDataPath);
         bool selectFolder(QString folderName);
         bool selectFolder(FolderItem* folder);
         void selectFile(QString fileName);

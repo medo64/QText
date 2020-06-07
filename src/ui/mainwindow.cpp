@@ -785,13 +785,12 @@ void MainWindow::onCopyContainingPath() {
 void MainWindow::onAppSettings() {
     auto dialog = new SettingsDialog(this, _hotkey);
     if (dialog->exec() == QDialog::Accepted) {
-        applySettings(dialog->changedShowInTaskbar(), dialog->changedTabTextColorPerType());
+        applySettings(dialog->changedShowInTaskbar(),
+                      dialog->changedTabTextColorPerType(),
+                      dialog->changedHotkey(),
+                      dialog->changedDataPath());
         this->show(); //to show window after setWindowFlag
         this->activateWindow();
-        if (dialog->changedHotkey()) { //just register again with the new key
-            _hotkey->unregisterHotkey();
-            _hotkey->registerHotkey(Settings::hotkey());
-        }
     }
 }
 
@@ -1051,7 +1050,22 @@ void MainWindow::selectFile(FileItem* file) {
     }
 }
 
-void MainWindow::applySettings(bool applyShowInTaskbar, bool applyTabTextColorPerType) {
+void MainWindow::applySettings(bool applyShowInTaskbar, bool applyTabTextColorPerType, bool applyHotkey, bool applyDataPath) {
+    if (applyDataPath) {
+        _storage->saveAll();
+        ui->tabWidget->clear();
+        _storage->deleteLater();
+
+        _storage = new Storage(Settings::dataPaths());
+        selectFolder(_storage->folderAt(0));
+        connect(_storage, &Storage::updatedFolder, this, &MainWindow::onUpdatedFolder);
+    }
+
+    if (applyHotkey) { //just register again with the new key
+        _hotkey->unregisterHotkey();
+        _hotkey->registerHotkey(Settings::hotkey());
+    }
+
     if (applyShowInTaskbar) {
         if (!Settings::showInTaskbar()) {
             setWindowFlag(Qt::Tool);

@@ -31,6 +31,7 @@ class FolderItem : public FolderItemInternal {
 
     public:
         FolderItem(Storage* storage, FolderItem* rootFolder, const int pathIndex, const QString directoryBase, const QString directoryName);
+        ~FolderItem();
         FolderItem* rootFolder() const;
         QUuid key() const { return _key; }
         QString name() const;
