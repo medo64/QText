@@ -1,6 +1,13 @@
 ## Release Notes ##
 
 
+### 0.1.12 [2020-06-07] ###
+
+* Added Html support
+* Added option to change path and hotkey
+* Bugfixing
+
+
 ### 0.1.11 [2020-05-17] ###
 
 * Added file system update checks
