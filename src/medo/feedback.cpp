@@ -27,6 +27,7 @@ bool Feedback::showDialog(QWidget* parent, QUrl url) {
                      ? QDesktopWidget().availableGeometry(parent)
                      : QGuiApplication::primaryScreen()->availableGeometry();
     int dialogWidth = geometry.width() / 4;
+    if (dialogWidth < 480) { dialogWidth = 480; }
 
     QDialog dialog(parent);
     dialog.resize(dialogWidth, 1);
@@ -78,6 +79,7 @@ bool Feedback::showDialog(QWidget* parent, QUrl url) {
 #endif
     textAdditionalData.appendPlainText("o Qt " + QString(qVersion()) + " (" + APP_QT_VERSION + ")");
     textAdditionalData.appendPlainText("o " + QSysInfo::prettyProductName() + " (" + QSysInfo::kernelType() + " " + QSysInfo::kernelVersion() + ")");
+    textAdditionalData.setTextCursor(QTextCursor());
     layout.addWidget(&textAdditionalData);
 
     QCheckBox checkAdditionalData;
@@ -132,7 +134,7 @@ bool Feedback::showDialog(QWidget* parent, QUrl url) {
 
             QDialogButtonBox buttonsProgress;
             buttonsProgress.setOrientation(Qt::Horizontal);
-            buttonsProgress.setStandardButtons(QDialogButtonBox::Ok);
+            buttonsProgress.setStandardButtons(successful ? QDialogButtonBox::Ok : QDialogButtonBox::Close);
             layoutProgress.addWidget(&buttonsProgress);
 
             QObject::connect(&buttonsProgress, &QDialogButtonBox::accepted, &progressDialog, &QDialog::accept);
@@ -180,6 +182,19 @@ bool Feedback::sendFeedback(QString message, QString senderEmail, QString sender
         qDebug().noquote().nospace() << "[Feedback] Post result is" << reply->error() << " (" << reply->errorString() << ")";
     }
     _errorMessage = reply->errorString();
+    if (successful) {
+        auto statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+        if (statusCode.isValid()) {
+            auto statusCodeReason = reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute);
+            if (statusCodeReason.isValid()){
+                _errorMessage = "Status code: " + statusCodeReason.toString() + ".";
+            } else {
+                _errorMessage = "Status code: " + QString::number(statusCode.toInt()) + ".";
+            }
+            successful = false;
+        }
+    }
     delete reply;
+
     return successful;
 }
