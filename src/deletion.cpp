@@ -77,8 +77,8 @@ bool Deletion::recycleFile(FileItem* file) {
         return osFile.remove();
     }
 
-    QFileInfo file(path);
-    QFileInfo trashBaseFile(QDir::cleanPath(trashDir.path() + "/" + file.fileName()));
+    QFileInfo fileInfo(path);
+    QFileInfo trashBaseFile(QDir::cleanPath(trashDir.path() + "/" + fileInfo.fileName()));
     QString trashPath = trashBaseFile.path();
     for (int i = 2; i < 100; i++) { //check for duplicates up to 100 times, then give up and overwrite
         if (!QFile::exists(trashPath)) { break; }
