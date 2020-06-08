@@ -118,7 +118,7 @@ if [[ "$BUILD" != "" ]]; then
             cp $QMAKE_DIR/Qt5PrintSupport.dll ../bin/
             cp $QMAKE_DIR/Qt5Widgets.dll      ../bin/
 
-            if [[ "$CERTIFICATE_THUMBPRINT" != "" ]]; then
+            if [[ "$CERTIFICATE_THUMBPRINT" != "" ]] && [[ -f "$CMD_SIGNTOOL" ]]; then
                 echo
                 if [[ "$TIMESTAMP_URL" != "" ]]; then
                     "$CMD_SIGNTOOL" sign -s "My" -sha1 $CERTIFICATE_THUMBPRINT -tr $TIMESTAMP_URL -v ../bin/QText.exe
@@ -148,7 +148,7 @@ if [[ "$BUILD" != "" ]]; then
                 if [[ $? -eq 0 ]]; then
                     LAST_PACKAGE=`ls -t dist/*.exe | head -1`
 
-                    if [[ "$CERTIFICATE_THUMBPRINT" != "" ]]; then
+                    if [[ "$CERTIFICATE_THUMBPRINT" != "" ]] && [[ -f "$CMD_SIGNTOOL" ]]; then
                         echo
                         if [[ "$TIMESTAMP_URL" != "" ]]; then
                             "$CMD_SIGNTOOL" sign -s "My" -sha1 $CERTIFICATE_THUMBPRINT -tr $TIMESTAMP_URL -v $LAST_PACKAGE
