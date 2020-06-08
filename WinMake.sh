@@ -92,6 +92,7 @@ HAS_UNCOMMITTED_RESULT=`git diff --quiet ; echo $?`
 
 rm bin/* 2> /dev/null
 rm -r bin/platforms 2> /dev/null
+rm -r bin/styles 2> /dev/null
 mkdir -p bin
 rm -R build/ 2> /dev/null
 mkdir -p build
@@ -128,6 +129,9 @@ if [[ "$BUILD" != "" ]]; then
 
             mkdir ../bin/platforms
             cp $QMAKE_DIR/../plugins/platforms/qwindows.dll ../bin/platforms/
+
+            mkdir ../bin/styles
+            cp $QMAKE_DIR/../plugins/styles/qwindowsvistastyle.dll ../bin/styles/
 
             if [[ "$CERTIFICATE_THUMBPRINT" != "" ]] && [[ -f "$CMD_SIGNTOOL" ]]; then
                 echo
@@ -190,6 +194,9 @@ if [[ "$BUILD" != "" ]]; then
 
             mkdir ../bin/platforms
             cp $QMAKE_DIR/../plugins/platforms/qwindows.dll ../bin/platforms/
+
+            mkdir ../bin/styles
+            cp $QMAKE_DIR/../plugins/styles/qwindowsvistastyle.dll ../bin/styles/
 
             echo -e "${ESCAPE_RESULT}Debug build completed.${ESCAPE_RESET}" >&2
             ;;
