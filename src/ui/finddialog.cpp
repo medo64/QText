@@ -24,7 +24,7 @@ FindDialog::FindDialog(QWidget* parent) : QDialog(parent), ui(new Ui::FindDialog
         onHistorySelected();
     }
 
-    connect(ui->comboSearch, QOverload<const QString&>::of(&QComboBox::currentIndexChanged), this, &FindDialog::onHistorySelected);
+    connect(ui->comboSearch, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &FindDialog::onHistorySelected);
     connect(ui->comboSearch, &QComboBox::editTextChanged, this, &FindDialog::onStateChanged);
     connect(ui->checkMatchCase, &QCheckBox::stateChanged, this, &FindDialog::onStateChanged);
     connect(ui->checkWholeWord, &QCheckBox::stateChanged, this, &FindDialog::onStateChanged);
