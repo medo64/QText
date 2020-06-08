@@ -178,11 +178,11 @@ if [[ "$BUILD" != "" ]]; then
             cp $QMAKE_DIR/libgcc_s_seh-1.dll   ../bin/
             cp $QMAKE_DIR/libstdc++-6.dll      ../bin/
             cp $QMAKE_DIR/libwinpthread-1.dll  ../bin/
-            cp $QMAKE_DIR/Qt5Cored.dll         ../bin/
-            cp $QMAKE_DIR/Qt5Guid.dll          ../bin/
-            cp $QMAKE_DIR/Qt5Networkd.dll      ../bin/
-            cp $QMAKE_DIR/Qt5PrintSupportd.dll ../bin/
-            cp $QMAKE_DIR/Qt5Widgetsd.dll      ../bin/
+            cp $QMAKE_DIR/Qt5Core.dll          ../bin/
+            cp $QMAKE_DIR/Qt5Gui.dll           ../bin/
+            cp $QMAKE_DIR/Qt5Network.dll       ../bin/
+            cp $QMAKE_DIR/Qt5PrintSupport.dll  ../bin/
+            cp $QMAKE_DIR/Qt5Widgets.dll       ../bin/
 
             echo -e "${ESCAPE_RESULT}Debug build completed.${ESCAPE_RESET}" >&2
             ;;
