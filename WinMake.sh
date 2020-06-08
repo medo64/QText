@@ -7,6 +7,7 @@ TIMESTAMP_URL="http://timestamp.comodoca.com/rfc3161"
 
 if [ -t 1 ]; then
     ESCAPE_RESET="\E[0m"
+    ESCAPE_INFO="\E[36;1m"
     ESCAPE_WARNING="\E[33;1m"
     ESCAPE_ERROR="\E[31;1m"
     ESCAPE_RESULT="\E[32;1m"
@@ -78,6 +79,12 @@ done
 if [[ ! -f "$CMD_SIGNTOOL" ]]; then
     echo -e "${ESCAPE_WARNING}Cannot find signtool!${ESCAPE_RESET}" >&2
 fi
+
+
+echo -e "QMake directory ...: ${ESCAPE_INFO}$QMAKE_DIR${ESCAPE_RESET}"
+echo -e "QMake executable ..: ${ESCAPE_INFO}$CMD_QMAKE${ESCAPE_RESET}"
+echo -e "Make executable ...: ${ESCAPE_INFO}$CMD_MAKE${ESCAPE_RESET}"
+echo -e "SignTool executable: ${ESCAPE_INFO}$CMD_SIGNTOOL${ESCAPE_RESET}"
 
 
 HAS_UNCOMMITTED_RESULT=`git diff --quiet ; echo $?`
