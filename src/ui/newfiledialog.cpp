@@ -19,11 +19,17 @@ NewFileDialog::NewFileDialog(QWidget* parent, FolderItem* folder) : QDialog(pare
     }
     ui->textTitle->setText(newFileTitle);
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     bool showMarkdown = Settings::showMarkdown() || (Settings::defaultFileType() == FileType::Markdown);
+#else
+    bool showMarkdown = false;
+#endif
     ui->radioMarkdown->setVisible(showMarkdown);
 
     switch (Settings::defaultFileType()) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         case FileType::Markdown: ui->radioMarkdown->setChecked(true); break;
+#endif
         case FileType::Html:     ui->radioHtml->setChecked(true);     break;
         default:                 ui->radioPlain->setChecked(true);    break;
     }
@@ -47,10 +53,12 @@ QString NewFileDialog::title() const {
 }
 
 FileType NewFileDialog::type() const {
-    if (ui->radioMarkdown->isChecked()) {
-        return FileType::Markdown;
-    } else if (ui->radioHtml->isChecked()) {
+    if (ui->radioHtml->isChecked()) {
         return FileType::Html;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    } else if (ui->radioMarkdown->isChecked()) {
+        return FileType::Markdown;
+#endif
     } else {
         return FileType::Plain;
     }

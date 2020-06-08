@@ -67,10 +67,12 @@ void Settings::setDataPaths(QStringList newPaths) {
 
 FileType Settings::defaultFileType() {
     QString value = Config::read("DefaultFileType", "Plain");
-    if ((value.compare("Markdown", Qt::CaseInsensitive) == 0) || (value.contains("md", Qt::CaseInsensitive))) {
-        return FileType::Markdown;
-    } else if ((value.compare("Html", Qt::CaseInsensitive) == 0) || (value.contains("html", Qt::CaseInsensitive))) {
+    if ((value.compare("Html", Qt::CaseInsensitive) == 0) || (value.contains("html", Qt::CaseInsensitive))) {
         return FileType::Html;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    } else if ((value.compare("Markdown", Qt::CaseInsensitive) == 0) || (value.contains("md", Qt::CaseInsensitive))) {
+            return FileType::Markdown;
+#endif
     } else {
         return FileType::Plain;
     }
@@ -78,7 +80,9 @@ FileType Settings::defaultFileType() {
 
 void Settings::setDefaultFileType(FileType newDefaultFileType) {
     switch (newDefaultFileType) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         case FileType::Markdown: Config::write("DefaultFileType", "Markdown"); break;
+#endif
         case FileType::Html:     Config::write("DefaultFileType", "Html");     break;
         default:                 Config::write("DefaultFileType", "Plain");    break;
     }
@@ -160,6 +164,8 @@ void Settings::setShowInTaskbar(bool newShowInTaskbar) {
 }
 
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+
 bool Settings::showMarkdown() {
     return Config::read("ShowMarkdown", defaultShowMarkdown());
 }
@@ -168,6 +174,7 @@ void Settings::setShowMarkdown(bool newShowMarkdown) {
     Config::write("ShowMarkdown", newShowMarkdown);
 }
 
+#endif
 
 bool Settings::tabTextColorPerType() {
     return Config::read("TabTextColorPerType", defaultTabTextColorPerType());

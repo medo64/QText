@@ -104,7 +104,9 @@ FileItem* FolderItem::newFile(QString title, FileType type, FileItem* afterItem)
 
     FileItem* file;
     switch (type) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         case FileType::Markdown: file = new FileItem(this, Helpers::getFileNameFromTitle(title) + "." + Storage::markdownSuffix());   break;
+#endif
         case FileType::Html:     file = new FileItem(this, Helpers::getFileNameFromTitle(title) + "." + Storage::htmlSuffix()); break;
         default:                 file = new FileItem(this, Helpers::getFileNameFromTitle(title) + "." + Storage::plainSuffix());  break;
     }

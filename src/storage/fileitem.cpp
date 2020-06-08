@@ -76,10 +76,12 @@ void FileItem::setTitle(QString newTitle) {
 
 FileType FileItem::type() const {
     QFileInfo file(path());
-    if (file.suffix() == Storage::markdownSuffix()) {
-        return FileType::Markdown;
-    } else  if (file.suffix() == Storage::htmlSuffix()) {
+    if (file.suffix() == Storage::htmlSuffix()) {
         return FileType::Html;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    } else  if (file.suffix() == Storage::markdownSuffix()) {
+        return FileType::Markdown;
+#endif
     } else {
         return FileType::Plain;
     }
@@ -93,9 +95,11 @@ bool FileItem::setType(FileType newType) {
     QFileInfo oldFile(oldPath);
     QString newFileName;
     switch (newType) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         case FileType::Markdown:
             newFileName = oldFile.completeBaseName() + Storage::markdownSuffix();
             break;
+#endif
         case FileType::Html:
             newFileName = oldFile.completeBaseName() + Storage::htmlSuffix();
             break;
@@ -145,10 +149,12 @@ bool FileItem::load() {
             QString contents = in.readAll();
             QTextDocument* document = new QTextDocument(this);
             switch (type()) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
                 case FileType::Markdown:
                     document->setMarkdown(contents);
                     this->setAcceptRichText(false);
                     break;
+#endif
                 case FileType::Html:
                     document->setHtml(contents);
                     this->setAcceptRichText(true);
@@ -202,9 +208,11 @@ bool FileItem::save() const {
 
     QString contents;
     switch (type()) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         case FileType::Markdown:
             contents = this->document()->toMarkdown();
             break;
+#endif
         case FileType::Html:
             contents = this->document()->toHtml();
             break;

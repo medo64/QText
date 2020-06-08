@@ -66,9 +66,11 @@ class Settings {
         static void setShowInTaskbar(bool newShowInTaskbar);
         static bool defaultShowInTaskbar() { return true; }
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         static bool showMarkdown();
         static void setShowMarkdown(bool newShowMarkdown);
         static bool defaultShowMarkdown() { return false; }
+#endif
 
         static bool tabTextColorPerType();
         static void setTabTextColorPerType(bool newTabTextColorPerType);

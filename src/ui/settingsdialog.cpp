@@ -22,7 +22,11 @@ SettingsDialog::SettingsDialog(QWidget* parent, Hotkey* hotkey) : QDialog(parent
     _oldHotkey = Settings::hotkey();
     _oldMinimizeToTray = Settings::minimizeToTray();
     _oldShowInTaskbar = Settings::showInTaskbar();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     _oldShowMarkdown = Settings::showMarkdown();
+#else
+    ui->checkboxShowMarkdown->setEnabled(false);
+#endif
     _oldTabTextColorPerType = Settings::tabTextColorPerType();
     _oldUseHtmlByDefault = (Settings::defaultFileType() == FileType::Html); //ignoring markdown
 
@@ -88,7 +92,9 @@ void SettingsDialog::restoreDefaults() {
     ui->editHotkey->setNewKey(Settings::defaultHotkey());
     ui->checkboxMinimizeToTray->setChecked(Settings::defaultMinimizeToTray());
     ui->checkboxShowInTaskbar->setChecked(Settings::defaultShowInTaskbar());
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     ui->checkboxShowMarkdown->setChecked(Settings::defaultShowMarkdown());
+#endif
     ui->checkboxTabTextColorPerType->setChecked(Settings::defaultTabTextColorPerType());
     ui->checkboxUseHtmlByDefault->setChecked(Settings::defaultFileType() == FileType::Html);
 }
@@ -123,9 +129,11 @@ void SettingsDialog::accept() {
     _changedShowInTaskbar = newShowInTaskbar != _oldShowInTaskbar;
     if (_changedShowInTaskbar) { Settings::setShowInTaskbar(newShowInTaskbar); }
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     bool newShowMarkdown = (ui->checkboxShowMarkdown->checkState() == Qt::Checked);
     _changedShowMarkdown = newShowMarkdown != _oldShowMarkdown;
     if (_changedShowMarkdown) { Settings::setShowMarkdown(newShowMarkdown); }
+#endif
 
     bool newTabTextColorPerType = (ui->checkboxTabTextColorPerType->checkState() == Qt::Checked);
     _changedTabTextColorPerType = newTabTextColorPerType != _oldTabTextColorPerType;

@@ -871,11 +871,13 @@ void MainWindow::onTabMenuRequested(const QPoint& point) {
         auto convertToHtmlAction = convertMenu->addAction("To HTML", this, &MainWindow::onFileConvert);
         convertToHtmlAction->setEnabled(file->type() != FileType::Html);
         convertToHtmlAction->setData(static_cast<int>(FileType::Html));
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         if (Settings::showMarkdown()) {
             auto convertToMarkdownAction = convertMenu->addAction("To Markdown", this, &MainWindow::onFileConvert);
             convertToMarkdownAction->setEnabled(file->type() != FileType::Markdown);
             convertToMarkdownAction->setData(static_cast<int>(FileType::Markdown));
         }
+#endif
 
         menu.addSeparator();
         menu.addAction(ui->actionDelete);

@@ -22,10 +22,12 @@ int QTabWidgetEx::addTab(QWidget* widget, const QString& text) {
         bool isDark = ((color.red() + color.green() + color.blue()) / 3) < 64;
         QColor newColor;
         switch (item->type()) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
             case FileType::Markdown: //green
                 newColor = isDark ? QColor(color.red(), 96, color.blue())
                            : QColor(color.red() * 0.75, color.green(), color.blue() * 0.75);
                 break;
+#endif
             case FileType::Html: //blue
                 newColor = isDark ? QColor(color.red(), color.green(), 128)
                            : QColor(color.red() * 0.75, color.green() * 0.75, color.blue());
