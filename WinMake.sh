@@ -2,7 +2,7 @@
 
 QT_PATH='/c/Qt'
 CERTIFICATE_THUMBPRINT="026184de8dbf52fdcbae75fd6b1a7d9ce4310e5d"
-TIMESTAMP_URL="http://timestamp.comodoca.com/rfc3161"
+TIMESTAMP_URL="http://timestamp.digicert.com"  #http://timestamp.comodoca.com/rfc3161
 
 
 if [ -t 1 ]; then
