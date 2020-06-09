@@ -1,4 +1,5 @@
 /* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
+// 2020-06-09: Improving server responses
 // 2020-06-07: Handling server errors
 // 2020-06-05: Initial version
 

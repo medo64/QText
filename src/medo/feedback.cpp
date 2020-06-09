@@ -185,12 +185,17 @@ bool Feedback::sendFeedback(QString message, QString senderEmail, QString sender
     if (successful) {
         auto statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
         if (statusCode.isValid()) {
-            auto statusCodeReason = reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute);
-            if (statusCodeReason.isValid()){
-                _errorMessage = "Status code: " + statusCodeReason.toString() + ".";
-            } else {
-                _errorMessage = "Status code: " + QString::number(statusCode.toInt()) + ".";
+            if (statusCode.toInt() != 200) {
+                auto statusCodeReason = reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute);
+                if (statusCodeReason.isValid()){
+                    _errorMessage = "Status code: " + statusCodeReason.toString() + ".";
+                } else {
+                    _errorMessage = "Status code: " + QString::number(statusCode.toInt()) + ".";
+                }
+                successful = false;
             }
+        } else {
+            _errorMessage = "No response.";
             successful = false;
         }
     }
