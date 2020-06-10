@@ -69,13 +69,13 @@ SOURCES += \
         storage/storage.cpp \
         storage/storagemonitorlocker.cpp \
         storage/storagemonitorthread.cpp \
+        app.cpp \
         appsetupmutex.cpp \
         clipboard.cpp \
         deletion.cpp \
         find.cpp \
         helpers.cpp \
         icons.cpp \
-        main.cpp \
         settings.cpp \
         setup.cpp
 
