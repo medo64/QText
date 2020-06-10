@@ -1,10 +1,11 @@
 #include <QCommandLineParser>
-#include "ui/mainwindow.h"
-#include "settings.h"
-#include "setup.h"
 #include "medo/config.h"
 #include "medo/singleinstance.h"
 #include "medo/state.h"
+#include "ui/mainwindow.h"
+#include "appsetupmutex.h"
+#include "settings.h"
+#include "setup.h"
 
 static Storage* storage;
 
@@ -16,6 +17,7 @@ int main(int argc, char* argv[]) {
     QCoreApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
+    AppSetupMutex appMutex("JosipMedved_QText");
     QApplication app(argc, argv);
 
     QCommandLineParser cli;

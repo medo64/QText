@@ -69,6 +69,7 @@ SOURCES += \
         storage/storage.cpp \
         storage/storagemonitorlocker.cpp \
         storage/storagemonitorthread.cpp \
+        appsetupmutex.cpp \
         clipboard.cpp \
         deletion.cpp \
         find.cpp \
@@ -102,6 +103,7 @@ HEADERS += \
         storage/storage.h \
         storage/storagemonitorlocker.h \
         storage/storagemonitorthread.h \
+        appsetupmutex.h \
         clipboard.h \
         deletion.h \
         find.h \
