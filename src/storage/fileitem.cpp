@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QDesktopServices>
 #include <QDir>
 #include <QFileInfo>
 #include <QMenu>
@@ -11,6 +12,8 @@
 #include "settings.h"
 #include "storage.h"
 #include "storagemonitorlocker.h"
+
+const QStringList urlPrefixes({ "ftp://", "http://", "https://", "mailto://", "sftp://", "ssh://"});
 
 FileItem::FileItem(FolderItem* folder, QString fileName)
     : QTextEdit(nullptr) {
@@ -461,6 +464,39 @@ void FileItem::onContextMenuRequested(const QPoint& point) {
     connect(insertDateTimeAction, &QAction::triggered, this, &FileItem::onContextMenuInsertTime);
     menu.addAction(insertDateTimeAction);
 
+    //check if there's an URL in selected text
+    QString selectedText = textCursor().selectedText();
+    int urlStart = -1, urlLength;
+    for (auto urlPrefix : urlPrefixes) { //search for the first prefix
+        int start = selectedText.indexOf(urlPrefix);
+        if ((start >= 0) && ((start < urlStart) || (urlStart == -1))) {
+            urlStart = start;
+            urlLength = urlPrefix.length();
+        }
+    }
+    if (urlStart >= 0) {
+        menu.addSeparator();
+
+        for (int i = urlStart + urlLength; i < selectedText.length(); i++) { //find end of URL
+            QChar ch = selectedText[i];
+            if ((ch >= 'A') && (ch <= 'Z')) {
+            } else if ((ch >= 'a') && (ch <= 'z')) {
+            } else if ((ch >= '0') && (ch <= '9')) {
+            } else if ((ch == '-') || (ch == '_') || (selectedText[i] == '.') || (selectedText[i] == '~')) {
+            } else if ((ch == '%')) {
+            } else {
+                break;
+            }
+            urlLength += 1;
+        }
+        QString url = selectedText.mid(urlStart, urlLength);
+
+        QAction* goToUrlAction = new QAction("Go to " + url);
+        goToUrlAction->setData(url);
+        connect(goToUrlAction, &QAction::triggered, this, &FileItem::onGoToUrl);
+        menu.addAction(goToUrlAction);
+    }
+
     menu.exec(this->mapToGlobal(point));
 }
 
@@ -524,4 +560,10 @@ void FileItem::onContextMenuInsertTime() {
         textCursor().removeSelectedText();
         textCursor().insertText(dialog->formattedTime() + "\n");
     }
+}
+
+void FileItem::onGoToUrl() {
+    auto senderAction = dynamic_cast<QAction*>(sender());
+    auto url = senderAction->data().toString();
+    QDesktopServices::openUrl(QUrl(url, QUrl::TolerantMode));
 }

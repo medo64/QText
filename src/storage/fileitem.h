@@ -77,5 +77,6 @@ class FileItem : public QTextEdit {
         void onContextMenuDelete();
         void onContextMenuSelectAll();
         void onContextMenuInsertTime();
+        void onGoToUrl();
 
 };
