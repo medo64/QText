@@ -1,4 +1,5 @@
 #pragma once
+
 #include <QString>
 #if defined(Q_OS_WIN)
     #include "windows.h"
@@ -12,6 +13,8 @@ class AppSetupMutex {
         ~AppSetupMutex();
 
     private:
+#if defined(Q_OS_WIN)
         HANDLE _mutexHandle;
+#endif
 
 };
