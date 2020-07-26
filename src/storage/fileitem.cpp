@@ -149,6 +149,8 @@ bool FileItem::load() {
     if (file.exists()) {
         if (file.open(QIODevice::ReadOnly)) {
             QTextStream in(&file);
+            in.setCodec(_utf8Codec);
+            in.setAutoDetectUnicode(true);
             QString contents = in.readAll();
             QTextDocument* document = new QTextDocument(this);
             switch (type()) {
@@ -227,6 +229,8 @@ bool FileItem::save() const {
     QFile file(path());
     if (file.open(QIODevice::WriteOnly)) {
         QTextStream out(&file);
+        out.setCodec(_utf8Codec);
+        out.setAutoDetectUnicode(true);
         out << contents;
         out.flush();
         file.close();

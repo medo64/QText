@@ -4,6 +4,7 @@
 #include <QFocusEvent>
 #include <QPrinter>
 #include <QString>
+#include <QTextCodec>
 #include <QTextEdit>
 #include <QTimer>
 #include <QUuid>
@@ -50,6 +51,7 @@ class FileItem : public QTextEdit {
         FolderItem* _folder = nullptr;
         QString _fileName;
         QTextEdit* _editor = nullptr;
+        QTextCodec* _utf8Codec = QTextCodec::codecForName("UTF-8");
         QTimer* _timerSavePending = nullptr;
         mutable QDateTime _modificationTime;
         int zoomAmount = 0;
