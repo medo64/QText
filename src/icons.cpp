@@ -1,4 +1,7 @@
+#include <QImage>
 #include "icons.h"
+
+bool Icons::_darkMode = false;
 
 QIcon Icons::app() {
     QIcon icon;
@@ -49,206 +52,232 @@ QIcon Icons::appWhite() {
 
 QIcon Icons::newFile() {
     QIcon icon;
-    icon.addFile(":icons/16x16/new.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/new.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/new.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/new.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/new.png", QSize(64, 64));
+    icon.addPixmap(getPixmap("new", 16));
+    icon.addPixmap(getPixmap("new", 24));
+    icon.addPixmap(getPixmap("new", 32));
+    icon.addPixmap(getPixmap("new", 48));
+    icon.addPixmap(getPixmap("new", 64));
     return icon;
 }
 
 QIcon Icons::saveFile() {
     QIcon icon;
-    icon.addFile(":icons/16x16/save.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/save.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/save.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/save.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/save.png", QSize(64, 64));
+    icon.addPixmap(getPixmap("save", 16));
+    icon.addPixmap(getPixmap("save", 24));
+    icon.addPixmap(getPixmap("save", 32));
+    icon.addPixmap(getPixmap("save", 48));
+    icon.addPixmap(getPixmap("save", 64));
     return icon;
 }
 
 QIcon Icons::renameFile() {
     QIcon icon;
-    icon.addFile(":icons/16x16/rename.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/rename.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/rename.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/rename.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/rename.png", QSize(64, 64));
+    icon.addPixmap(getPixmap("rename", 16));
+    icon.addPixmap(getPixmap("rename", 24));
+    icon.addPixmap(getPixmap("rename", 32));
+    icon.addPixmap(getPixmap("rename", 48));
+    icon.addPixmap(getPixmap("rename", 64));
     return icon;
 }
 
 QIcon Icons::deleteFile() {
     QIcon icon;
-    icon.addFile(":icons/16x16/delete.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/delete.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/delete.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/delete.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/delete.png", QSize(64, 64));
+    icon.addPixmap(getPixmap("delete", 16));
+    icon.addPixmap(getPixmap("delete", 24));
+    icon.addPixmap(getPixmap("delete", 32));
+    icon.addPixmap(getPixmap("delete", 48));
+    icon.addPixmap(getPixmap("delete", 64));
     return icon;
 }
 
 QIcon Icons::printFile() {
     QIcon icon;
-    icon.addFile(":icons/16x16/print.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/print.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/print.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/print.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/print.png", QSize(64, 64));
+    icon.addPixmap(getPixmap("print", 16));
+    icon.addPixmap(getPixmap("print", 24));
+    icon.addPixmap(getPixmap("print", 32));
+    icon.addPixmap(getPixmap("print", 48));
+    icon.addPixmap(getPixmap("print", 64));
     return icon;
 }
 
 QIcon Icons::printPreviewFile() {
     QIcon icon;
-    icon.addFile(":icons/16x16/printPreview.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/printPreview.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/printPreview.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/printPreview.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/printPreview.png", QSize(64, 64));
+    icon.addPixmap(getPixmap("printPreview", 16));
+    icon.addPixmap(getPixmap("printPreview", 24));
+    icon.addPixmap(getPixmap("printPreview", 32));
+    icon.addPixmap(getPixmap("printPreview", 48));
+    icon.addPixmap(getPixmap("printPreview", 64));
     return icon;
 }
 
 QIcon Icons::printToPdfFile() {
     QIcon icon;
-    icon.addFile(":icons/16x16/printPdf.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/printPdf.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/printPdf.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/printPdf.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/printPdf.png", QSize(64, 64));
+    icon.addPixmap(getPixmap("printPdf", 16));
+    icon.addPixmap(getPixmap("printPdf", 24));
+    icon.addPixmap(getPixmap("printPdf", 32));
+    icon.addPixmap(getPixmap("printPdf", 48));
+    icon.addPixmap(getPixmap("printPdf", 64));
     return icon;
 }
 
 
 QIcon Icons::cut() {
     QIcon icon;
-    icon.addFile(":icons/16x16/cut.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/cut.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/cut.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/cut.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/cut.png", QSize(64, 64));
+    icon.addPixmap(getPixmap("cut", 16));
+    icon.addPixmap(getPixmap("cut", 24));
+    icon.addPixmap(getPixmap("cut", 32));
+    icon.addPixmap(getPixmap("cut", 48));
+    icon.addPixmap(getPixmap("cut", 64));
     return icon;
 }
 
 QIcon Icons::copy() {
     QIcon icon;
-    icon.addFile(":icons/16x16/copy.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/copy.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/copy.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/copy.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/copy.png", QSize(64, 64));
+    icon.addPixmap(getPixmap("copy", 16));
+    icon.addPixmap(getPixmap("copy", 24));
+    icon.addPixmap(getPixmap("copy", 32));
+    icon.addPixmap(getPixmap("copy", 48));
+    icon.addPixmap(getPixmap("copy", 64));
     return icon;
 }
 
 QIcon Icons::paste() {
     QIcon icon;
-    icon.addFile(":icons/16x16/paste.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/paste.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/paste.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/paste.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/paste.png", QSize(64, 64));
+    icon.addPixmap(getPixmap("paste", 16));
+    icon.addPixmap(getPixmap("paste", 24));
+    icon.addPixmap(getPixmap("paste", 32));
+    icon.addPixmap(getPixmap("paste", 48));
+    icon.addPixmap(getPixmap("paste", 64));
     return icon;
 }
 
 
 QIcon Icons::undo() {
     QIcon icon;
-    icon.addFile(":icons/16x16/undo.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/undo.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/undo.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/undo.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/undo.png", QSize(64, 64));
+    icon.addPixmap(getPixmap("undo", 16));
+    icon.addPixmap(getPixmap("undo", 24));
+    icon.addPixmap(getPixmap("undo", 32));
+    icon.addPixmap(getPixmap("undo", 48));
+    icon.addPixmap(getPixmap("undo", 64));
     return icon;
 }
 
 QIcon Icons::redo() {
     QIcon icon;
-    icon.addFile(":icons/16x16/redo.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/redo.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/redo.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/redo.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/redo.png", QSize(64, 64));
+    icon.addPixmap(getPixmap("redo", 16));
+    icon.addPixmap(getPixmap("redo", 24));
+    icon.addPixmap(getPixmap("redo", 32));
+    icon.addPixmap(getPixmap("redo", 48));
+    icon.addPixmap(getPixmap("redo", 64));
     return icon;
 }
 
 
 QIcon Icons::fontBold() {
     QIcon icon;
-    icon.addFile(":icons/16x16/bold.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/bold.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/bold.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/bold.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/bold.png", QSize(64, 64));
+    icon.addPixmap(getPixmap("bold", 16));
+    icon.addPixmap(getPixmap("bold", 24));
+    icon.addPixmap(getPixmap("bold", 32));
+    icon.addPixmap(getPixmap("bold", 48));
+    icon.addPixmap(getPixmap("bold", 64));
     return icon;
 }
 
 QIcon Icons::fontItalic() {
     QIcon icon;
-    icon.addFile(":icons/16x16/italic.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/italic.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/italic.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/italic.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/italic.png", QSize(64, 64));
+    icon.addPixmap(getPixmap("italic", 16));
+    icon.addPixmap(getPixmap("italic", 24));
+    icon.addPixmap(getPixmap("italic", 32));
+    icon.addPixmap(getPixmap("italic", 48));
+    icon.addPixmap(getPixmap("italic", 64));
     return icon;
 }
 
 QIcon Icons::fontUnderline() {
     QIcon icon;
-    icon.addFile(":icons/16x16/underline.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/underline.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/underline.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/underline.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/underline.png", QSize(64, 64));
+    icon.addPixmap(getPixmap("underline", 16));
+    icon.addPixmap(getPixmap("underline", 24));
+    icon.addPixmap(getPixmap("underline", 32));
+    icon.addPixmap(getPixmap("underline", 48));
+    icon.addPixmap(getPixmap("underline", 64));
     return icon;
 }
 
 QIcon Icons::fontStrikethrough() {
     QIcon icon;
-    icon.addFile(":icons/16x16/strikethrough.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/strikethrough.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/strikethrough.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/strikethrough.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/strikethrough.png", QSize(64, 64));
+    icon.addPixmap(getPixmap("strikethrough", 16));
+    icon.addPixmap(getPixmap("strikethrough", 24));
+    icon.addPixmap(getPixmap("strikethrough", 32));
+    icon.addPixmap(getPixmap("strikethrough", 48));
+    icon.addPixmap(getPixmap("strikethrough", 64));
     return icon;
 }
 
 
 QIcon Icons::find() {
     QIcon icon;
-    icon.addFile(":icons/16x16/find.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/find.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/find.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/find.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/find.png", QSize(64, 64));
+    icon.addPixmap(getPixmap("find", 16));
+    icon.addPixmap(getPixmap("find", 24));
+    icon.addPixmap(getPixmap("find", 32));
+    icon.addPixmap(getPixmap("find", 48));
+    icon.addPixmap(getPixmap("find", 64));
     return icon;
 }
 
 QIcon Icons::findNext() {
     QIcon icon;
-    icon.addFile(":icons/16x16/findNext.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/findNext.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/findNext.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/findNext.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/findNext.png", QSize(64, 64));
+    icon.addPixmap(getPixmap("findNext", 16));
+    icon.addPixmap(getPixmap("findNext", 24));
+    icon.addPixmap(getPixmap("findNext", 32));
+    icon.addPixmap(getPixmap("findNext", 48));
+    icon.addPixmap(getPixmap("findNext", 64));
     return icon;
 }
 
 
 QIcon Icons::gotoIcon() {
     QIcon icon;
-    icon.addFile(":icons/16x16/goto.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/goto.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/goto.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/goto.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/goto.png", QSize(64, 64));
+    icon.addPixmap(getPixmap("goto", 16));
+    icon.addPixmap(getPixmap("goto", 24));
+    icon.addPixmap(getPixmap("goto", 32));
+    icon.addPixmap(getPixmap("goto", 48));
+    icon.addPixmap(getPixmap("goto", 64));
     return icon;
 }
 
 
 QIcon Icons::settings() {
     QIcon icon;
-    icon.addFile(":icons/16x16/settings.png", QSize(16, 16));
-    icon.addFile(":icons/24x24/settings.png", QSize(24, 24));
-    icon.addFile(":icons/32x32/settings.png", QSize(32, 32));
-    icon.addFile(":icons/48x48/settings.png", QSize(48, 48));
-    icon.addFile(":icons/64x64/settings.png", QSize(64, 64));
+    icon.addPixmap(getPixmap("settings", 16));
+    icon.addPixmap(getPixmap("settings", 24));
+    icon.addPixmap(getPixmap("settings", 32));
+    icon.addPixmap(getPixmap("settings", 48));
+    icon.addPixmap(getPixmap("settings", 64));
     return icon;
+}
+
+
+void Icons::setDarkMode(bool darkMode) {
+    _darkMode = darkMode;
+}
+
+
+QPixmap Icons::getPixmap(QString baseName, int size) {
+    QString fileName = QString(":icons/%1x%1/%2.png").arg(QString::number(size), baseName);
+    QImage image(fileName);
+    if (_darkMode) {
+        image.invertPixels();
+        //remove yellow tint, naive way
+        for (int x = 0; x < image.width(); x++) {
+            for (int y = 0; y < image.height(); y++) {
+                QColor color = image.pixelColor(x, y);
+                QColor newColor = QColor::fromHsv(color.hue() + 165,
+                                                  color.saturation(),
+                                                  color.value(),
+                                                  color.alpha()).lighter(125);
+                image.setPixelColor(x, y, newColor);
+            }
+        }
+    }
+    return QPixmap::fromImage(image);
 }

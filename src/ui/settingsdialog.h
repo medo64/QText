@@ -16,6 +16,7 @@ class SettingsDialog : public QDialog {
         bool changedAlwaysOnTop() const { return _changedAlwaysOnTop; }
         bool changedAutostart() const { return _changedAutostart; }
         bool changedDataPath() const { return _changedDataPath; }
+        bool changedForceDarkMode() const { return _changedForceDarkMode; }
         bool changedForcePlainCopyPaste() const { return _changedForcePlainCopyPaste; }
         bool changedHotkey() const { return _changedHotkey; }
         bool changedMinimizeToTray() const { return _changedMinimizeToTray; }
@@ -35,6 +36,7 @@ class SettingsDialog : public QDialog {
         bool _changedAlwaysOnTop;
         bool _changedAutostart;
         bool _changedDataPath;
+        bool _changedForceDarkMode;
         bool _changedForcePlainCopyPaste;
         bool _changedHotkey;
         bool _changedMinimizeToTray;
@@ -45,6 +47,7 @@ class SettingsDialog : public QDialog {
         bool _oldAlwaysOnTop;
         bool _oldAutostart;
         QString _oldDataPath;
+        bool _oldForceDarkMode;
         bool _oldForcePlainCopyPaste;
         QKeySequence _oldHotkey;
         bool _oldMinimizeToTray;

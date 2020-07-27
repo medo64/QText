@@ -43,6 +43,10 @@ class Settings {
         static void setDeletionStyle(DeletionStyle newDeletionStyle);
         static DeletionStyle defaultDeletionStyle() { return DeletionStyle::Delete; }
 
+        static bool forceDarkMode();
+        static void setForceDarkMode(bool newForceDarkMode);
+        static bool defaultForceDarkMode() { return false; }
+
         static bool forcePlainCopyPaste();
         static void setForcePlainCopyPaste(bool newForcePlainCopyPaste);
         static bool defaultForcePlainCopyPaste() { return false; }

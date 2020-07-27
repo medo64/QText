@@ -23,6 +23,8 @@ class Helpers {
         static void setReadonlyPalette(QWidget* widget);
         static void setupResizableDialog(QWidget* dialog);
         static void setupFixedSizeDialog(QWidget* dialog);
+        static void setupTheme(bool darkMode);
+        static bool isOSInDarkMode();
 
     private:
         static bool isValidTitleChar(QChar ch);

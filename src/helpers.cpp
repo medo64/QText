@@ -1,6 +1,9 @@
+#include <QApplication>
 #include <QDesktopServices>
 #include <QDir>
 #include <QProcess>
+#include <QStyle>
+#include <QStyleFactory>
 #include <QUrl>
 #include "helpers.h"
 #include "icons.h"
@@ -326,4 +329,48 @@ void Helpers::setupResizableDialog(QWidget* dialog) {
 void Helpers::setupFixedSizeDialog(QWidget* dialog) {
     dialog->setWindowIcon(Icons::appMono());
     dialog->setFixedSize(dialog->geometry().width(), dialog->sizeHint().height());
+}
+
+/*!
+ * \brief Sets application palette to dark
+ */
+void Helpers::setupTheme(bool darkMode) {
+    if (darkMode) {
+        qApp->setStyle(QStyleFactory::create("Fusion"));
+
+        QPalette newPalette;
+        newPalette.setColor(QPalette::Window,          QColor( 37,  37,  37));
+        newPalette.setColor(QPalette::WindowText,      QColor(212, 212, 212));
+        newPalette.setColor(QPalette::Base,            QColor( 60,  60,  60));
+        newPalette.setColor(QPalette::AlternateBase,   QColor( 45,  45,  45));
+        newPalette.setColor(QPalette::PlaceholderText, QColor(127, 127, 127));
+        newPalette.setColor(QPalette::Text,            QColor(212, 212, 212));
+        newPalette.setColor(QPalette::Button,          QColor( 45,  45,  45));
+        newPalette.setColor(QPalette::ButtonText,      QColor(212, 212, 212));
+        newPalette.setColor(QPalette::BrightText,      QColor(240, 240, 240));
+        newPalette.setColor(QPalette::Highlight,       QColor( 38,  79, 120));
+
+        newPalette.setColor(QPalette::Light,           QColor( 60,  60,  60));
+        newPalette.setColor(QPalette::Midlight,        QColor( 52,  52,  52));
+        newPalette.setColor(QPalette::Dark,            QColor( 30,  30,  30) );
+        newPalette.setColor(QPalette::Mid,             QColor( 37,  37,  37));
+        newPalette.setColor(QPalette::Shadow,          QColor( 0,    0,   0));
+
+        qApp->setPalette(newPalette);
+    } else {
+        qApp->setPalette(qApp->style()->standardPalette());
+        qApp->setStyle(QStyleFactory::create("WindowsVista"));
+    }
+}
+
+/*!
+ * \brief Checks if OS is in dark mode.
+ * On Linux returns false always.
+ */
+bool Helpers::isOSInDarkMode() {
+#if defined(Q_OS_WIN)
+    return false; //TODO
+#else
+    return false;
+#endif
 }

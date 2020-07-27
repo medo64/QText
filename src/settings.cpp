@@ -109,6 +109,15 @@ void Settings::setDeletionStyle(DeletionStyle newDeletionStyle) {
 }
 
 
+bool Settings::forceDarkMode() {
+    return Config::read("ForceDarkMode", defaultForceDarkMode());
+}
+
+void Settings::setForceDarkMode(bool newForceDarkMode) {
+    Config::write("ForceDarkMode", newForceDarkMode);
+}
+
+
 bool Settings::forcePlainCopyPaste() {
     return Config::read("ForcePlainCopyPaste", defaultForcePlainCopyPaste());
 }

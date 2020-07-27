@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QIcon>
+#include <QPixmap>
 
 class Icons {
 
@@ -35,5 +36,11 @@ class Icons {
         static QIcon gotoIcon();
 
         static QIcon settings();
+
+        static void setDarkMode(bool darkMode);
+
+    private:
+        static bool _darkMode;
+        static QPixmap getPixmap(QString baseName, int size);
 
 };

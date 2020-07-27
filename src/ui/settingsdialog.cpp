@@ -18,6 +18,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, Hotkey* hotkey) : QDialog(parent
     _oldAlwaysOnTop = Settings::alwaysOnTop();
     _oldAutostart = Setup::autostart();
     _oldDataPath = Settings::dataPath();
+    _oldForceDarkMode = Settings::forceDarkMode();
     _oldForcePlainCopyPaste = Settings::forcePlainCopyPaste();
     _oldHotkey = Settings::hotkey();
     _oldMinimizeToTray = Settings::minimizeToTray();
@@ -75,6 +76,7 @@ void SettingsDialog::reset() {
     ui->checkboxAlwaysOnTop->setChecked(_oldAlwaysOnTop);
     ui->checkboxAutostart->setChecked(_oldAutostart);
     ui->editDataPath->setText(QDir::toNativeSeparators(Settings::dataPath()));
+    ui->checkboxForceDarkMode->setChecked(_oldForceDarkMode);
     ui->checkboxForcePlainCopyPaste->setChecked(_oldForcePlainCopyPaste);
     ui->editHotkey->setNewKey(_oldHotkey);
     ui->checkboxMinimizeToTray->setChecked(_oldMinimizeToTray);
@@ -88,6 +90,7 @@ void SettingsDialog::restoreDefaults() {
     ui->checkboxAlwaysOnTop->setChecked(Settings::defaultAlwaysOnTop());
     ui->checkboxAutostart->setChecked(true);
     ui->editDataPath->setText(QDir::toNativeSeparators(Settings::defaultDataPath()));
+    ui->checkboxForceDarkMode->setChecked(Settings::defaultForceDarkMode());
     ui->checkboxForcePlainCopyPaste->setChecked(Settings::defaultForcePlainCopyPaste());
     ui->editHotkey->setNewKey(Settings::defaultHotkey());
     ui->checkboxMinimizeToTray->setChecked(Settings::defaultMinimizeToTray());
@@ -112,6 +115,10 @@ void SettingsDialog::accept() {
     if (newDataDirectory.isEmpty()) { newDataDirectory = _oldDataPath; } //if empty, just ignore the new one
     _changedDataPath = newDataDirectory != _oldDataPath;
     if (_changedDataPath) { Settings::setDataPath(newDataDirectory); }
+
+    bool newForceDarkMode = (ui->checkboxForceDarkMode->checkState() == Qt::Checked);
+    _changedForceDarkMode = newForceDarkMode != _oldForceDarkMode;
+    if (_changedForceDarkMode) { Settings::setForceDarkMode(newForceDarkMode); }
 
     bool newForcePlainCopyPaste = (ui->checkboxForcePlainCopyPaste->checkState() == Qt::Checked);
     _changedForcePlainCopyPaste = newForcePlainCopyPaste != _oldForcePlainCopyPaste;

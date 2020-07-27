@@ -72,66 +72,28 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     connect(SingleInstance::instance(), &SingleInstance::newInstanceDetected, this, &MainWindow::onTrayShow);
 
     //toolbar setup
-    ui->actionNew->setIcon(Icons::newFile());
     connect(ui->actionNew, &QAction::triggered, this, &MainWindow::onFileNew);
-
-    ui->actionSave->setIcon(Icons::saveFile());
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::onFileSave);
-
-    ui->actionRename->setIcon(Icons::renameFile());
     connect(ui->actionRename, &QAction::triggered, this, &MainWindow::onFileRename);
-
-    ui->actionDelete->setIcon(Icons::deleteFile());
     connect(ui->actionDelete, &QAction::triggered, this, &MainWindow::onFileDelete);
-
-    ui->actionPrint->setIcon(Icons::printFile());
     connect(ui->actionPrint, &QAction::triggered, this, &MainWindow::onFilePrint);
-
-    ui->actionPrintPreview->setIcon(Icons::printPreviewFile());
     connect(ui->actionPrintPreview, &QAction::triggered, this, &MainWindow::onFilePrintPreview);
-
-    ui->actionPrintToPdf->setIcon(Icons::printToPdfFile());
     connect(ui->actionPrintToPdf, &QAction::triggered, this, &MainWindow::onFilePrintToPdf);
-
-    ui->actionCut->setIcon(Icons::cut());
     connect(ui->actionCut, &QAction::triggered, this, &MainWindow::onTextCut);
-
-    ui->actionCopy->setIcon(Icons::copy());
     connect(ui->actionCopy, &QAction::triggered, this, &MainWindow::onTextCopy);
-
-    ui->actionPaste->setIcon(Icons::paste());
     connect(ui->actionPaste, &QAction::triggered, this, &MainWindow::onTextPaste);
-
-    ui->actionUndo->setIcon(Icons::undo());
     connect(ui->actionUndo, &QAction::triggered, this, &MainWindow::onTextUndo);
-
-    ui->actionRedo->setIcon(Icons::redo());
     connect(ui->actionRedo, &QAction::triggered, this, &MainWindow::onTextRedo);
-
-    ui->actionFontBold->setIcon(Icons::fontBold());
     connect(ui->actionFontBold, &QAction::triggered, this, &MainWindow::onTextFontBold);
-
-    ui->actionFontItalic->setIcon(Icons::fontItalic());
     connect(ui->actionFontItalic, &QAction::triggered, this, &MainWindow::onTextFontItalic);
-
-    ui->actionFontUnderline->setIcon(Icons::fontUnderline());
     connect(ui->actionFontUnderline, &QAction::triggered, this, &MainWindow::onTextFontUnderline);
-
-    ui->actionFontStrikethrough->setIcon(Icons::fontStrikethrough());
     connect(ui->actionFontStrikethrough, &QAction::triggered, this, &MainWindow::onTextFontStrikethrough);
-
-    ui->actionFind->setIcon(Icons::find());
     connect(ui->actionFind, &QAction::triggered, this, &MainWindow::onFind);
-
-    ui->actionFindNext->setIcon(Icons::findNext());
     connect(ui->actionFindNext, &QAction::triggered, this, &MainWindow::onFindNext);
-
-    ui->actionGoto->setIcon(Icons::gotoIcon());
     connect(ui->actionGoto, &QAction::triggered, this, &MainWindow::onGoto);
 
     //print button menu
     _printButton = new QToolButton();
-    _printButton->setIcon(Icons::printFile());
     _printButton->setPopupMode(QToolButton::MenuButtonPopup);
     _printButton->setMenu(new QMenu());
     connect(_printButton, &QToolButton::clicked, this, &MainWindow::onFilePrint);
@@ -166,7 +128,6 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
 
     //app button menu
     _appButton = new QToolButton();
-    _appButton->setIcon(Icons::settings());
     _appButton->setPopupMode(QToolButton::MenuButtonPopup);
     _appButton->setMenu(new QMenu());
     connect(_appButton, &QToolButton::clicked, this, &MainWindow::onAppSettings);
@@ -192,6 +153,9 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     _appButton->menu()->addAction(appQuitAction);
 
     ui->mainToolBar->addWidget(_appButton)->setPriority(QAction::HighPriority);
+
+    //toolbar icon setup
+    applyToolbarIcons();
 
     //tabs
     ui->tabWidget->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -788,7 +752,8 @@ void MainWindow::onAppSettings() {
         applySettings(dialog->changedShowInTaskbar(),
                       dialog->changedTabTextColorPerType(),
                       dialog->changedHotkey(),
-                      dialog->changedDataPath());
+                      dialog->changedDataPath(),
+                      dialog->changedForceDarkMode());
         this->show(); //to show window after setWindowFlag
         this->activateWindow();
     }
@@ -1052,7 +1017,7 @@ void MainWindow::selectFile(FileItem* file) {
     }
 }
 
-void MainWindow::applySettings(bool applyShowInTaskbar, bool applyTabTextColorPerType, bool applyHotkey, bool applyDataPath) {
+void MainWindow::applySettings(bool applyShowInTaskbar, bool applyTabTextColorPerType, bool applyHotkey, bool applyDataPath, bool applyForceDarkMode) {
     if (applyDataPath) {
         _storage->saveAll();
         ui->tabWidget->clear();
@@ -1078,8 +1043,37 @@ void MainWindow::applySettings(bool applyShowInTaskbar, bool applyTabTextColorPe
     if (applyTabTextColorPerType) {
         selectFolder(_folder);
     }
+
+    if (applyForceDarkMode) { applyToolbarIcons(); }
 }
 
+void MainWindow::applyToolbarIcons() {
+    bool isDark = Helpers::isOSInDarkMode() || Settings::forceDarkMode();
+    Helpers::setupTheme(isDark);
+    Icons::setDarkMode(isDark);
+
+    ui->actionNew->setIcon(Icons::newFile());
+    ui->actionSave->setIcon(Icons::saveFile());
+    ui->actionRename->setIcon(Icons::renameFile());
+    ui->actionDelete->setIcon(Icons::deleteFile());
+    ui->actionPrint->setIcon(Icons::printFile());
+    ui->actionPrintPreview->setIcon(Icons::printPreviewFile());
+    ui->actionPrintToPdf->setIcon(Icons::printToPdfFile());
+    ui->actionCut->setIcon(Icons::cut());
+    ui->actionCopy->setIcon(Icons::copy());
+    ui->actionPaste->setIcon(Icons::paste());
+    ui->actionUndo->setIcon(Icons::undo());
+    ui->actionRedo->setIcon(Icons::redo());
+    ui->actionFontBold->setIcon(Icons::fontBold());
+    ui->actionFontItalic->setIcon(Icons::fontItalic());
+    ui->actionFontUnderline->setIcon(Icons::fontUnderline());
+    ui->actionFontStrikethrough->setIcon(Icons::fontStrikethrough());
+    ui->actionFind->setIcon(Icons::find());
+    ui->actionFindNext->setIcon(Icons::findNext());
+    ui->actionGoto->setIcon(Icons::gotoIcon());
+    _printButton->setIcon(Icons::printFile());
+    _appButton->setIcon(Icons::settings());
+}
 
 void MainWindow::onUpdatedFolder(FolderItem* folder) {
     if (folder == _folder) {
