@@ -1,6 +1,13 @@
 ## Release Notes ##
 
 
+### 0.1.13 [2020-07-26] ###
+
+* Added dark mode
+* UTF-8 is default encoding
+* Bugfixing
+
+
 ### 0.1.12 [2020-06-07] ###
 
 * Added Html support

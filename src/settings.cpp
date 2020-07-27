@@ -71,7 +71,7 @@ FileType Settings::defaultFileType() {
         return FileType::Html;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     } else if ((value.compare("Markdown", Qt::CaseInsensitive) == 0) || (value.contains("md", Qt::CaseInsensitive))) {
-            return FileType::Markdown;
+        return FileType::Markdown;
 #endif
     } else {
         return FileType::Plain;
