@@ -100,14 +100,14 @@ bool FileItem::setType(FileType newType) {
     switch (newType) {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         case FileType::Markdown:
-            newFileName = oldFile.completeBaseName() + Storage::markdownSuffix();
+            newFileName = oldFile.completeBaseName() + "." + Storage::markdownSuffix();
             break;
 #endif
         case FileType::Html:
-            newFileName = oldFile.completeBaseName() + Storage::htmlSuffix();
+            newFileName = oldFile.completeBaseName() + "." + Storage::htmlSuffix();
             break;
         default:
-            newFileName = oldFile.completeBaseName() + Storage::plainSuffix();
+            newFileName = oldFile.completeBaseName() + "." + Storage::plainSuffix();
             break;
     }
     QString newPath = QDir::cleanPath(oldFile.dir().path() + "/" + newFileName);
