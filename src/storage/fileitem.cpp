@@ -26,7 +26,7 @@ FileItem::FileItem(FolderItem* folder, QString fileName)
 
     load();
 
-    QFontMetricsF fm (this->font());
+    QFontMetricsF fm(this->font());
     auto tabWidth = Settings::tabWidth() * fm.width(' ');
     this->setTabStopDistance(tabWidth);
 
@@ -153,6 +153,7 @@ bool FileItem::load() {
             in.setAutoDetectUnicode(true);
             QString contents = in.readAll();
             QTextDocument* document = new QTextDocument(this);
+
             switch (type()) {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
                 case FileType::Markdown:
@@ -172,6 +173,7 @@ bool FileItem::load() {
             file.close();
             this->setDocument(document);
             this->document()->setModified(false);
+
             this->blockSignals(false);
             emit titleChanged(this);
             fileValid = true;
@@ -196,6 +198,10 @@ bool FileItem::load() {
             fileValid = false;
         }
     }
+
+    QFont font = Settings::font();
+    this->setFont(font); //for plain text
+    this->document()->setDefaultFont(font);
 
     if (fileValid) {
         QFileInfo info(file);

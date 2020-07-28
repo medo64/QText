@@ -3,6 +3,7 @@
 #include "medo/config.h"
 
 #include <QDir>
+#include <QFont>
 
 bool Settings::alwaysOnTop() {
     return Config::read("AlwaysOnTop", defaultAlwaysOnTop());
@@ -106,6 +107,39 @@ void Settings::setDeletionStyle(DeletionStyle newDeletionStyle) {
         case DeletionStyle::Overwrite: Config::write("DeletionStyle", "Overwrite"); break;
         default:                       Config::write("DeletionStyle", "Delete");    break;
     }
+}
+
+
+QFont Settings::font() {
+    QFont font(Settings::fontName(), Settings::fontSize());
+    return font;
+}
+
+void Settings::setFont(QFont newFont) {
+    Config::write("FontName", newFont.family());
+    Config::write("FontSize", newFont.pointSize());
+}
+
+
+QString Settings::fontName() {
+    return Config::read("FontName", defaultFontName());
+}
+
+void Settings::setFontName(QString newFontName) {
+    Config::write("FontName", newFontName);
+}
+
+
+int Settings::fontSize() {
+    int value =     Config::read("FontSize", defaultFontSize());
+    if (value == 0) { return defaultFontSize(); } //return default size
+    if (value < 6) { return 6;  } //minimum is 6 pt
+    if (value > 72) { return 72;  } //maximum is 72 pt
+    return value;
+}
+
+void Settings::setFontSize(int newFontSize) {
+    Config::write("FontSize", newFontSize);
 }
 
 

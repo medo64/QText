@@ -43,6 +43,23 @@ class Settings {
         static void setDeletionStyle(DeletionStyle newDeletionStyle);
         static DeletionStyle defaultDeletionStyle() { return DeletionStyle::Delete; }
 
+        static QFont font();
+        static void setFont(QFont newFont);
+
+        static QString fontName();
+        static void setFontName(QString newFontName);
+        static QString defaultFontName() {
+#if defined(Q_OS_WIN)
+            return "Calibri";
+#else
+            return "DejaVu Sans";
+#endif
+        }
+
+        static int fontSize();
+        static void setFontSize(int newFontSize);
+        static int defaultFontSize() { return 11; }
+
         static bool forceDarkMode();
         static void setForceDarkMode(bool newForceDarkMode);
         static bool defaultForceDarkMode() { return false; }
