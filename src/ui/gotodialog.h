@@ -28,8 +28,6 @@ class GotoDialog : public QDialog {
         QString _folderKey;
         QString _fileKey;
         Storage* _storage = nullptr;
-        QIcon _folderIcon;
-        QIcon _fileIcon;
 
     private slots:
         void onTextEdited(const QString& text);

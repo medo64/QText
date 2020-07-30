@@ -349,6 +349,7 @@ void Helpers::setupTheme(bool darkMode) {
         newPalette.setColor(QPalette::ButtonText,      QColor(212, 212, 212));
         newPalette.setColor(QPalette::BrightText,      QColor(240, 240, 240));
         newPalette.setColor(QPalette::Highlight,       QColor( 38,  79, 120));
+        newPalette.setColor(QPalette::HighlightedText, QColor(240, 240, 240));
 
         newPalette.setColor(QPalette::Light,           QColor( 60,  60,  60));
         newPalette.setColor(QPalette::Midlight,        QColor( 52,  52,  52));

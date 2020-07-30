@@ -37,6 +37,9 @@ class Icons {
 
         static QIcon settings();
 
+        static QIcon gotoFile();
+        static QIcon gotoFolder();
+
         static void setDarkMode(bool darkMode);
 
     private:

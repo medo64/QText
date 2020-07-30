@@ -1,5 +1,6 @@
 #include <QPushButton>
 #include "gotodialog.h"
+#include "icons.h"
 #include "ui_gotodialog.h"
 #include "medo/state.h"
 #include "helpers.h"
@@ -10,18 +11,6 @@ GotoDialog::GotoDialog(QWidget* parent, Storage* storage) : QDialog(parent), ui(
     ui->textSearch->installEventFilter(this);
 
     _storage = storage;
-
-    _fileIcon.addFile(":icons/16x16/file.png", QSize(16, 16));
-    _fileIcon.addFile(":icons/24x24/file.png", QSize(24, 24));
-    _fileIcon.addFile(":icons/32x32/file.png", QSize(32, 32));
-    _fileIcon.addFile(":icons/48x48/file.png", QSize(48, 48));
-    _fileIcon.addFile(":icons/64x64/file.png", QSize(64, 64));
-
-    _folderIcon.addFile(":icons/16x16/folder.png", QSize(16, 16));
-    _folderIcon.addFile(":icons/24x24/folder.png", QSize(24, 24));
-    _folderIcon.addFile(":icons/32x32/folder.png", QSize(32, 32));
-    _folderIcon.addFile(":icons/48x48/folder.png", QSize(48, 48));
-    _folderIcon.addFile(":icons/64x64/folder.png", QSize(64, 64));
 
     connect(ui->textSearch, &QLineEdit::textEdited, this, &GotoDialog::onTextEdited);
     connect(ui->listWidget, &QListWidget::itemSelectionChanged, this, &GotoDialog::onItemSelectionChanged);
@@ -85,7 +74,7 @@ void GotoDialog::onTextEdited(const QString& text) {
 
     if (text.length() == 0) {
         auto folder = _storage->folderAt(0);
-        QListWidgetItem* item = new QListWidgetItem(_folderIcon, folder->title());
+        QListWidgetItem* item = new QListWidgetItem(Icons::gotoFolder(), folder->title());
         item->setData(Qt::UserRole, folder->name());
         items.push_back(item);
     } else {
@@ -96,7 +85,7 @@ void GotoDialog::onTextEdited(const QString& text) {
                 if (!folder->isPrimary() && !folder->isRoot()) {
                     title += " in " + folder->rootFolder()->title();
                 }
-                QListWidgetItem* item = new QListWidgetItem(_folderIcon, title);
+                QListWidgetItem* item = new QListWidgetItem(Icons::gotoFolder(), title);
                 item->setData(Qt::UserRole, folder->name());
                 items.push_back(item);
             }
@@ -111,7 +100,7 @@ void GotoDialog::onTextEdited(const QString& text) {
                         title += " in " + folder->title();
                         if (!folder->isRoot()) { title += " " + folder->rootFolder()->title(); }
                     }
-                    QListWidgetItem* item = new QListWidgetItem(_fileIcon, title);
+                    QListWidgetItem* item = new QListWidgetItem(Icons::gotoFile(), title);
                     item->setData(Qt::UserRole, folder->name() + '\0' + file->name());
                     items.push_back(item);
                 }

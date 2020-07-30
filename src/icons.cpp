@@ -257,6 +257,27 @@ QIcon Icons::settings() {
 }
 
 
+QIcon Icons::gotoFile() {
+    QIcon icon;
+    icon.addPixmap(getPixmap("file", 16));
+    icon.addPixmap(getPixmap("file", 24));
+    icon.addPixmap(getPixmap("file", 32));
+    icon.addPixmap(getPixmap("file", 48));
+    icon.addPixmap(getPixmap("file", 64));
+    return icon;
+}
+
+QIcon Icons::gotoFolder() {
+    QIcon icon;
+    icon.addPixmap(getPixmap("folder", 16));
+    icon.addPixmap(getPixmap("folder", 24));
+    icon.addPixmap(getPixmap("folder", 32));
+    icon.addPixmap(getPixmap("folder", 48));
+    icon.addPixmap(getPixmap("folder", 64));
+    return icon;
+}
+
+
 void Icons::setDarkMode(bool darkMode) {
     _darkMode = darkMode;
 }
