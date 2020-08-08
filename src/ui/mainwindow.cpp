@@ -324,6 +324,10 @@ void MainWindow::keyPressEvent(QKeyEvent* event) {
             if (ui->tabWidget->count() >= 10) { ui->tabWidget->setCurrentIndex(9); }
             break;
 
+        case Qt::AltModifier | Qt::Key_Comma:
+            onFileRename();
+            break;
+
         case Qt::AltModifier | Qt::Key_Left:
             if (ui->tabWidget->currentIndex() > 0) { ui->tabWidget->setCurrentIndex(ui->tabWidget->currentIndex() - 1); }
             break;
