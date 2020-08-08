@@ -26,6 +26,7 @@
 #include "foldersdialog.h"
 #include "gotodialog.h"
 #include "newfiledialog.h"
+#include "phoneticdialog.h"
 #include "renamefiledialog.h"
 #include "settingsdialog.h"
 
@@ -247,6 +248,10 @@ void MainWindow::keyPressEvent(QKeyEvent* event) {
             break;
 
         case Qt::ShiftModifier | Qt::Key_F1:
+            onPhoneticSpelling();
+            break;
+
+        case Qt::ControlModifier | Qt::Key_F1:
             _appButton->click();
             break;
 
@@ -744,6 +749,16 @@ void MainWindow::onCopyContainingPath() {
     } else {
         Clipboard::setData(QDir::toNativeSeparators(_folder->path()));
     }
+}
+
+void MainWindow::onPhoneticSpelling() {
+    QString text = "";
+    if (ui->tabWidget->currentWidget() != nullptr) {
+        auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
+        text = file->textCursor().selectedText();
+    }
+    auto dialog = new PhoneticDialog(this, text);
+    dialog->exec();
 }
 
 void MainWindow::onAppSettings() {

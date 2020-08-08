@@ -48,6 +48,7 @@ QMAKE_CXXFLAGS_WARN_ON += -Wdouble-promotion
 
 
 SOURCES += \
+        phoneticalphabet.cpp \
         ui/finddialog.cpp \
         ui/foldersdialog.cpp \
         ui/gotodialog.cpp \
@@ -58,6 +59,7 @@ SOURCES += \
         ui/newfiledialog.cpp \
         ui/qtabbarex.cpp \
         ui/qtabwidgetex.cpp \
+        ui/phoneticdialog.cpp \
         ui/renamefiledialog.cpp \
         medo/config.cpp \
         medo/feedback.cpp \
@@ -80,17 +82,19 @@ SOURCES += \
         setup.cpp
 
 HEADERS += \
+        phoneticalphabet.h \
         ui/finddialog.h \
         ui/foldersdialog.h \
         ui/gotodialog.h \
         ui/hotkeyedit.h \
         ui/inserttimedialog.h \
-        ui/settingsdialog.h \
         ui/mainwindow.h \
         ui/newfiledialog.h \
         ui/qtabbarex.h \
         ui/qtabwidgetex.h \
+        ui/phoneticdialog.h \
         ui/renamefiledialog.h \
+        ui/settingsdialog.h \
         medo/config.h \
         medo/feedback.h \
         medo/hotkey.h \
@@ -118,6 +122,7 @@ FORMS += \
         ui/gotodialog.ui \
         ui/inserttimedialog.ui \
         ui/newfiledialog.ui \
+        ui/phoneticdialog.ui \
         ui/renamefiledialog.ui \
         ui/settingsdialog.ui \
         ui/mainwindow.ui

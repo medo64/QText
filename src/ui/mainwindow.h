@@ -75,6 +75,7 @@ class MainWindow : public QMainWindow {
         void onShowContainingDirectory();
         void onShowContainingDirectoryOnly();
         void onCopyContainingPath();
+        void onPhoneticSpelling();
         void onAppSettings();
         void onAppFeedback();
         void onAppAbout();

@@ -9,7 +9,8 @@ Simple note taking program.
 | Key               | Description                                             |
 |-------------------|---------------------------------------------------------|
 | `F1`              | Show application menu                                   |
-| `Shift+F1`        | Show settings                                           |
+| `Shift+F1`        | Show phonetic spelling dialog                           |
+| `Ctrl+F1`         | Show settings                                           |
 | `F2`              | Rename file                                             |
 | `F3`              | Find next text match                                    |
 | `Shift+F3`        | Find previous text match                                |
