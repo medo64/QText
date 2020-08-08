@@ -28,6 +28,7 @@ Simple note taking program.
 | `Ctrl+Shift+P`    | Print preview                                           |
 | `Ctrl+Alt+R`      | Show containing directory                               |
 | `Ctrl+S`          | Save file immediatelly                                  |
+| `Ctrl+T`          | Toggle always on top (might not work on Linux)          |
 | `Ctrl+V`          | Paste text                                              |
 | `Ctrl+X`          | Cut text                                                |
 | `Ctrl+Y`          | Redo action                                             |

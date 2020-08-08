@@ -283,6 +283,10 @@ void MainWindow::keyPressEvent(QKeyEvent* event) {
             onCopyContainingPath();
             break;
 
+        case Qt::ControlModifier | Qt::Key_T:
+            onTopMost();
+            break;
+
         case Qt::AltModifier | Qt::Key_1:
             if (ui->tabWidget->count() >= 1) { ui->tabWidget->setCurrentIndex(0); }
             break;
@@ -762,6 +766,13 @@ void MainWindow::onPhoneticSpelling() {
     }
     auto dialog = new PhoneticDialog(this, text);
     dialog->exec();
+}
+
+void MainWindow::onTopMost() {
+    Settings::setAlwaysOnTop(!Settings::alwaysOnTop());
+    applySettings(false, false, true, false, false, false);
+    this->show(); //to show window after setWindowFlag
+    this->activateWindow();
 }
 
 void MainWindow::onAppSettings() {
