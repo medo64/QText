@@ -78,10 +78,80 @@ QString PhoneticAlphabet::getNatoText(QString character) {
     } else if (ch == '9') {
         out = "Nine";
     } else {
-        return "[" + ch + "]"; //just return the darn character back
+        return "[" + getNonAlphanumericCharacterText(ch) + "]";
     }
 
     if (chLatin.length() > 1) { out += "'"; } //add prime if character had accents
-
     return out;
+}
+
+
+QString PhoneticAlphabet::getNonAlphanumericCharacterText(QChar ch) {
+    if (ch == '!') {
+        return "Exclamation mark";
+    } else if (ch == '"') {
+        return "Double quotation mark";
+    } else if (ch == '#') {
+        return "Number sign";
+    } else if (ch == '$') {
+        return "Dollar sign";
+    } else if (ch == '%') {
+        return "Percent sign";
+    } else if (ch == '&') {
+        return "Ampersand";
+    } else if (ch == '\'') {
+        return "Apostrophe";
+    } else if (ch == '(') {
+        return "Left parenthesis";
+    } else if (ch == ')') {
+        return "Right parenthesis";
+    } else if (ch == '*') {
+        return "Asterisk";
+    } else if (ch == '+') {
+        return "Plus sign";
+    } else if (ch == ',') {
+        return "Comma";
+    } else if (ch == '-') {
+        return "Minus sign";
+    } else if (ch == '.') {
+        return "Period";
+    } else if (ch == '/') {
+        return "Slash";
+    } else if (ch == ':') {
+        return "Colon";
+    } else if (ch == ';') {
+        return "Semicolon";
+    } else if (ch == '<') {
+        return "Less-than sign";
+    } else if (ch == '=') {
+        return "Equal sign";
+    } else if (ch == '>') {
+        return "Greater-than sign";
+    } else if (ch == '?') {
+        return "Question mark";
+    } else if (ch == '@') {
+        return "At sign";
+    } else if (ch == '[') {
+        return "Left square bracket";
+    } else if (ch == '\\') {
+        return "Backslash";
+    } else if (ch == ']') {
+        return "Right square bracket";
+    } else if (ch == '^') {
+        return "Circumflex accent";
+    } else if (ch == '_') {
+        return "Underscore";
+    } else if (ch == '`') {
+        return "Backtick";
+    } else if (ch == '{') {
+        return "left curly brace";
+    } else if (ch == '|') {
+        return "Pipe";
+    } else if (ch == '}') {
+        return "Right curly brace";
+    } else if (ch == '~') {
+        return "Tilde accent";
+    } else {
+        return ch;
+    }
 }
