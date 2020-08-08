@@ -144,13 +144,13 @@ QString PhoneticAlphabet::getNonAlphanumericCharacterText(QChar ch) {
     } else if (ch == '`') {
         return "Backtick";
     } else if (ch == '{') {
-        return "left curly brace";
+        return "left curly bracket";
     } else if (ch == '|') {
         return "Pipe";
     } else if (ch == '}') {
-        return "Right curly brace";
+        return "Right curly bracket";
     } else if (ch == '~') {
-        return "Tilde accent";
+        return "Tilde";
     } else {
         return ch;
     }
