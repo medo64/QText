@@ -33,8 +33,8 @@ class MainWindow : public QMainWindow {
         QToolButton* _folderButton = nullptr;
         QToolButton* _appButton = nullptr;
         Hotkey* _hotkey = nullptr;
-        void applySettings() { applySettings(true, true, false, false, false); }
-        void applySettings(bool applyShowInTaskbar, bool applyTabTextColorPerType, bool applyHotkey, bool applyDataPath, bool applyForceDarkMode);
+        void applySettings() { applySettings(true, true, true, false, false, false); }
+        void applySettings(bool applyShowInTaskbar, bool applyTabTextColorPerType, bool applyAlwaysOnTop, bool applyHotkey, bool applyDataPath, bool applyForceDarkMode);
         void applyToolbarIcons();
         bool selectFolder(QString folderName);
         bool selectFolder(FolderItem* folder);

@@ -186,7 +186,6 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     }
 
     //settings
-    if (Settings::alwaysOnTop()) { setWindowFlag(Qt::WindowStaysOnTopHint); } //always on top cannot be set dynamically :(
     applySettings();
 
     if (!Settings::setupCompleted()) { // show extra info when ran first time
@@ -770,6 +769,7 @@ void MainWindow::onAppSettings() {
     if (dialog->exec() == QDialog::Accepted) {
         applySettings(dialog->changedShowInTaskbar(),
                       dialog->changedTabTextColorPerType(),
+                      dialog->changedAlwaysOnTop(),
                       dialog->changedHotkey(),
                       dialog->changedDataPath(),
                       dialog->changedForceDarkMode());
@@ -1036,7 +1036,7 @@ void MainWindow::selectFile(FileItem* file) {
     }
 }
 
-void MainWindow::applySettings(bool applyShowInTaskbar, bool applyTabTextColorPerType, bool applyHotkey, bool applyDataPath, bool applyForceDarkMode) {
+void MainWindow::applySettings(bool applyShowInTaskbar, bool applyTabTextColorPerType, bool applyAlwaysOnTop, bool applyHotkey, bool applyDataPath, bool applyForceDarkMode) {
     if (applyDataPath) {
         _storage->saveAll();
         ui->tabWidget->clear();
@@ -1050,6 +1050,16 @@ void MainWindow::applySettings(bool applyShowInTaskbar, bool applyTabTextColorPe
     if (applyHotkey) { //just register again with the new key
         _hotkey->unregisterHotkey();
         _hotkey->registerHotkey(Settings::hotkey());
+    }
+
+    if (applyAlwaysOnTop) { //always on top might require restart (at least on Linux)
+        auto flags = windowFlags();
+        if (Settings::alwaysOnTop()) {
+            flags = (flags | Qt::WindowStaysOnTopHint);
+        } else {
+            flags = (flags & ~Qt::WindowStaysOnTopHint);
+        }
+        setWindowFlags(flags);
     }
 
     if (applyShowInTaskbar) {
