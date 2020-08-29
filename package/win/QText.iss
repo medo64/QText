@@ -59,6 +59,8 @@ Source: "Qt5Gui.dll";                               DestDir: "{app}";  Flags: ig
 Source: "Qt5Network.dll";                           DestDir: "{app}";  Flags: ignoreversion;
 Source: "Qt5PrintSupport.dll";                      DestDir: "{app}";  Flags: ignoreversion;
 Source: "Qt5Widgets.dll";                           DestDir: "{app}";  Flags: ignoreversion;
+Source: "libcrypto-1_1-x64.dll";                    DestDir: "{app}";  Flags: ignoreversion;
+Source: "libssl-1_1-x64.dll";                       DestDir: "{app}";  Flags: ignoreversion;
 Source: "platforms/qwindows.dll";                   DestDir: "{app}/platforms";  Flags: ignoreversion;
 Source: "styles/qwindowsvistastyle.dll";            DestDir: "{app}/styles";     Flags: ignoreversion;
 Source: "..\README.md";   DestName: "README.txt";   DestDir: "{app}";  Flags: overwritereadonly uninsremovereadonly;  Attribs: readonly;

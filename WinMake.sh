@@ -51,6 +51,11 @@ if [[ ! -f "$CMD_MAKE" ]]; then
     exit 1
 fi
 
+OPENSSL_DIR=$QT_PATH/Tools/QtCreator/bin
+if [[ ! -f "$OPENSSL_DIR/libcrypto-1_1-x64.dll" ]] || [[ ! -f "$OPENSSL_DIR/libssl-1_1-x64.dll" ]]; then
+    echo -e "${ESCAPE_WARNING}Cannot find OpenSSL files.${ESCAPE_RESET}" >&2
+fi
+
 
 CMD_CERTUTIL=`command -v certutil`
 if [[ ! -f "$CMD_CERTUTIL" ]]; then
@@ -127,6 +132,9 @@ if [[ "$BUILD" != "" ]]; then
             cp $QMAKE_DIR/Qt5PrintSupport.dll ../bin/
             cp $QMAKE_DIR/Qt5Widgets.dll      ../bin/
 
+            cp $OPENSSL_DIR/libcrypto-1_1-x64.dll ../bin/
+            cp $OPENSSL_DIR/libssl-1_1-x64.dll    ../bin/
+
             mkdir ../bin/platforms
             cp $QMAKE_DIR/../plugins/platforms/qwindows.dll ../bin/platforms/
 
@@ -191,6 +199,9 @@ if [[ "$BUILD" != "" ]]; then
             cp $QMAKE_DIR/Qt5Network.dll       ../bin/
             cp $QMAKE_DIR/Qt5PrintSupport.dll  ../bin/
             cp $QMAKE_DIR/Qt5Widgets.dll       ../bin/
+
+            cp $OPENSSL_DIR/libcrypto-1_1-x64.dll ../bin/
+            cp $OPENSSL_DIR/libssl-1_1-x64.dll    ../bin/
 
             mkdir ../bin/platforms
             cp $QMAKE_DIR/../plugins/platforms/qwindows.dll ../bin/platforms/
