@@ -1,6 +1,14 @@
 ## Release Notes ##
 
 
+### 0.1.14 [2020-09-05] ###
+
+* Added font settings
+* Adjusted phonetic character descriptions
+* Packaging OpenSSL with Windows installer
+* Bugfixing
+
+
 ### 0.1.13 [2020-07-26] ###
 
 * Added dark mode
