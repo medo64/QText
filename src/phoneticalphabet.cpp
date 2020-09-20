@@ -1,7 +1,8 @@
+#include "helpers.h"
 #include "phoneticalphabet.h"
 
 QString PhoneticAlphabet::getNatoText(QString character) {
-    QString chLatin = character.normalized(QString::NormalizationForm_KD).toUpper().toLatin1(); //yes, relies on undefined conversion to remove accents
+    QString chLatin = Helpers::getTextWithoutAccents(character).toUpper();
     QChar ch = chLatin[0];
 
     QString out;

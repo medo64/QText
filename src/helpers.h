@@ -12,6 +12,7 @@ class Helpers {
         static QString getFileTitleFromName(QString fileName);
         static QString getFolderNameFromTitle(QString folderTitle);
         static QString getFolderTitleFromName(QString folderName);
+        static QString getTextWithoutAccents(QString text);
         static bool showInFileManager(QString directoryPath, QString filePath);
         static bool openWithDefaultApplication(QString filePath);
         static bool openFileWithVSCode(FileItem* file);

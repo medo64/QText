@@ -78,9 +78,12 @@ void GotoDialog::onTextEdited(const QString& text) {
         item->setData(Qt::UserRole, folder->name());
         items.push_back(item);
     } else {
+        QString cleanedText = Helpers::getTextWithoutAccents(text);
+
         for (FolderItem* folder : *_storage) {
             auto folderTitle = folder->title();
-            if (folderTitle.contains(text, Qt::CaseInsensitive)) {
+            auto cleanedFolderTitle = Helpers::getTextWithoutAccents(folderTitle);
+            if (folderTitle.contains(text, Qt::CaseInsensitive) || cleanedFolderTitle.contains(cleanedText, Qt::CaseInsensitive)) {
                 QString title = folderTitle;
                 if (!folder->isPrimary() && !folder->isRoot()) {
                     title += " in " + folder->rootFolder()->title();
@@ -92,7 +95,8 @@ void GotoDialog::onTextEdited(const QString& text) {
 
             for (FileItem* file : *folder) {
                 auto fileTitle = file->title();
-                if (fileTitle.contains(text, Qt::CaseInsensitive)) {
+                auto cleanedFileTitle = Helpers::getTextWithoutAccents(fileTitle);
+                if (fileTitle.contains(text, Qt::CaseInsensitive) || cleanedFileTitle.contains(cleanedText, Qt::CaseInsensitive)) {
                     QString title = fileTitle;
                     if (folder->isPrimary()) {
                         title += " in " + folder->title();

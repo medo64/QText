@@ -156,6 +156,18 @@ QString Helpers::getFSTitleFromName(QString fsName) {
 
 
 /*!
+ * \brief Returns text with accents removed.
+ * \param text Text.
+ */
+QString Helpers::getTextWithoutAccents(QString text) {
+    QString asciiText = text.normalized(QString::NormalizationForm_KD)
+                        .toLatin1() //yes, relies on undefined conversion to remove accents
+                        .replace("?", "");
+    return asciiText;
+}
+
+
+/*!
  * \brief Shows directory or file in file manager. Returns true if successful.
  * \param directoryPath Directory path.
  * \param filePath File path. Can be nullptr.
