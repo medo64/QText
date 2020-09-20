@@ -160,10 +160,16 @@ QString Helpers::getFSTitleFromName(QString fsName) {
  * \param text Text.
  */
 QString Helpers::getTextWithoutAccents(QString text) {
-    QString asciiText = text.normalized(QString::NormalizationForm_KD)
-                        .toLatin1() //yes, relies on undefined conversion to remove accents
-                        .replace("?", "");
-    return asciiText;
+    QString normalizedText = text.normalized(QString::NormalizationForm_D);
+
+    QString filtered;
+    for (int i = 0; i < normalizedText.length(); i++) {
+        if (normalizedText.at(i).category() != QChar::Mark_NonSpacing) {
+            filtered.append(normalizedText.at(i));
+        }
+    }
+
+    return filtered.normalized(QString::NormalizationForm_C);
 }
 
 
