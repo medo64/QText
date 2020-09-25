@@ -20,6 +20,7 @@ class RtfConverter {
         struct Context {
             int defaultCodePage = 0;
             int codePage = 0;
+            int fontSize = 0;
             bool fontBold = false;
             bool fontItalic = false;
             bool fontUnderline = false;

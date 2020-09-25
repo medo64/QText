@@ -166,12 +166,21 @@ void RtfConverter::processCommand(QString& command, Context& context, int& level
         } else if (command == "line") {
             context.htmlOutput += "<br/>";
         } else if (command == "plain") {
+            if (context.fontSize > 0) { context.htmlOutput += "</font>"; context.fontSize = 0; }
             if (context.fontBold) { context.htmlOutput += "</b>"; context.fontBold = false; }
             if (context.fontItalic) { context.htmlOutput += "</i>"; context.fontItalic = false; }
             if (context.fontUnderline) { context.htmlOutput += "</u>"; context.fontUnderline = false; }
             if (context.fontStrike) { context.htmlOutput += "</s>"; context.fontStrike = false; }
             if (context.fontSub) { context.htmlOutput += "</sub>"; context.fontSub = false; }
             if (context.fontSuper) { context.htmlOutput += "</sup>"; context.fontSuper = false; }
+        } else if (command.startsWith("fs")) {
+            if (context.fontSize > 0) { context.htmlOutput += "</font>"; context.fontSize = 0; }
+            bool ok;
+            int fontSize = command.remove(0, 2).toInt(&ok) / 2;
+            if (ok) {
+                context.htmlOutput += "<font style=\"font-size:" + QString::number(fontSize) +  "pt;\">";
+                context.fontSize = fontSize;
+            }
         } else if (command == "b") {
             context.htmlOutput += "<b>"; context.fontBold = true;
         } else if (command == "b0") {
