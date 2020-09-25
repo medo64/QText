@@ -48,7 +48,6 @@ QMAKE_CXXFLAGS_WARN_ON += -Wdouble-promotion
 
 
 SOURCES += \
-        phoneticalphabet.cpp \
         ui/finddialog.cpp \
         ui/foldersdialog.cpp \
         ui/gotodialog.cpp \
@@ -78,11 +77,12 @@ SOURCES += \
         find.cpp \
         helpers.cpp \
         icons.cpp \
+        phoneticalphabet.cpp \
+        rtfconverter.cpp \
         settings.cpp \
         setup.cpp
 
 HEADERS += \
-        phoneticalphabet.h \
         ui/finddialog.h \
         ui/foldersdialog.h \
         ui/gotodialog.h \
@@ -113,6 +113,8 @@ HEADERS += \
         find.h \
         helpers.h \
         icons.h \
+        phoneticalphabet.h \
+        rtfconverter.h \
         settings.h \
         setup.h
 

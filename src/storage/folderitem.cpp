@@ -7,6 +7,7 @@
 #include "storage/storagemonitorlocker.h"
 #include "deletion.h"
 #include "helpers.h"
+#include "rtfconverter.h"
 
 FolderItem::FolderItem(Storage* storage, FolderItem* rootFolder, const int pathIndex, const QString directoryPath, const QString directoryName) {
     _storage = storage;
@@ -16,6 +17,13 @@ FolderItem::FolderItem(Storage* storage, FolderItem* rootFolder, const int pathI
     _pathIndex = pathIndex;
 
     QDir directory = path();
+
+    //convert rtf to html
+    QStringList rtfFiles = directory.entryList(QStringList({"*.rtf"}), QDir::Files);
+    for (QString fileName : rtfFiles) {
+        QString fullPath = QDir::cleanPath(_directoryPath + QDir::separator() + _directoryName + QDir::separator() + fileName);
+        RtfConverter::convertFile(fullPath);
+    }
 
     QStringList files = directory.entryList(Storage::supportedExtensionFilters(), QDir::Files);
     for (QString fileName : files) {
