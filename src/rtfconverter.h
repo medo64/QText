@@ -20,6 +20,10 @@ class RtfConverter {
         struct Context {
             int defaultCodePage = 0;
             int codePage = 0;
+            bool fontBold = false;
+            bool fontItalic = false;
+            bool fontUnderline = false;
+            bool fontStrike = false;
             bool fontSub = false;
             bool fontSuper = false;
             QString htmlOutput;

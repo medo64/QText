@@ -165,32 +165,38 @@ void RtfConverter::processCommand(QString& command, Context& context, int& level
             context.htmlOutput += "<br/>"; //proper paragraph handling results in too much spacing
         } else if (command == "line") {
             context.htmlOutput += "<br/>";
+        } else if (command == "plain") {
+            if (context.fontBold) { context.htmlOutput += "</b>"; context.fontBold = false; }
+            if (context.fontItalic) { context.htmlOutput += "</i>"; context.fontItalic = false; }
+            if (context.fontUnderline) { context.htmlOutput += "</u>"; context.fontUnderline = false; }
+            if (context.fontStrike) { context.htmlOutput += "</s>"; context.fontStrike = false; }
+            if (context.fontSub) { context.htmlOutput += "</sub>"; context.fontSub = false; }
+            if (context.fontSuper) { context.htmlOutput += "</sup>"; context.fontSuper = false; }
         } else if (command == "b") {
-            context.htmlOutput += "<b>";
+            context.htmlOutput += "<b>"; context.fontBold = true;
         } else if (command == "b0") {
-            context.htmlOutput += "</b>";
+            if (context.fontBold) { context.htmlOutput += "</b>"; context.fontBold = false; }
         } else if (command == "i") {
-            context.htmlOutput += "<i>";
+            context.htmlOutput += "<i>"; context.fontItalic = true;
         } else if (command == "i0") {
-            context.htmlOutput += "</i>";
+            if (context.fontItalic) { context.htmlOutput += "</i>"; context.fontItalic = false; }
         } else if (command == "ul") {
-            context.htmlOutput += "<u>";
+            context.htmlOutput += "<u>"; context.fontUnderline = true;
         } else if (command == "ulnone") {
-            context.htmlOutput += "</u>";
+            if (context.fontUnderline) { context.htmlOutput += "</u>"; context.fontUnderline = false; }
+        } else if (command == "strike") {
+            context.htmlOutput += "<s>"; context.fontStrike = true;
+        } else if (command == "strike0") {
+            if (context.fontStrike) { context.htmlOutput += "</s>"; context.fontStrike = false; }
         } else if (command == "sub") {
+            if (context.fontSuper) { context.htmlOutput += "</sup>"; context.fontSuper = false; }
             context.htmlOutput += "<sub>"; context.fontSub = true;
         } else if (command == "super") {
+            if (context.fontSub) { context.htmlOutput += "</sub>"; context.fontSub = false; }
             context.htmlOutput += "<sup>"; context.fontSuper = true;
         } else if (command == "nosupersub") {
-            if (context.fontSub) {
-                context.htmlOutput += "</sub>";
-            } else if (context.fontSuper) {
-                context.htmlOutput += "</sup>";
-            }
-        } else if (command == "strike") {
-            context.htmlOutput += "<s>";
-        } else if (command == "strike0") {
-            context.htmlOutput += "</s>";
+            if (context.fontSub) { context.htmlOutput += "</sub>"; context.fontSub = false; }
+            if (context.fontSuper) { context.htmlOutput += "</sup>"; context.fontSuper = false; }
         } else if (command == "tab") {
             context.htmlOutput += "\t";
         }
