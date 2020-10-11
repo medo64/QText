@@ -1,6 +1,11 @@
 ## Release Notes ##
 
 
+### 0.1.15 [2020-10-11] ###
+
+* Added RTF import
+
+
 ### 0.1.14 [2020-09-05] ###
 
 * Added font settings
