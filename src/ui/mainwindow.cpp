@@ -664,8 +664,14 @@ void MainWindow::onFolderMenuShow() {
     QFont italicFont = _folderButton->menu()->font();
     italicFont.setItalic(true);
 
+    bool isFirst = true;
     _folderButton->menu()->clear();
     for (FolderItem* folder : *_storage) {
+        if (isFirst) {
+            isFirst = false;
+        } else {
+            if (folder->isRoot()) { _folderButton->menu()->addSeparator();                 }
+        }
         QAction* folderAction = new QAction(folder->title());
         folderAction->setData(folder->name());
         folderAction->setDisabled(folder == _folder);
@@ -851,7 +857,13 @@ void MainWindow::onTabMenuRequested(const QPoint& point) {
 
         if (_storage->folderCount() > 1) {
             auto moveMenu = menu.addMenu("Move");
+            bool isFirst = true;
             for (FolderItem* folder : *_storage) {
+                if (isFirst) {
+                    isFirst = false;
+                } else {
+                    if (folder->isRoot()) { moveMenu->addSeparator();                 }
+                }
                 auto folderAction = moveMenu->addAction(folder->title(), this, &MainWindow::onFolderMove);
                 if (!folder->isPrimary()) { folderAction->setFont(italicFont); }
                 folderAction->setData(folder->key());
