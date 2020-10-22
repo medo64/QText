@@ -11,6 +11,7 @@ Simple note taking program with multi-folder support, auto-save, and encryption 
   * `F3`                      Find next
   * `F5`                      Insert date/time.
   * `F10`                     Activate toolbar.
+  * `Shift+F1`                Phonetic spelling.
   * `Ctrl+A`                  Select all
   * `Ctrl+C`                  Copy
   * `Ctrl+F`                  Find
