@@ -24,7 +24,7 @@ void PhoneticDialog::onChanged() {
     QString output;
 
     bool addSpace = false;
-    foreach (QString ch, text.split("", QString::SkipEmptyParts)) { //splits on UTF-8 borders correctly
+    foreach (QString ch, text.split("", Qt::SkipEmptyParts)) { //splits on UTF-8 borders correctly
         if (ch == " ") {
             output += "\n";
             addSpace = false;
