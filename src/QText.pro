@@ -65,6 +65,7 @@ SOURCES += \
         medo/hotkey.cpp \
         medo/singleinstance.cpp \
         medo/state.cpp \
+        medo/upgrade.cpp \
         storage/fileitem.cpp \
         storage/folderitem.cpp \
         storage/storage.cpp \
@@ -100,6 +101,7 @@ HEADERS += \
         medo/hotkey.h \
         medo/singleinstance.h \
         medo/state.h \
+        medo/upgrade.h \
         storage/deletionstyle.h \
         storage/fileitem.h \
         storage/filetype.h \

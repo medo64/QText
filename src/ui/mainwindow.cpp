@@ -21,6 +21,7 @@
 #include "medo/feedback.h"
 #include "medo/singleinstance.h"
 #include "medo/state.h"
+#include "medo/upgrade.h"
 
 #include "finddialog.h"
 #include "foldersdialog.h"
@@ -142,6 +143,12 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     QAction* appFeedbackAction = new QAction("Send &Feedback");
     connect(appFeedbackAction, &QAction::triggered, this, &MainWindow::onAppFeedback);
     _appButton->menu()->addAction(appFeedbackAction);
+
+#if defined(Q_OS_WIN) //upgrade visible only on Windows
+    QAction* appUpgradeAction = new QAction("Check for &Upgrade");
+    connect(appUpgradeAction, &QAction::triggered, this, &MainWindow::onAppUpgrade);
+    _appButton->menu()->addAction(appUpgradeAction);
+#endif
 
     QAction* appAboutAction = new QAction("&About");
     connect(appAboutAction, &QAction::triggered, this, &MainWindow::onAppAbout);
@@ -797,6 +804,12 @@ void MainWindow::onAppSettings() {
 
 void MainWindow::onAppFeedback() {
     Feedback::showDialog(this, QUrl("https://medo64.com/feedback/"));
+}
+
+void MainWindow::onAppUpgrade() {
+    if (Upgrade::showDialog(this, QUrl("https://medo64.com/upgrade/"))) {
+        onAppQuit();
+    }
 }
 
 void MainWindow::onAppAbout() {

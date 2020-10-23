@@ -79,6 +79,7 @@ class MainWindow : public QMainWindow {
         void onTopMost();
         void onAppSettings();
         void onAppFeedback();
+        void onAppUpgrade();
         void onAppAbout();
         void onAppQuit();
         void onTabMenuRequested(const QPoint&);
