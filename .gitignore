@@ -2,6 +2,9 @@
 /build
 /build-*
 /dist
+
 **/*.pro.user
 **/*.pro.user.*
 **/*.rs.bk
+
+*.rar
