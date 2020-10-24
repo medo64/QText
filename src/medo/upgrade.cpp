@@ -118,12 +118,16 @@ UpgradeFile Upgrade::upgradeFile(QUrl serviceUrl) {
     }
     if (appName.isEmpty()) { return UpgradeFile(); }
 
+    QString appVersion = QCoreApplication::applicationVersion();
+
     QString url = serviceUrl.toString();
     if (!url.endsWith("/")) { url += "/"; }
     url += appName;
     url += "/";
-    url += APP_VERSION;
-    url += "/";
+    if (!appVersion.isEmpty()) {
+        url += appVersion;
+        url += "/";
+    }
 
     QElapsedTimer stopwatch;
     stopwatch.start();
