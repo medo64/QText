@@ -302,10 +302,11 @@ QPixmap Icons::getPixmap(QString baseName, int size) {
         for (int x = 0; x < image.width(); x++) {
             for (int y = 0; y < image.height(); y++) {
                 QColor color = image.pixelColor(x, y);
-                QColor newColor = QColor::fromHsv(color.hue() + 165,
-                                                  color.saturation(),
-                                                  color.value(),
-                                                  color.alpha()).lighter(125);
+                int h = color.hue() + 165; if (h > 359) { h = 359; }
+                int s = color.saturation();
+                int v = color.value() * 1.25; if (v > 255) { v = 255; }
+                int a = color.alpha();
+                QColor newColor = QColor::fromHsv(h, s, v, a);
                 image.setPixelColor(x, y, newColor);
             }
         }
