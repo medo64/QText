@@ -32,7 +32,10 @@ class Upgrade {
         static UpgradeFile upgradeFile(QString serviceUrl);
 
         /*! Returns true if upgrade is available. */
-        static bool hasUpgrade(QUrl url);
+        static bool available(QUrl url);
+
+        /*! Returns true if upgrade is available. */
+        static bool available(QString url);
 
     private:
         static UpgradeFile getUpgradeFileFromURL(QElapsedTimer* stopwatch, QUrl url);

@@ -143,5 +143,10 @@
         <file>icons/32x32/strikethrough.png</file>
         <file>icons/48x48/strikethrough.png</file>
         <file>icons/64x64/strikethrough.png</file>
+        <file>icons/16x16/settingsWithUpgrade.png</file>
+        <file>icons/24x24/settingsWithUpgrade.png</file>
+        <file>icons/32x32/settingsWithUpgrade.png</file>
+        <file>icons/48x48/settingsWithUpgrade.png</file>
+        <file>icons/64x64/settingsWithUpgrade.png</file>
     </qresource>
 </RCC>

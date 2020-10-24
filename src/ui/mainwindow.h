@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QApplication>
+#include <QFutureWatcher>
 #include <QMainWindow>
 #include <QToolButton>
 #include <QSystemTrayIcon>
@@ -33,6 +34,7 @@ class MainWindow : public QMainWindow {
         QToolButton* _folderButton = nullptr;
         QToolButton* _appButton = nullptr;
         Hotkey* _hotkey = nullptr;
+        QFutureWatcher<bool>* _futureWatcher = nullptr;
         void applySettings() { applySettings(true, true, true, false, false, false); }
         void applySettings(bool applyShowInTaskbar, bool applyTabTextColorPerType, bool applyAlwaysOnTop, bool applyHotkey, bool applyDataPath, bool applyForceDarkMode);
         void applyToolbarIcons();
@@ -80,6 +82,7 @@ class MainWindow : public QMainWindow {
         void onAppSettings();
         void onAppFeedback();
         void onAppUpgrade();
+        void onAppUpgradeChecked();
         void onAppAbout();
         void onAppQuit();
         void onTabMenuRequested(const QPoint&);

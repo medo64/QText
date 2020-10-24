@@ -36,6 +36,7 @@ class Icons {
         static QIcon gotoIcon();
 
         static QIcon settings();
+        static QIcon settingsWithUpgrade();
 
         static QIcon gotoFile();
         static QIcon gotoFolder();

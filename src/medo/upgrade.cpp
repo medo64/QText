@@ -134,6 +134,14 @@ UpgradeFile Upgrade::upgradeFile(QString serviceUrl) {
     return upgradeFile(QUrl(serviceUrl));
 }
 
+bool Upgrade::available(QUrl serviceUrl) {
+    return upgradeFile(serviceUrl).available();
+}
+
+bool Upgrade::available(QString serviceUrl) {
+    return available(QUrl(serviceUrl));
+}
+
 UpgradeFile Upgrade::getUpgradeFileFromURL(QElapsedTimer* stopwatch, QUrl url) {
     if (stopwatch->elapsed() > 7000) { //give up if already running more than 7 seconds
         qDebug().noquote().nospace() << "[Upgrade] Upgrade timed out (took " << stopwatch->elapsed() << " ms)";

@@ -3,6 +3,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QTabBar>
+#include <QtConcurrent/QtConcurrent>
 #include <QtPrintSupport/QAbstractPrintDialog>
 #include <QtPrintSupport/QPageSetupDialog>
 #include <QtPrintSupport/QPrintDialog>
@@ -207,6 +208,12 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
 
     //storage updates
     connect(_storage, &Storage::updatedFolder, this, &MainWindow::onUpdatedFolder);
+
+    //upgrade
+    _futureWatcher = new QFutureWatcher<bool>();
+    connect(_futureWatcher, &QFutureWatcher<bool>::finished, this, &MainWindow::onAppUpgradeChecked);
+    QFuture<bool> future = QtConcurrent::run([]() { return Upgrade::available("https://medo64.com/upgrade/"); });
+    _futureWatcher->setFuture(future);
 }
 
 MainWindow::~MainWindow() {
@@ -810,6 +817,15 @@ void MainWindow::onAppUpgrade() {
     if (Upgrade::showDialog(this, QUrl("https://medo64.com/upgrade/"))) {
         onAppQuit();
     }
+}
+
+void MainWindow::onAppUpgradeChecked() {
+    bool hasUpgrade = _futureWatcher->future().result();
+    if (hasUpgrade && this->isVisible()) {
+        _appButton->setIcon(Icons::settingsWithUpgrade());
+    }
+    delete _futureWatcher;
+    _futureWatcher = nullptr;
 }
 
 void MainWindow::onAppAbout() {

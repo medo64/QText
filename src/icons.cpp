@@ -256,6 +256,16 @@ QIcon Icons::settings() {
     return icon;
 }
 
+QIcon Icons::settingsWithUpgrade() {
+    QIcon icon;
+    icon.addPixmap(getPixmap("settingsWithUpgrade", 16));
+    icon.addPixmap(getPixmap("settingsWithUpgrade", 24));
+    icon.addPixmap(getPixmap("settingsWithUpgrade", 32));
+    icon.addPixmap(getPixmap("settingsWithUpgrade", 48));
+    icon.addPixmap(getPixmap("settingsWithUpgrade", 64));
+    return icon;
+}
+
 
 QIcon Icons::gotoFile() {
     QIcon icon;
