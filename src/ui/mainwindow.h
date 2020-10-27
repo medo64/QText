@@ -21,9 +21,11 @@ class MainWindow : public QMainWindow {
         ~MainWindow();
 
     protected:
-        void closeEvent(QCloseEvent* event);
-        void changeEvent(QEvent* event);
-        void keyPressEvent(QKeyEvent* event);
+        void closeEvent(QCloseEvent* event) override;
+        void changeEvent(QEvent* event) override;
+        void keyPressEvent(QKeyEvent* event) override;
+        void moveEvent(QMoveEvent* event) override;
+        void resizeEvent(QResizeEvent* event) override;
 
     private:
         Ui::MainWindow* ui;

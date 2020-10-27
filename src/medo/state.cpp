@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QDebug>
 #include <QScreen>
 #include <QWindow>
 #include "state.h"
@@ -24,6 +25,9 @@ void State::load(QMainWindow* window) {
 void State::load(QString objectName, QMainWindow* window) {
     if (window == nullptr) { return; }
     if (objectName.isNull()) { objectName = window->objectName(); }
+#ifdef QT_DEBUG
+    qDebug().noquote().nospace() << "[State] load(" << objectName << ", window)";
+#endif
     instance()->loadEx(objectName, window);
 }
 
@@ -34,6 +38,9 @@ void State::save(QMainWindow* window) {
 void State::save(QString objectName, QMainWindow* window) {
     if (window == nullptr) { return; }
     if (objectName.isNull()) { objectName = window->objectName(); }
+#ifdef QT_DEBUG
+    qDebug().noquote().nospace() << "[State] save(" << objectName << ", window)";
+#endif
     instance()->saveEx(objectName, window);
 }
 
@@ -63,6 +70,9 @@ void State::load(QWidget* widget) {
 void State::load(QString objectName, QWidget* widget) {
     if (widget == nullptr) { return; }
     if (objectName.isNull()) { objectName = widget->objectName(); }
+#ifdef QT_DEBUG
+    qDebug().noquote().nospace() << "[State] load(" << objectName << ", widget)";
+#endif
     instance()->loadEx(objectName, widget);
 
     QWidget* parent = widget->parentWidget();
@@ -102,6 +112,9 @@ void State::save(QWidget* widget) {
 void State::save(QString objectName, QWidget* widget) {
     if (widget == nullptr) { return; }
     if (objectName.isNull()) { objectName = widget->objectName(); }
+#ifdef QT_DEBUG
+    qDebug().noquote().nospace() << "[State] save(" << objectName << ", widget)";
+#endif
     instance()->saveEx(objectName, widget);
 }
 

@@ -413,6 +413,15 @@ void MainWindow::keyPressEvent(QKeyEvent* event) {
     }
 }
 
+void MainWindow::moveEvent(QMoveEvent* event) {
+    QMainWindow::moveEvent(event);
+    if (this->isVisible()) { State::save(this); }
+}
+
+void MainWindow::resizeEvent(QResizeEvent* event) {
+    QMainWindow::resizeEvent(event);
+    if (this->isVisible()) { State::save(this); }
+}
 
 void MainWindow::onFileModificationChanged(FileItem* file, bool isModified) {
     auto tabIndex = ui->tabWidget->indexOf(file);
