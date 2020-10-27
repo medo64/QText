@@ -415,7 +415,16 @@ void MainWindow::keyPressEvent(QKeyEvent* event) {
 
 void MainWindow::moveEvent(QMoveEvent* event) {
     QMainWindow::moveEvent(event);
-    if (this->isVisible()) { State::save(this); }
+    if (_moveTimer == nullptr) { //setup state save a second later; don't create if timer already exists
+        _moveTimer = new QTimer();
+        _moveTimer->setSingleShot(true);
+        _moveTimer->start(1000);
+        QObject::connect(_moveTimer, &QTimer::timeout, [&]() { //triggered only once per setup
+            delete _moveTimer; //release timer
+            _moveTimer = nullptr;
+            if (this->isVisible()) { State::save(this); }
+        });
+    }
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event) {

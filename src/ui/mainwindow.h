@@ -37,6 +37,7 @@ class MainWindow : public QMainWindow {
         QToolButton* _appButton = nullptr;
         Hotkey* _hotkey = nullptr;
         QFutureWatcher<bool>* _futureWatcher = nullptr;
+        QTimer* _moveTimer = nullptr;
         void applySettings() { applySettings(true, true, true, false, false, false); }
         void applySettings(bool applyShowInTaskbar, bool applyTabTextColorPerType, bool applyAlwaysOnTop, bool applyHotkey, bool applyDataPath, bool applyForceDarkMode);
         void applyToolbarIcons();
