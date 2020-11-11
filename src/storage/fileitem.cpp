@@ -324,28 +324,16 @@ bool FileItem::isFontBold() {
     return textCursor().charFormat().fontWeight() == QFont::Bold;
 }
 
-void FileItem::fontBold() {
-    if (textCursor().hasSelection()) {
-        if (textCursor().charFormat().fontWeight() != QFont::Bold) {
-            qDebug() << "[FileItem] fontBold(true)";
-            QTextCharFormat format;
-            format.setFontWeight(QFont::Bold);
-            textCursor().mergeCharFormat(format);
-        } else {
-            qDebug() << "[FileItem] fontBold(false)";
-            QTextCharFormat format;
-            format.setFontWeight(QFont::Normal);
-            textCursor().mergeCharFormat(format);
-        }
+void FileItem::setFontBold(bool bold) {
+    qDebug().noquote().nospace() << "[FileItem] setFontBold(" << bold << ")";
+    QTextCursor cursor = textCursor();
+    if (cursor.hasSelection()) {
+        QTextCharFormat format;
+        format.setFontWeight(bold ? QFont::Bold : QFont::Normal);
+        cursor.mergeCharFormat(format);
     } else { //change for new text
         QTextCharFormat format = currentCharFormat();
-        if (format.fontWeight() != QFont::Bold) {
-            qDebug() << "[FileItem] fontBold(true*)";
-            format.setFontWeight(QFont::Bold);
-        } else {
-            qDebug() << "[FileItem] fontBold(false*)";
-            format.setFontWeight(QFont::Normal);
-        }
+        format.setFontWeight(bold ? QFont::Bold : QFont::Normal);
         setCurrentCharFormat(format);
     }
 }
@@ -354,26 +342,16 @@ bool FileItem::isFontItalic() {
     return textCursor().charFormat().fontItalic();
 }
 
-void FileItem::fontItalic() {
-    if (textCursor().hasSelection()) {
+void FileItem::setFontItalic(bool italic) {
+    qDebug().noquote().nospace() << "[FileItem] setFontItalic(" << italic << ")";
+    QTextCursor cursor = textCursor();
+    if (cursor.hasSelection()) {
         QTextCharFormat format;
-        if (!textCursor().charFormat().fontItalic()) {
-            qDebug() << "[FileItem] fontItalic(true)";
-            format.setFontItalic(true);
-        } else {
-            qDebug() << "[FileItem] fontItalic(false)";
-            format.setFontItalic(false);
-        }
-        textCursor().mergeCharFormat(format);
+        format.setFontItalic(italic);
+        cursor.mergeCharFormat(format);
     } else { //change for new text
         QTextCharFormat format = currentCharFormat();
-        if (!format.fontItalic()) {
-            qDebug() << "[FileItem] fontItalic(true*)";
-            format.setFontItalic(true);
-        } else {
-            qDebug() << "[FileItem] fontItalic(false*)";
-            format.setFontItalic(false);
-        }
+        format.setFontItalic(italic);
         setCurrentCharFormat(format);
     }
 }
@@ -382,26 +360,16 @@ bool FileItem::isFontUnderline() {
     return textCursor().charFormat().fontUnderline();
 }
 
-void FileItem::fontUnderline() {
-    if (textCursor().hasSelection()) {
+void FileItem::setFontUnderline(bool underline) {
+    qDebug().noquote().nospace() << "[FileItem] setFontUnderline(" << underline << ")";
+    QTextCursor cursor = textCursor();
+    if (cursor.hasSelection()) {
         QTextCharFormat format;
-        if (!textCursor().charFormat().fontUnderline()) {
-            qDebug() << "[FileItem] fontUnderline(true)";
-            format.setFontUnderline(true);
-        } else {
-            qDebug() << "[FileItem] fontUnderline(false)";
-            format.setFontUnderline(false);
-        }
-        textCursor().mergeCharFormat(format);
+        format.setFontUnderline(underline);
+        cursor.mergeCharFormat(format);
     } else { //change for new text
         QTextCharFormat format = currentCharFormat();
-        if (!format.fontUnderline()) {
-            qDebug() << "[FileItem] fontUnderline(true*)";
-            format.setFontUnderline(true);
-        } else {
-            qDebug() << "[FileItem] fontUnderline(false*)";
-            format.setFontUnderline(false);
-        }
+        format.setFontUnderline(underline);
         setCurrentCharFormat(format);
     }
 }
@@ -410,26 +378,16 @@ bool FileItem::isFontStrikethrough() {
     return textCursor().charFormat().fontStrikeOut();
 }
 
-void FileItem::fontStrikethrough() {
-    if (textCursor().hasSelection()) {
+void FileItem::setFontStrikethrough(bool strikethrough) {
+    qDebug().noquote().nospace() << "[FileItem] setFontStrikethrough(" << strikethrough << ")";
+    QTextCursor cursor = textCursor();
+    if (cursor.hasSelection()) {
         QTextCharFormat format;
-        if (!textCursor().charFormat().fontStrikeOut()) {
-            qDebug() << "[FileItem] fontStrikethrough(true)";
-            format.setFontStrikeOut(true);
-        } else {
-            qDebug() << "[FileItem] fontStrikethrough(false)";
-            format.setFontStrikeOut(false);
-        }
-        textCursor().mergeCharFormat(format);
+        format.setFontStrikeOut(strikethrough);
+        cursor.mergeCharFormat(format);
     } else { //change for new text
         QTextCharFormat format = currentCharFormat();
-        if (!format.fontStrikeOut()) {
-            qDebug() << "[FileItem] fontStrikethrough(true*)";
-            format.setFontStrikeOut(true);
-        } else {
-            qDebug() << "[FileItem] fontStrikethrough(false*)";
-            format.setFontStrikeOut(false);
-        }
+        format.setFontStrikeOut(strikethrough);
         setCurrentCharFormat(format);
     }
 }

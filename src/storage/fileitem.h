@@ -48,13 +48,13 @@ class FileItem : public QTextEdit {
         void textPaste(bool forcePlain = false);
 
         bool isFontBold();
-        void fontBold();
+        void setFontBold(bool bold = true);
         bool isFontItalic();
-        void fontItalic();
+        void setFontItalic(bool italic = true);
         bool isFontUnderline();
-        void fontUnderline();
+        void setFontUnderline(bool underline = true);
         bool isFontStrikethrough();
-        void fontStrikethrough();
+        void setFontStrikethrough(bool strikethrough = true);
 
     public:
         FileItem(const FileItem&) = delete;

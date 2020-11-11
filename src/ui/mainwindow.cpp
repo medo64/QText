@@ -590,22 +590,22 @@ void MainWindow::onTextRedo() {
 
 void MainWindow::onTextFontBold() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-    file->fontBold();
+    file->setFontBold(ui->actionFontBold->isChecked());
 }
 
 void MainWindow::onTextFontItalic() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-    file->fontItalic();
+    file->setFontItalic(ui->actionFontItalic->isChecked());
 }
 
 void MainWindow::onTextFontUnderline() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-    file->fontUnderline();
+    file->setFontUnderline(ui->actionFontUnderline->isChecked());
 }
 
 void MainWindow::onTextFontStrikethrough() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-    file->fontStrikethrough();
+    file->setFontStrikethrough(ui->actionFontStrikethrough->isChecked());
 }
 
 void MainWindow::onFind() {
