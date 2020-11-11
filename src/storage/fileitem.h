@@ -35,6 +35,28 @@ class FileItem : public QTextEdit {
         bool setFolder(FolderItem* newFolder);
 
     public:
+        bool isTextUndoAvailable();
+        void textUndo();
+        bool isTextRedoAvailable();
+        void textRedo();
+
+        bool canTextCut();
+        void textCut(bool forcePlain = false);
+        bool canTextCopy();
+        void textCopy(bool forcePlain = false);
+        bool canTextPaste();
+        void textPaste(bool forcePlain = false);
+
+        bool isFontBold();
+        void fontBold();
+        bool isFontItalic();
+        void fontItalic();
+        bool isFontUnderline();
+        void fontUnderline();
+        bool isFontStrikethrough();
+        void fontStrikethrough();
+
+    public:
         FileItem(const FileItem&) = delete;
         void operator=(const FileItem&) = delete;
 

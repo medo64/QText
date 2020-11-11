@@ -266,6 +266,175 @@ bool FileItem::setFolder(FolderItem* newFolder) {
 }
 
 
+bool FileItem::isTextUndoAvailable() {
+    return document()->isUndoAvailable();
+}
+
+void FileItem::textUndo() {
+    document()->undo();
+}
+
+bool FileItem::isTextRedoAvailable() {
+    return document()->isRedoAvailable();
+}
+
+void FileItem::textRedo() {
+    document()->redo();
+}
+
+bool FileItem::canTextCut() {
+    return textCursor().hasSelection();
+}
+
+
+void FileItem::textCut(bool forcePlain) {
+    if (!Settings::forcePlainCopyPaste() && !forcePlain) {
+        Clipboard::cutHtml(textCursor());
+    } else {
+        Clipboard::cutPlain(textCursor());
+    }
+}
+
+bool FileItem::canTextCopy() {
+    return textCursor().hasSelection();
+}
+
+void FileItem::textCopy(bool forcePlain) {
+    if (!Settings::forcePlainCopyPaste() && !forcePlain) {
+        Clipboard::copyHtml(textCursor());
+    } else {
+        Clipboard::copyPlain(textCursor());
+    }
+}
+
+bool FileItem::canTextPaste() {
+    return Clipboard::hasPlain();
+}
+
+void FileItem::textPaste(bool forcePlain) {
+    if (!Settings::forcePlainCopyPaste() && !forcePlain && (type() == FileType::Html)) {
+        Clipboard::pasteHtml(textCursor());
+    } else {
+        Clipboard::pastePlain(textCursor());
+    }
+}
+
+
+bool FileItem::isFontBold() {
+    return textCursor().charFormat().fontWeight() == QFont::Bold;
+}
+
+void FileItem::fontBold() {
+    if (textCursor().hasSelection()) {
+        if (textCursor().charFormat().fontWeight() != QFont::Bold) {
+            qDebug() << "[FileItem] fontBold(true)";
+            QTextCharFormat format;
+            format.setFontWeight(QFont::Bold);
+            textCursor().mergeCharFormat(format);
+        } else {
+            qDebug() << "[FileItem] fontBold(false)";
+            QTextCharFormat format;
+            format.setFontWeight(QFont::Normal);
+            textCursor().mergeCharFormat(format);
+        }
+    } else { //change for new text
+        QTextCharFormat format = currentCharFormat();
+        if (format.fontWeight() != QFont::Bold) {
+            qDebug() << "[FileItem] fontBold(true*)";
+            format.setFontWeight(QFont::Bold);
+        } else {
+            qDebug() << "[FileItem] fontBold(false*)";
+            format.setFontWeight(QFont::Normal);
+        }
+        setCurrentCharFormat(format);
+    }
+}
+
+bool FileItem::isFontItalic() {
+    return textCursor().charFormat().fontItalic();
+}
+
+void FileItem::fontItalic() {
+    if (textCursor().hasSelection()) {
+        QTextCharFormat format;
+        if (!textCursor().charFormat().fontItalic()) {
+            qDebug() << "[FileItem] fontItalic(true)";
+            format.setFontItalic(true);
+        } else {
+            qDebug() << "[FileItem] fontItalic(false)";
+            format.setFontItalic(false);
+        }
+        textCursor().mergeCharFormat(format);
+    } else { //change for new text
+        QTextCharFormat format = currentCharFormat();
+        if (!format.fontItalic()) {
+            qDebug() << "[FileItem] fontItalic(true*)";
+            format.setFontItalic(true);
+        } else {
+            qDebug() << "[FileItem] fontItalic(false*)";
+            format.setFontItalic(false);
+        }
+        setCurrentCharFormat(format);
+    }
+}
+
+bool FileItem::isFontUnderline() {
+    return textCursor().charFormat().fontUnderline();
+}
+
+void FileItem::fontUnderline() {
+    if (textCursor().hasSelection()) {
+        QTextCharFormat format;
+        if (!textCursor().charFormat().fontUnderline()) {
+            qDebug() << "[FileItem] fontUnderline(true)";
+            format.setFontUnderline(true);
+        } else {
+            qDebug() << "[FileItem] fontUnderline(false)";
+            format.setFontUnderline(false);
+        }
+        textCursor().mergeCharFormat(format);
+    } else { //change for new text
+        QTextCharFormat format = currentCharFormat();
+        if (!format.fontUnderline()) {
+            qDebug() << "[FileItem] fontUnderline(true*)";
+            format.setFontUnderline(true);
+        } else {
+            qDebug() << "[FileItem] fontUnderline(false*)";
+            format.setFontUnderline(false);
+        }
+        setCurrentCharFormat(format);
+    }
+}
+
+bool FileItem::isFontStrikethrough() {
+    return textCursor().charFormat().fontStrikeOut();
+}
+
+void FileItem::fontStrikethrough() {
+    if (textCursor().hasSelection()) {
+        QTextCharFormat format;
+        if (!textCursor().charFormat().fontStrikeOut()) {
+            qDebug() << "[FileItem] fontStrikethrough(true)";
+            format.setFontStrikeOut(true);
+        } else {
+            qDebug() << "[FileItem] fontStrikethrough(false)";
+            format.setFontStrikeOut(false);
+        }
+        textCursor().mergeCharFormat(format);
+    } else { //change for new text
+        QTextCharFormat format = currentCharFormat();
+        if (!format.fontStrikeOut()) {
+            qDebug() << "[FileItem] fontStrikethrough(true*)";
+            format.setFontStrikeOut(true);
+        } else {
+            qDebug() << "[FileItem] fontStrikethrough(false*)";
+            format.setFontStrikeOut(false);
+        }
+        setCurrentCharFormat(format);
+    }
+}
+
+
 bool FileItem::event(QEvent* event) {
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent* e = static_cast<QKeyEvent*>(event);
@@ -511,48 +680,36 @@ void FileItem::onContextMenuRequested(const QPoint& point) {
 }
 
 void FileItem::onContextMenuUndo() {
-    document()->undo();
+    textUndo();
 }
 
 void FileItem::onContextMenuRedo() {
-    document()->redo();
+    textRedo();
 }
 
 
 void FileItem::onContextMenuCut() {
-    if (!Settings::forcePlainCopyPaste()) {
-        Clipboard::cutHtml(textCursor());
-    } else {
-        Clipboard::cutPlain(textCursor());
-    }
+    textCut();
 }
 
 void FileItem::onContextMenuCopy() {
-    if (!Settings::forcePlainCopyPaste()) {
-        Clipboard::copyHtml(textCursor());
-    } else {
-        Clipboard::copyPlain(textCursor());
-    }
+    textCopy();
 }
 
 void FileItem::onContextMenuPaste() {
-    if (!Settings::forcePlainCopyPaste() && (type() == FileType::Html)) {
-        Clipboard::pasteHtml(textCursor());
-    } else {
-        Clipboard::pastePlain(textCursor());
-    }
+    textPaste();
 }
 
 void FileItem::onContextMenuCutPlain() {
-    Clipboard::cutPlain(textCursor());
+    textCut(true);
 }
 
 void FileItem::onContextMenuCopyPlain() {
-    Clipboard::copyPlain(textCursor());
+    textCopy(true);
 }
 
 void FileItem::onContextMenuPastePlain() {
-    Clipboard::pastePlain(textCursor());
+    textPaste(true);
 }
 
 

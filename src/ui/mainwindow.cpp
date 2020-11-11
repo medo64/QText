@@ -565,89 +565,47 @@ void MainWindow::onFilePrintToPdf() {
 
 void MainWindow::onTextCut() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-    Clipboard::cutPlain(file->textCursor());
+    file->textCut();
 }
 
 void MainWindow::onTextCopy() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-    Clipboard::copyPlain(file->textCursor());
+    file->textCopy();
 }
 
 void MainWindow::onTextPaste() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-    Clipboard::pastePlain(file->textCursor());
+    file->textPaste();
 }
 
 void MainWindow::onTextUndo() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-    file->document()->undo();
+    file->textUndo();
 }
 
 void MainWindow::onTextRedo() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-    file->document()->redo();
+    file->textRedo();
 }
 
 void MainWindow::onTextFontBold() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-    if (file->textCursor().hasSelection()) {
-        if (file->textCursor().charFormat().fontWeight() != QFont::Bold) {
-            QTextCharFormat format;
-            format.setFontWeight(QFont::Bold);
-            file->textCursor().mergeCharFormat(format);
-        } else {
-            QTextCharFormat format;
-            format.setFontWeight(QFont::Normal);
-            file->textCursor().mergeCharFormat(format);
-        }
-    } else { //change for new text
-        QTextCharFormat format = file->currentCharFormat();
-        if (format.fontWeight() != QFont::Bold) {
-            format.setFontWeight(QFont::Bold);
-        } else {
-            format.setFontWeight(QFont::Normal);
-        }
-        file->setCurrentCharFormat(format);
-    }
+    file->fontBold();
 }
 
 void MainWindow::onTextFontItalic() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-    if (file->textCursor().hasSelection()) {
-        QTextCharFormat format;
-        format.setFontItalic(!file->textCursor().charFormat().fontItalic());
-        file->textCursor().mergeCharFormat(format);
-    } else { //change for new text
-        QTextCharFormat format = file->currentCharFormat();
-        format.setFontItalic(!format.fontItalic());
-        file->setCurrentCharFormat(format);
-    }
+    file->fontItalic();
 }
 
 void MainWindow::onTextFontUnderline() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-    if (file->textCursor().hasSelection()) {
-        QTextCharFormat format;
-        format.setFontUnderline(!file->textCursor().charFormat().fontUnderline());
-        file->textCursor().mergeCharFormat(format);
-    } else { //change for new text
-        QTextCharFormat format = file->currentCharFormat();
-        format.setFontUnderline(!format.fontUnderline());
-        file->setCurrentCharFormat(format);
-    }
+    file->fontUnderline();
 }
 
 void MainWindow::onTextFontStrikethrough() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
-    if (file->textCursor().hasSelection()) {
-        QTextCharFormat format;
-        format.setFontStrikeOut(!file->textCursor().charFormat().fontStrikeOut());
-        file->textCursor().mergeCharFormat(format);
-    } else { //change for new text
-        QTextCharFormat format = file->currentCharFormat();
-        format.setFontStrikeOut(!format.fontStrikeOut());
-        file->setCurrentCharFormat(format);
-    }
+    file->fontStrikethrough();
 }
 
 void MainWindow::onFind() {
@@ -980,30 +938,23 @@ void MainWindow::onTextStateChanged() {
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
 
     bool hasFile = (file != nullptr) ? true : false;
-    bool isSelectionAvailable = hasFile ? file->textCursor().hasSelection() : false;
-
-    auto document = hasFile ? file->document() : nullptr;
-    bool isUndoAvailable = (document != nullptr) ? document->isUndoAvailable() : false;
-    bool isRedoAvailable = (document != nullptr) ? document->isRedoAvailable() : false;
 
     bool hasFontOperations = hasFile && (file->type() != FileType::Plain);
-    bool isSelectionFontBold = hasFile && (file->textCursor().charFormat().fontWeight() == QFont::Bold);
-    bool isSelectionFontItalic = hasFile && file->textCursor().charFormat().fontItalic();
-    bool isSelectionFontUnderline = hasFile && file->textCursor().charFormat().fontUnderline();
-    bool isSelectionFontStrikethrough = hasFile && file->textCursor().charFormat().fontStrikeOut();
-
-    bool isClipboardTextAvailable = hasFile ? Clipboard::hasPlain() : false;
+    bool isSelectionFontBold = hasFile && file->isFontBold();
+    bool isSelectionFontItalic = hasFile && file->isFontItalic();
+    bool isSelectionFontUnderline = hasFile && file->isFontUnderline();
+    bool isSelectionFontStrikethrough = hasFile && file->isFontStrikethrough();
 
     ui->actionFontBold->setVisible(hasFontOperations);
     ui->actionFontItalic->setVisible(hasFontOperations);
     ui->actionFontUnderline->setVisible(hasFontOperations);
     ui->actionFontStrikethrough->setVisible(hasFontOperations);
 
-    ui->actionCut->setDisabled(!isSelectionAvailable);
-    ui->actionCopy->setDisabled(!isSelectionAvailable);
-    ui->actionPaste->setDisabled(!isClipboardTextAvailable);
-    ui->actionUndo->setDisabled(!isUndoAvailable);
-    ui->actionRedo->setDisabled(!isRedoAvailable);
+    ui->actionCut->setDisabled(!hasFile || !file->canTextCut());
+    ui->actionCopy->setDisabled(!hasFile || !file->canTextCopy());
+    ui->actionPaste->setDisabled(!hasFile || !file->canTextPaste());
+    ui->actionUndo->setDisabled(!hasFile || !file->isTextUndoAvailable());
+    ui->actionRedo->setDisabled(!hasFile || !file->isTextRedoAvailable());
     ui->actionFind->setDisabled(!hasFile);
     ui->actionFindNext->setDisabled(!hasFile);
 
