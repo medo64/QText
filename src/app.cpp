@@ -1,9 +1,9 @@
 #include <QCommandLineParser>
+#include "medo/appsetupmutex.h"
 #include "medo/config.h"
 #include "medo/singleinstance.h"
 #include "medo/state.h"
 #include "ui/mainwindow.h"
-#include "appsetupmutex.h"
 #include "settings.h"
 #include "setup.h"
 

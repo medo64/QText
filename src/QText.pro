@@ -60,6 +60,7 @@ SOURCES += \
         ui/qtabwidgetex.cpp \
         ui/phoneticdialog.cpp \
         ui/renamefiledialog.cpp \
+        medo/appsetupmutex.cpp \
         medo/config.cpp \
         medo/feedback.cpp \
         medo/hotkey.cpp \
@@ -72,7 +73,6 @@ SOURCES += \
         storage/storagemonitorlocker.cpp \
         storage/storagemonitorthread.cpp \
         app.cpp \
-        appsetupmutex.cpp \
         clipboard.cpp \
         deletion.cpp \
         find.cpp \
@@ -96,6 +96,7 @@ HEADERS += \
         ui/phoneticdialog.h \
         ui/renamefiledialog.h \
         ui/settingsdialog.h \
+        medo/appsetupmutex.h \
         medo/config.h \
         medo/feedback.h \
         medo/hotkey.h \
@@ -109,7 +110,6 @@ HEADERS += \
         storage/storage.h \
         storage/storagemonitorlocker.h \
         storage/storagemonitorthread.h \
-        appsetupmutex.h \
         clipboard.h \
         deletion.h \
         find.h \
