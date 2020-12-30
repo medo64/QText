@@ -1,9 +1,11 @@
 #!/bin/bash
 set -e
 
+# Kill application
 PID=$(ps aux | grep '[/]opt/qtext/qtext' | awk '{print $2}')
 if [[ $PID != "" ]]; then
     sudo kill $PID 2>/dev/null || true
 fi
 
+# Done
 exit 0
