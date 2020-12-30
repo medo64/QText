@@ -1,7 +1,7 @@
 #!/bin/bash
 
 QT_PATH='/c/Qt'
-CERTIFICATE_THUMBPRINT="026184de8dbf52fdcbae75fd6b1a7d9ce4310e5d"
+CERTIFICATE_THUMBPRINT="e9b444fffb1375ece027e40d8637b6da3fdaaf0e"
 TIMESTAMP_URL="http://timestamp.digicert.com"  #http://timestamp.comodoca.com/rfc3161
 
 
