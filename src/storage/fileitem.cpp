@@ -634,6 +634,13 @@ void FileItem::onContextMenuRequested(const QPoint& point) {
         menu.addAction(goToUrlAction);
     }
 
+    menu.addSeparator();
+
+    QAction* resetFontAction = new QAction("&Reset Font");
+    resetFontAction->setDisabled(!textCursor().hasSelection());
+    connect(resetFontAction, &QAction::triggered, this, &FileItem::onContextMenuResetFont);
+    menu.addAction(resetFontAction);
+
     menu.exec(this->mapToGlobal(point));
 }
 
@@ -684,6 +691,15 @@ void FileItem::onContextMenuInsertTime() {
     if (dialog->exec() == QDialog::Accepted) {
         textCursor().removeSelectedText();
         textCursor().insertText(dialog->formattedTime() + "\n");
+    }
+}
+
+void FileItem::onContextMenuResetFont() {
+    QTextCursor cursor = textCursor();
+    if (cursor.hasSelection()) {
+        QTextCharFormat format;
+        format.setFont(Settings::font());
+        cursor.setCharFormat(format);
     }
 }
 
