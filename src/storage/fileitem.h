@@ -61,10 +61,10 @@ class FileItem : public QTextEdit {
         void operator=(const FileItem&) = delete;
 
     protected:
-        bool event(QEvent* event);
-        void focusInEvent(QFocusEvent* e);
-        void focusOutEvent(QFocusEvent* e);
-        void wheelEvent(QWheelEvent* e);
+        virtual bool event(QEvent* event);
+        virtual void focusInEvent(QFocusEvent* e);
+        virtual void focusOutEvent(QFocusEvent* e);
+        virtual void wheelEvent(QWheelEvent* e);
 
     private:
         FileItem(FolderItem* folder, QString fileName);

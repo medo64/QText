@@ -602,37 +602,44 @@ void FileItem::onContextMenuRequested(const QPoint& point) {
     connect(insertDateTimeAction, &QAction::triggered, this, &FileItem::onContextMenuInsertTime);
     menu.addAction(insertDateTimeAction);
 
-    //check if there's an URL in selected text
+    //check if there are URLs in selected text
     QString selectedText = textCursor().selectedText();
-    int urlStart = -1, urlLength;
-    for (auto urlPrefix : urlPrefixes) { //search for the first prefix
-        int start = selectedText.indexOf(urlPrefix);
-        if ((start >= 0) && ((start < urlStart) || (urlStart == -1))) {
-            urlStart = start;
-            urlLength = urlPrefix.length();
-        }
-    }
-    if (urlStart >= 0) {
-        menu.addSeparator();
-
-        for (int i = urlStart + urlLength; i < selectedText.length(); i++) { //find end of URL
-            QChar ch = selectedText[i];
-            if ((ch >= 'A') && (ch <= 'Z')) {
-            } else if ((ch >= 'a') && (ch <= 'z')) {
-            } else if ((ch >= '0') && (ch <= '9')) {
-            } else if ((ch == '-') || (ch == '_') || (selectedText[i] == '.') || (selectedText[i] == '~')) {
-            } else if ((ch == '%')) {
-            } else {
-                break;
+    bool separatorAdded = false;
+    int startFrom = 0;
+    while (true) {
+        int urlStart = -1, urlLength;
+        for (auto urlPrefix : urlPrefixes) { //search for the first prefix
+            int start = selectedText.indexOf(urlPrefix, startFrom);
+            if ((start >= 0) && ((start < urlStart) || (urlStart == -1))) {
+                urlStart = start;
+                urlLength = urlPrefix.length();
             }
-            urlLength += 1;
         }
-        QString url = selectedText.mid(urlStart, urlLength);
+        if (urlStart >= 0) {
+            if (!separatorAdded) { menu.addSeparator(); separatorAdded = true; }
 
-        QAction* goToUrlAction = new QAction("Go to " + url);
-        goToUrlAction->setData(url);
-        connect(goToUrlAction, &QAction::triggered, this, &FileItem::onGoToUrl);
-        menu.addAction(goToUrlAction);
+            for (int i = urlStart + urlLength; i < selectedText.length(); i++) { //find end of URL
+                QChar ch = selectedText[i];
+                if ((ch >= 'A') && (ch <= 'Z')) {
+                } else if ((ch >= 'a') && (ch <= 'z')) {
+                } else if ((ch >= '0') && (ch <= '9')) {
+                } else if ((ch == '-') || (ch == '_') || (selectedText[i] == '.') || (selectedText[i] == '~')) {
+                } else if ((ch == '%')) {
+                } else {
+                    break;
+                }
+                urlLength += 1;
+            }
+            QString url = selectedText.mid(urlStart, urlLength);
+            startFrom = urlStart + urlLength;
+
+            QAction* goToUrlAction = new QAction("Go to " + url);
+            goToUrlAction->setData(url);
+            connect(goToUrlAction, &QAction::triggered, this, &FileItem::onGoToUrl);
+            menu.addAction(goToUrlAction);
+        } else {
+            break;  // done with search
+        }
     }
 
     menu.addSeparator();
