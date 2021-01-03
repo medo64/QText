@@ -188,6 +188,7 @@ bool FileItem::load() {
         if (file.open(QIODevice::WriteOnly)) {
             file.close();
             this->document()->setModified(false);
+            this->blockSignals(false);
             emit titleChanged(this);
             fileValid = true;
         } else {
