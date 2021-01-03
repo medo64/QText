@@ -48,6 +48,7 @@ QMAKE_CXXFLAGS_WARN_ON += -Wdouble-promotion
 
 
 SOURCES += \
+        medo/about.cpp \
         ui/finddialog.cpp \
         ui/foldersdialog.cpp \
         ui/gotodialog.cpp \
@@ -84,6 +85,7 @@ SOURCES += \
         setup.cpp
 
 HEADERS += \
+        medo/about.h \
         ui/finddialog.h \
         ui/foldersdialog.h \
         ui/gotodialog.h \

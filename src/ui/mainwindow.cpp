@@ -18,6 +18,7 @@
 #include "settings.h"
 #include "storage/storage.h"
 
+#include "medo/about.h"
 #include "medo/config.h"
 #include "medo/feedback.h"
 #include "medo/singleinstance.h"
@@ -805,27 +806,7 @@ void MainWindow::onAppUpgradeChecked() {
 }
 
 void MainWindow::onAppAbout() {
-    QString description = QCoreApplication::applicationName() + " " + APP_VERSION;
-    QString commit = APP_COMMIT;
-    if (commit.length() > 0) {
-        description.append("+");
-        description.append(APP_COMMIT);
-    }
-#ifdef QT_DEBUG
-    description.append("\nDEBUG");
-#endif
-    description.append("\n\nQt ");
-
-    QString runtimeVersion = qVersion();
-    QString compileVersion = APP_QT_VERSION;
-    description.append(runtimeVersion);
-    if (runtimeVersion != compileVersion) {
-        description.append(" / ");
-        description.append(compileVersion);
-    }
-    description.append("\n" + QSysInfo::prettyProductName());
-    description.append("\n" + QSysInfo::kernelType() + " " + QSysInfo::kernelVersion());
-    QMessageBox::about(this, "About",  description);
+    About::showDialog(this);
 }
 
 void MainWindow::onAppQuit() {
