@@ -4,5 +4,8 @@ set -e
 # Update man pages
 mandb -q
 
+# Just loading to suppress warning
+. /usr/share/debconf/confmodule || true
+
 # Done
 exit 0
