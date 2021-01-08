@@ -1,6 +1,13 @@
 ## Release Notes ##
 
 
+### 0.1.16 [2021-01-07] ###
+
+* Extra font operations
+* Refactoring dark mode icons
+* Added upgrade option (Windows-only)
+
+
 ### 0.1.15 [2020-10-11] ###
 
 * Added RTF import
