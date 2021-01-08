@@ -83,6 +83,7 @@ bool Upgrade::showDialog(QWidget* parent, QUrl serviceUrl) {
             QApplication::restoreOverrideCursor();
         });
 #else //just show Close button if not Windows
+        Q_UNUSED( buttonDownload )
         buttonBox.setStandardButtons(QDialogButtonBox::Close);
 #endif
 

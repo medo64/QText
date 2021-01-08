@@ -17,6 +17,8 @@ AppSetupMutex::AppSetupMutex(const QString& mutexName) {
     } else {
         qDebug().noquote() << "[AppSetupMutex]" << mutexName << "could not be created";
     }
+#else
+    Q_UNUSED(mutexName)
 #endif
 }
 
