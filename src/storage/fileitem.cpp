@@ -624,6 +624,7 @@ void FileItem::onContextMenuRequested(const QPoint& point) {
                 } else if ((ch >= 'a') && (ch <= 'z')) {
                 } else if ((ch >= '0') && (ch <= '9')) {
                 } else if ((ch == '-') || (ch == '_') || (selectedText[i] == '.') || (selectedText[i] == '~')) {
+                } else if ((ch == '/')) {
                 } else if ((ch == '%')) {
                 } else {
                     break;
