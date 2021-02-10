@@ -40,6 +40,9 @@ NewFileDialog::NewFileDialog(QWidget* parent, FolderItem* folder) : QDialog(pare
     connect(ui->radioHtml, &QRadioButton::toggled, this, &NewFileDialog::onChanged);
     onChanged();
 
+    ui->labelError->setStyleSheet("QLabel { background-color : red; color : black; padding-left: 3px; padding-right: 3px; }");
+    ui->labelError->setVisible(false);
+
     ui->textTitle->setFocus();
 }
 
@@ -67,6 +70,7 @@ FileType NewFileDialog::type() const {
 
 void NewFileDialog::onChanged() {
     QString text = ui->textTitle->text();
+    ui->labelError->setVisible(false);
 
     if (text.length() == 0) {
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
@@ -76,5 +80,9 @@ void NewFileDialog::onChanged() {
             if (text.compare(iFile->title(), Qt::CaseInsensitive) == 0) { matchesName = true; break; }
         }
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(!matchesName);
+        if (matchesName) {
+            ui->labelError->setText("File already exists");
+            ui->labelError->setVisible(true);
+        }
     }
 }
