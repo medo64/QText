@@ -1,5 +1,7 @@
+#include <QAbstractButton>
 #include <QApplication>
 #include <QDesktopServices>
+#include <QDialogButtonBox>
 #include <QDir>
 #include <QProcess>
 #include <QStyle>
@@ -339,6 +341,10 @@ void Helpers::setReadonlyPalette(QWidget* widget) {
  */
 void Helpers::setupResizableDialog(QWidget* dialog) {
     dialog->setWindowIcon(Icons::appMono());
+
+    for (QAbstractButton* button : dialog->findChild<QDialogButtonBox*>()->buttons()) {
+        button->setIcon(QIcon());
+    }
 }
 
 /*!
@@ -347,6 +353,10 @@ void Helpers::setupResizableDialog(QWidget* dialog) {
 void Helpers::setupFixedSizeDialog(QWidget* dialog) {
     dialog->setWindowIcon(Icons::appMono());
     dialog->setFixedSize(dialog->geometry().width(), dialog->sizeHint().height());
+
+    for (QAbstractButton* button : dialog->findChild<QDialogButtonBox*>()->buttons()) {
+        button->setIcon(QIcon());
+    }
 }
 
 /*!
