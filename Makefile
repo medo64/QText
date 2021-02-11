@@ -124,7 +124,7 @@ package: dist
 	@sed -i "s/ARCHITECTURE/$(DEB_BUILD_ARCH)/" $(PACKAGE_DIR)/DEBIAN/control
 	@mkdir -p $(PACKAGE_DIR)/usr/share/doc/qtext/
 	@cp package/deb/copyright $(PACKAGE_DIR)/usr/share/doc/qtext/copyright
-	@cp CHANGES.md build/changelog
+	@cp CHANGELOG.md build/changelog
 	@sed -i '/^$$/d' build/changelog
 	@sed -i '/## Release Notes ##/d' build/changelog
 	@sed -i '1{s/### \(.*\) \[.*/qtext \(\1\) stable; urgency=low/}' build/changelog

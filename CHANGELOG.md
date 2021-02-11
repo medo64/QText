@@ -182,7 +182,7 @@
 * Bug-fixing
 
 
-### 3.50 [2013-04-17] (https://www.medo64.com/2013/04/qtext-350/) ###
+### 3.50 [2013-04-17](https://www.medo64.com/2013/04/qtext-350/) ###
 
 * Added keyboard zoom support
 * Added plain-text operation shortcuts (Ctrl+Shift+X/C/V)
@@ -200,7 +200,7 @@
 * Improved search functionality
 
 
-### 3.20 [2012-06-30] (https://www.medo64.com/2012/06/qtext-320/) ###
+### 3.20 [2012-06-30](https://www.medo64.com/2012/06/qtext-320/) ###
 
 * Added file encryption
 * Lot of small tweaks and bug-fixes
@@ -223,7 +223,7 @@
 * Fixed data location change
 
 
-### 3.00 [2012-02-14] (https://www.medo64.com/2012/02/qtext-300/) ###
+### 3.00 [2012-02-14](https://www.medo64.com/2012/02/qtext-300/) ###
 
 * Added support for folders
 * Removed support for hidden files (replaced by folders)
@@ -244,12 +244,12 @@
 * Bug-fixing
 
 
-### 2.31 [2010-10-11] (https://www.medo64.com/2010/11/qtext-231/) ###
+### 2.31 [2010-10-11](https://www.medo64.com/2010/11/qtext-231/) ###
 
 * Directory is now created during startup
 
 
-### 2.30 [2010-10-10] (https://www.medo64.com/2010/11/qtext-230/) ###
+### 2.30 [2010-10-10](https://www.medo64.com/2010/11/qtext-230/) ###
 
 * All text is now internally handled via RichTextBox
 * Files can be hidden
@@ -259,20 +259,20 @@
 * Fix: Cursor does not reset position upon save
 
 
-### 2.20 [2009-10-01] (https://www.medo64.com/2009/10/qtext-220/) ###
+### 2.20 [2009-10-01](https://www.medo64.com/2009/10/qtext-220/) ###
 
 * Added Find option
 * Fix: Window restoring via shortcut
 * Fix: Clipboard bug (Requested Clipboard operation did not succeed)
 
 
-### 2.10 [2009-06-30] (https://www.medo64.com/2009/06/qtext-210/) ###
+### 2.10 [2009-06-30](https://www.medo64.com/2009/06/qtext-210/) ###
 
 * Changed installer to InnoSetup
 * Small bug fixes and changes
 
 
-### 2.00 [2009-03-19] (https://www.medo64.com/2009/03/qtext-200/) ###
+### 2.00 [2009-03-19](https://www.medo64.com/2009/03/qtext-200/) ###
 
 * Redesigned Options
 * Added Ctrl+1, Ctrl+2, …, Ctrl+0 shortcuts
