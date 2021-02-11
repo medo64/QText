@@ -62,6 +62,7 @@ class FileItem : public QTextEdit {
 
     protected:
         virtual bool event(QEvent* event);
+        virtual bool eventFilter(QObject* obj, QEvent* event);
         virtual void focusInEvent(QFocusEvent* e);
         virtual void focusOutEvent(QFocusEvent* e);
         virtual void wheelEvent(QWheelEvent* e);
@@ -77,6 +78,7 @@ class FileItem : public QTextEdit {
         QTimer* _timerSavePending = nullptr;
         mutable QDateTime _modificationTime;
         int zoomAmount = 0;
+        bool customCursorSet = false;
 
     signals:
         void activated(FileItem* file);

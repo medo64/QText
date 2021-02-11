@@ -33,6 +33,8 @@ FileItem::FileItem(FolderItem* folder, QString fileName)
     connect(this->document(), &QTextDocument::modificationChanged, this, &FileItem::onModificationChanged);
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &FileItem::customContextMenuRequested, this, &FileItem::onContextMenuRequested);
+
+    this->viewport()->installEventFilter(this);
 }
 
 FileItem::~FileItem() {
@@ -443,6 +445,42 @@ bool FileItem::event(QEvent* event) {
     return QTextEdit::event(event);
 }
 
+bool FileItem::eventFilter(QObject* obj, QEvent* event) {
+    if ((obj == this) || (obj == viewport())) {
+        switch (event->type()) {
+            case QEvent::MouseButtonDblClick: {
+                    QMouseEvent* e = static_cast<QMouseEvent*>(event);
+                    if ((e->buttons() & Qt::LeftButton)) {
+                        QString anchor = this->anchorAt(e->pos());
+                        if (!anchor.isEmpty()) {
+                            QApplication::setOverrideCursor(Qt::WaitCursor);
+                            QDesktopServices::openUrl(QUrl(anchor));
+                            QApplication::restoreOverrideCursor();
+                            return true;
+                        }
+                    }
+                } break;
+
+            case QEvent::MouseMove: {
+                    QMouseEvent* e = static_cast<QMouseEvent*>(event);
+                    QString anchor = this->anchorAt(e->pos());
+                    if (!anchor.isEmpty()) {
+                        if (!customCursorSet) {
+                            viewport()->setCursor(Qt::PointingHandCursor);
+                            customCursorSet = true;
+                        }
+                    } else if (customCursorSet) {
+                        viewport()->setCursor(Qt::IBeamCursor);
+                        customCursorSet = false;
+                    }
+                } break;
+
+            default: break;
+        }
+    }
+    return false;
+}
+
 void FileItem::focusInEvent(QFocusEvent* e) {
     qDebug().nospace() << "focusInEvent(" << QVariant::fromValue(e->reason()).toString() << ") " << path();
     QFile file(path());
@@ -602,45 +640,14 @@ void FileItem::onContextMenuRequested(const QPoint& point) {
     connect(insertDateTimeAction, &QAction::triggered, this, &FileItem::onContextMenuInsertTime);
     menu.addAction(insertDateTimeAction);
 
-    //check if there are URLs in selected text
-    QString selectedText = textCursor().selectedText();
-    bool separatorAdded = false;
-    int startFrom = 0;
-    while (true) {
-        int urlStart = -1, urlLength;
-        for (auto urlPrefix : urlPrefixes) { //search for the first prefix
-            int start = selectedText.indexOf(urlPrefix, startFrom);
-            if ((start >= 0) && ((start < urlStart) || (urlStart == -1))) {
-                urlStart = start;
-                urlLength = urlPrefix.length();
-            }
-        }
-        if (urlStart >= 0) {
-            if (!separatorAdded) { menu.addSeparator(); separatorAdded = true; }
+    QString anchor = this->anchorAt(point);
+    if (!anchor.isEmpty()) {
+        menu.addSeparator();
 
-            for (int i = urlStart + urlLength; i < selectedText.length(); i++) { //find end of URL
-                QChar ch = selectedText[i];
-                if ((ch >= 'A') && (ch <= 'Z')) {
-                } else if ((ch >= 'a') && (ch <= 'z')) {
-                } else if ((ch >= '0') && (ch <= '9')) {
-                } else if ((ch == '-') || (ch == '_') || (selectedText[i] == '.') || (selectedText[i] == '~')) {
-                } else if ((ch == '/')) {
-                } else if ((ch == '%')) {
-                } else {
-                    break;
-                }
-                urlLength += 1;
-            }
-            QString url = selectedText.mid(urlStart, urlLength);
-            startFrom = urlStart + urlLength;
-
-            QAction* goToUrlAction = new QAction("Go to " + url);
-            goToUrlAction->setData(url);
-            connect(goToUrlAction, &QAction::triggered, this, &FileItem::onGoToUrl);
-            menu.addAction(goToUrlAction);
-        } else {
-            break;  // done with search
-        }
+        QAction* goToUrlAction = new QAction("Go to " + anchor);
+        goToUrlAction->setData(anchor);
+        connect(goToUrlAction, &QAction::triggered, this, &FileItem::onGoToUrl);
+        menu.addAction(goToUrlAction);
     }
 
     menu.addSeparator();
