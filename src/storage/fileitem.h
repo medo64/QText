@@ -70,6 +70,7 @@ class FileItem : public QTextEdit {
     private:
         FileItem(FolderItem* folder, QString fileName);
         ~FileItem();
+        QString findAnchorAt(QPoint pos);
         QUuid _key = QUuid::createUuid();
         FolderItem* _folder = nullptr;
         QString _fileName;

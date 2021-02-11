@@ -450,8 +450,8 @@ bool FileItem::eventFilter(QObject* obj, QEvent* event) {
         switch (event->type()) {
             case QEvent::MouseButtonDblClick: {
                     QMouseEvent* e = static_cast<QMouseEvent*>(event);
-                    if ((e->buttons() & Qt::LeftButton)) {
-                        QString anchor = this->anchorAt(e->pos());
+                    if ((e->buttons() == Qt::LeftButton)) {
+                        QString anchor = findAnchorAt(e->pos());
                         if (!anchor.isEmpty()) {
                             QApplication::setOverrideCursor(Qt::WaitCursor);
                             QDesktopServices::openUrl(QUrl(anchor));
@@ -463,15 +463,17 @@ bool FileItem::eventFilter(QObject* obj, QEvent* event) {
 
             case QEvent::MouseMove: {
                     QMouseEvent* e = static_cast<QMouseEvent*>(event);
-                    QString anchor = this->anchorAt(e->pos());
-                    if (!anchor.isEmpty()) {
-                        if (!customCursorSet) {
-                            viewport()->setCursor(Qt::PointingHandCursor);
-                            customCursorSet = true;
+                    QString anchor = findAnchorAt(e->pos());
+                    if ((e->buttons() == Qt::NoButton)) {
+                        if (!anchor.isEmpty()) {
+                            if (!customCursorSet) {
+                                viewport()->setCursor(Qt::PointingHandCursor);
+                                customCursorSet = true;
+                            }
+                        } else if (customCursorSet) {
+                            viewport()->setCursor(Qt::IBeamCursor);
+                            customCursorSet = false;
                         }
-                    } else if (customCursorSet) {
-                        viewport()->setCursor(Qt::IBeamCursor);
-                        customCursorSet = false;
                     }
                 } break;
 
@@ -534,6 +536,46 @@ void FileItem::wheelEvent(QWheelEvent* e) {
     } else {
         QTextEdit::wheelEvent(e);
     }
+}
+
+
+QString FileItem::findAnchorAt(QPoint pos) {
+    QString anchor = this->anchorAt(pos);
+    if (!anchor.isEmpty()) { return anchor; }
+
+    // check for links in text
+    QTextCursor cursor = cursorForPosition(pos);
+    int charPosition = cursor.positionInBlock();
+
+    cursor.movePosition(QTextCursor::StartOfBlock, QTextCursor::MoveAnchor, 1);
+    cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor, 1);
+    QString blockText = cursor.selectedText();
+    if (charPosition >= blockText.length()) { return QString(); }  // don't check if on last character - to avoid "whitespace links"
+
+    int startAt = 0;
+    int endAt = blockText.length();
+    for (int i = 0; i < blockText.length(); i++) {
+        if (blockText.at(i).isSpace()) {
+            if (i < charPosition) {
+                startAt = i + 1;
+            } else {
+                endAt = i;
+                break;
+            }
+        }
+    }
+    QString text = blockText.mid(startAt, endAt - startAt);
+    if (text.startsWith("http://") || text.startsWith("https://") || text.startsWith("www.")
+            || text.endsWith(".com") || text.endsWith(".org") || text.endsWith(".net")
+            || text.endsWith(".int") || text.endsWith(".edu") || text.endsWith(".gov")
+            || text.endsWith(".mil") || text.endsWith(".edu")
+            || text.contains(".com/") || text.contains(".org/") || text.contains(".net/")
+            || text.contains(".int/") || text.contains(".edu/") || text.contains(".gov/")
+            || text.contains(".mil/") || text.contains(".edu/")) {
+        return text;
+    }
+
+    return QString();
 }
 
 
