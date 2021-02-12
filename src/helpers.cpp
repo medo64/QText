@@ -379,6 +379,9 @@ void Helpers::setupTheme(bool darkMode) {
         newPalette.setColor(QPalette::Highlight,       QColor( 38,  79, 120));
         newPalette.setColor(QPalette::HighlightedText, QColor(240, 240, 240));
 
+        newPalette.setColor(QPalette::Link,            QColor(182, 208, 250));
+        newPalette.setColor(QPalette::LinkVisited,     QColor(222, 208, 250));
+
         newPalette.setColor(QPalette::Light,           QColor( 60,  60,  60));
         newPalette.setColor(QPalette::Midlight,        QColor( 52,  52,  52));
         newPalette.setColor(QPalette::Dark,            QColor( 30,  30,  30) );
