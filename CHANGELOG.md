@@ -1,6 +1,12 @@
 ## Release Notes ##
 
 
+### 0.1.17 [2021-02-11] ###
+
+* Clickable links
+* Minor visual improvements
+
+
 ### 0.1.16 [2021-01-07] ###
 
 * Extra font operations
