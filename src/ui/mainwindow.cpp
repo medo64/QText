@@ -39,7 +39,7 @@
 
 MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::MainWindow) {
     ui->setupUi(this);
-    ui->tabWidget->tabBar()->setStyleSheet("QTabBar::tab:!selected { background: #10000000; }");
+    //ui->tabWidget->tabBar()->setStyleSheet("QTabBar::tab:!selected { background: #10000000; }");
 
     _storage = storage;
 
