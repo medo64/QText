@@ -13,7 +13,11 @@
 #include "storage.h"
 #include "storagemonitorlocker.h"
 
-const QStringList urlPrefixes({ "ftp://", "http://", "https://", "mailto://", "sftp://", "ssh://"});
+const QStringList urlProtocols({ "ftp://", "http://", "https://", "mailto://", "sftp://", "ssh://" });
+const QStringList urlPrefixes({ "www." });
+const QStringList urlSuffixes({ ".com", ".org", ".net", ".int", ".edu", ".gov", ".mil", ".edu" });
+const QStringList urlInfixes({ ".com/", ".org/", ".net/", ".int/", ".edu/", ".gov/", ".mil/", ".edu/" });
+
 
 FileItem::FileItem(FolderItem* folder, QString fileName)
     : QTextEdit(nullptr) {
@@ -35,6 +39,9 @@ FileItem::FileItem(FolderItem* folder, QString fileName)
     connect(this, &FileItem::customContextMenuRequested, this, &FileItem::onContextMenuRequested);
 
     this->viewport()->installEventFilter(this);
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
+    this->viewport()->setMouseTracking(true);
+#endif
 }
 
 FileItem::~FileItem() {
@@ -446,13 +453,14 @@ bool FileItem::event(QEvent* event) {
 }
 
 bool FileItem::eventFilter(QObject* obj, QEvent* event) {
-    if ((obj == this) || (obj == viewport())) {
+    if (obj == viewport()) {
         switch (event->type()) {
             case QEvent::MouseButtonDblClick: {
                     QMouseEvent* e = static_cast<QMouseEvent*>(event);
                     if ((e->buttons() == Qt::LeftButton)) {
                         QString anchor = findAnchorAt(e->pos());
                         if (!anchor.isEmpty()) {
+                            qDebug().noquote().nospace() << "[FileItem] URL executing (" << anchor << ")";
                             QApplication::setOverrideCursor(Qt::WaitCursor);
                             QDesktopServices::openUrl(QUrl(anchor));
                             QApplication::restoreOverrideCursor();
@@ -467,10 +475,12 @@ bool FileItem::eventFilter(QObject* obj, QEvent* event) {
                     if ((e->buttons() == Qt::NoButton)) {
                         if (!anchor.isEmpty()) {
                             if (!customCursorSet) {
+                                qDebug().noquote().nospace() << "[FileItem] URL detected (" << anchor << ")";
                                 viewport()->setCursor(Qt::PointingHandCursor);
                                 customCursorSet = true;
                             }
                         } else if (customCursorSet) {
+                            qDebug().noquote().nospace() << "[FileItem] URL gone";
                             viewport()->setCursor(Qt::IBeamCursor);
                             customCursorSet = false;
                         }
@@ -564,15 +574,31 @@ QString FileItem::findAnchorAt(QPoint pos) {
             }
         }
     }
+
     QString text = blockText.mid(startAt, endAt - startAt);
-    if (text.startsWith("http://") || text.startsWith("https://") || text.startsWith("www.")
-            || text.endsWith(".com") || text.endsWith(".org") || text.endsWith(".net")
-            || text.endsWith(".int") || text.endsWith(".edu") || text.endsWith(".gov")
-            || text.endsWith(".mil") || text.endsWith(".edu")
-            || text.contains(".com/") || text.contains(".org/") || text.contains(".net/")
-            || text.contains(".int/") || text.contains(".edu/") || text.contains(".gov/")
-            || text.contains(".mil/") || text.contains(".edu/")) {
-        return text;
+    QString url;
+    for (QString part : urlProtocols) {
+        if (text.startsWith(part)) { url = text; }
+    }
+    if (url.isNull()) {
+        for (QString part : urlPrefixes) {
+            if (text.startsWith(part)) { url = text; }
+        }
+    }
+    if (url.isNull()) {
+        for (QString part : urlSuffixes) {
+            if (text.endsWith(part)) { url = text; }
+        }
+    }
+    if (url.isNull()) {
+        for (QString part : urlInfixes) {
+            if (text.contains(part)) { url = text; }
+        }
+    }
+    if (!url.isNull()) {
+        if (url.contains("://")) { return url; }
+        if (url.startsWith("ftp.")) { return "ftp://" + url; }
+        return "http://" + url;
     }
 
     return QString();
