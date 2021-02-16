@@ -1,6 +1,12 @@
 ## Release Notes ##
 
 
+### 0.1.18 [2021-02-15] ###
+
+* Adjusting clickable links
+* Minor visual improvements
+
+
 ### 0.1.17 [2021-02-11] ###
 
 * Clickable links
