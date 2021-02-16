@@ -708,7 +708,7 @@ void FileItem::onContextMenuRequested(const QPoint& point) {
     connect(insertDateTimeAction, &QAction::triggered, this, &FileItem::onContextMenuInsertTime);
     menu.addAction(insertDateTimeAction);
 
-    QString anchor = this->anchorAt(point);
+    QString anchor = findAnchorAt(point);
     if (!anchor.isEmpty()) {
         menu.addSeparator();
 
