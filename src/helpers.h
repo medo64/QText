@@ -26,6 +26,7 @@ class Helpers {
         static void setupFixedSizeDialog(QWidget* dialog);
         static void setupTheme(bool darkMode);
         static bool isOSInDarkMode();
+        static void openUrl(QString url);
 
     private:
         static bool isValidTitleChar(QChar ch);

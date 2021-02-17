@@ -408,3 +408,10 @@ bool Helpers::isOSInDarkMode() {
     return false;
 #endif
 }
+
+/*!
+ * \brief Opens URL.
+ */
+void Helpers::openUrl(QString url) {
+    QDesktopServices::openUrl(QUrl(url, QUrl::TolerantMode));
+}

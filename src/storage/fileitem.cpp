@@ -1,5 +1,4 @@
 #include <QDebug>
-#include <QDesktopServices>
 #include <QDir>
 #include <QFileInfo>
 #include <QMenu>
@@ -462,7 +461,7 @@ bool FileItem::eventFilter(QObject* obj, QEvent* event) {
                         if (!anchor.isEmpty()) {
                             qDebug().noquote().nospace() << "[FileItem] URL executing (" << anchor << ")";
                             QApplication::setOverrideCursor(Qt::WaitCursor);
-                            QDesktopServices::openUrl(QUrl(anchor));
+                            Helpers::openUrl(anchor);
                             QApplication::restoreOverrideCursor();
                             return true;
                         }
@@ -714,7 +713,7 @@ void FileItem::onContextMenuRequested(const QPoint& point) {
 
         QAction* goToUrlAction = new QAction("Go to " + anchor);
         goToUrlAction->setData(anchor);
-        connect(goToUrlAction, &QAction::triggered, this, &FileItem::onGoToUrl);
+        connect(goToUrlAction, &QAction::triggered, this, &FileItem::onContextGoToUrl);
         menu.addAction(goToUrlAction);
     }
 
@@ -787,8 +786,8 @@ void FileItem::onContextMenuResetFont() {
     }
 }
 
-void FileItem::onGoToUrl() {
+void FileItem::onContextGoToUrl() {
     auto senderAction = dynamic_cast<QAction*>(sender());
     auto url = senderAction->data().toString();
-    QDesktopServices::openUrl(QUrl(url, QUrl::TolerantMode));
+    Helpers::openUrl(url);
 }
