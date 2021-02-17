@@ -711,6 +711,11 @@ void FileItem::onContextMenuRequested(const QPoint& point) {
     if (!anchor.isEmpty()) {
         menu.addSeparator();
 
+        QAction* copyUrlAction = new QAction("Copy " + anchor);
+        copyUrlAction->setData(anchor);
+        connect(copyUrlAction, &QAction::triggered, this, &FileItem::onContextCopyUrl);
+        menu.addAction(copyUrlAction);
+
         QAction* goToUrlAction = new QAction("Go to " + anchor);
         goToUrlAction->setData(anchor);
         connect(goToUrlAction, &QAction::triggered, this, &FileItem::onContextGoToUrl);
@@ -784,6 +789,12 @@ void FileItem::onContextMenuResetFont() {
         format.setFont(Settings::font());
         cursor.setCharFormat(format);
     }
+}
+
+void FileItem::onContextCopyUrl() {
+    auto senderAction = dynamic_cast<QAction*>(sender());
+    auto url = senderAction->data().toString();
+    Clipboard::setData(url);
 }
 
 void FileItem::onContextGoToUrl() {

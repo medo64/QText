@@ -105,6 +105,7 @@ class FileItem : public QTextEdit {
         void onContextMenuSelectAll();
         void onContextMenuInsertTime();
         void onContextMenuResetFont();
+        void onContextCopyUrl();
         void onContextGoToUrl();
 
 };
