@@ -43,6 +43,10 @@ class Settings {
         static void setDeletionStyle(DeletionStyle newDeletionStyle);
         static DeletionStyle defaultDeletionStyle() { return DeletionStyle::Delete; }
 
+        static bool followUrls();
+        static void setFollowUrls(bool newFollowUrls);
+        static bool defaultFollowUrls() { return true; }
+
         static QFont font();
         static void setFont(QFont newFont);
 

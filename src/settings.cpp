@@ -110,6 +110,15 @@ void Settings::setDeletionStyle(DeletionStyle newDeletionStyle) {
 }
 
 
+bool Settings::followUrls() {
+    return Config::read("FollowUrls", defaultFollowUrls());
+}
+
+void Settings::setFollowUrls(bool newFollowUrls) {
+    Config::write("FollowUrls", newFollowUrls);
+}
+
+
 QFont Settings::font() {
     QFont font(Settings::fontName(), Settings::fontSize());
     return font;

@@ -27,7 +27,7 @@
    <item row="1" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tabBehavior">
       <attribute name="title">
@@ -52,6 +52,13 @@
         <widget class="QCheckBox" name="checkboxAlwaysOnTop">
          <property name="text">
           <string>Always on top (requires restart)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkboxFollowUrls">
+         <property name="text">
+          <string>Follow URLs (double-click)</string>
          </property>
         </widget>
        </item>
@@ -180,7 +187,7 @@
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QCheckBox" name="checkBoxHotkeyTogglesVisibility">
+          <widget class="QCheckBox" name="checkboxHotkeyTogglesVisibility">
            <property name="text">
             <string>Toggle visibility</string>
            </property>
@@ -244,6 +251,23 @@
    <header>ui/hotkeyedit.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>checkboxAutostart</tabstop>
+  <tabstop>editHotkey</tabstop>
+  <tabstop>checkboxHotkeyTogglesVisibility</tabstop>
+  <tabstop>editDataPath</tabstop>
+  <tabstop>buttonDataPath</tabstop>
+  <tabstop>checkboxForcePlainCopyPaste</tabstop>
+  <tabstop>checkboxForceDarkMode</tabstop>
+  <tabstop>checkboxTabTextColorPerType</tabstop>
+  <tabstop>checkboxShowInTaskbar</tabstop>
+  <tabstop>checkboxFollowUrls</tabstop>
+  <tabstop>checkboxUseHtmlByDefault</tabstop>
+  <tabstop>checkboxMinimizeToTray</tabstop>
+  <tabstop>checkboxAlwaysOnTop</tabstop>
+  <tabstop>checkboxShowMarkdown</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

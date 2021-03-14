@@ -18,6 +18,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, Hotkey* hotkey) : QDialog(parent
     _oldAlwaysOnTop = Settings::alwaysOnTop();
     _oldAutostart = Setup::autostart();
     _oldDataPath = Settings::dataPath();
+    _oldFollowUrls = Settings::followUrls();
     _oldForceDarkMode = Settings::forceDarkMode();
     _oldForcePlainCopyPaste = Settings::forcePlainCopyPaste();
     _oldHotkey = Settings::hotkey();
@@ -77,10 +78,11 @@ void SettingsDialog::reset() {
     ui->checkboxAlwaysOnTop->setChecked(_oldAlwaysOnTop);
     ui->checkboxAutostart->setChecked(_oldAutostart);
     ui->editDataPath->setText(QDir::toNativeSeparators(Settings::dataPath()));
+    ui->checkboxFollowUrls->setChecked(_oldFollowUrls);
     ui->checkboxForceDarkMode->setChecked(_oldForceDarkMode);
     ui->checkboxForcePlainCopyPaste->setChecked(_oldForcePlainCopyPaste);
     ui->editHotkey->setNewKey(_oldHotkey);
-    ui->checkBoxHotkeyTogglesVisibility->setChecked(_oldHotkeyTogglesVisibility);
+    ui->checkboxHotkeyTogglesVisibility->setChecked(_oldHotkeyTogglesVisibility);
     ui->checkboxMinimizeToTray->setChecked(_oldMinimizeToTray);
     ui->checkboxShowInTaskbar->setChecked(_oldShowInTaskbar);
     ui->checkboxShowMarkdown->setChecked(_oldShowMarkdown);
@@ -92,10 +94,11 @@ void SettingsDialog::restoreDefaults() {
     ui->checkboxAlwaysOnTop->setChecked(Settings::defaultAlwaysOnTop());
     ui->checkboxAutostart->setChecked(true);
     ui->editDataPath->setText(QDir::toNativeSeparators(Settings::defaultDataPath()));
+    ui->checkboxFollowUrls->setChecked(Settings::defaultFollowUrls());
     ui->checkboxForceDarkMode->setChecked(Settings::defaultForceDarkMode());
     ui->checkboxForcePlainCopyPaste->setChecked(Settings::defaultForcePlainCopyPaste());
     ui->editHotkey->setNewKey(Settings::defaultHotkey());
-    ui->checkBoxHotkeyTogglesVisibility->setChecked(Settings::defaultHotkeyTogglesVisibility());
+    ui->checkboxHotkeyTogglesVisibility->setChecked(Settings::defaultHotkeyTogglesVisibility());
     ui->checkboxMinimizeToTray->setChecked(Settings::defaultMinimizeToTray());
     ui->checkboxShowInTaskbar->setChecked(Settings::defaultShowInTaskbar());
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
@@ -119,6 +122,10 @@ void SettingsDialog::accept() {
     _changedDataPath = newDataDirectory != _oldDataPath;
     if (_changedDataPath) { Settings::setDataPath(newDataDirectory); }
 
+    bool newFollowUrls = (ui->checkboxFollowUrls->checkState() == Qt::Checked);
+    _changedFollowUrls = newFollowUrls != _oldFollowUrls;
+    if (_changedFollowUrls) { Settings::setFollowUrls(newFollowUrls); }
+
     bool newForceDarkMode = (ui->checkboxForceDarkMode->checkState() == Qt::Checked);
     _changedForceDarkMode = newForceDarkMode != _oldForceDarkMode;
     if (_changedForceDarkMode) { Settings::setForceDarkMode(newForceDarkMode); }
@@ -131,7 +138,7 @@ void SettingsDialog::accept() {
     _changedHotkey = (newHotkey != 0) && (newHotkey != _oldHotkey);
     if (_changedHotkey) { Settings::setHotkey(newHotkey); }
 
-    bool newHotkeyTogglesVisibility = (ui->checkBoxHotkeyTogglesVisibility->checkState() == Qt::Checked);
+    bool newHotkeyTogglesVisibility = (ui->checkboxHotkeyTogglesVisibility->checkState() == Qt::Checked);
     _changedHotkeyTogglesVisibility = newHotkeyTogglesVisibility != _oldHotkeyTogglesVisibility;
     if (_changedHotkeyTogglesVisibility) { Settings::setHotkeyTogglesVisibility(newHotkeyTogglesVisibility); }
 

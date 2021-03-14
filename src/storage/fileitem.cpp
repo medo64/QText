@@ -455,33 +455,37 @@ bool FileItem::eventFilter(QObject* obj, QEvent* event) {
     if (obj == viewport()) {
         switch (event->type()) {
             case QEvent::MouseButtonDblClick: {
-                    QMouseEvent* e = static_cast<QMouseEvent*>(event);
-                    if ((e->buttons() == Qt::LeftButton)) {
-                        QString anchor = findAnchorAt(e->pos());
-                        if (!anchor.isEmpty()) {
-                            qDebug().noquote().nospace() << "[FileItem] URL executing (" << anchor << ")";
-                            QApplication::setOverrideCursor(Qt::WaitCursor);
-                            Helpers::openUrl(anchor);
-                            QApplication::restoreOverrideCursor();
-                            return true;
+                    if (Settings::followUrls()) {
+                        QMouseEvent* e = static_cast<QMouseEvent*>(event);
+                        if ((e->buttons() == Qt::LeftButton)) {
+                            QString anchor = findAnchorAt(e->pos());
+                            if (!anchor.isEmpty()) {
+                                qDebug().noquote().nospace() << "[FileItem] URL executing (" << anchor << ")";
+                                QApplication::setOverrideCursor(Qt::WaitCursor);
+                                Helpers::openUrl(anchor);
+                                QApplication::restoreOverrideCursor();
+                                return true;
+                            }
                         }
                     }
                 } break;
 
             case QEvent::MouseMove: {
-                    QMouseEvent* e = static_cast<QMouseEvent*>(event);
-                    QString anchor = findAnchorAt(e->pos());
-                    if ((e->buttons() == Qt::NoButton)) {
-                        if (!anchor.isEmpty()) {
-                            if (!customCursorSet) {
-                                qDebug().noquote().nospace() << "[FileItem] URL detected (" << anchor << ")";
-                                viewport()->setCursor(Qt::PointingHandCursor);
-                                customCursorSet = true;
+                    if (Settings::followUrls()) {
+                        QMouseEvent* e = static_cast<QMouseEvent*>(event);
+                        QString anchor = findAnchorAt(e->pos());
+                        if ((e->buttons() == Qt::NoButton)) {
+                            if (!anchor.isEmpty()) {
+                                if (!customCursorSet) {
+                                    qDebug().noquote().nospace() << "[FileItem] URL detected (" << anchor << ")";
+                                    viewport()->setCursor(Qt::PointingHandCursor);
+                                    customCursorSet = true;
+                                }
+                            } else if (customCursorSet) {
+                                qDebug().noquote().nospace() << "[FileItem] URL gone";
+                                viewport()->setCursor(Qt::IBeamCursor);
+                                customCursorSet = false;
                             }
-                        } else if (customCursorSet) {
-                            qDebug().noquote().nospace() << "[FileItem] URL gone";
-                            viewport()->setCursor(Qt::IBeamCursor);
-                            customCursorSet = false;
                         }
                     }
                 } break;
