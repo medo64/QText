@@ -568,7 +568,14 @@ QString FileItem::findAnchorAt(QPoint pos) {
     int startAt = 0;
     int endAt = blockText.length();
     for (int i = 0; i < blockText.length(); i++) {
-        if (blockText.at(i).isSpace()) {
+        QChar ch = blockText.at(i);
+        bool isUrlChar = ch.isLetterOrNumber()
+                         || (ch == '-')
+                         || (ch == '.')
+                         || (ch == '_')
+                         || (ch == '~')
+                         || (ch == '%');
+        if (!isUrlChar) {
             if (i < charPosition) {
                 startAt = i + 1;
             } else {
