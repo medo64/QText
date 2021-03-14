@@ -21,6 +21,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, Hotkey* hotkey) : QDialog(parent
     _oldForceDarkMode = Settings::forceDarkMode();
     _oldForcePlainCopyPaste = Settings::forcePlainCopyPaste();
     _oldHotkey = Settings::hotkey();
+    _oldHotkeyTogglesVisibility = Settings::hotkeyTogglesVisibility();
     _oldMinimizeToTray = Settings::minimizeToTray();
     _oldShowInTaskbar = Settings::showInTaskbar();
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
@@ -79,6 +80,7 @@ void SettingsDialog::reset() {
     ui->checkboxForceDarkMode->setChecked(_oldForceDarkMode);
     ui->checkboxForcePlainCopyPaste->setChecked(_oldForcePlainCopyPaste);
     ui->editHotkey->setNewKey(_oldHotkey);
+    ui->checkBoxHotkeyTogglesVisibility->setChecked(_oldHotkeyTogglesVisibility);
     ui->checkboxMinimizeToTray->setChecked(_oldMinimizeToTray);
     ui->checkboxShowInTaskbar->setChecked(_oldShowInTaskbar);
     ui->checkboxShowMarkdown->setChecked(_oldShowMarkdown);
@@ -93,6 +95,7 @@ void SettingsDialog::restoreDefaults() {
     ui->checkboxForceDarkMode->setChecked(Settings::defaultForceDarkMode());
     ui->checkboxForcePlainCopyPaste->setChecked(Settings::defaultForcePlainCopyPaste());
     ui->editHotkey->setNewKey(Settings::defaultHotkey());
+    ui->checkBoxHotkeyTogglesVisibility->setChecked(Settings::defaultHotkeyTogglesVisibility());
     ui->checkboxMinimizeToTray->setChecked(Settings::defaultMinimizeToTray());
     ui->checkboxShowInTaskbar->setChecked(Settings::defaultShowInTaskbar());
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
@@ -127,6 +130,10 @@ void SettingsDialog::accept() {
     QKeySequence newHotkey = ui->editHotkey->newKey();
     _changedHotkey = (newHotkey != 0) && (newHotkey != _oldHotkey);
     if (_changedHotkey) { Settings::setHotkey(newHotkey); }
+
+    bool newHotkeyTogglesVisibility = (ui->checkBoxHotkeyTogglesVisibility->checkState() == Qt::Checked);
+    _changedHotkeyTogglesVisibility = newHotkeyTogglesVisibility != _oldHotkeyTogglesVisibility;
+    if (_changedHotkeyTogglesVisibility) { Settings::setHotkeyTogglesVisibility(newHotkeyTogglesVisibility); }
 
     bool newMinimizeToTray = (ui->checkboxMinimizeToTray->checkState() == Qt::Checked);
     _changedMinimizeToTray = newMinimizeToTray != _oldMinimizeToTray;

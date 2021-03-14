@@ -176,6 +176,15 @@ void Settings::setHotkey(QKeySequence newHotkey) {
 }
 
 
+bool Settings::hotkeyTogglesVisibility() {
+    return Config::read("HotkeyTogglesVisibility", defaultHotkeyTogglesVisibility());
+}
+
+void Settings::setHotkeyTogglesVisibility(bool newHotkeyTogglesVisibility) {
+    Config::write("HotkeyTogglesVisibility", newHotkeyTogglesVisibility);
+}
+
+
 bool Settings::minimizeToTray() {
     return Config::read("MinimizeToTray", defaultMinimizeToTray());
 }

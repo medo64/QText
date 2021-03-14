@@ -19,6 +19,7 @@ class SettingsDialog : public QDialog {
         bool changedForceDarkMode() const { return _changedForceDarkMode; }
         bool changedForcePlainCopyPaste() const { return _changedForcePlainCopyPaste; }
         bool changedHotkey() const { return _changedHotkey; }
+        bool changedHotkeyTogglesVisibility() const { return _changedHotkeyTogglesVisibility; }
         bool changedMinimizeToTray() const { return _changedMinimizeToTray; }
         bool changedShowInTaskbar() const { return _changedShowInTaskbar; }
         bool changedShowMarkdown() const { return _changedShowMarkdown; }
@@ -39,6 +40,7 @@ class SettingsDialog : public QDialog {
         bool _changedForceDarkMode;
         bool _changedForcePlainCopyPaste;
         bool _changedHotkey;
+        bool _changedHotkeyTogglesVisibility;
         bool _changedMinimizeToTray;
         bool _changedShowInTaskbar;
         bool _changedShowMarkdown;
@@ -50,6 +52,7 @@ class SettingsDialog : public QDialog {
         bool _oldForceDarkMode;
         bool _oldForcePlainCopyPaste;
         QKeySequence _oldHotkey;
+        bool _oldHotkeyTogglesVisibility;
         bool _oldMinimizeToTray;
         bool _oldShowInTaskbar;
         bool _oldShowMarkdown;

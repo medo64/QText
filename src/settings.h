@@ -75,6 +75,10 @@ class Settings {
             return  defaultHotkey;
         }
 
+        static bool hotkeyTogglesVisibility();
+        static void setHotkeyTogglesVisibility(bool newHotkeyTogglesVisibility);
+        static bool defaultHotkeyTogglesVisibility() { return false; }
+
         static bool minimizeToTray();
         static void setMinimizeToTray(bool newMinimizeToTray);
         static bool defaultMinimizeToTray() { return true; }

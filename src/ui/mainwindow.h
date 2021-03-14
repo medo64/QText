@@ -92,6 +92,7 @@ class MainWindow : public QMainWindow {
         void onTabChanged();
         void onTabMoved(int from, int to);
         void onTextStateChanged();
+        void onHotkeyPress();
         void onTrayActivate(QSystemTrayIcon::ActivationReason reason);
         void onTrayShow();
         void onUpdatedFolder(FolderItem* folder);

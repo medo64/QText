@@ -7,30 +7,33 @@
     <x>0</x>
     <y>0</y>
     <width>450</width>
-    <height>182</height>
+    <height>225</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Settings</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0" alignment="Qt::AlignTop">
+   <item row="2" column="0">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok|QDialogButtonBox::Reset|QDialogButtonBox::RestoreDefaults</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tabBehavior">
       <attribute name="title">
        <string>Behavior</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayoutLookAndFeel">
-       <item>
-        <widget class="QCheckBox" name="checkboxUseHtmlByDefault">
-         <property name="text">
-          <string>Use HTML by default</string>
-         </property>
-        </widget>
-       </item>
        <item>
         <widget class="QCheckBox" name="checkboxShowInTaskbar">
          <property name="text">
@@ -52,32 +55,8 @@
          </property>
         </widget>
        </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tabLookAndFeel">
-      <attribute name="title">
-       <string>Look &amp;&amp; Feel</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="0">
-        <widget class="QCheckBox" name="checkboxTabTextColorPerType">
-         <property name="toolTip">
-          <string>Different color is shown in tab depending if tab is plain text, Html, or Markdown.</string>
-         </property>
-         <property name="text">
-          <string>Color tab text per file type</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QCheckBox" name="checkboxForcePlainCopyPaste">
-         <property name="text">
-          <string>Force plain copy/paste (even for Html files)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <spacer name="verticalSpacer">
+       <item>
+        <spacer name="verticalSpacer_4">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
@@ -89,12 +68,56 @@
          </property>
         </spacer>
        </item>
-       <item row="2" column="0">
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabLookAndFeel">
+      <attribute name="title">
+       <string>Look &amp;&amp; Feel</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayoutLookAndFeel">
+       <item>
+        <widget class="QCheckBox" name="checkboxUseHtmlByDefault">
+         <property name="text">
+          <string>Use HTML by default</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkboxForcePlainCopyPaste">
+         <property name="text">
+          <string>Force plain copy/paste (even for Html files)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QCheckBox" name="checkboxForceDarkMode">
          <property name="text">
           <string>Force dark mode</string>
          </property>
         </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkboxTabTextColorPerType">
+         <property name="toolTip">
+          <string>Different color is shown in tab depending if tab is plain text, Html, or Markdown.</string>
+         </property>
+         <property name="text">
+          <string>Color tab text per file type</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
@@ -112,10 +135,7 @@
        </item>
        <item>
         <layout class="QGridLayout" name="gridSystem">
-         <item row="0" column="1">
-          <widget class="HotkeyEdit" name="editHotkey"/>
-         </item>
-         <item row="1" column="1">
+         <item row="2" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <property name="spacing">
             <number>0</number>
@@ -142,7 +162,10 @@
            </item>
           </layout>
          </item>
-         <item row="1" column="0">
+         <item row="0" column="1">
+          <widget class="HotkeyEdit" name="editHotkey"/>
+         </item>
+         <item row="2" column="0">
           <widget class="QLabel" name="labelDataPath">
            <property name="text">
             <string>Data directory:</string>
@@ -153,6 +176,13 @@
           <widget class="QLabel" name="labelHotkey">
            <property name="text">
             <string>Hotkey:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QCheckBox" name="checkBoxHotkeyTogglesVisibility">
+           <property name="text">
+            <string>Toggle visibility</string>
            </property>
           </widget>
          </item>
@@ -177,8 +207,8 @@
       <attribute name="title">
        <string>Experimental</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="0">
+      <layout class="QVBoxLayout" name="verticalLayoutSystem">
+       <item>
         <widget class="QCheckBox" name="checkboxShowMarkdown">
          <property name="toolTip">
           <string>Controls if markdown will be shown as one of the file options</string>
@@ -188,7 +218,7 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
+       <item>
         <spacer name="verticalSpacer_2">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -203,16 +233,6 @@
        </item>
       </layout>
      </widget>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok|QDialogButtonBox::Reset|QDialogButtonBox::RestoreDefaults</set>
-     </property>
     </widget>
    </item>
   </layout>

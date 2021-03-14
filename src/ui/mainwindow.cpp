@@ -71,7 +71,7 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     //hotkey
     _hotkey = new Hotkey(this);
     _hotkey->registerHotkey(Settings::hotkey());
-    connect(_hotkey, &Hotkey::activated, this, &MainWindow::onTrayShow);
+    connect(_hotkey, &Hotkey::activated, this, &MainWindow::onHotkeyPress);
 
     //single instance
     connect(SingleInstance::instance(), &SingleInstance::newInstanceDetected, this, &MainWindow::onTrayShow);
@@ -944,6 +944,14 @@ void MainWindow::onTextStateChanged() {
     ui->actionFontItalic->setChecked(isSelectionFontItalic);
     ui->actionFontUnderline->setChecked(isSelectionFontUnderline);
     ui->actionFontStrikethrough->setChecked(isSelectionFontStrikethrough);
+}
+
+void MainWindow::onHotkeyPress() {
+    if (this->isVisible() && Settings::hotkeyTogglesVisibility()) {
+        this->hide();
+    } else {
+        onTrayShow();
+    }
 }
 
 void MainWindow::onTrayActivate(QSystemTrayIcon::ActivationReason reason) {
