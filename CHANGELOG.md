@@ -1,6 +1,12 @@
 ## Release Notes ##
 
 
+### 0.1.19 [2021-03-13] ###
+
+* Added option to toggle visibility
+* Fixed URL detection
+
+
 ### 0.1.18 [2021-02-15] ###
 
 * Adjusting clickable links
