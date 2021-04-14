@@ -573,6 +573,10 @@ QString FileItem::findAnchorAt(QPoint pos) {
                          || (ch == '-')
                          || (ch == '.')
                          || (ch == '_')
+                         || (ch == ':')
+                         || (ch == '/')
+                         || (ch == '?')
+                         || (ch == '&')
                          || (ch == '~')
                          || (ch == '%');
         if (!isUrlChar) {
@@ -720,14 +724,19 @@ void FileItem::onContextMenuRequested(const QPoint& point) {
 
     QString anchor = findAnchorAt(point);
     if (!anchor.isEmpty()) {
+        QString anchorText = anchor;
+        int questionMark = anchorText.indexOf('?');
+        if (questionMark > 0) { anchorText = anchorText.left(questionMark); }
+        if (anchorText.length() > 42) { anchorText = anchorText.left(39) + "…"; }
+
         menu.addSeparator();
 
-        QAction* copyUrlAction = new QAction("Copy " + anchor);
+        QAction* copyUrlAction = new QAction("Copy " + anchorText);
         copyUrlAction->setData(anchor);
         connect(copyUrlAction, &QAction::triggered, this, &FileItem::onContextCopyUrl);
         menu.addAction(copyUrlAction);
 
-        QAction* goToUrlAction = new QAction("Go to " + anchor);
+        QAction* goToUrlAction = new QAction("Go to " + anchorText);
         goToUrlAction->setData(anchor);
         connect(goToUrlAction, &QAction::triggered, this, &FileItem::onContextGoToUrl);
         menu.addAction(goToUrlAction);
