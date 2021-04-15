@@ -577,6 +577,7 @@ QString FileItem::findAnchorAt(QPoint pos) {
                          || (ch == '/')
                          || (ch == '?')
                          || (ch == '&')
+                         || (ch == '=')
                          || (ch == '~')
                          || (ch == '%');
         if (!isUrlChar) {
