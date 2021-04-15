@@ -821,5 +821,7 @@ void FileItem::onContextCopyUrl() {
 void FileItem::onContextGoToUrl() {
     auto senderAction = dynamic_cast<QAction*>(sender());
     auto url = senderAction->data().toString();
+    QApplication::setOverrideCursor(Qt::WaitCursor);
     Helpers::openUrl(url);
+    QApplication::restoreOverrideCursor();
 }
