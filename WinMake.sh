@@ -1,6 +1,7 @@
 #!/bin/bash
 
 QT_PATH='/c/Qt'
+QT_VERSION=5.14.2
 CERTIFICATE_THUMBPRINT="e9b444fffb1375ece027e40d8637b6da3fdaaf0e"
 TIMESTAMP_URL="http://timestamp.digicert.com"  #http://timestamp.comodoca.com/rfc3161
 
@@ -37,7 +38,7 @@ DIST_NAME='qtext'
 DIST_VERSION=`grep VERSION src/QText.pro | head -1 | cut -d'=' -f2 | awk '{print $$1}' | tr -d '"'`
 
 
-CMD_QMAKE=`ls $QT_PATH/**/**/bin/qmake.exe | sort | tail -1`
+CMD_QMAKE=`ls $QT_PATH/$QT_VERSION/**/bin/qmake.exe | sort | tail -1`
 CMD_MAKE=`ls $QT_PATH/Tools/**/bin/mingw32-make.exe | sort | tail -1`
 
 if [[ ! -f "$CMD_QMAKE" ]]; then
