@@ -1,6 +1,12 @@
 ## Release Notes ##
 
 
+### 0.1.20 [2021-04-14] ###
+
+* Adjusted dark mode icons
+* Fixed URL detection
+
+
 ### 0.1.19 [2021-03-13] ###
 
 * Added option to toggle visibility
