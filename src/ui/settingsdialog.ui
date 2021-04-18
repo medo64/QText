@@ -56,7 +56,14 @@
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="checkboxFollowUrls">
+        <widget class="QCheckBox" name="checkboxFollowUrlWithCtrl">
+         <property name="text">
+          <string>Follow URLs (holding Ctrl)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkboxFollowUrlWithDoubleClick">
          <property name="text">
           <string>Follow URLs (double-click)</string>
          </property>
@@ -262,7 +269,8 @@
   <tabstop>checkboxForceDarkMode</tabstop>
   <tabstop>checkboxTabTextColorPerType</tabstop>
   <tabstop>checkboxShowInTaskbar</tabstop>
-  <tabstop>checkboxFollowUrls</tabstop>
+  <tabstop>checkboxFollowUrlWithCtrl</tabstop>
+  <tabstop>checkboxFollowUrlWithDoubleClick</tabstop>
   <tabstop>checkboxUseHtmlByDefault</tabstop>
   <tabstop>checkboxMinimizeToTray</tabstop>
   <tabstop>checkboxAlwaysOnTop</tabstop>

@@ -43,9 +43,13 @@ class Settings {
         static void setDeletionStyle(DeletionStyle newDeletionStyle);
         static DeletionStyle defaultDeletionStyle() { return DeletionStyle::Delete; }
 
-        static bool followUrls();
-        static void setFollowUrls(bool newFollowUrls);
-        static bool defaultFollowUrls() { return true; }
+        static bool followUrlWithCtrl();
+        static void setFollowUrlWithCtrl(bool newFollowUrlWithCtrl);
+        static bool defaultFollowUrlWithCtrl() { return true; }
+
+        static bool followUrlWithDoubleClick();
+        static void setFollowUrlWithDoubleClick(bool newFollowUrlWithDoubleClick);
+        static bool defaultFollowUrlWithDoubleClick() { return false; }
 
         static QFont font();
         static void setFont(QFont newFont);

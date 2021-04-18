@@ -37,6 +37,7 @@ FileItem::FileItem(FolderItem* folder, QString fileName)
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &FileItem::customContextMenuRequested, this, &FileItem::onContextMenuRequested);
 
+    this->installEventFilter(this);  // just to catch Ctrl key
     this->viewport()->installEventFilter(this);
 #if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
     this->viewport()->setMouseTracking(true);
@@ -452,45 +453,76 @@ bool FileItem::event(QEvent* event) {
 }
 
 bool FileItem::eventFilter(QObject* obj, QEvent* event) {
-    if (obj == viewport()) {
+    bool isViewport = (obj == viewport());
+    bool isKeyEvent = (event->type() == QEvent::KeyPress) || (event->type() == QEvent::KeyRelease);
+
+    if (isViewport || isKeyEvent) {
+        QMouseEvent* e = nullptr;
+        bool isMouseClick = false;
+        bool isMouseDblClick = false;
+        bool isMouseMove = false;
+
         switch (event->type()) {
-            case QEvent::MouseButtonDblClick: {
-                    if (Settings::followUrls()) {
-                        QMouseEvent* e = static_cast<QMouseEvent*>(event);
-                        if ((e->buttons() == Qt::LeftButton)) {
-                            QString anchor = findAnchorAt(e->pos());
-                            if (!anchor.isEmpty()) {
-                                qDebug().noquote().nospace() << "[FileItem] URL executing (" << anchor << ")";
-                                QApplication::setOverrideCursor(Qt::WaitCursor);
-                                Helpers::openUrl(anchor);
-                                QApplication::restoreOverrideCursor();
-                                return true;
-                            }
-                        }
+            case QEvent::KeyPress:
+            case QEvent::KeyRelease: {
+                    QKeyEvent* ek = static_cast<QKeyEvent*>(event);
+                    if (ek->key() == Qt::Key_Control) {  // pretend this is a mouse move
+                        e = new QMouseEvent(QEvent::MouseMove,
+                                            this->mapFromGlobal(QCursor::pos()),
+                                            Qt::NoButton,
+                                            Qt::NoButton,
+                                            ek->modifiers());  // dummy event details
+                        isMouseMove = true;
                     }
                 } break;
 
-            case QEvent::MouseMove: {
-                    if (Settings::followUrls()) {
-                        QMouseEvent* e = static_cast<QMouseEvent*>(event);
-                        QString anchor = findAnchorAt(e->pos());
-                        if ((e->buttons() == Qt::NoButton)) {
-                            if (!anchor.isEmpty()) {
-                                if (!customCursorSet) {
-                                    qDebug().noquote().nospace() << "[FileItem] URL detected (" << anchor << ")";
-                                    viewport()->setCursor(Qt::PointingHandCursor);
-                                    customCursorSet = true;
-                                }
-                            } else if (customCursorSet) {
-                                qDebug().noquote().nospace() << "[FileItem] URL gone";
-                                viewport()->setCursor(Qt::IBeamCursor);
-                                customCursorSet = false;
-                            }
-                        }
-                    }
-                } break;
+            case QEvent::MouseButtonPress:
+                e = static_cast<QMouseEvent*>(event);
+                isMouseClick = (e->buttons() == Qt::LeftButton);
+                break;
+
+            case QEvent::MouseButtonDblClick:
+                e = static_cast<QMouseEvent*>(event);
+                isMouseDblClick = (e->buttons() == Qt::LeftButton);
+                break;
+
+            case QEvent::MouseMove:
+                e = static_cast<QMouseEvent*>(event);
+                isMouseMove = true;
+                break;
 
             default: break;
+        }
+
+        if (e != nullptr) {
+            bool isCtrlPressed = e->modifiers() == Qt::ControlModifier;
+            bool useCtrl = Settings::followUrlWithCtrl();
+            bool useDblClick = Settings::followUrlWithDoubleClick();
+            QString anchor = findAnchorAt(e->pos());
+
+            if ((isMouseClick && useCtrl && isCtrlPressed) || (isMouseDblClick && useDblClick)) {
+                if (!anchor.isEmpty()) {
+                    qDebug().noquote().nospace() << "[FileItem] URL executing (" << anchor << ")";
+                    QApplication::setOverrideCursor(Qt::WaitCursor);
+                    Helpers::openUrl(anchor);
+                    QApplication::restoreOverrideCursor();
+                    return true;
+                }
+            } else if (isMouseMove) {
+                if ((e->buttons() == Qt::NoButton)) {
+                    if (!anchor.isEmpty() && ((useCtrl && isCtrlPressed) || useDblClick)) {
+                        if (!customCursorSet) {
+                            qDebug().noquote().nospace() << "[FileItem] URL detected (" << anchor << ")";
+                            viewport()->setCursor(Qt::PointingHandCursor);
+                            customCursorSet = true;
+                        }
+                    } else if (customCursorSet) {
+                        qDebug().noquote().nospace() << "[FileItem] URL gone";
+                        viewport()->setCursor(Qt::IBeamCursor);
+                        customCursorSet = false;
+                    }
+                }
+            }
         }
     }
     return false;

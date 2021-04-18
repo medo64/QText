@@ -18,7 +18,8 @@ SettingsDialog::SettingsDialog(QWidget* parent, Hotkey* hotkey) : QDialog(parent
     _oldAlwaysOnTop = Settings::alwaysOnTop();
     _oldAutostart = Setup::autostart();
     _oldDataPath = Settings::dataPath();
-    _oldFollowUrls = Settings::followUrls();
+    _oldFollowUrlWithCtrl = Settings::followUrlWithCtrl();
+    _oldFollowUrlWithDoubleClick = Settings::followUrlWithDoubleClick();
     _oldForceDarkMode = Settings::forceDarkMode();
     _oldForcePlainCopyPaste = Settings::forcePlainCopyPaste();
     _oldHotkey = Settings::hotkey();
@@ -78,7 +79,8 @@ void SettingsDialog::reset() {
     ui->checkboxAlwaysOnTop->setChecked(_oldAlwaysOnTop);
     ui->checkboxAutostart->setChecked(_oldAutostart);
     ui->editDataPath->setText(QDir::toNativeSeparators(Settings::dataPath()));
-    ui->checkboxFollowUrls->setChecked(_oldFollowUrls);
+    ui->checkboxFollowUrlWithCtrl->setChecked(_oldFollowUrlWithCtrl);
+    ui->checkboxFollowUrlWithDoubleClick->setChecked(_oldFollowUrlWithDoubleClick);
     ui->checkboxForceDarkMode->setChecked(_oldForceDarkMode);
     ui->checkboxForcePlainCopyPaste->setChecked(_oldForcePlainCopyPaste);
     ui->editHotkey->setNewKey(_oldHotkey);
@@ -94,7 +96,8 @@ void SettingsDialog::restoreDefaults() {
     ui->checkboxAlwaysOnTop->setChecked(Settings::defaultAlwaysOnTop());
     ui->checkboxAutostart->setChecked(true);
     ui->editDataPath->setText(QDir::toNativeSeparators(Settings::defaultDataPath()));
-    ui->checkboxFollowUrls->setChecked(Settings::defaultFollowUrls());
+    ui->checkboxFollowUrlWithCtrl->setChecked(Settings::defaultFollowUrlWithCtrl());
+    ui->checkboxFollowUrlWithDoubleClick->setChecked(Settings::defaultFollowUrlWithDoubleClick());
     ui->checkboxForceDarkMode->setChecked(Settings::defaultForceDarkMode());
     ui->checkboxForcePlainCopyPaste->setChecked(Settings::defaultForcePlainCopyPaste());
     ui->editHotkey->setNewKey(Settings::defaultHotkey());
@@ -122,9 +125,13 @@ void SettingsDialog::accept() {
     _changedDataPath = newDataDirectory != _oldDataPath;
     if (_changedDataPath) { Settings::setDataPath(newDataDirectory); }
 
-    bool newFollowUrls = (ui->checkboxFollowUrls->checkState() == Qt::Checked);
-    _changedFollowUrls = newFollowUrls != _oldFollowUrls;
-    if (_changedFollowUrls) { Settings::setFollowUrls(newFollowUrls); }
+    bool newFollowUrlWithCtrl = (ui->checkboxFollowUrlWithCtrl->checkState() == Qt::Checked);
+    _changedFollowUrlWithCtrl = newFollowUrlWithCtrl != _oldFollowUrlWithCtrl;
+    if (_changedFollowUrlWithCtrl) { Settings::setFollowUrlWithCtrl(newFollowUrlWithCtrl); }
+
+    bool newFollowUrlWithDoubleClick = (ui->checkboxFollowUrlWithDoubleClick->checkState() == Qt::Checked);
+    _changedFollowUrlWithDoubleClick = newFollowUrlWithDoubleClick != _oldFollowUrlWithDoubleClick;
+    if (_changedFollowUrlWithDoubleClick) { Settings::setFollowUrlWithDoubleClick(newFollowUrlWithDoubleClick); }
 
     bool newForceDarkMode = (ui->checkboxForceDarkMode->checkState() == Qt::Checked);
     _changedForceDarkMode = newForceDarkMode != _oldForceDarkMode;

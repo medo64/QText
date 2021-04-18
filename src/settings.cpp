@@ -110,12 +110,21 @@ void Settings::setDeletionStyle(DeletionStyle newDeletionStyle) {
 }
 
 
-bool Settings::followUrls() {
-    return Config::read("FollowUrls", defaultFollowUrls());
+bool Settings::followUrlWithCtrl() {
+    return Config::read("FollowUrl", defaultFollowUrlWithCtrl());
 }
 
-void Settings::setFollowUrls(bool newFollowUrls) {
-    Config::write("FollowUrls", newFollowUrls);
+void Settings::setFollowUrlWithCtrl(bool newFollowUrlWithCtrl) {
+    Config::write("FollowUrl", newFollowUrlWithCtrl);
+}
+
+
+bool Settings::followUrlWithDoubleClick() {
+    return Config::read("FollowUrlWithDoubleClick", defaultFollowUrlWithDoubleClick());
+}
+
+void Settings::setFollowUrlWithDoubleClick(bool newFollowUrlWithDoubleClick) {
+    Config::write("FollowUrlWithDoubleClick", newFollowUrlWithDoubleClick);
 }
 
 
