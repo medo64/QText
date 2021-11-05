@@ -1,6 +1,11 @@
 ## Release Notes ##
 
 
+### 0.1.22 [2021-11-05] ###
+
+* Recompiled for QT 5.12.8
+
+
 ### 0.1.21 [2021-11-04] ###
 
 * Updated URL for packages repository

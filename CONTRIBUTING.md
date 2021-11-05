@@ -12,10 +12,12 @@ All code is situated in `src` directory.
 
 #### Linux
 
-To build project under Linux, the following packaages are required (in addition
+To build project under Linux, the following packages are required (in addition
 to Qt Creator):
-  * qtbase5-dev
+  * build-essentials
   * libqt5x11extras5-dev
+  * qtbase5-dev
+  * lintian
 
 To build executables, one can use `make`:
 
