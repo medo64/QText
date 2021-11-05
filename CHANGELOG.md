@@ -1,6 +1,11 @@
 ## Release Notes ##
 
 
+### 0.1.21 [2021-11-04] ###
+
+* Updated URL for packages repository
+
+
 ### 0.1.20 [2021-04-14] ###
 
 * Adjusted dark mode icons
