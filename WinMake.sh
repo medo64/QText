@@ -1,7 +1,7 @@
 #!/bin/bash
 
 QT_PATH='/c/Qt'
-QT_VERSION=5.14.2
+QT_VERSION=5.15.2
 CERTIFICATE_THUMBPRINT="e9b444fffb1375ece027e40d8637b6da3fdaaf0e"
 TIMESTAMP_URL="http://timestamp.digicert.com"  #http://timestamp.comodoca.com/rfc3161
 

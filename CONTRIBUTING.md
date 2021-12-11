@@ -5,7 +5,8 @@ Welcome and thank you for your interest in contributing.
 
 ### Compiling Code
 
-Project uses Qt 5.12.8 and Qt Creator is the preferred development environment.
+Project uses Qt 5.12.8 (Linux) and Qt 5.15.2 (Windows) with Qt Creator being the
+preferred development environment.
 
 All code is situated in `src` directory.
 

@@ -1,6 +1,11 @@
 ## Release Notes ##
 
 
+### 0.1.23 [2021-12-11] ###
+
+* Fixed slow tab switching when used on ZFS
+
+
 ### 0.1.22 [2021-11-05] ###
 
 * Recompiled for QT 5.12.8
