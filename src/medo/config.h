@@ -1,5 +1,6 @@
 /* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
 
+// 2021-12-10: Added background save
 // 2020-05-25: Using strongly typed enums
 // 2020-05-05: Added stateRead/stateWrite for integers, longs, and doubles
 //             Allowing : and = in key name
@@ -9,7 +10,7 @@
 // 2019-11-01: Fixed readMany implementation
 // 2019-11-17: Added stateReadMany and stateWriteMany
 //             Added option to set paths manually
-// 2020-03-15: If QApplication hasn't bee initializesd, assume installed on Linux
+// 2020-03-15: If QApplication hasn't been initialized, assume installed on Linux
 
 #pragma once
 
@@ -17,6 +18,7 @@
 #include <QMutex>
 #include <QString>
 #include <QStringList>
+#include <QThread>
 #include <QVariant>
 #include <QVector>
 
@@ -292,6 +294,25 @@ class Config {
         static QString dataDirectoryPathWhenInstalled();
 
     private:
+        class ConfigSaveThread : private QThread {
+            public:
+                explicit ConfigSaveThread(void);
+                ~ConfigSaveThread();
+
+            public:
+                void requestSave();
+
+            public:
+                ConfigSaveThread(const ConfigSaveThread&) = delete;
+                void operator=(const ConfigSaveThread&) = delete;
+
+            private:
+                QMutex _syncRoot;
+                bool _saveRequested = false;
+                void run();
+        };
+
+    private:
         class ConfigFile {
             public:
                 ConfigFile(QString filePath);
@@ -364,5 +385,6 @@ class Config {
         static ConfigFile* getStateFile();
         static void resetStateFile();
         static ConfigFile* _stateFile;
+        static Config::ConfigSaveThread _configSaveThread;
 
 };
