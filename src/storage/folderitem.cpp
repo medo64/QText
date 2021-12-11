@@ -1,6 +1,7 @@
 #include <QDir>
 #include <QString>
 #include "medo/config.h"
+#include "medo/lifetimewatch.h"
 #include "storage/fileitem.h"
 #include "storage/folderitem.h"
 #include "storage/storage.h"
@@ -162,6 +163,7 @@ bool FolderItem::fileExists(QString title) const {
 
 
 bool FolderItem::saveAll() const {
+    LifetimeWatch watch("FolderItem.saveAll()");
     bool allSaved = true;
     for (FileItem* file : _files) {
         if (file->isModified()) {

@@ -3,6 +3,7 @@
 #include <QFileInfo>
 #include <QMenu>
 #include <QTextDocumentFragment>
+#include "medo/lifetimewatch.h"
 #include "ui/inserttimedialog.h"
 #include "clipboard.h"
 #include "fileitem.h"
@@ -529,6 +530,7 @@ bool FileItem::eventFilter(QObject* obj, QEvent* event) {
 }
 
 void FileItem::focusInEvent(QFocusEvent* e) {
+    LifetimeWatch watch("focusInEvent()");
     qDebug().nospace() << "focusInEvent(" << QVariant::fromValue(e->reason()).toString() << ") " << path();
     QFile file(path());
     if (file.exists()) {
@@ -551,6 +553,7 @@ void FileItem::focusInEvent(QFocusEvent* e) {
 }
 
 void FileItem::focusOutEvent(QFocusEvent* e) {
+    LifetimeWatch watch("focusOutEvent()");
     qDebug().nospace() << "focusOutEvent(" << QVariant::fromValue(e->reason()).toString() << ") " << path();
     QTextEdit::focusOutEvent(e);
     if (this->document()->isModified()) { save(); }

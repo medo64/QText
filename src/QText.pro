@@ -46,6 +46,9 @@ QMAKE_CXXFLAGS_WARN_ON += -Wextra
 QMAKE_CXXFLAGS_WARN_ON += -Wshadow
 QMAKE_CXXFLAGS_WARN_ON += -Wdouble-promotion
 
+QMAKE_CXXFLAGS_DEBUG *= -pg
+QMAKE_LFLAGS_DEBUG *= -pg
+
 
 SOURCES += \
         medo/about.cpp \
@@ -65,6 +68,7 @@ SOURCES += \
         medo/config.cpp \
         medo/feedback.cpp \
         medo/hotkey.cpp \
+        medo/lifetimewatch.cpp \
         medo/singleinstance.cpp \
         medo/state.cpp \
         medo/upgrade.cpp \
@@ -102,6 +106,7 @@ HEADERS += \
         medo/config.h \
         medo/feedback.h \
         medo/hotkey.h \
+        medo/lifetimewatch.h \
         medo/singleinstance.h \
         medo/state.h \
         medo/upgrade.h \

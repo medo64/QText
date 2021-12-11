@@ -2,6 +2,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
+#include <QElapsedTimer>
 #include <QSaveFile>
 #include <QStandardPaths>
 #include <QTextStream>
@@ -16,6 +17,9 @@ Config::ConfigFile* Config::_configFile(nullptr);
 Config::ConfigFile* Config::_stateFile(nullptr);
 
 void Config::reset() {
+    qDebug().noquote().nospace() << "[Config] reset()";
+    QElapsedTimer stopwatch; stopwatch.start();
+
     QMutexLocker locker(&_publicAccessMutex);
 
     _configurationFilePath = QString();
@@ -25,19 +29,40 @@ void Config::reset() {
     _immediateSave = true;
     resetConfigFile();
     resetStateFile();
+
+    qDebug().noquote().nospace() << "[Config] reset() done in " << stopwatch.elapsed() << "ms";
 }
 
 bool Config::load() {
+    qDebug().noquote().nospace() << "[Config] load()";
+    QElapsedTimer stopwatch; stopwatch.start();
+
     QMutexLocker locker(&_publicAccessMutex);
     resetConfigFile();
     resetStateFile();
     QFile file(configurationFilePath());
-    return file.exists();
+
+    if (file.exists()) {
+        qDebug().noquote().nospace() << "[Config] load() done in " << stopwatch.elapsed() << "ms";
+        return true;
+    } else {
+        qDebug().noquote().nospace() << "[Config] load() failed in " << stopwatch.elapsed() << "ms";
+        return false;
+    }
 }
 
 bool Config::save() {
+    qDebug().noquote().nospace() << "[Config] save()";
+    QElapsedTimer stopwatch; stopwatch.start();
+
     QMutexLocker locker(&_publicAccessMutex);
-    return getConfigFile()->save();
+    if (getConfigFile()->save()) {
+        qDebug().noquote().nospace() << "[Config] save() done in " << stopwatch.elapsed() << "ms";
+        return true;
+    } else {
+        qDebug().noquote().nospace() << "[Config] save() failed in " << stopwatch.elapsed() << "ms";
+        return false;
+    }
 }
 
 

@@ -21,6 +21,7 @@
 #include "medo/about.h"
 #include "medo/config.h"
 #include "medo/feedback.h"
+#include "medo/lifetimewatch.h"
 #include "medo/singleinstance.h"
 #include "medo/state.h"
 #include "medo/upgrade.h"
@@ -890,6 +891,7 @@ void MainWindow::onTabMenuRequested(const QPoint& point) {
 }
 
 void MainWindow::onTabChanged() {
+    LifetimeWatch watch("onTabChanged()", true);
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
     bool exists = (file != nullptr);
     bool hasAny = (ui->tabWidget->count() == 0);
@@ -917,6 +919,7 @@ void MainWindow::onTabMoved(int from, int to) {
 
 
 void MainWindow::onTextStateChanged() {
+    LifetimeWatch watch("onTextStateChanged()");
     auto file = dynamic_cast<FileItem*>(ui->tabWidget->currentWidget());
 
     bool hasFile = (file != nullptr) ? true : false;
@@ -969,9 +972,9 @@ void MainWindow::onTrayShow() {
 }
 
 bool MainWindow::selectFolder(QString folderName) {
-    qDebug().nospace() << "selectFolder(" << folderName << ") ";
-    FolderItem* selectedFolder = nullptr;
+    LifetimeWatch watch("selectFolder(" + folderName + ") ");
 
+    FolderItem* selectedFolder = nullptr;
     for (int i = 0; i < _storage->folderCount(); i++) {
         auto folder = _storage->folderAt(i);
         if (folder->name().compare(folderName, Qt::CaseSensitive) == 0) {
@@ -994,6 +997,8 @@ bool MainWindow::selectFolder(QString folderName) {
 
 bool MainWindow::selectFolder(FolderItem* selectedFolder) {
     if (selectedFolder != nullptr) {
+        LifetimeWatch watch("selectFolder*(" + selectedFolder->name() + ")");
+
         if (_folder != nullptr) { _folder->saveAll(); } //save all files in previous folder / just in case
         _folder = selectedFolder;
 
@@ -1030,7 +1035,8 @@ bool MainWindow::selectFolder(FolderItem* selectedFolder) {
 }
 
 void MainWindow::selectFile(QString fileName) {
-    qDebug().nospace() << "selectFile(" << fileName << ") " << _folder->name();
+    LifetimeWatch watch("selectFile(" + fileName + ")");
+
     for (int i = 0; i < ui->tabWidget->count() ; i++) {
         auto file = dynamic_cast<FileItem*>(ui->tabWidget->widget(i));
         if (file->name().compare(fileName, Qt::CaseInsensitive) == 0) {
