@@ -204,8 +204,8 @@ QString Upgrade::processUrl(QUrl url, int* statusCode) {
     request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, false);
     request.setMaximumRedirectsAllowed(0);
     if (url.scheme() == "https") {
-        QSslConfiguration sslConfig;
-        sslConfig.setProtocol(QSsl::TlsV1_2OrLater);
+        QSslConfiguration sslConfig = QSslConfiguration::defaultConfiguration();
+        sslConfig.setProtocol(QSsl::TlsV1_3OrLater);
         request.setSslConfiguration(sslConfig);
     }
 
