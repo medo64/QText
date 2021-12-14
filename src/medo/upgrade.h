@@ -1,5 +1,6 @@
 /* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
 
+// 2021-12-13: Updated HTTP status code for upgrade
 // 2021-12-12: Fixed TLS 1.3 connection
 // 2020-10-23: Initial version
 

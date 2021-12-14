@@ -159,6 +159,8 @@ UpgradeFile Upgrade::getUpgradeFileFromURL(QElapsedTimer* stopwatch, QUrl url) {
     switch (statusCode) {
         // No update at this time
         case 204: //NoContent
+
+        case 403: //Forbidden
         case 410: //Gone (old)
             qDebug().noquote().nospace() << "[Upgrade] Upgrade not available (took " << stopwatch->elapsed() << " ms)";
             return UpgradeFile();
