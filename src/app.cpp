@@ -38,6 +38,7 @@ int main(int argc, char* argv[]) {
     Config::setStateFilePath(dataPaths[0] + "/.qtext.user"); //store state file in the first directory
     QApplication::connect(State::instance(), &State::writeToConfig, [ = ] (QString key, QString value) { Config::stateWrite("State!" + key, value); });
     QApplication::connect(State::instance(), &State::readFromConfig, [ = ] (QString key) { return Config::stateRead("State!" + key, QString()); });
+    QApplication::connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, [ = ] () { Config::quit(); });
 
     storage = new Storage(dataPaths);
     MainWindow w { storage };

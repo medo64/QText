@@ -1,5 +1,6 @@
 /* Josip Medved <jmedved@jmedved.com> * www.medo64.com * MIT License */
 
+// 2021-12-13: Refactored background save and added a quit() method
 // 2021-12-10: Added background save
 // 2020-05-25: Using strongly typed enums
 // 2020-05-05: Added stateRead/stateWrite for integers, longs, and doubles
@@ -36,6 +37,9 @@ class Config {
 
         /*! Forces immediate save of a config file. Returns true if operation was successful. */
         static bool save();
+
+        /*! Forces immediate save of a config file and cleans everything up in preparation to quit. */
+        static void quit();
 
 
         /*! Returns if application is considered portable. Initial value will be auto-detected.
@@ -294,29 +298,12 @@ class Config {
         static QString dataDirectoryPathWhenInstalled();
 
     private:
-        class ConfigSaveThread : private QThread {
-            public:
-                explicit ConfigSaveThread(void);
-                ~ConfigSaveThread();
-
-            public:
-                void requestSave();
-
-            public:
-                ConfigSaveThread(const ConfigSaveThread&) = delete;
-                void operator=(const ConfigSaveThread&) = delete;
-
-            private:
-                QMutex _syncRoot;
-                bool _saveRequested = false;
-                void run();
-        };
-
-    private:
         class ConfigFile {
             public:
-                ConfigFile(QString filePath);
+                ConfigFile(QString kind, QString filePath);
+                ~ConfigFile();
                 bool save();
+                void requestSave();
                 QString readOne(QString key);
                 QStringList readMany(QString key);
                 void writeOne(QString key, QString value);
@@ -325,8 +312,31 @@ class Config {
                 void removeAll();
 
             private:
-                QMutex _cacheMutex;
+                QMutex _cacheMutex;          // used for line data
+                QMutex _saveMutex;           // used only for saving to file
                 QHash<QString, QVariant> _cache;
+
+            private:
+                class BackgroundSaveThread : private QThread {
+                    public:
+                        explicit BackgroundSaveThread(ConfigFile* config);
+                        ~BackgroundSaveThread();
+
+                    public:
+                        void requestSave();
+                        void cancelRequestedSave();
+
+                    public:
+                        BackgroundSaveThread(const BackgroundSaveThread&) = delete;
+                        void operator=(const BackgroundSaveThread&) = delete;
+
+                    private:
+                        ConfigFile* _config = nullptr;
+                        QMutex _syncRoot;
+                        bool _saveRequested = false;
+                        void run();
+                };
+                Config::ConfigFile::BackgroundSaveThread* _backgroundSaveThread = nullptr;
 
             private:
                 enum class ProcessState {
@@ -375,6 +385,7 @@ class Config {
                 bool _fileLoaded;
                 QString _filePath;
                 QString _lineEnding;
+                QString _kind;
 
         };
 
@@ -382,9 +393,10 @@ class Config {
         static ConfigFile* getConfigFile();
         static void resetConfigFile();
         static ConfigFile* _configFile;
+        static QMutex _configFileMutex;
         static ConfigFile* getStateFile();
         static void resetStateFile();
         static ConfigFile* _stateFile;
-        static Config::ConfigSaveThread _configSaveThread;
+        static QMutex _stateFileMutex;
 
 };

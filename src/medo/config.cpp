@@ -6,8 +6,11 @@
 #include <QSaveFile>
 #include <QStandardPaths>
 #include <QTextStream>
+#include <QTimer>
 
 QMutex Config::_publicAccessMutex(QMutex::Recursive);
+QMutex Config::_configFileMutex(QMutex::NonRecursive);
+QMutex Config::_stateFileMutex(QMutex::NonRecursive);
 QString Config::_configurationFilePath;
 QString Config::_stateFilePath;
 QString Config::_dataDirectoryPath;
@@ -15,7 +18,6 @@ Config::PortableStatus Config::_isPortable(PortableStatus::Unknown);
 bool Config::_immediateSave(true);
 Config::ConfigFile* Config::_configFile(nullptr);
 Config::ConfigFile* Config::_stateFile(nullptr);
-Config::ConfigSaveThread Config::_configSaveThread{};
 
 void Config::reset() {
     qDebug().noquote().nospace() << "[Config] reset()";
@@ -35,35 +37,38 @@ void Config::reset() {
 }
 
 bool Config::load() {
-    qDebug().noquote().nospace() << "[Config] load()";
-    QElapsedTimer stopwatch; stopwatch.start();
-
     QMutexLocker locker(&_publicAccessMutex);
+    qDebug().noquote().nospace() << "[Config] load()";
+
     resetConfigFile();
     resetStateFile();
     QFile file(configurationFilePath());
 
     if (file.exists()) {
-        qDebug().noquote().nospace() << "[Config] load() done in " << stopwatch.elapsed() << "ms";
         return true;
     } else {
-        qDebug().noquote().nospace() << "[Config] load() failed in " << stopwatch.elapsed() << "ms";
         return false;
     }
 }
 
 bool Config::save() {
-    qDebug().noquote().nospace() << "[Config] save()";
-    QElapsedTimer stopwatch; stopwatch.start();
-
     QMutexLocker locker(&_publicAccessMutex);
-    if (getConfigFile()->save()) {
-        qDebug().noquote().nospace() << "[Config] save() done in " << stopwatch.elapsed() << "ms";
-        return true;
-    } else {
-        qDebug().noquote().nospace() << "[Config] save() failed in " << stopwatch.elapsed() << "ms";
-        return false;
-    }
+    qDebug().noquote().nospace() << "[Config] save()";
+
+    bool success = getConfigFile()->save();
+    getStateFile()->save();  // ignore status for return code
+    return success;
+}
+
+void Config::quit() {
+    QMutexLocker locker(&_publicAccessMutex);
+    qDebug().noquote().nospace() << "[Config] quit()";
+
+    getConfigFile()->save();
+    resetConfigFile();
+
+    getStateFile()->save();
+    resetStateFile();
 }
 
 
@@ -131,7 +136,10 @@ bool Config::immediateSave() {
 void Config::setImmediateSave(bool saveImmediately) {
     QMutexLocker locker(&_publicAccessMutex);
     _immediateSave = saveImmediately;
-    if (_immediateSave) { Config::_configSaveThread.requestSave(); } //to ensure any pending writes are cleared
+    if (_immediateSave) {  //to ensure any pending writes are cleared
+        getConfigFile()->requestSave();
+        getStateFile()->requestSave();
+    }
 }
 
 
@@ -602,13 +610,15 @@ void Config::stateWriteMany(QString key, QStringList values) {
 
 
 Config::ConfigFile* Config::getConfigFile() {
+    QMutexLocker locker(&_configFileMutex);
     if (_configFile == nullptr) {
-        _configFile = new ConfigFile(configurationFile());
+        _configFile = new ConfigFile("Config", configurationFile());
     }
     return _configFile;
 }
 
 void Config::resetConfigFile() {
+    QMutexLocker locker(&_configFileMutex);
     if (_configFile != nullptr) {
         delete _configFile;
         _configFile = nullptr;
@@ -617,13 +627,15 @@ void Config::resetConfigFile() {
 
 
 Config::ConfigFile* Config::getStateFile() {
+    QMutexLocker locker(&_stateFileMutex);
     if (_stateFile == nullptr) {
-        _stateFile = new ConfigFile(stateFile());
+        _stateFile = new ConfigFile("State", stateFile());
     }
     return _stateFile;
 }
 
 void Config::resetStateFile() {
+    QMutexLocker locker(&_stateFileMutex);
     if (_stateFile != nullptr) {
         delete _stateFile;
         _stateFile = nullptr;
@@ -631,59 +643,12 @@ void Config::resetStateFile() {
 }
 
 
-Config::ConfigSaveThread::ConfigSaveThread(void) {
-    this->setObjectName("ConfigSaveThread");
-    this->start(LowPriority);
-}
+Config::ConfigFile::ConfigFile(QString kind, QString filePath) {
+    qDebug().noquote().nospace() << "[Config:" << kind << "] load(" << filePath << ")";
+    QElapsedTimer stopwatch; stopwatch.start();
 
-Config::ConfigSaveThread::~ConfigSaveThread() {
-    this->requestInterruption();
-    this->wait();
-}
+    _kind = kind;
 
-void Config::ConfigSaveThread::requestSave() {
-    QMutexLocker locker(&_syncRoot);
-    _saveRequested = true;
-}
-
-void Config::ConfigSaveThread::run() {
-    while (!this->isInterruptionRequested()) {
-        QMutexLocker locker(&_syncRoot);
-        bool saveRequested = _saveRequested;
-        locker.unlock();
-        if (saveRequested) {
-            qDebug().noquote().nospace() << "[Config] Background save()";
-            QElapsedTimer stopwatch; stopwatch.start();
-            if (Config::getConfigFile()->save()) {
-                locker.relock();
-                _saveRequested = false;
-                locker.unlock();
-                qDebug().noquote().nospace() << "[Config] Background save() done in " << stopwatch.elapsed() << "ms";
-            } else {
-                qDebug().noquote().nospace() << "[Config] Background save() failed in " << stopwatch.elapsed() << "ms";
-                this->msleep(2500);  // give it some time
-            }
-        }
-        this->msleep(250);
-    }
-
-    {  // check once more when exiting
-        QMutexLocker locker(&_syncRoot);
-        bool saveRequested = _saveRequested;
-        locker.unlock();
-        if (saveRequested) {
-            qDebug().noquote().nospace() << "[Config] Final background save()";
-            QElapsedTimer stopwatch; stopwatch.start();
-            if (Config::getConfigFile()->save()) {
-                qDebug().noquote().nospace() << "[Config] Final background save() done in " << stopwatch.elapsed() << "ms";
-            } else {
-                qDebug().noquote().nospace() << "[Config] Final background save() failed in " << stopwatch.elapsed() << "ms";
-            }
-        }
-    }
-}
-
-Config::ConfigFile::ConfigFile(QString filePath) {
     QString fileContent;
     QString lineEnding = QString();
     QFile file(filePath);
@@ -734,21 +699,32 @@ Config::ConfigFile::ConfigFile(QString filePath) {
     _lineEnding = !lineEnding.isNull() ? lineEnding : "\n";
 #endif
 
+qDebug().noquote().nospace() << "[Config:" << _kind << "] load() done in " << stopwatch.elapsed() << "ms";
+
 #ifdef QT_DEBUG
-    qDebug().noquote() << "[Config]" << configurationFilePath();
     for (LineData line : _lines) {
         QString key = line.getKey();
         QString value = line.getValue();
         if (!key.isNull() && !key.isEmpty()) {
-            qDebug().noquote() << "[Config]" << key + ":" << value;
+            qDebug().noquote().nospace() << "[Config:" << _kind << "] " << key + ":" << value;
         }
     }
 #endif
 
     _filePath = filePath;
+    _backgroundSaveThread = new BackgroundSaveThread(this);
+}
+
+Config::ConfigFile::~ConfigFile() {
+    _backgroundSaveThread->~BackgroundSaveThread();
+    _backgroundSaveThread = nullptr;
+    qDebug().noquote().nospace() << "[Config:" << _kind << "] destructed()";
 }
 
 void Config::ConfigFile::processLine(QString lineText) {
+    qDebug().noquote().nospace() << "[Config:" << _kind << "] load()";
+    QElapsedTimer stopwatch; stopwatch.start();
+
     QString valueSeparator = QString();
 
     QString sbKey = QString();
@@ -926,22 +902,42 @@ void Config::ConfigFile::processLine(QString lineText) {
 
 
 bool Config::ConfigFile::save() {
+    QMutexLocker lockerSave(&_saveMutex);  // make sure save operations are ordered
+    qDebug().noquote().nospace() << "[Config:" << _kind << "] save()";
+    QElapsedTimer stopwatch; stopwatch.start();
+
+    _backgroundSaveThread->cancelRequestedSave();  // try skipping any save that might be queued
+
+    QMutexLocker locker(&_cacheMutex);
     QString content;
     for (int i = 0; i < _lines.length(); i++) {
         if (i > 0) { content += _lineEnding; }
         content.append(_lines[i].toString());
     }
+    locker.unlock();  // needed only while composing what to save
+
+    qDebug().noquote().nospace() << "[Config:" << _kind << "] save() prepared in " << stopwatch.elapsed() << "ms";
 
     QSaveFile file(_filePath);
     if (file.open(QIODevice::WriteOnly)) {
         QTextStream out(&file);
         out.setCodec("UTF-8");
         out << content;
-        return file.commit();
+        if (file.commit()) {
+            qDebug().noquote().nospace() << "[Config:" << _kind << "] save() done in " << stopwatch.elapsed() << "ms";
+            return true;
+        } else {
+            qDebug().noquote().nospace() << "[Config:" << _kind << "] save() failed in " << stopwatch.elapsed() << "ms";
+            return false;
+        }
     } else {
-        qDebug().noquote() << "[Config]" << "Cannot write file!" << file.errorString();
+        qDebug().noquote().nospace() << "[Config:" << _kind << "] save() error in " << stopwatch.elapsed() << "ms (" << file.errorString() << ")";
         return false;
     }
+}
+
+void Config::ConfigFile::requestSave() {
+    _backgroundSaveThread->requestSave();
 }
 
 QString Config::ConfigFile::readOne(QString key) {
@@ -1017,7 +1013,8 @@ void Config::ConfigFile::writeOne(QString key, QString value) {
         }
     }
 
-    if (_immediateSave) { Config::_configSaveThread.requestSave(); }
+    qDebug().noquote().nospace() << "[Config:" << _kind << "] " << key + "=" << value;
+    if (_immediateSave) { requestSave(); }
 }
 
 void Config::ConfigFile::writeMany(QString key, QStringList values) {
@@ -1071,7 +1068,12 @@ void Config::ConfigFile::writeMany(QString key, QStringList values) {
         }
     }
 
-    if (_immediateSave) { Config::_configSaveThread.requestSave(); }
+#ifdef QT_DEBUG
+    for (QString value : values) {
+        qDebug().noquote().nospace() << "[Config:" << _kind << "] " << key + "=" << value;
+    }
+#endif
+    if (_immediateSave) { requestSave(); }
 }
 
 void Config::ConfigFile::removeMany(QString key) {
@@ -1084,7 +1086,9 @@ void Config::ConfigFile::removeMany(QString key) {
             _lines.removeAt(i);
         }
     }
-    if (_immediateSave) { Config::_configSaveThread.requestSave(); }
+
+    qDebug().noquote().nospace() << "[Config:" << _kind << "] remove(" << key << ")";
+    if (_immediateSave) { requestSave(); }
 }
 
 void Config::ConfigFile::removeAll() {
@@ -1092,7 +1096,9 @@ void Config::ConfigFile::removeAll() {
     _cache.clear(); //invalidate cache
 
     _lines.clear();
-    if (_immediateSave) { Config::_configSaveThread.requestSave(); }
+
+    qDebug().noquote().nospace() << "[Config:" << _kind << "] removeAll()";
+    if (_immediateSave) { requestSave(); }
 }
 
 
@@ -1225,6 +1231,55 @@ void Config::ConfigFile::LineData::escapeIntoStringBuilder(QString* sb, QString 
                     sb->append(ch);
                 }
                 break;
+        }
+    }
+}
+
+
+Config::ConfigFile::BackgroundSaveThread::BackgroundSaveThread(ConfigFile* config) {
+    _config = config;
+
+    this->setObjectName("Config:BackgroundSave" + _config->_kind + "Thread");
+    this->start(LowPriority);
+}
+
+Config::ConfigFile::BackgroundSaveThread::~BackgroundSaveThread() {
+    this->requestInterruption();
+    this->wait();
+}
+
+void Config::ConfigFile::BackgroundSaveThread::requestSave() {
+    QMutexLocker locker(&_syncRoot);
+    _saveRequested = true;
+}
+
+void Config::ConfigFile::BackgroundSaveThread::cancelRequestedSave() {
+    QMutexLocker locker(&_syncRoot);
+    _saveRequested = false;
+}
+
+void Config::ConfigFile::BackgroundSaveThread::run() {
+    while (!this->isInterruptionRequested()) {
+        QMutexLocker locker(&_syncRoot);
+        bool saveRequested = _saveRequested;
+        _saveRequested = false;  // reset signal for now
+        locker.unlock();  // unlock early
+
+        if (saveRequested) {
+            qDebug().noquote().nospace() << "[Config:" << _config->_kind << "] backgroundSave()";
+            _config->save();  // if it fails, ignore - nothing much to do
+        }
+
+        this->msleep(250);
+    }
+
+    {  // check once more when exiting
+        QMutexLocker locker(&_syncRoot);
+        bool saveRequested = _saveRequested;
+        locker.unlock();
+        if (saveRequested) {
+            qDebug().noquote().nospace() << "[Config:" << _config->_kind << "] backgroundSave()";
+            _config->save();
         }
     }
 }
