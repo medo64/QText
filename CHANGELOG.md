@@ -1,6 +1,11 @@
 ## Release Notes ##
 
 
+### 0.1.24 [2021-12-13] ###
+
+* Fixing state saving on quit
+
+
 ### 0.1.23 [2021-12-11] ###
 
 * Fixed slow tab switching when used on ZFS
