@@ -87,6 +87,10 @@ class Settings {
         static void setHotkeyTogglesVisibility(bool newHotkeyTogglesVisibility);
         static bool defaultHotkeyTogglesVisibility() { return false; }
 
+        static bool hotkeyUseDConf();
+        static void setHotkeyUseDConf(bool newHotkeyUseDConf);
+        static bool defaultHotkeyUseDConf();
+
         static bool minimizeToTray();
         static void setMinimizeToTray(bool newMinimizeToTray);
         static bool defaultMinimizeToTray() { return true; }

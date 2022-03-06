@@ -1,6 +1,6 @@
 APP_PRODUCT = "QText"
 APP_COMPANY = "Josip Medved"
-APP_VERSION = "0.1.24"
+APP_VERSION = "0.1.25"
 APP_COPYRIGHT = "Copyright 2004 Josip Medved <jmedved@jmedved.com>"
 APP_DESCRIPTION = "Note taking utility with auto-save."
 
@@ -51,7 +51,6 @@ QMAKE_LFLAGS_DEBUG *= -pg
 
 
 SOURCES += \
-        medo/about.cpp \
         ui/finddialog.cpp \
         ui/foldersdialog.cpp \
         ui/gotodialog.cpp \
@@ -64,8 +63,10 @@ SOURCES += \
         ui/qtabwidgetex.cpp \
         ui/phoneticdialog.cpp \
         ui/renamefiledialog.cpp \
+        medo/about.cpp \
         medo/appsetupmutex.cpp \
         medo/config.cpp \
+        medo/dconfHotkey.cpp \
         medo/feedback.cpp \
         medo/hotkey.cpp \
         medo/lifetimewatch.cpp \
@@ -89,7 +90,6 @@ SOURCES += \
         setup.cpp
 
 HEADERS += \
-        medo/about.h \
         ui/finddialog.h \
         ui/foldersdialog.h \
         ui/gotodialog.h \
@@ -102,8 +102,10 @@ HEADERS += \
         ui/phoneticdialog.h \
         ui/renamefiledialog.h \
         ui/settingsdialog.h \
+        medo/about.h \
         medo/appsetupmutex.h \
         medo/config.h \
+        medo/dconfHotkey.h \
         medo/feedback.h \
         medo/hotkey.h \
         medo/lifetimewatch.h \

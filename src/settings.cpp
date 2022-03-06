@@ -203,6 +203,20 @@ void Settings::setHotkeyTogglesVisibility(bool newHotkeyTogglesVisibility) {
 }
 
 
+bool Settings::hotkeyUseDConf() {
+    return Config::read("HotkeyUseDConf", defaultHotkeyUseDConf());
+}
+
+void Settings::setHotkeyUseDConf(bool newHotkeyUseDConf) {
+    Config::write("HotkeyUseDConf", newHotkeyUseDConf);
+}
+
+bool Settings::defaultHotkeyUseDConf() {
+    QString sessionType = getenv("XDG_SESSION_TYPE");
+    return (sessionType.compare("wayland") == 0);
+}
+
+
 bool Settings::minimizeToTray() {
     return Config::read("MinimizeToTray", defaultMinimizeToTray());
 }

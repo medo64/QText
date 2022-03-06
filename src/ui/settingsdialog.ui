@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>450</width>
-    <height>225</height>
+    <height>253</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,7 +27,7 @@
    <item row="1" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tabBehavior">
       <attribute name="title">
@@ -149,7 +149,38 @@
        </item>
        <item>
         <layout class="QGridLayout" name="gridSystem">
+         <item row="0" column="0">
+          <widget class="QLabel" name="labelHotkey">
+           <property name="text">
+            <string>Hotkey:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="HotkeyEdit" name="editHotkey"/>
+         </item>
+         <item row="1" column="1">
+          <widget class="QCheckBox" name="checkboxHotkeyUseDConf">
+           <property name="text">
+            <string>Use DConf (global)</string>
+           </property>
+          </widget>
+         </item>
          <item row="2" column="1">
+          <widget class="QCheckBox" name="checkboxHotkeyTogglesVisibility">
+           <property name="text">
+            <string>Toggle visibility</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="labelDataPath">
+           <property name="text">
+            <string>Data directory:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <property name="spacing">
             <number>0</number>
@@ -175,30 +206,6 @@
             </widget>
            </item>
           </layout>
-         </item>
-         <item row="0" column="1">
-          <widget class="HotkeyEdit" name="editHotkey"/>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="labelDataPath">
-           <property name="text">
-            <string>Data directory:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="labelHotkey">
-           <property name="text">
-            <string>Hotkey:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QCheckBox" name="checkboxHotkeyTogglesVisibility">
-           <property name="text">
-            <string>Toggle visibility</string>
-           </property>
-          </widget>
          </item>
         </layout>
        </item>
@@ -285,8 +292,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>257</x>
+     <y>243</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -301,8 +308,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>325</x>
+     <y>243</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>

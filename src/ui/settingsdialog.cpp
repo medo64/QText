@@ -23,6 +23,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, Hotkey* hotkey) : QDialog(parent
     _oldForceDarkMode = Settings::forceDarkMode();
     _oldForcePlainCopyPaste = Settings::forcePlainCopyPaste();
     _oldHotkey = Settings::hotkey();
+    _oldHotkeyUseDConf = Settings::hotkeyUseDConf();
     _oldHotkeyTogglesVisibility = Settings::hotkeyTogglesVisibility();
     _oldMinimizeToTray = Settings::minimizeToTray();
     _oldShowInTaskbar = Settings::showInTaskbar();
@@ -33,6 +34,10 @@ SettingsDialog::SettingsDialog(QWidget* parent, Hotkey* hotkey) : QDialog(parent
 #endif
     _oldTabTextColorPerType = Settings::tabTextColorPerType();
     _oldUseHtmlByDefault = (Settings::defaultFileType() == FileType::Html); //ignoring markdown
+
+#if defined(Q_OS_WIN)
+    ui->checkboxHotkeyUseDConf->setVisible(false);
+#endif
 
     connect(ui->buttonBox, &QDialogButtonBox::clicked, this, &SettingsDialog::onButtonClicked);
     connect(ui->buttonDataPath, &QToolButton::clicked, this, &SettingsDialog::onDataPathClicked);
@@ -84,6 +89,7 @@ void SettingsDialog::reset() {
     ui->checkboxForceDarkMode->setChecked(_oldForceDarkMode);
     ui->checkboxForcePlainCopyPaste->setChecked(_oldForcePlainCopyPaste);
     ui->editHotkey->setNewKey(_oldHotkey);
+    ui->checkboxHotkeyUseDConf->setChecked(_oldHotkeyUseDConf);
     ui->checkboxHotkeyTogglesVisibility->setChecked(_oldHotkeyTogglesVisibility);
     ui->checkboxMinimizeToTray->setChecked(_oldMinimizeToTray);
     ui->checkboxShowInTaskbar->setChecked(_oldShowInTaskbar);
@@ -101,6 +107,7 @@ void SettingsDialog::restoreDefaults() {
     ui->checkboxForceDarkMode->setChecked(Settings::defaultForceDarkMode());
     ui->checkboxForcePlainCopyPaste->setChecked(Settings::defaultForcePlainCopyPaste());
     ui->editHotkey->setNewKey(Settings::defaultHotkey());
+    ui->checkboxHotkeyUseDConf->setChecked(Settings::defaultHotkeyUseDConf());
     ui->checkboxHotkeyTogglesVisibility->setChecked(Settings::defaultHotkeyTogglesVisibility());
     ui->checkboxMinimizeToTray->setChecked(Settings::defaultMinimizeToTray());
     ui->checkboxShowInTaskbar->setChecked(Settings::defaultShowInTaskbar());
@@ -144,6 +151,10 @@ void SettingsDialog::accept() {
     QKeySequence newHotkey = ui->editHotkey->newKey();
     _changedHotkey = (newHotkey != 0) && (newHotkey != _oldHotkey);
     if (_changedHotkey) { Settings::setHotkey(newHotkey); }
+
+    bool newHotkeyUseDConf = (ui->checkboxHotkeyUseDConf->checkState() == Qt::Checked);
+    _changedHotkeyUseDConf = newHotkeyUseDConf != _oldHotkeyUseDConf;
+    if (_changedHotkeyUseDConf) { Settings::setHotkeyUseDConf(newHotkeyUseDConf); }
 
     bool newHotkeyTogglesVisibility = (ui->checkboxHotkeyTogglesVisibility->checkState() == Qt::Checked);
     _changedHotkeyTogglesVisibility = newHotkeyTogglesVisibility != _oldHotkeyTogglesVisibility;

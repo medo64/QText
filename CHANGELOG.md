@@ -1,6 +1,11 @@
 ## Release Notes ##
 
 
+### 0.1.25 [2022-03-05] ###
+
+* Added support for DConf hotkey
+
+
 ### 0.1.24 [2021-12-13] ###
 
 * Fixing state saving on quit
