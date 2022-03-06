@@ -25,7 +25,12 @@ QString getKeyString(QKeySequence key) {
 
     if (keyboardModifiers == 0) { //all modifiers have been processed
         QKeySequence keySeq = QKeySequence(keyboardKey);
-        keySequence += keySeq.toString(QKeySequence::NativeText);
+        QString keySeqText = keySeq.toString(QKeySequence::NativeText);
+        if (keySeqText.length() == 1) {
+            keySequence += keySeqText.toLower();
+        } else {
+            keySequence += keySeqText;
+        }
         return keySequence;
     } else {
         return QString();  // cannot figure how to process all modifiers
