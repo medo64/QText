@@ -47,7 +47,7 @@ QStringList getSubkeys() {
     dconfList.waitForFinished();
     QString dconfListText(dconfList.readAllStandardOutput());
 
-    QStringList dconfListLines = dconfListText.split('\n', QString::SkipEmptyParts);
+    QStringList dconfListLines = dconfListText.split('\n', Qt::SkipEmptyParts);
     return dconfListLines;
 }
 
@@ -115,17 +115,17 @@ bool DConfHotkey::registerHotkey(QKeySequence key) {
     QString dconfPath = "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/" + selectedSubkey;
 
     QProcess dconfWriteName;
-    dconfWriteName.start("/usr/bin/dconf write " + dconfPath + "name \"'" + _name + "'\"");
+    dconfWriteName.start("/usr/bin/dconf write " + dconfPath + "name \"'" + _name + "'\"", QStringList());
     dconfWriteName.waitForFinished();
     isOk = isOk && (dconfWriteName.exitCode() == 0);
 
     QProcess dconfWriteCommand;
-    dconfWriteCommand.start("/usr/bin/dconf write " + dconfPath + "command \"'" + QCoreApplication::applicationFilePath() + "'\"");
+    dconfWriteCommand.start("/usr/bin/dconf write " + dconfPath + "command \"'" + QCoreApplication::applicationFilePath() + "'\"", QStringList());
     dconfWriteCommand.waitForFinished();
     isOk = isOk && (dconfWriteCommand.exitCode() == 0);
 
     QProcess dconfWriteBinding;
-    dconfWriteBinding.start("/usr/bin/dconf write " + dconfPath + "binding \"'" + keySequence + "'\"");
+    dconfWriteBinding.start("/usr/bin/dconf write " + dconfPath + "binding \"'" + keySequence + "'\"", QStringList());
     dconfWriteBinding.waitForFinished();
     isOk = isOk && (dconfWriteBinding.exitCode() == 0);
 
@@ -149,7 +149,7 @@ bool DConfHotkey::unregisterHotkey() {
 
     QProcess dconfReset;
     QString dconfPath = "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/" + selectedSubkey;
-    dconfReset.start("/usr/bin/dconf reset -f " + dconfPath);
+    dconfReset.start("/usr/bin/dconf reset -f " + dconfPath, QStringList());
     dconfReset.waitForFinished();
     bool isOk = (dconfReset.exitCode() == 0);
 
