@@ -40,8 +40,8 @@ class MainWindow : public QMainWindow {
         DConfHotkey* _dconfHotkey = nullptr;
         QFutureWatcher<bool>* _futureWatcher = nullptr;
         QTimer* _moveTimer = nullptr;
-        void applySettings() { applySettings(true, true, true, false, false, false, false); }
-        void applySettings(bool applyShowInTaskbar, bool applyTabTextColorPerType, bool applyAlwaysOnTop, bool applyHotkey, bool applyDConfHotkey, bool applyDataPath, bool applyForceDarkMode);
+        void applySettings() { applySettings(true, true, true, false, false, false, false, false); }
+        void applySettings(bool applyShowInTaskbar, bool applyTabTextColorPerType, bool applyAlwaysOnTop, bool applyHotkey, bool applyDConfHotkey, bool applyDataPath, bool applyFont, bool applyForceDarkMode);
         void applyToolbarIcons();
         bool selectFolder(QString folderName);
         bool selectFolder(FolderItem* folder);

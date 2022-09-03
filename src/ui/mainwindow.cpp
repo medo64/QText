@@ -792,7 +792,7 @@ void MainWindow::onPhoneticSpelling() {
 
 void MainWindow::onTopMost() {
     Settings::setAlwaysOnTop(!Settings::alwaysOnTop());
-    applySettings(false, false, true, false, false, false, false);
+    applySettings(false, false, true, false, false, false, false, false);
     this->show(); //to show window after setWindowFlag
     this->activateWindow();
 }
@@ -806,6 +806,7 @@ void MainWindow::onAppSettings() {
                       dialog->changedHotkey(),
                       dialog->changedHotkeyUseDConf(),
                       dialog->changedDataPath(),
+                      dialog->changedFont(),
                       dialog->changedForceDarkMode());
         this->show(); //to show window after setWindowFlag
         this->activateWindow();
@@ -1077,7 +1078,7 @@ void MainWindow::selectFile(FileItem* file) {
     }
 }
 
-void MainWindow::applySettings(bool applyShowInTaskbar, bool applyTabTextColorPerType, bool applyAlwaysOnTop, bool applyHotkey, bool applyDConfHotkey, bool applyDataPath, bool applyForceDarkMode) {
+void MainWindow::applySettings(bool applyShowInTaskbar, bool applyTabTextColorPerType, bool applyAlwaysOnTop, bool applyHotkey, bool applyDConfHotkey, bool applyDataPath, bool applyFont, bool applyForceDarkMode) {
     if (applyDataPath) {
         _storage->saveAll();
         ui->tabWidget->clear();
@@ -1128,6 +1129,13 @@ void MainWindow::applySettings(bool applyShowInTaskbar, bool applyTabTextColorPe
     }
 
     if (applyForceDarkMode) { applyToolbarIcons(); }
+
+    if (applyFont) {
+        for (auto i = 0; i < ui->tabWidget->count(); i++) {  // refresh all tabs
+            auto file = dynamic_cast<FileItem*>(ui->tabWidget->widget(i));
+            file->load();
+        }
+    }
 }
 
 void MainWindow::applyToolbarIcons() {

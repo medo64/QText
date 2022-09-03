@@ -1,4 +1,5 @@
 #include <QFileDialog>
+#include <QFontDialog>
 #include <QKeyEvent>
 #include <QPushButton>
 #include "settingsdialog.h"
@@ -12,6 +13,8 @@ SettingsDialog::SettingsDialog(QWidget* parent, Hotkey* hotkey) : QDialog(parent
     ui->setupUi(this);
     Helpers::setupFixedSizeDialog(this);
     Helpers::setReadonlyPalette(ui->editDataPath);
+    Helpers::setReadonlyPalette(ui->editFontName);
+    Helpers::setReadonlyPalette(ui->editFontSize);
 
     ui->editHotkey->setHotkey(hotkey, Settings::hotkey());
 
@@ -20,6 +23,8 @@ SettingsDialog::SettingsDialog(QWidget* parent, Hotkey* hotkey) : QDialog(parent
     _oldDataPath = Settings::dataPath();
     _oldFollowUrlWithCtrl = Settings::followUrlWithCtrl();
     _oldFollowUrlWithDoubleClick = Settings::followUrlWithDoubleClick();
+    _oldFontName = Settings::fontName();
+    _oldFontSize = Settings::fontSize();
     _oldForceDarkMode = Settings::forceDarkMode();
     _oldForcePlainCopyPaste = Settings::forcePlainCopyPaste();
     _oldHotkey = Settings::hotkey();
@@ -41,6 +46,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, Hotkey* hotkey) : QDialog(parent
 
     connect(ui->buttonBox, &QDialogButtonBox::clicked, this, &SettingsDialog::onButtonClicked);
     connect(ui->buttonDataPath, &QToolButton::clicked, this, &SettingsDialog::onDataPathClicked);
+    connect(ui->buttonFont, &QToolButton::clicked, this, &SettingsDialog::onFontClicked);
 
     reset();
 }
@@ -86,6 +92,8 @@ void SettingsDialog::reset() {
     ui->editDataPath->setText(QDir::toNativeSeparators(Settings::dataPath()));
     ui->checkboxFollowUrlWithCtrl->setChecked(_oldFollowUrlWithCtrl);
     ui->checkboxFollowUrlWithDoubleClick->setChecked(_oldFollowUrlWithDoubleClick);
+    ui->editFontName->setText(Settings::fontName());
+    ui->editFontSize->setText(QString::number(Settings::fontSize()) + " pt");
     ui->checkboxForceDarkMode->setChecked(_oldForceDarkMode);
     ui->checkboxForcePlainCopyPaste->setChecked(_oldForcePlainCopyPaste);
     ui->editHotkey->setNewKey(_oldHotkey);
@@ -104,6 +112,8 @@ void SettingsDialog::restoreDefaults() {
     ui->editDataPath->setText(QDir::toNativeSeparators(Settings::defaultDataPath()));
     ui->checkboxFollowUrlWithCtrl->setChecked(Settings::defaultFollowUrlWithCtrl());
     ui->checkboxFollowUrlWithDoubleClick->setChecked(Settings::defaultFollowUrlWithDoubleClick());
+    ui->editFontName->setText(Settings::defaultFontName());
+    ui->editFontSize->setText(QString::number(Settings::defaultFontSize()) + " pt");
     ui->checkboxForceDarkMode->setChecked(Settings::defaultForceDarkMode());
     ui->checkboxForcePlainCopyPaste->setChecked(Settings::defaultForcePlainCopyPaste());
     ui->editHotkey->setNewKey(Settings::defaultHotkey());
@@ -139,6 +149,14 @@ void SettingsDialog::accept() {
     bool newFollowUrlWithDoubleClick = (ui->checkboxFollowUrlWithDoubleClick->checkState() == Qt::Checked);
     _changedFollowUrlWithDoubleClick = newFollowUrlWithDoubleClick != _oldFollowUrlWithDoubleClick;
     if (_changedFollowUrlWithDoubleClick) { Settings::setFollowUrlWithDoubleClick(newFollowUrlWithDoubleClick); }
+
+    QString newFontName = ui->editFontName->text();
+    int newFontSize = ui->editFontSize->text().split(" ")[0].toInt();
+    _changedFont = (newFontName != _oldFontName) || (newFontSize != _oldFontSize);
+    if (_changedFont) {
+        Settings::setFontName(newFontName);
+        Settings::setFontSize(newFontSize);
+    }
 
     bool newForceDarkMode = (ui->checkboxForceDarkMode->checkState() == Qt::Checked);
     _changedForceDarkMode = newForceDarkMode != _oldForceDarkMode;
@@ -190,5 +208,15 @@ void SettingsDialog::onDataPathClicked() {
     QString newDataPath = QFileDialog::getExistingDirectory(this, "Select data directory", _oldDataPath, QFileDialog::ShowDirsOnly);
     if (!newDataPath.isNull()) {
         ui->editDataPath->setText(QDir::toNativeSeparators(newDataPath));
+    }
+}
+
+void SettingsDialog::onFontClicked() {
+    QFont currFont = QFont(Settings::fontName(), Settings::fontSize());
+    bool ok;
+    QFont newFont = QFontDialog::getFont(&ok, currFont, this);
+    if (ok) {
+        ui->editFontName->setText(newFont.family());
+        ui->editFontSize->setText(QString::number(newFont.pointSize()) + " pt");
     }
 }

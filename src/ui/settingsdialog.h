@@ -18,6 +18,7 @@ class SettingsDialog : public QDialog {
         bool changedDataPath() const { return _changedDataPath; }
         bool changedFollowUrlWithCtrl() const { return _changedFollowUrlWithCtrl; }
         bool changedFollowUrlWithDoubleClick() const { return _changedFollowUrlWithDoubleClick; }
+        bool changedFont() const { return _changedFont; }
         bool changedForceDarkMode() const { return _changedForceDarkMode; }
         bool changedForcePlainCopyPaste() const { return _changedForcePlainCopyPaste; }
         bool changedHotkey() const { return _changedHotkey; }
@@ -42,6 +43,7 @@ class SettingsDialog : public QDialog {
         bool _changedDataPath;
         bool _changedFollowUrlWithCtrl;
         bool _changedFollowUrlWithDoubleClick;
+        bool _changedFont;
         bool _changedForceDarkMode;
         bool _changedForcePlainCopyPaste;
         bool _changedHotkey;
@@ -57,6 +59,8 @@ class SettingsDialog : public QDialog {
         QString _oldDataPath;
         bool _oldFollowUrlWithCtrl;
         bool _oldFollowUrlWithDoubleClick;
+        QString _oldFontName;
+        int _oldFontSize;
         bool _oldForceDarkMode;
         bool _oldForcePlainCopyPaste;
         QKeySequence _oldHotkey;
@@ -71,5 +75,6 @@ class SettingsDialog : public QDialog {
     private slots:
         void onButtonClicked(QAbstractButton* button);
         void onDataPathClicked();
+        void onFontClicked();
 
 };
