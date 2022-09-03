@@ -1,5 +1,11 @@
 ## Release Notes ##
 
+### 4.99.26 [2022-09-03] ###
+
+* Added font selection in settings
+* Supporting non-privileged installation under Windows
+* Fixed icon detection for Windows 11
+
 
 ### 0.1.25 [2022-03-05] ###
 
