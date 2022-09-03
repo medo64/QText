@@ -80,7 +80,7 @@ bool DConfHotkey::hasRegisteredHotkey() {
 
 bool DConfHotkey::registerHotkey(QKeySequence key) {
 #if defined(Q_OS_WIN)  // not applicable for Windows
-    return;
+    return false;
 #endif
 
     if (key.count() != 1) {

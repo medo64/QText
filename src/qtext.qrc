@@ -12,6 +12,34 @@
         <file>icons/64x64/app.png</file>
         <file>icons/96x96/app.png</file>
         <file>icons/128x128/app.png</file>
+        <file>icons/16x16/appDebug.png</file>
+        <file>icons/24x24/appDebug.png</file>
+        <file>icons/32x32/appDebug.png</file>
+        <file>icons/48x48/appDebug.png</file>
+        <file>icons/64x64/appDebug.png</file>
+        <file>icons/96x96/appDebug.png</file>
+        <file>icons/128x128/appDebug.png</file>
+        <file>icons/16x16/appMono.png</file>
+        <file>icons/24x24/appMono.png</file>
+        <file>icons/32x32/appMono.png</file>
+        <file>icons/48x48/appMono.png</file>
+        <file>icons/64x64/appMono.png</file>
+        <file>icons/96x96/appMono.png</file>
+        <file>icons/128x128/appMono.png</file>
+        <file>icons/16x16/appBlack.png</file>
+        <file>icons/24x24/appBlack.png</file>
+        <file>icons/32x32/appBlack.png</file>
+        <file>icons/48x48/appBlack.png</file>
+        <file>icons/64x64/appBlack.png</file>
+        <file>icons/96x96/appBlack.png</file>
+        <file>icons/128x128/appBlack.png</file>
+        <file>icons/16x16/appWhite.png</file>
+        <file>icons/24x24/appWhite.png</file>
+        <file>icons/32x32/appWhite.png</file>
+        <file>icons/48x48/appWhite.png</file>
+        <file>icons/64x64/appWhite.png</file>
+        <file>icons/96x96/appWhite.png</file>
+        <file>icons/128x128/appWhite.png</file>
         <file>icons/16x16/save.png</file>
         <file>icons/24x24/save.png</file>
         <file>icons/32x32/save.png</file>
@@ -52,13 +80,6 @@
         <file>icons/24x24/delete.png</file>
         <file>icons/48x48/delete.png</file>
         <file>icons/64x64/delete.png</file>
-        <file>icons/16x16/appWhite.png</file>
-        <file>icons/24x24/appWhite.png</file>
-        <file>icons/32x32/appWhite.png</file>
-        <file>icons/48x48/appWhite.png</file>
-        <file>icons/64x64/appWhite.png</file>
-        <file>icons/96x96/appWhite.png</file>
-        <file>icons/128x128/appWhite.png</file>
         <file>icons/16x16/settings.png</file>
         <file>icons/24x24/settings.png</file>
         <file>icons/32x32/settings.png</file>
@@ -99,13 +120,6 @@
         <file>icons/32x32/printPdf.png</file>
         <file>icons/48x48/printPdf.png</file>
         <file>icons/64x64/printPdf.png</file>
-        <file>icons/16x16/appMono.png</file>
-        <file>icons/24x24/appMono.png</file>
-        <file>icons/32x32/appMono.png</file>
-        <file>icons/48x48/appMono.png</file>
-        <file>icons/64x64/appMono.png</file>
-        <file>icons/96x96/appMono.png</file>
-        <file>icons/128x128/appMono.png</file>
         <file>icons/16x16/find.png</file>
         <file>icons/16x16/findNext.png</file>
         <file>icons/24x24/find.png</file>
@@ -116,13 +130,6 @@
         <file>icons/48x48/findNext.png</file>
         <file>icons/64x64/find.png</file>
         <file>icons/64x64/findNext.png</file>
-        <file>icons/16x16/appDebug.png</file>
-        <file>icons/24x24/appDebug.png</file>
-        <file>icons/32x32/appDebug.png</file>
-        <file>icons/48x48/appDebug.png</file>
-        <file>icons/64x64/appDebug.png</file>
-        <file>icons/96x96/appDebug.png</file>
-        <file>icons/128x128/appDebug.png</file>
         <file>icons/16x16/bold.png</file>
         <file>icons/24x24/bold.png</file>
         <file>icons/32x32/bold.png</file>

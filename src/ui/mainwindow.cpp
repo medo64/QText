@@ -60,7 +60,23 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     font.setBold(true);
     defaultAction->setFont(font);
     _tray->setContextMenu(trayMenu);
-    _tray->setIcon(Settings::colorTrayIcon() ? Icons::app() : Icons::appWhite());
+
+    if (Settings::colorTrayIcon()) {
+        _tray->setIcon(Icons::app());
+    } else {
+        bool isWindows = (QSysInfo::kernelType() == "winnt");
+        bool isWindows10 = isWindows && (QSysInfo::kernelVersion().startsWith("10.0.1"));
+        bool isWindows11 = isWindows && (QSysInfo::kernelVersion().startsWith("10.0.2")); // 10.0.22000 is the first
+
+        if (isWindows10) {
+            _tray->setIcon(Icons::appWhite());
+        } else if (isWindows11) {
+            _tray->setIcon(Icons::appBlack());
+        } else {
+            _tray->setIcon(Icons::app());
+        }
+    }
+
     auto hotkeyText = Settings::hotkey().toString(QKeySequence::PortableText);
     if (hotkeyText.length() > 0) {
         _tray->setToolTip( + "Access notes from tray or press " + hotkeyText + " hotkey.");

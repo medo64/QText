@@ -248,10 +248,11 @@ Valid values are whole numbers between \fB60\fP and \fB86400\fP.
 
 .TP
 \fBColorTrayIcon\fP
-If \fBtrue\fP, a color icon will be used for tray. If \fBfalse\fP, a white icon
-will be used instead. Default is to show color icon on all platforms except
-Windows 10 where default is to show a white icon.
-    ColorTrayIcon: true
+If \fBtrue\fP, a color icon will always be used for tray. If \fBfalse\fP, an
+attempt to auto-detect appropriate icon will be made. Default is to show color
+icon on all platforms except Windows 10 where default is to show a white icon,
+and Windows 11 where black outline icon will be shown.
+    ColorTrayIcon: false
 
 .TP
 \fBDataPath\fP

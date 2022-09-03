@@ -21,11 +21,7 @@ class Settings {
         static bool colorTrayIcon();
         static void setColorTrayIcon(bool newColorTrayIcon);
         static bool defaultColorTrayIcon() {
-            if ((QSysInfo::kernelType() == "winnt") && (QSysInfo::productVersion() == "10")) {
-                return false; //white icon
-            } else {
-                return true; //color icon
-            }
+            return false; // auto detect
         }
 
         static QString dataPath();

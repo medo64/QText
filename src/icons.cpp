@@ -37,6 +37,18 @@ QIcon Icons::appMono() {
     return icon;
 }
 
+QIcon Icons::appBlack() {
+    QIcon icon;
+    icon.addFile(":icons/16x16/appBlack.png", QSize(16, 16));
+    icon.addFile(":icons/24x24/appBlack.png", QSize(24, 24));
+    icon.addFile(":icons/32x32/appBlack.png", QSize(32, 32));
+    icon.addFile(":icons/48x48/appBlack.png", QSize(48, 48));
+    icon.addFile(":icons/64x64/appBlack.png", QSize(64, 64));
+    icon.addFile(":icons/96x96/appBlack.png", QSize(96, 96));
+    icon.addFile(":icons/128x128/appBlack.png", QSize(128, 128));
+    return icon;
+}
+
 QIcon Icons::appWhite() {
     QIcon icon;
     icon.addFile(":icons/16x16/appWhite.png", QSize(16, 16));
