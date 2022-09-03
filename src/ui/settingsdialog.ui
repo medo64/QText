@@ -33,7 +33,7 @@
       <attribute name="title">
        <string>Behavior</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayoutLookAndFeel">
+      <layout class="QVBoxLayout" name="verticalLayoutBehavior">
        <item>
         <widget class="QCheckBox" name="checkboxShowInTaskbar">
          <property name="text">
@@ -300,7 +300,7 @@
       <attribute name="title">
        <string>Experimental</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayoutSystem">
+      <layout class="QVBoxLayout" name="verticalLayoutExperimental">
        <item>
         <widget class="QCheckBox" name="checkboxShowMarkdown">
          <property name="toolTip">
