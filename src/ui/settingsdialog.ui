@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SettingsDialog</class>
+ <widget class="QDialog" name="SettingsDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>450</width>
+    <height>253</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Settings</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="2" column="0">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok|QDialogButtonBox::Reset|QDialogButtonBox::RestoreDefaults</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>1</number>
+     </property>
+     <widget class="QWidget" name="tabBehavior">
+      <attribute name="title">
+       <string>Behavior</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayoutBehavior">
+       <item>
+        <widget class="QCheckBox" name="checkboxShowInTaskbar">
+         <property name="text">
+          <string>Show in taskbar</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkboxMinimizeToTray">
+         <property name="text">
+          <string>Minimize to tray</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkboxAlwaysOnTop">
+         <property name="text">
+          <string>Always on top (requires restart)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkboxFollowUrlWithCtrl">
+         <property name="text">
+          <string>Follow URLs (holding Ctrl)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkboxFollowUrlWithDoubleClick">
+         <property name="text">
+          <string>Follow URLs (double-click)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabLookAndFeel">
+      <attribute name="title">
+       <string>Look &amp;&amp; Feel</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayoutLookAndFeel">
+       <item>
+        <widget class="QCheckBox" name="checkboxUseHtmlByDefault">
+         <property name="text">
+          <string>Use HTML by default</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkboxForcePlainCopyPaste">
+         <property name="text">
+          <string>Force plain copy/paste (even for Html files)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkboxForceDarkMode">
+         <property name="text">
+          <string>Force dark mode</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkboxTabTextColorPerType">
+         <property name="toolTip">
+          <string>Different color is shown in tab depending if tab is plain text, Html, or Markdown.</string>
+         </property>
+         <property name="text">
+          <string>Color tab text per file type</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="0" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="100,0,0">
+           <property name="spacing">
+            <number>1</number>
+           </property>
+           <property name="sizeConstraint">
+            <enum>QLayout::SetDefaultConstraint</enum>
+           </property>
+           <item>
+            <widget class="QLineEdit" name="editFontName">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="editFontSize">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>42</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>-- pt</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="buttonFont">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="labelFont">
+           <property name="text">
+            <string>Font:</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabSystem">
+      <attribute name="title">
+       <string>System</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayoutSystem">
+       <item>
+        <widget class="QCheckBox" name="checkboxAutostart">
+         <property name="text">
+          <string>Auto-start</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="gridSystem">
+         <item row="0" column="0">
+          <widget class="QLabel" name="labelHotkey">
+           <property name="text">
+            <string>Hotkey:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="HotkeyEdit" name="editHotkey"/>
+         </item>
+         <item row="1" column="1">
+          <widget class="QCheckBox" name="checkboxHotkeyUseDConf">
+           <property name="text">
+            <string>Use DConf (global)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QCheckBox" name="checkboxHotkeyTogglesVisibility">
+           <property name="text">
+            <string>Toggle visibility</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="labelDataPath">
+           <property name="text">
+            <string>Data directory:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <property name="spacing">
+            <number>1</number>
+           </property>
+           <item>
+            <widget class="QLineEdit" name="editDataPath">
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="buttonDataPath">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabExperimental">
+      <attribute name="title">
+       <string>Experimental</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayoutExperimental">
+       <item>
+        <widget class="QCheckBox" name="checkboxShowMarkdown">
+         <property name="toolTip">
+          <string>Controls if markdown will be shown as one of the file options</string>
+         </property>
+         <property name="text">
+          <string>Show markdown as an option</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>HotkeyEdit</class>
+   <extends>QLineEdit</extends>
+   <header>ui/hotkeyedit.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>checkboxAutostart</tabstop>
+  <tabstop>editHotkey</tabstop>
+  <tabstop>checkboxHotkeyTogglesVisibility</tabstop>
+  <tabstop>editDataPath</tabstop>
+  <tabstop>buttonDataPath</tabstop>
+  <tabstop>checkboxForcePlainCopyPaste</tabstop>
+  <tabstop>checkboxForceDarkMode</tabstop>
+  <tabstop>checkboxTabTextColorPerType</tabstop>
+  <tabstop>checkboxShowInTaskbar</tabstop>
+  <tabstop>checkboxFollowUrlWithCtrl</tabstop>
+  <tabstop>checkboxFollowUrlWithDoubleClick</tabstop>
+  <tabstop>checkboxUseHtmlByDefault</tabstop>
+  <tabstop>checkboxMinimizeToTray</tabstop>
+  <tabstop>checkboxAlwaysOnTop</tabstop>
+  <tabstop>checkboxShowMarkdown</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>SettingsDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>257</x>
+     <y>243</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>SettingsDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>325</x>
+     <y>243</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

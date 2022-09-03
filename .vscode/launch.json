@@ -1,15 +1,17 @@
 {
-    "version": "0.2.0",
+    "version": "2.0.0",
     "configurations": [
         {
-            "name": ".NET Framework",
-            "type": "clr",
+            "name": "C++ Launch",
+            "type": "cppdbg",
             "request": "launch",
-            "preLaunchTask": "build",
-            "program": "QText.exe",
-            "args": [],
-            "cwd": "${workspaceFolder}/Binaries/",
-            "stopAtEntry": false
+            "program": "${workspaceFolder}/bin/qtext",
+            "windows": {
+                "program": "${workspaceFolder}\\bin\\QText.exe"
+            },
+            "externalConsole": false,
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "build"
         }
     ]
-}
+ }

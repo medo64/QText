@@ -1,0 +1,354 @@
+.\" Manpage for QText
+.\" Contact jmedved@jmedved.com to correct errors or typos.
+.TH QTEXT 1 "CURR_DATE" "MAJOR.MINOR.PATCH" "QText Manual"
+
+
+.SH NAME
+
+QText \- Note taking utility
+
+
+.SH SYNOPSIS
+
+.ad l
+\fBqtext\fP
+
+
+.SH DESCRIPTION
+Note taking application with auto-save.
+
+
+.SH SHORTCUTS
+
+.TP
+\fBF1\fP
+Show application menu
+
+.TP
+\fBShift+F1\fP
+Show phonetic spelling dialog
+
+.TP
+\fBCtrl+F1\fP
+Show settings
+
+.TP
+\fBF2\fP
+Rename file
+
+.TP
+\fBF3\fP
+Find next text match
+
+.TP
+\fBShift+F3\fP
+Find previous text match
+
+.TP
+\fBF4\fP
+Show folder menu
+
+.TP
+\fBShift+F4\fP
+Show folder edit dialog
+
+.TP
+\fBF5\fP
+Insert time and date
+
+.TP
+\fBAlt+F8\fP
+Show file and/or directory in Visual Studio Code (if installed)
+
+.TP 12
+\fBCtrl+C\fP
+Copy text
+
+.TP 12
+\fBCtrl+F\fP
+Find text
+
+.TP
+\fBCtrl+G\fP
+Find folder or file by name
+
+.TP
+\fBCtrl+N\fP
+New file
+
+.TP
+\fBCtrl+O\fP
+Show folder menu
+
+.TP
+\fBCtrl+Shift+O\fP
+Show folder edit dialog
+
+.TP
+\fBCtrl+P\fP
+Print
+
+.TP
+\fBCtrl+Shift+P\fP
+Print preview
+
+.TP
+\fBCtrl+Alt+R\fP
+Show containing directory
+
+.TP
+\fBCtrl+S\fP
+Save file immediatelly
+
+.TP
+\fBCtrl+T\fP
+Toggle always on top (might not work on Linux)
+
+.TP
+\fBCtrl+V\fP
+Paste text
+
+.TP
+\fBCtrl+X\fP
+Cut text
+
+.TP
+\fBCtrl+Y\fP
+Redo action
+
+.TP
+\fBCtrl+Z\fP
+Undo action
+
+.TP
+\fBAlt+1\fP
+Select first tab
+
+.TP
+\fBAlt+2\fP
+Select second tab
+
+.TP
+\fBAlt+3\fP
+Select third tab
+
+.TP
+\fBAlt+4\fP
+Select fourth tab
+
+.TP
+\fBAlt+5\fP
+Select fifth tab
+
+.TP
+\fBAlt+6\fP
+Select sixth tab
+
+.TP
+\fBAlt+7\fP
+Select seventh tab
+
+.TP
+\fBAlt+8\fP
+Select eight tab
+
+.TP
+\fBAlt+9\fP
+Select nineth tab
+
+.TP
+\fBAlt+0\fP
+Select tenth tab
+
+.TP
+\fBAlt+Left\fP
+Select file to the left
+
+.TP
+\fBAlt+Shift+Left\fP
+Move file to the left
+
+.TP
+\fBAlt+Right\fP
+Select file to the right
+
+.TP
+\fBAlt+Shift+Right\fP
+Move file to the right
+
+.TP
+\fBAlt+Up\fP
+Select previous folder
+
+.TP
+\fBAlt+Down\fP
+Select next folder
+
+.TP
+\fBAlt+Home\fP
+Select base folder
+
+.TP
+\fBAlt+End\fP
+Show folder selection menu
+
+.TP
+\fBAlt+PageUp\fP
+Select previous folder
+
+.TP
+\fBAlt+PageDown\fP
+Select next folder
+
+.TP
+\fBMenu\fP
+Show context menu for text
+
+.TP
+\fBShift+Menu\fP
+Show context menu for file
+
+
+.SH FOLDER DIALOG SHORTCUTS
+
+.TP
+\fBAlt+F8\fP
+Show all directories in Visual Studio Code (if installed).
+
+
+.SH SETTINGS DIALOG SHORTCUTS
+
+.TP
+\fBF8\fP
+Show config file in file manager.
+
+.TP
+\fBShift+F8\fP
+Show config file in Visual Studio Code (if installed).
+
+
+.SH SETTINGS
+
+Settings for QText are stored in \fB~/.config/qtext.conf\fP when application
+is installed and next to executable in \fB.qtext\fP if run directly. It is
+recommended to change settings from application menu but they can also be
+changed directly.
+
+.TP
+\fBAlwaysOnTop\fP
+Controls if application will be shown on top of the other applications. Valid
+values are \fBtrue\fP and \fBfalse\fP.
+    AlwaysOnTop: false
+
+.TP
+\fBClearUndoInterval\fP
+Determines interval in seconds after whick Undo/Redo stack will be cleaned.
+Valid values are whole numbers between \fB60\fP and \fB86400\fP.
+    ClearUndoInterval: 900
+
+.TP
+\fBColorTrayIcon\fP
+If \fBtrue\fP, a color icon will always be used for tray. If \fBfalse\fP, an
+attempt to auto-detect appropriate icon will be made. Default is to show color
+icon on all platforms except Windows 10 where default is to show a white icon,
+and Windows 11 where black outline icon will be shown.
+    ColorTrayIcon: false
+
+.TP
+\fBDataPath\fP
+Location where files are stored. It can be repeated multiple times and all
+directories will be loaded. However, only the first directory listed will have
+all operations available. Using more than one directory is not fully supported.
+    DataPath: ~/.local/share/qtext/
+
+.TP
+\fBDeletionStyle\fP
+Controls how the file is deleted. Valid values are \fBDelete\fP,
+\fBOverwrite\fP, and \fBRecycle\fP.
+    DeletionStyle: Delete
+
+.TP
+\fBDefaultFileType\fP
+Which file type is preselected when creating new file. Valid values are
+\fBPlain\fP, \fBMarkdown\fP, and \fBHtml\fP.
+    DefaultFileType: Plain
+
+.TP
+\fBFollowUrl\fP
+If true, URLs will be clickable if <Ctrl> key is pressed.
+    FollowUrl: true
+
+.TP
+\fBFollowUrlWithDoubleClick\fP
+If true, it will be possible to double-click URLs to activate.
+    FollowUrlWithDoubleClick: false
+
+.TP
+\fBFontName\fP
+Font name to use. On Windows default is \fBCalibri\fP and on Linux default is
+\fBDejaVu Sans\fP.
+    FontName: Calibri
+    FontName: DejaVu Sans
+
+.TP
+\fBFontSize\fP
+Font size to use. Valid values are between \fB6\fP and \fB72\fP.
+    FontSize: 11
+
+.TP
+\fBHotkey\fP
+Determines hotkey used to show application.
+    Hotkey: Ctrl+Shift+Q
+
+.TP
+\fBHotkeyTogglesVisibility\fP
+If true, pressing hotkey again will hide window instead of moving it to top.
+    HotkeyTogglesVisibility: false
+
+.TP
+\fBMinimizeToTray\fP
+If true, minimizing application will actually move it to tray area instead.
+Valid values are \fBtrue\fP and \fBfalse\fP.
+    MinimizeToTray: true
+
+.TP
+\fBQuickSaveInterval\fP
+Interval in milliseconds after which file will be saved if there is no writing
+activity detected. Valid values are between \fB1000\fP and \fB60000\fP.
+    QuickSaveInterval: 2500
+
+.TP
+\fBScaleFactor\fP
+Extra scaling to be used for application's UI. If 0, no additional scaling is
+applied. Valid values are between \fB0.25\fP and \fB4.00\fP.
+    ScaleFactor: 0.00
+
+.TP
+\fBShowInTaskbar\fP
+If true, application will be shown in taskbar. Valid values are \fBtrue\fP and
+\fBfalse\fP.
+    ShowInTaskbar: true
+
+.TP
+\fBTabTextColorPerType\fP
+Controls if tab text is different color based on file type. If \fBtrue\fP,
+markdown files are green and html files are blue. Valid values are \fBfalse\fP
+and \fBtrue\fP.
+    TabTextColorPerType: false
+
+.TP
+\fBTabWidth\fP
+Amount of spaces used for indenting. Valid values are between \fB2\fP and
+\fB16\fP.
+    TabWidth: 4
+
+.TP
+\fBWordWrap\fP
+If true, text will be wrapped instead of showing scrollbar. Valid values are
+\fBtrue\fP and \fBfalse\fP.
+    WordWrap: true
+
+
+.SH AUTHOR
+
+Josip Medved <jmedved@jmedved.com>

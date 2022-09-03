@@ -1,89 +1,57 @@
 [QText](https://medo64.com/qtext/)
 ==================================
 
-Simple note taking program with multi-folder support, auto-save, and encryption support.
+Simple note taking program.
 
 
-## Shortcut Keys
+## Shortcuts
 
-  * `Esc`                     Close
-  * `F2`                      Rename
-  * `F3`                      Find next
-  * `F5`                      Insert date/time.
-  * `F10`                     Activate toolbar.
-  * `Shift+F1`                Phonetic spelling.
-  * `Ctrl+A`                  Select all
-  * `Ctrl+C`                  Copy
-  * `Ctrl+F`                  Find
-  * `Ctrl+G`                  Navigation
-  * `Ctrl+N`                  New
-  * `Ctrl+R`                  Reopen
-  * `Ctrl+S`                  Save now
-  * `Ctrl+T`                  Always on top
-  * `Ctrl+V`                  Paste
-  * `Ctrl+X`                  Cut
-  * `Ctrl+Y`                  Redo
-  * `Ctrl+Z`                  Undo
-  * `Ctrl+0`                  Reset zoom.
-  * `Ctrl+Tab`                Alternates between two last used tabs
-  * `Ctrl+Plus`               Zoom in.
-  * `Ctrl+Minus`              Zoom out.
-  * `Ctrl+Backspace`          Delete word on left.
-  * `Ctrl+Delete`             Delete word on right.
-  * `Ctrl+PgUp`               Select tab on the left.
-  * `Ctrl+PgDn`               Select tab on the right.
-  * `Ctrl+;`                  Insert date.
-  * `Ctrl+:`                  Insert time.
-  * `Ctrl+Shift+C`            Copy as plain text
-  * `Ctrl+Shift+V`            Paste as plain text
-  * `Ctrl+Shift+X`            Cut as plain text
-  * `Alt+1`                   Selects 1st tab.
-  * `Alt+2`                   Selects 2nd tab.
-  * `Alt+3`                   Selects 3rd tab.
-  * `Alt+4`                   Selects 4th tab.
-  * `Alt+5`                   Selects 5th tab.
-  * `Alt+6`                   Selects 6th tab.
-  * `Alt+7`                   Selects 7th tab.
-  * `Alt+8`                   Selects 8th tab.
-  * `Alt+9`                   Selects 9th tab.
-  * `Alt+0`                   Selects 10th tab.
-  * `Alt+Left`                Select tab on the left.
-  * `Alt+Right`               Select tab on the right.
-  * `Alt+Up`                  Select previous folder.
-  * `Alt+Down`                Select next folder.
-  * `Alt+Home`                Select default folder.
-  * `Alt+PageUp`              Select previous folder.
-  * `Alt+PageDown`            Select next folder.
-  * `Alt+Shift+D`             Inserts current date into text.
-  * `Alt+Shift+T`             Inserts current time into text.
-
-
-## Encryption
-
-All encrypted files are compatible with salted OpenSSL 256-bit AES CBC file
-encryption (as defined at http://www.openssl.org/docs/apps/enc.html). In order
-to decrypt file OpenSSL command line would be:
-
-    openssl aes-256-cbc -d -in file.txt.aes256cbc -out file.txt -k "password"
-
-That means that, even if you stop using this fabulous program, you can always
-get to your data. I consider this an important feature.
-
-Downside to using this standard algorithm is that it is rather fast. And fast
-is bad when you need to deal with brute force attacks. This encryption is no
-worse than what OpenSSL normally does (it is equivalent actually) but beware
-that lot of security lies in well chosen password.
-
-
-## Contributors
-
-List of people that helped with the project (in alphabetic order):
-
-  * Dražen Bajus            (Croatia)
-  * Radu Capan              (Romaina)
-  * Marc Desbiens           (Canada)
-  * Ivan Gabajček           (Croatia)
-  * Igor Griner             (Croatia)
-  * Michael Jagersberger    (Austria)
-  * Randy Simat
-  * Steven Yarnot           (United States)
+| Key               | Description                                             |
+|-------------------|---------------------------------------------------------|
+| `F1`              | Show application menu                                   |
+| `Shift+F1`        | Show phonetic spelling dialog                           |
+| `Ctrl+F1`         | Show settings                                           |
+| `F2`              | Rename file                                             |
+| `F3`              | Find next text match                                    |
+| `Shift+F3`        | Find previous text match                                |
+| `F4`              | Show folder menu                                        |
+| `Shift+F4`        | Show folder edit dialog                                 |
+| `F5`              | Insert time and date                                    |
+| `Alt+F8`          | Show file and/or directory in Visual Studio Code        |
+| `Ctrl+C`          | Copy text                                               |
+| `Ctrl+F`          | Find text                                               |
+| `Ctrl+G`          | Find folder or file by name                             |
+| `Ctrl+N`          | New file                                                |
+| `Ctrl+O`          | Show folder menu                                        |
+| `Ctrl+Shift+O`    | Show folder edit dialog                                 |
+| `Ctrl+P`          | Print                                                   |
+| `Ctrl+Shift+P`    | Print preview                                           |
+| `Ctrl+Alt+R`      | Show containing directory                               |
+| `Ctrl+S`          | Save file immediatelly                                  |
+| `Ctrl+T`          | Toggle always on top (might not work on Linux)          |
+| `Ctrl+V`          | Paste text                                              |
+| `Ctrl+X`          | Cut text                                                |
+| `Ctrl+Y`          | Redo action                                             |
+| `Ctrl+Z`          | Undo action                                             |
+| `Alt+1`           | Select first tab                                        |
+| `Alt+2`           | Select second tab                                       |
+| `Alt+3`           | Select third tab                                        |
+| `Alt+4`           | Select fourth tab                                       |
+| `Alt+5`           | Select fifth tab                                        |
+| `Alt+6`           | Select sixth tab                                        |
+| `Alt+7`           | Select seventh tab                                      |
+| `Alt+8`           | Select eight tab                                        |
+| `Alt+9`           | Select ninth tab                                       |
+| `Alt+0`           | Select tenth tab                                        |
+| `Alt+Left`        | Select file to the left                                 |
+| `Alt+Shift+Left`  | Select file to the left                                 |
+| `Alt+Right`       | Select file to the right                                |
+| `Alt+Shift+Right` | Select file to the right                                |
+| `Alt+Up`          | Select previous folder                                  |
+| `Alt+Down`        | Select next folder                                      |
+| `Alt+Home`        | Select base folder                                      |
+| `Alt+End`         | Show folder selection menu                              |
+| `Alt+PageUp`      | Select previous folder                                  |
+| `Alt+PageDown`    | Select next folder                                      |
+| `Menu`            | Show context menu for text                              |
+| `Shift+Menu`      | Show context menu for file                              |

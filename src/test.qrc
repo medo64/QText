@@ -1,0 +1,40 @@
+<RCC>
+    <qresource prefix="/">
+        <file>test/Config/CommentsOnly.cfg</file>
+        <file>test/Config/CommentsWithValues.cfg</file>
+        <file>test/Config/Empty.cfg</file>
+        <file>test/Config/EmptyLinesCR.cfg</file>
+        <file>test/Config/EmptyLinesCRLF.cfg</file>
+        <file>test/Config/EmptyLinesLF.cfg</file>
+        <file>test/Config/EmptyLinesMixed.cfg</file>
+        <file>test/Config/EmptyLinesMixed.Good.cfg</file>
+        <file>test/Config/KeyWhitespace.cfg</file>
+        <file>test/Config/KeyWhitespace.Good.cfg</file>
+        <file>test/Config/Remove.cfg</file>
+        <file>test/Config/Remove.Good.cfg</file>
+        <file>test/Config/RemoveMulti.cfg</file>
+        <file>test/Config/RemoveMulti.Good.cfg</file>
+        <file>test/Config/Replace.cfg</file>
+        <file>test/Config/Replace.Good.cfg</file>
+        <file>test/Config/ReplaceOnlyLast.cfg</file>
+        <file>test/Config/ReplaceOnlyLast.Good.cfg</file>
+        <file>test/Config/SpacingCorrections.cfg</file>
+        <file>test/Config/SpacingCorrections.Good.cfg</file>
+        <file>test/Config/SpacingEscape.cfg</file>
+        <file>test/Config/SpacingEscape.Good.cfg</file>
+        <file>test/Config/SpacingPreserved.cfg</file>
+        <file>test/Config/SpacingPreserved.Good.cfg</file>
+        <file>test/Config/SpacingPreservedOnAdd.cfg</file>
+        <file>test/Config/SpacingPreservedOnAdd.Good.cfg</file>
+        <file>test/Config/WriteBasic.Good.cfg</file>
+        <file>test/Config/WriteMulti.cfg</file>
+        <file>test/Config/WriteMulti.Good.cfg</file>
+        <file>test/Config/WriteNoEmptyLine.cfg</file>
+        <file>test/Config/WriteNoEmptyLine.Good.cfg</file>
+        <file>test/Config/WriteSameSeparatorEquals.cfg</file>
+        <file>test/Config/WriteSameSeparatorEquals.Good.cfg</file>
+        <file>test/Config/WriteSameSeparatorSpace.cfg</file>
+        <file>test/Config/WriteSameSeparatorSpace.Good.cfg</file>
+        <file>test/Config/WriteConvertedCpp.Good.cfg</file>
+    </qresource>
+</RCC>

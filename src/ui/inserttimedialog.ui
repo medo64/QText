@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>InsertTimeDialog</class>
+ <widget class="QDialog" name="InsertTimeDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>727</width>
+    <height>548</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Insert Time/Date</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="3" column="0" colspan="3">
+    <widget class="QLabel" name="instructionsLabel">
+     <property name="text">
+      <string>&lt;html&gt;
+  &lt;head/&gt;
+  &lt;body&gt;
+    &lt;table&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;h&lt;/b&gt;&lt;/td&gt;&lt;td&gt;The hour without a leading zero (0 to 23 or 1 to 12 if AM/PM display)&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;hh&lt;/b&gt;&lt;/td&gt;&lt;td&gt;The hour with a leading zero (00 to 23 or 01 to 12 if AM/PM display)&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;H&lt;/b&gt;&lt;/td&gt;&lt;td&gt;The hour without a leading zero (0 to 23, even with AM/PM display)&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;HH&lt;/b&gt;&lt;/td&gt;&lt;td&gt;The hour with a leading zero (00 to 23, even with AM/PM display)&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;m&lt;/b&gt;&lt;/td&gt;&lt;td&gt;The minute without a leading zero (0 to 59)&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;mm&lt;/b&gt;&lt;/td&gt;&lt;td&gt;The minute with a leading zero (00 to 59)&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;s&lt;/b&gt;&lt;/td&gt;&lt;td&gt;The whole second, without any leading zero (0 to 59)&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;ss&lt;/b&gt;&lt;/td&gt;&lt;td&gt;The whole second, with a leading zero where applicable (00 to 59)&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;z&lt;/b&gt;&lt;/td&gt;&lt;td&gt;The fractional part of the second, to go after a decimal point, without trailing zeroes (0 to 999).&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;zzz&lt;/b&gt;&lt;/td&gt;&lt;td&gt;The fractional part of the second, to millisecond precision, including trailing zeroes (000 to 999).&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;A&lt;/b&gt;&lt;/td&gt;&lt;td&gt;Use AM/PM display (upper-case).&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;a&lt;/b&gt;&lt;/td&gt;&lt;td&gt;Use am/pm display (lower-case).&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;t&lt;/b&gt;&lt;/td&gt;&lt;td&gt;The timezone (for example &amp;quot;CEST&amp;quot;)&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;d&lt;/b&gt;&lt;/td&gt;&lt;td&gt;The day as a number without a leading zero (1 to 31)&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;dd&lt;/b&gt;&lt;/td&gt;&lt;td&gt;The day as a number with a leading zero (01 to 31)&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;ddd&lt;/b&gt;&lt;/td&gt;&lt;td&gt;The abbreviated localized day name (e.g. 'Mon' to 'Sun').&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;dddd&lt;/b&gt;&lt;/td&gt;&lt;td&gt;The long localized day name (e.g. 'Monday' to 'Sunday').&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;M&lt;/b&gt;&lt;/td&gt;&lt;td&gt;The month as a number without a leading zero (1 to 12)&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;MM&lt;/b&gt;&lt;/td&gt;&lt;td&gt;The month as a number with a leading zero (01 to 12)&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;MMM&lt;/b&gt;&lt;/td&gt;&lt;td&gt;The abbreviated localized month name (e.g. 'Jan' to 'Dec').&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;MMMM&lt;/b&gt;&lt;/td&gt;&lt;td&gt;The long localized month name (e.g. 'January' to 'December').&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;yy&lt;/b&gt;&lt;/td&gt;&lt;td&gt;The year as a two digit number (00 to 99)&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;&lt;b&gt;yyyy&lt;/b&gt;&lt;/td&gt;&lt;td&gt;The year as a four digit number.&lt;/td&gt;&lt;/tr&gt;
+    &lt;/table&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLineEdit" name="exampleText">
+     <property name="palette">
+      <palette>
+       <active/>
+       <inactive/>
+       <disabled/>
+      </palette>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="formatLabel">
+     <property name="text">
+      <string>Format:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLineEdit" name="formatText">
+     <property name="placeholderText">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLabel" name="exampleLabel">
+     <property name="text">
+      <string>Example:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="3" alignment="Qt::AlignBottom">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>formatText</tabstop>
+  <tabstop>exampleText</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>InsertTimeDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>InsertTimeDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

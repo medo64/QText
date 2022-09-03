@@ -1,0 +1,12 @@
+Package:        qtext
+Version:        MAJOR.MINOR.PATCH
+Architecture:   ARCHITECTURE
+Maintainer:     Josip Medved <jmedved@jmedved.com>
+Homepage:       https://www.medo64.com/qtext/
+Description:    Note taking utility
+ It's similar to notepad which can be brought from tray when needed but has also
+ auto-save thing going on.
+Section:        utils
+Priority:       optional
+Depends:        debconf, gnupg2, libc6, qtbase5-dev, libqt5x11extras5, openssl, dconf-cli
+Build-Depends:  qtbase5-dev, libqt5x11extras5-dev

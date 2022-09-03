@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>500</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>320</width>
+    <height>200</height>
+   </size>
+  </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::NoContextMenu</enum>
+  </property>
+  <property name="windowTitle">
+   <string notr="true">QText</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>app.ico</normaloff>app.ico</iconset>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>16</width>
+    <height>16</height>
+   </size>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <item row="0" column="0">
+     <widget class="QTabWidgetEx" name="tabWidget" native="true">
+      <property name="contextMenuPolicy">
+       <enum>Qt::NoContextMenu</enum>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <property name="contextMenuPolicy">
+    <enum>Qt::NoContextMenu</enum>
+   </property>
+   <property name="movable">
+    <bool>false</bool>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>16</width>
+     <height>16</height>
+    </size>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonIconOnly</enum>
+   </property>
+   <property name="floatable">
+    <bool>false</bool>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionNew"/>
+   <addaction name="actionSave"/>
+   <addaction name="actionRename"/>
+   <addaction name="separator"/>
+   <addaction name="actionCut"/>
+   <addaction name="actionCopy"/>
+   <addaction name="actionPaste"/>
+   <addaction name="separator"/>
+   <addaction name="actionUndo"/>
+   <addaction name="actionRedo"/>
+   <addaction name="separator"/>
+   <addaction name="actionFontBold"/>
+   <addaction name="actionFontItalic"/>
+   <addaction name="actionFontUnderline"/>
+   <addaction name="actionFontStrikethrough"/>
+   <addaction name="separator"/>
+   <addaction name="actionFind"/>
+   <addaction name="actionFindNext"/>
+   <addaction name="separator"/>
+   <addaction name="actionGoto"/>
+  </widget>
+  <action name="actionNew">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/new.png</normaloff>:/icons/16x16/new.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;New</string>
+   </property>
+   <property name="iconText">
+    <string>New</string>
+   </property>
+   <property name="toolTip">
+    <string>New file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/save.png</normaloff>:/icons/16x16/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Save</string>
+   </property>
+   <property name="toolTip">
+    <string>Save file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionReopen">
+   <property name="text">
+    <string>Re&amp;open</string>
+   </property>
+   <property name="toolTip">
+    <string>Reload file</string>
+   </property>
+  </action>
+  <action name="actionRename">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/rename.png</normaloff>:/icons/16x16/rename.png</iconset>
+   </property>
+   <property name="text">
+    <string>R&amp;ename</string>
+   </property>
+   <property name="toolTip">
+    <string>Rename file</string>
+   </property>
+   <property name="shortcut">
+    <string>F2</string>
+   </property>
+  </action>
+  <action name="actionOpenWithDefaultApplication">
+   <property name="text">
+    <string>Open Using Default &amp;Application</string>
+   </property>
+   <property name="toolTip">
+    <string>Use default application to show file</string>
+   </property>
+  </action>
+  <action name="actionOpenWithVisualStudioCode">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/vscode.png</normaloff>:/icons/16x16/vscode.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open Using Visual Studio &amp;Code</string>
+   </property>
+   <property name="toolTip">
+    <string>Use Visual Studio Code to show file</string>
+   </property>
+  </action>
+  <action name="actionShowContainingDirectory">
+   <property name="text">
+    <string>Show Containing &amp;Directory</string>
+   </property>
+   <property name="toolTip">
+    <string>Show file in containing directory</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+R</string>
+   </property>
+  </action>
+  <action name="actionShowContainingDirectoryOnly">
+   <property name="text">
+    <string>Show Containing &amp;Directory</string>
+   </property>
+   <property name="toolTip">
+    <string>Show containing directory</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+R</string>
+   </property>
+  </action>
+  <action name="actionCut">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/cut.png</normaloff>:/icons/16x16/cut.png</iconset>
+   </property>
+   <property name="text">
+    <string>Cu&amp;t</string>
+   </property>
+   <property name="toolTip">
+    <string>Cut text</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="actionCopy">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/copy.png</normaloff>:/icons/16x16/copy.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Copy</string>
+   </property>
+   <property name="toolTip">
+    <string>Copy text</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionPaste">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/paste.png</normaloff>:/icons/16x16/paste.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Paste</string>
+   </property>
+   <property name="toolTip">
+    <string>Paste text</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/undo.png</normaloff>:/icons/16x16/undo.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Undo</string>
+   </property>
+   <property name="toolTip">
+    <string>Undo action</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/redo.png</normaloff>:/icons/16x16/redo.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Redo</string>
+   </property>
+   <property name="toolTip">
+    <string>Redo action</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/delete.png</normaloff>:/icons/16x16/delete.png</iconset>
+   </property>
+   <property name="text">
+    <string>Delete</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete file</string>
+   </property>
+  </action>
+  <action name="actionGoto">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/goto.png</normaloff>:/icons/16x16/goto.png</iconset>
+   </property>
+   <property name="text">
+    <string>Go &amp;To</string>
+   </property>
+   <property name="toolTip">
+    <string>Find folder or file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+G</string>
+   </property>
+  </action>
+  <action name="actionCopyContainingPath">
+   <property name="text">
+    <string>Copy Containing Path</string>
+   </property>
+   <property name="toolTip">
+    <string>Copy path to clipboard</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+C</string>
+   </property>
+  </action>
+  <action name="actionPrint">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/print.png</normaloff>:/icons/16x16/print.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Print</string>
+   </property>
+   <property name="toolTip">
+    <string>Print file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionPrintPreview">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/icons/16x16/print-preview.png</normaloff>:/icons/16x16/print-preview.png</iconset>
+   </property>
+   <property name="text">
+    <string>Print Pre&amp;view</string>
+   </property>
+   <property name="toolTip">
+    <string>Print preview</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+P</string>
+   </property>
+  </action>
+  <action name="actionPrintToPdf">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/icons/16x16/print-pdf.png</normaloff>:/icons/16x16/print-pdf.png</iconset>
+   </property>
+   <property name="text">
+    <string>Print to PD&amp;F</string>
+   </property>
+   <property name="toolTip">
+    <string>Print file into a PDF document</string>
+   </property>
+  </action>
+  <action name="actionFind">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/find.png</normaloff>:/icons/16x16/find.png</iconset>
+   </property>
+   <property name="text">
+    <string>Find</string>
+   </property>
+   <property name="toolTip">
+    <string>Search for specified text</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="actionFindNext">
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/findNext.png</normaloff>:/icons/16x16/findNext.png</iconset>
+   </property>
+   <property name="text">
+    <string>Find Next</string>
+   </property>
+   <property name="toolTip">
+    <string>Continues search for text</string>
+   </property>
+   <property name="shortcut">
+    <string>F3</string>
+   </property>
+  </action>
+  <action name="actionFontBold">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/bold.png</normaloff>:/icons/16x16/bold.png</iconset>
+   </property>
+   <property name="text">
+    <string>Bold</string>
+   </property>
+   <property name="toolTip">
+    <string>Make text bold</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+B</string>
+   </property>
+  </action>
+  <action name="actionFontItalic">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/italic.png</normaloff>:/icons/16x16/italic.png</iconset>
+   </property>
+   <property name="text">
+    <string>Italic</string>
+   </property>
+   <property name="toolTip">
+    <string>Make text italic</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="actionFontUnderline">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/underline.png</normaloff>:/icons/16x16/underline.png</iconset>
+   </property>
+   <property name="text">
+    <string>Underline</string>
+   </property>
+   <property name="toolTip">
+    <string>Make text underlined</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+U</string>
+   </property>
+  </action>
+  <action name="actionFontStrikethrough">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../qtext.qrc">
+     <normaloff>:/icons/16x16/strikethrough.png</normaloff>:/icons/16x16/strikethrough.png</iconset>
+   </property>
+   <property name="text">
+    <string>Strikethrough</string>
+   </property>
+   <property name="toolTip">
+    <string>Strikes out the text</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+X</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QTabWidgetEx</class>
+   <extends>QWidget</extends>
+   <header>ui/qtabwidgetex.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../qtext.qrc"/>
+ </resources>
+ <connections/>
+</ui>
