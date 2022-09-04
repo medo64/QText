@@ -23,9 +23,10 @@ OutputBaseFilename={#AppSetupFile}
 SourceDir=..\..\bin
 OutputDir=..\dist
 AppId=JosipMedved_QText
-CloseApplications="yes"
+CloseApplications="force"
 RestartApplications="no"
-AppMutex=JosipMedved_QText
+//AppMutex=JosipMedved_QText
+SetupMutex=JosipMedved_QText_Setup
 UninstallDisplayIcon={app}\QText.exe
 AlwaysShowComponentsList=no
 ArchitecturesInstallIn64BitMode=x64
@@ -85,13 +86,4 @@ Description: "View ReadMe.txt";         Filename: "{app}\ReadMe.txt";           
 procedure InitializeWizard;
 begin
   WizardForm.LicenseAcceptedRadio.Checked := True;
-end;
-
-
-function PrepareToInstall(var NeedsRestart: Boolean): String;
-var
-    ResultCode: Integer;
-begin
-    Exec(ExpandConstant('{sys}\taskkill.exe'), '/f /im qtext.exe', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
-    Result := Result;
 end;
