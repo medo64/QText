@@ -27,6 +27,7 @@ class Helpers {
         static void setupTheme(bool darkMode);
         static bool isOSInDarkMode();
         static void openUrl(QString url);
+        static bool isWayland();
 
     private:
         static bool isValidTitleChar(QChar ch);

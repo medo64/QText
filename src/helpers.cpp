@@ -415,3 +415,9 @@ bool Helpers::isOSInDarkMode() {
 void Helpers::openUrl(QString url) {
     QDesktopServices::openUrl(QUrl(url, QUrl::TolerantMode));
 }
+
+bool Helpers::isWayland() {
+    QString platformName = QGuiApplication::platformName();
+    QString sessionType = getenv("XDG_SESSION_TYPE");
+    return (platformName.compare("wayland") == 0) || (sessionType.compare("wayland") == 0);
+}
