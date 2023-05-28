@@ -1,5 +1,11 @@
 ## Release Notes ##
 
+### 4.99.27 [2023-05-28] ###
+
+* Fixed link detection
+* Adjusted hotkey handling under Wayland to use dconf
+
+
 ### 4.99.26 [2022-09-03] ###
 
 * Added font selection in settings
