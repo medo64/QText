@@ -604,17 +604,10 @@ QString FileItem::findAnchorAt(QPoint pos) {
     int endAt = blockText.length();
     for (int i = 0; i < blockText.length(); i++) {
         QChar ch = blockText.at(i);
-        bool isUrlChar = ch.isLetterOrNumber()
-                         || (ch == '-')
-                         || (ch == '.')
-                         || (ch == '_')
-                         || (ch == ':')
-                         || (ch == '/')
-                         || (ch == '?')
-                         || (ch == '&')
-                         || (ch == '=')
-                         || (ch == '~')
-                         || (ch == '%');
+        bool isUrlChar = ch.isLetterOrNumber() || (ch == '-') || (ch == '.')|| (ch == '_') || (ch == '~')  // unreserved (https://www.rfc-editor.org/rfc/rfc3986)
+                         || (ch == ':') || (ch == '/') || (ch == '?') || (ch == '#') || (ch == '[') || (ch == ']') || (ch == '@')  // gen-delims
+                         || (ch == '!') || (ch == '$') || (ch == '&') || (ch == '\'') || (ch == '(') || (ch == ')') || (ch == '*') || (ch == '+') || (ch == ',') || (ch == ';') || (ch == '=')  // sub-delims
+                         || (ch == '%');  // pct-encoded
         if (!isUrlChar) {
             if (i < charPosition) {
                 startAt = i + 1;
