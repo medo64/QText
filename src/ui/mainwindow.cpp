@@ -91,7 +91,7 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     connect(_hotkey, &Hotkey::activated, this, &MainWindow::onHotkeyPress);
 
     //single instance
-    connect(SingleInstance::instance(), &SingleInstance::newInstanceDetected, this, &MainWindow::onTrayShow);
+    connect(SingleInstance::instance(), &SingleInstance::newInstanceDetected, this, &MainWindow::onHotkeyPress);
 
     //toolbar setup
     connect(ui->actionNew, &QAction::triggered, this, &MainWindow::onFileNew);

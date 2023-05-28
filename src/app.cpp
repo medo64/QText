@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
     cli.setApplicationDescription(APP_DESCRIPTION);
     cli.addHelpOption();
     cli.addVersionOption();
-    QCommandLineOption hideOption(QStringList() << "s" << "hide", "Application is immediatelly sent to tray.");
+    QCommandLineOption hideOption(QStringList() << "s" << "hide", "Application is immediately sent to tray.");
     cli.addOption(hideOption);
     cli.process(app);
 
