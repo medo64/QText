@@ -66,7 +66,6 @@ SOURCES += \
         medo/about.cpp \
         medo/appsetupmutex.cpp \
         medo/config.cpp \
-        medo/dconfHotkey.cpp \
         medo/feedback.cpp \
         medo/hotkey.cpp \
         medo/lifetimewatch.cpp \
@@ -89,6 +88,17 @@ SOURCES += \
         settings.cpp \
         setup.cpp
 
+unix {
+    SOURCES += \
+        medo/dconfHotkey.cpp \
+        medo/xcbHotkey.cpp
+}
+
+win32 {
+    SOURCES += \
+        medo/winHotkey.cpp
+}
+
 HEADERS += \
         ui/finddialog.h \
         ui/foldersdialog.h \
@@ -105,7 +115,6 @@ HEADERS += \
         medo/about.h \
         medo/appsetupmutex.h \
         medo/config.h \
-        medo/dconfHotkey.h \
         medo/feedback.h \
         medo/hotkey.h \
         medo/lifetimewatch.h \
@@ -128,6 +137,17 @@ HEADERS += \
         rtfconverter.h \
         settings.h \
         setup.h
+
+unix {
+    HEADERS += \
+        medo/dconfHotkey.h \
+        medo/xcbHotkey.h
+}
+
+win32 {
+    HEADERS += \
+        medo/winHotkey.h
+}
 
 FORMS += \
         ui/finddialog.ui \

@@ -17,9 +17,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, Hotkey* hotkey) : QDialog(parent
     Helpers::setReadonlyPalette(ui->editFontSize);
     Helpers::setReadonlyPalette(ui->editHotkey);
 
-    if (!Helpers::isWayland()) {
-        ui->editHotkey->setHotkey(hotkey, Settings::hotkey());
-    }
+    ui->editHotkey->setHotkey(hotkey, Settings::hotkey());
 
     _oldAlwaysOnTop = Settings::alwaysOnTop();
     _oldAutostart = Setup::autostart();
@@ -30,15 +28,8 @@ SettingsDialog::SettingsDialog(QWidget* parent, Hotkey* hotkey) : QDialog(parent
     _oldFontSize = Settings::fontSize();
     _oldForceDarkMode = Settings::forceDarkMode();
     _oldForcePlainCopyPaste = Settings::forcePlainCopyPaste();
-    if (!Helpers::isWayland()) {
-        _oldHotkey = Settings::hotkey();
-        _oldHotkeyUseDConf = Settings::hotkeyUseDConf();
-        _oldHotkeyTogglesVisibility = Settings::hotkeyTogglesVisibility();
-    } else {
-        ui->editHotkey->setEnabled(false);
-        ui->checkboxHotkeyUseDConf->setEnabled(false);
-        ui->checkboxHotkeyTogglesVisibility->setEnabled(false);
-    }
+    _oldHotkey = Settings::hotkey();
+    _oldHotkeyTogglesVisibility = Settings::hotkeyTogglesVisibility();
     _oldMinimizeToTray = Settings::minimizeToTray();
     _oldShowInTaskbar = Settings::showInTaskbar();
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
@@ -105,11 +96,8 @@ void SettingsDialog::reset() {
     ui->editFontSize->setText(QString::number(Settings::fontSize()) + " pt");
     ui->checkboxForceDarkMode->setChecked(_oldForceDarkMode);
     ui->checkboxForcePlainCopyPaste->setChecked(_oldForcePlainCopyPaste);
-    if (!Helpers::isWayland()) {
-        ui->editHotkey->setNewKey(_oldHotkey);
-        ui->checkboxHotkeyUseDConf->setChecked(_oldHotkeyUseDConf);
-        ui->checkboxHotkeyTogglesVisibility->setChecked(_oldHotkeyTogglesVisibility);
-    }
+    ui->editHotkey->setNewKey(_oldHotkey);
+    ui->checkboxHotkeyTogglesVisibility->setChecked(_oldHotkeyTogglesVisibility);
     ui->checkboxMinimizeToTray->setChecked(_oldMinimizeToTray);
     ui->checkboxShowInTaskbar->setChecked(_oldShowInTaskbar);
     ui->checkboxShowMarkdown->setChecked(_oldShowMarkdown);
@@ -127,11 +115,8 @@ void SettingsDialog::restoreDefaults() {
     ui->editFontSize->setText(QString::number(Settings::defaultFontSize()) + " pt");
     ui->checkboxForceDarkMode->setChecked(Settings::defaultForceDarkMode());
     ui->checkboxForcePlainCopyPaste->setChecked(Settings::defaultForcePlainCopyPaste());
-    if (!Helpers::isWayland()) {
-        ui->editHotkey->setNewKey(Settings::defaultHotkey());
-        ui->checkboxHotkeyUseDConf->setChecked(Settings::defaultHotkeyUseDConf());
-        ui->checkboxHotkeyTogglesVisibility->setChecked(Settings::defaultHotkeyTogglesVisibility());
-    }
+    ui->editHotkey->setNewKey(Settings::defaultHotkey());
+    ui->checkboxHotkeyTogglesVisibility->setChecked(Settings::defaultHotkeyTogglesVisibility());
     ui->checkboxMinimizeToTray->setChecked(Settings::defaultMinimizeToTray());
     ui->checkboxShowInTaskbar->setChecked(Settings::defaultShowInTaskbar());
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
@@ -179,19 +164,13 @@ void SettingsDialog::accept() {
     _changedForcePlainCopyPaste = newForcePlainCopyPaste != _oldForcePlainCopyPaste;
     if (_changedForcePlainCopyPaste) { Settings::setForcePlainCopyPaste(newForcePlainCopyPaste); }
 
-    if (!Helpers::isWayland()) {
-        QKeySequence newHotkey = ui->editHotkey->newKey();
-        _changedHotkey = (newHotkey != 0) && (newHotkey != _oldHotkey);
-        if (_changedHotkey) { Settings::setHotkey(newHotkey); }
+    QKeySequence newHotkey = ui->editHotkey->newKey();
+    _changedHotkey = (newHotkey != 0) && (newHotkey != _oldHotkey);
+    if (_changedHotkey) { Settings::setHotkey(newHotkey); }
 
-        bool newHotkeyUseDConf = (ui->checkboxHotkeyUseDConf->checkState() == Qt::Checked);
-        _changedHotkeyUseDConf = newHotkeyUseDConf != _oldHotkeyUseDConf;
-        if (_changedHotkeyUseDConf) { Settings::setHotkeyUseDConf(newHotkeyUseDConf); }
-
-        bool newHotkeyTogglesVisibility = (ui->checkboxHotkeyTogglesVisibility->checkState() == Qt::Checked);
-        _changedHotkeyTogglesVisibility = newHotkeyTogglesVisibility != _oldHotkeyTogglesVisibility;
-        if (_changedHotkeyTogglesVisibility) { Settings::setHotkeyTogglesVisibility(newHotkeyTogglesVisibility); }
-    }
+    bool newHotkeyTogglesVisibility = (ui->checkboxHotkeyTogglesVisibility->checkState() == Qt::Checked);
+    _changedHotkeyTogglesVisibility = newHotkeyTogglesVisibility != _oldHotkeyTogglesVisibility;
+    if (_changedHotkeyTogglesVisibility) { Settings::setHotkeyTogglesVisibility(newHotkeyTogglesVisibility); }
 
     bool newMinimizeToTray = (ui->checkboxMinimizeToTray->checkState() == Qt::Checked);
     _changedMinimizeToTray = newMinimizeToTray != _oldMinimizeToTray;

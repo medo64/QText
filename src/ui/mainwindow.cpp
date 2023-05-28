@@ -86,18 +86,9 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     _tray->show();
 
     //hotkey
-    if (!Helpers::isWayland()) {
-        _hotkey = new Hotkey(this);
-        _hotkey->registerHotkey(Settings::hotkey());
-        connect(_hotkey, &Hotkey::activated, this, &MainWindow::onHotkeyPress);
-
-        _dconfHotkey = new DConfHotkey("QText", this);
-        if (Settings::hotkeyUseDConf()) {
-            if (_dconfHotkey->hasRegisteredHotkey() == false) {  // register if not already in settings
-                _dconfHotkey->registerHotkey(Settings::hotkey());
-            }
-        }
-    }
+    _hotkey = new Hotkey("QText", Settings::hotkeyUseDConf(), !Settings::hotkeyUseDConf(), this);
+    _hotkey->registerHotkey(Settings::hotkey());
+    connect(_hotkey, &Hotkey::activated, this, &MainWindow::onHotkeyPress);
 
     //single instance
     connect(SingleInstance::instance(), &SingleInstance::newInstanceDetected, this, &MainWindow::onTrayShow);
@@ -794,7 +785,7 @@ void MainWindow::onPhoneticSpelling() {
 
 void MainWindow::onTopMost() {
     Settings::setAlwaysOnTop(!Settings::alwaysOnTop());
-    applySettings(false, false, true, false, false, false, false, false);
+    applySettings(false, false, true, false, false, false, false);
     this->show(); //to show window after setWindowFlag
     this->activateWindow();
 }
@@ -806,7 +797,6 @@ void MainWindow::onAppSettings() {
                       dialog->changedTabTextColorPerType(),
                       dialog->changedAlwaysOnTop(),
                       dialog->changedHotkey(),
-                      dialog->changedHotkeyUseDConf(),
                       dialog->changedDataPath(),
                       dialog->changedFont(),
                       dialog->changedForceDarkMode());
@@ -1080,7 +1070,7 @@ void MainWindow::selectFile(FileItem* file) {
     }
 }
 
-void MainWindow::applySettings(bool applyShowInTaskbar, bool applyTabTextColorPerType, bool applyAlwaysOnTop, bool applyHotkey, bool applyDConfHotkey, bool applyDataPath, bool applyFont, bool applyForceDarkMode) {
+void MainWindow::applySettings(bool applyShowInTaskbar, bool applyTabTextColorPerType, bool applyAlwaysOnTop, bool applyHotkey, bool applyDataPath, bool applyFont, bool applyForceDarkMode) {
     if (applyDataPath) {
         _storage->saveAll();
         ui->tabWidget->clear();
@@ -1091,24 +1081,9 @@ void MainWindow::applySettings(bool applyShowInTaskbar, bool applyTabTextColorPe
         connect(_storage, &Storage::updatedFolder, this, &MainWindow::onUpdatedFolder);
     }
 
-    if (!Helpers::isWayland()) {
-        if (applyHotkey) { //just register again with the new key
-            _hotkey->unregisterHotkey();
-            _hotkey->registerHotkey(Settings::hotkey());
-            if (Settings::hotkeyUseDConf()) {
-                _dconfHotkey->registerHotkey(Settings::hotkey());
-            }
-        }
-
-        if (applyDConfHotkey) {
-            if (Settings::hotkeyUseDConf()) {
-                if (!applyHotkey) {  // apply only if not applied already above
-                    _dconfHotkey->registerHotkey(Settings::hotkey());
-                }
-            } else {
-                _dconfHotkey->unregisterHotkey();
-            }
-        }
+    if (applyHotkey) { //just register again with the new key
+        _hotkey->unregisterHotkey();
+        _hotkey->registerHotkey(Settings::hotkey());
     }
 
     if (applyAlwaysOnTop) { //always on top might require restart (at least on Linux)

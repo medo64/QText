@@ -5,10 +5,6 @@
 
 DConfHotkey::DConfHotkey(QString name, QObject* parent)
     : QObject(parent) {
-#if defined(Q_OS_WIN)  // not applicable for Windows
-    return;
-#endif
-
     _name = name;
 }
 
@@ -57,8 +53,8 @@ QString getSubkey(QString name, QStringList subkeys) {  // returns which subkey 
             QProcess dconfReadName;
             dconfReadName.start("/usr/bin/dconf",
                                 QStringList({
-                                     "read",
-                                     "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/" + pathSubkey + "name"
+                                    "read",
+                                    "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/" + pathSubkey + "name"
                                 }));
             dconfReadName.waitForFinished();
             QString dconfReadNameText(dconfReadName.readAllStandardOutput());
@@ -79,10 +75,6 @@ bool DConfHotkey::hasRegisteredHotkey() {
 }
 
 bool DConfHotkey::registerHotkey(QKeySequence key) {
-#if defined(Q_OS_WIN)  // not applicable for Windows
-    return false;
-#endif
-
     if (key.count() != 1) {
         qDebug().noquote() << "[DConfHotkey]" << "Must have only one key combination!";
         return false;
@@ -115,19 +107,39 @@ bool DConfHotkey::registerHotkey(QKeySequence key) {
     QString dconfPath = "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/" + selectedSubkey;
 
     QProcess dconfWriteName;
-    dconfWriteName.start("/usr/bin/dconf write " + dconfPath + "name \"'" + _name + "'\"", QStringList());
+    dconfWriteName.start("/usr/bin/dconf",
+                         QStringList {
+                             "write",
+                             dconfPath + "name",
+                             "'" + _name + "'"
+                         });
     dconfWriteName.waitForFinished();
-    isOk = isOk && (dconfWriteName.exitCode() == 0);
+    int  dconfWriteNameExitCode = dconfWriteName.exitCode();
+    isOk = isOk && (dconfWriteNameExitCode == 0);
+    //QString dconfReadNameText(dconfWriteName.readAllStandardOutput());
+    //qDebug().noquote() << "[DConfHotkey]" << dconfReadNameText;
 
     QProcess dconfWriteCommand;
-    dconfWriteCommand.start("/usr/bin/dconf write " + dconfPath + "command \"'" + QCoreApplication::applicationFilePath() + "'\"", QStringList());
+    dconfWriteCommand.start("/usr/bin/dconf",
+                            QStringList {
+                                "write",
+                                dconfPath + "command",
+                                "'" + QCoreApplication::applicationFilePath() + "'"
+                            });
     dconfWriteCommand.waitForFinished();
-    isOk = isOk && (dconfWriteCommand.exitCode() == 0);
+    int dconfWriteCommandExitCode = dconfWriteCommand.exitCode();
+    isOk = isOk && (dconfWriteCommandExitCode == 0);
 
     QProcess dconfWriteBinding;
-    dconfWriteBinding.start("/usr/bin/dconf write " + dconfPath + "binding \"'" + keySequence + "'\"", QStringList());
+    dconfWriteBinding.start("/usr/bin/dconf",
+                            QStringList {
+                                "write",
+                                dconfPath + "binding",
+                                "'" + keySequence + "'"
+                            });
     dconfWriteBinding.waitForFinished();
-    isOk = isOk && (dconfWriteBinding.exitCode() == 0);
+    int dconfWriteBindingExitCode = dconfWriteBinding.exitCode();
+    isOk = isOk && (dconfWriteBindingExitCode  == 0);
 
     if (!isOk){
         qDebug().noquote() << "[DConfHotkey]" << "Registration failed!";
@@ -136,10 +148,6 @@ bool DConfHotkey::registerHotkey(QKeySequence key) {
 }
 
 bool DConfHotkey::unregisterHotkey() {
-#if defined(Q_OS_WIN)  // not applicable for Windows
-    return false;
-#endif
-
     QStringList subkeys = getSubkeys();
     QString selectedSubkey = getSubkey(_name, subkeys);
     if (selectedSubkey.isEmpty()) {
@@ -149,7 +157,12 @@ bool DConfHotkey::unregisterHotkey() {
 
     QProcess dconfReset;
     QString dconfPath = "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/" + selectedSubkey;
-    dconfReset.start("/usr/bin/dconf reset -f " + dconfPath, QStringList());
+    dconfReset.start("/usr/bin/dconf",
+                     QStringList({
+                         "reset",
+                         "-f",
+                         dconfPath
+                     }));
     dconfReset.waitForFinished();
     bool isOk = (dconfReset.exitCode() == 0);
 
@@ -158,4 +171,3 @@ bool DConfHotkey::unregisterHotkey() {
     }
     return isOk;
 }
-
