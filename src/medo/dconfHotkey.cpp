@@ -19,7 +19,7 @@ QString getKeyString(QKeySequence key) {
 
     QString keySequence;
     if (keyboardModifiers & Qt::ShiftModifier)   { keySequence += "<Shift>";   keyboardModifiers ^= Qt::ShiftModifier; }
-    if (keyboardModifiers & Qt::ControlModifier) { keySequence += "<Primary>"; keyboardModifiers ^= Qt::ControlModifier; }
+    if (keyboardModifiers & Qt::ControlModifier) { keySequence += "<Control>"; keyboardModifiers ^= Qt::ControlModifier; }
     if (keyboardModifiers & Qt::AltModifier)     { keySequence += "<Alt>";     keyboardModifiers ^= Qt::AltModifier; }
     if (keyboardModifiers & Qt::MetaModifier)    { keySequence += "<Super>";   keyboardModifiers ^= Qt::MetaModifier; }
 
