@@ -144,7 +144,7 @@ package: dist
 	@install -d $(PACKAGE_DIR)/opt/qtext/
 	@install bin/qtext $(PACKAGE_DIR)/opt/qtext/
 	@strip $(PACKAGE_DIR)/opt/qtext/qtext
-	@fakeroot dpkg-deb --build $(PACKAGE_DIR)/ > /dev/null
+	@fakeroot dpkg-deb -Z gzip --build $(PACKAGE_DIR)/ > /dev/null
 	@cp /tmp/$(PACKAGE_NAME).deb dist/
 	@$(RM) -r $(PACKAGE_DIR)/
 	@lintian --suppress-tags dir-or-file-in-opt dist/$(PACKAGE_NAME).deb
