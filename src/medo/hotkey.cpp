@@ -58,7 +58,7 @@ Hotkey::~Hotkey() {
 bool Hotkey::registerHotkey(QKeySequence key) {
 #if defined(Q_OS_WIN)
     if (_winHotkey != nullptr) {
-        _return winHotkey->registerHotkey(key);
+        return _winHotkey->registerHotkey(key);
     }
 #elif defined(Q_OS_LINUX)
     if (_dconfHotkey != nullptr) {
