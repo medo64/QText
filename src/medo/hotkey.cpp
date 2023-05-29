@@ -7,6 +7,7 @@
 Hotkey::Hotkey(QString name, bool forceDConf, bool forceXcb, QObject* parent)
     : QObject(parent) {
 #if defined(Q_OS_WIN)
+    Q_UNUSED(name);
     Q_UNUSED(forceDConf);
     Q_UNUSED(forceXcb);
     _winHotkey = new WinHotkey(this);
