@@ -1,4 +1,5 @@
 #include <algorithm>
+#include "helpers.h"
 #include "settings.h"
 #include "medo/config.h"
 
@@ -203,19 +204,30 @@ void Settings::setHotkeyTogglesVisibility(bool newHotkeyTogglesVisibility) {
 }
 
 
-bool Settings::hotkeyUseDConf() {
-    return Config::read("HotkeyUseDConf", defaultHotkeyUseDConf());
+bool Settings::hotkeyForceDConf() {
+    return Config::read("HotkeyForceDConf", defaultHotkeyForceDConf());
 }
 
-void Settings::setHotkeyUseDConf(bool newHotkeyUseDConf) {
-    Config::write("HotkeyUseDConf", newHotkeyUseDConf);
+void Settings::setHotkeyForceDConf(bool newHotkeyForceDConf) {
+    Config::write("HotkeyForceDConf", newHotkeyForceDConf);
 }
 
-bool Settings::defaultHotkeyUseDConf() {
-    QString sessionType = getenv("XDG_SESSION_TYPE");
-    return (sessionType.compare("wayland") == 0);
+bool Settings::defaultHotkeyForceDConf() {
+    return Helpers::isWayland();
 }
 
+
+bool Settings::hotkeyForceXcb() {
+    return Config::read("HotkeyForceXcb", defaultHotkeyForceXcb());
+}
+
+void Settings::setHotkeyForceXcb(bool newHotkeyForceXcb) {
+    Config::write("HotkeyForceXcb", newHotkeyForceXcb);
+}
+
+bool Settings::defaultHotkeyForceXcb() {
+    return false;
+}
 
 bool Settings::minimizeToTray() {
     return Config::read("MinimizeToTray", defaultMinimizeToTray());
