@@ -58,13 +58,43 @@ Hotkey::~Hotkey() {
 bool Hotkey::registerHotkey(QKeySequence key) {
 #if defined(Q_OS_WIN)
     if (_winHotkey != nullptr) {
+        if (key == 0) { return true; }  // nothing to register
         _return winHotkey->registerHotkey(key);
     }
 #elif defined(Q_OS_LINUX)
     if (_dconfHotkey != nullptr) {
-        return _dconfHotkey->registerHotkey(key);
+        if (key == 0) {
+            return _dconfHotkey->unregisterHotkey();  // we need to delete global hotkey
+        } else {
+            return _dconfHotkey->registerHotkey(key);  // no need to unregister; new registration will overwrite old
+        }
     }
     if (_xcbHotkey != nullptr) {
+        if (key == 0) { return true; }  // nothing to register
+        return _xcbHotkey->registerHotkey(key);
+    }
+#endif
+    return false;
+}
+
+bool Hotkey::reregisterHotkey(QKeySequence key) {
+#if defined(Q_OS_WIN)
+    if (_winHotkey != nullptr) {
+        _winHotkey->unregisterHotkey();
+        if (key == 0) { return true; }  // nothing to register
+        _return winHotkey->registerHotkey(key);
+    }
+#elif defined(Q_OS_LINUX)
+    if (_dconfHotkey != nullptr) {
+        if (key == 0) {
+            return _dconfHotkey->unregisterHotkey();  // we need to delete global hotkey
+        } else {
+            return _dconfHotkey->registerHotkey(key);  // no need to unregister; new registration will overwrite old
+        }
+    }
+    if (_xcbHotkey != nullptr) {
+        _xcbHotkey->unregisterHotkey();
+        if (key == 0) { return true; }  // nothing to register
         return _xcbHotkey->registerHotkey(key);
     }
 #endif

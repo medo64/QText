@@ -31,6 +31,10 @@ class Hotkey : public QObject {  // because I don't want to mess with interfaces
          * \param key Hotkey. Cannot have more than one key combination. */
         bool registerHotkey(QKeySequence key);
 
+        /*! Registers a different hotkey.
+         * \param key Hotkey. Cannot have more than one key combination. */
+        bool reregisterHotkey(QKeySequence key);
+
         /*! Disables currently registered hotkey. */
         bool unregisterHotkey();
 

@@ -1081,9 +1081,8 @@ void MainWindow::applySettings(bool applyShowInTaskbar, bool applyTabTextColorPe
         connect(_storage, &Storage::updatedFolder, this, &MainWindow::onUpdatedFolder);
     }
 
-    if (applyHotkey) { //just register again with the new key
-        _hotkey->unregisterHotkey();
-        _hotkey->registerHotkey(Settings::hotkey());
+    if (applyHotkey) {  // hotkey class will sort out unregister first
+        _hotkey->reregisterHotkey(Settings::hotkey());
     }
 
     if (applyAlwaysOnTop) { //always on top might require restart (at least on Linux)
