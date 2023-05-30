@@ -181,15 +181,17 @@ void Settings::setForcePlainCopyPaste(bool newForcePlainCopyPaste) {
 
 QKeySequence Settings::hotkey() {
     QString hotkeyText = Config::read("Hotkey", "");
-    if (hotkeyText.length() > 0) {
+    if (hotkeyText.compare("-") == 0) {
+        return 0;  // explicit no shortcut
+    } else if (hotkeyText.length() > 0) {
         QKeySequence hotkeyKeys = QKeySequence(hotkeyText, QKeySequence::PortableText);
         if (hotkeyKeys.count() > 0) { return QKeySequence { hotkeyKeys[0] }; } //return first key found
     }
-    return  defaultHotkey();
+    return defaultHotkey();
 }
 
 void Settings::setHotkey(QKeySequence newHotkey) {
-    QString hotkeyText { newHotkey.toString(QKeySequence::PortableText) };
+    QString hotkeyText { newHotkey == 0 ? "-" : newHotkey.toString(QKeySequence::PortableText) };
     Config::write("Hotkey", hotkeyText);
 }
 

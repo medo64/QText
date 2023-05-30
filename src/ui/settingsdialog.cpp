@@ -165,7 +165,7 @@ void SettingsDialog::accept() {
     if (_changedForcePlainCopyPaste) { Settings::setForcePlainCopyPaste(newForcePlainCopyPaste); }
 
     QKeySequence newHotkey = ui->editHotkey->newKey();
-    _changedHotkey = (newHotkey != 0) && (newHotkey != _oldHotkey);
+    _changedHotkey = (newHotkey != _oldHotkey);
     if (_changedHotkey) { Settings::setHotkey(newHotkey); }
 
     bool newHotkeyTogglesVisibility = (ui->checkboxHotkeyTogglesVisibility->checkState() == Qt::Checked);

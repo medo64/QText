@@ -3,6 +3,17 @@
 #include <QKeyEvent>
 #include "hotkeyedit.h"
 
+static const char* NoShortcutText = "No shortcut assigned";
+static const char* ChangeShortcutText = "Press hotkey combination";
+
+static QString getPlaceholderText(QKeySequence key) {
+    if (key == 0) {
+        return QString(NoShortcutText);
+    } else {
+        return key.toString(QKeySequence::NativeText);
+    }
+}
+
 HotkeyEdit::HotkeyEdit(QWidget* parent)
     : QLineEdit(parent) {
     setReadOnly(true);
@@ -12,19 +23,19 @@ HotkeyEdit::HotkeyEdit(QWidget* parent)
 void HotkeyEdit::setHotkey(Hotkey* hotkey, QKeySequence key) {
     _hotkey = hotkey;
     _oldKey = key;
-    setPlaceholderText(_oldKey.toString(QKeySequence::NativeText));
+    _newKey = key;
+    setPlaceholderText(getPlaceholderText(key));
 }
 
 void HotkeyEdit::setNewKey(QKeySequence key) {
     _newKey = key;
-    if ((key == 0) || (key == _oldKey)) {
-        setText("");
-        setPlaceholderText(_oldKey.toString(QKeySequence::NativeText));
+    if (key == _oldKey) {
+        setText(QString());
+        setPlaceholderText(getPlaceholderText(_oldKey));
     } else {
-        setText(key.toString(QKeySequence::NativeText));
+        setPlaceholderText(getPlaceholderText(key));
     }
 }
-
 
 bool HotkeyEdit::event(QEvent* event) {
     if (event->type() == QEvent::KeyPress) {
@@ -42,14 +53,21 @@ bool HotkeyEdit::event(QEvent* event) {
             auto keyboardKey = Qt::Key(key[0] & static_cast<int>(~Qt::KeyboardModifierMask));
             auto keyboardModifiers = Qt::KeyboardModifiers(key[0] & static_cast<int>(Qt::KeyboardModifierMask));
 
-            if ((keyboardKey > 0) && (keyboardKey < 0xFFFF) && (keyboardModifiers != Qt::NoModifier) && (keyboardModifiers != Qt::ShiftModifier)) {
-                setText(key.toString(QKeySequence::NativeText));
-                _newKey = key;
-                return true;
-            }
-            if ((keyboardModifiers == Qt::NoModifier) && (keyboardKey == Qt::Key_Escape) && (_newKey != 0)) {
+            if ((keyboardModifiers == Qt::NoModifier) && (keyboardKey == Qt::Key_Escape)) {  // cancel edit
+                _newKey = _oldKey;
                 setText(QString());
+                setPlaceholderText(getPlaceholderText(_oldKey));
+                return true;
+            } else if ((keyboardModifiers == Qt::NoModifier) && (keyboardKey == Qt::Key_Backspace)) {
                 _newKey = 0;
+                if (_oldKey != _newKey) { setText(QString(NoShortcutText)); }  // mark as changed only if different
+                setPlaceholderText(getPlaceholderText(0));
+                return true;
+            } else if ((keyboardKey > 0) && (keyboardKey < 0xFFFF) && (keyboardModifiers != Qt::NoModifier) && (keyboardModifiers != Qt::ShiftModifier)) {
+                _newKey = key;
+                if (_oldKey != _newKey) { setText(QString(NoShortcutText)); }  // mark as changed only if different
+                setText(key.toString(QKeySequence::NativeText));
+                setPlaceholderText(getPlaceholderText(_oldKey));
                 return true;
             }
         }
@@ -60,11 +78,11 @@ bool HotkeyEdit::event(QEvent* event) {
 void HotkeyEdit::focusInEvent(QFocusEvent* e) {
     if (_hotkey != nullptr) { _hotkey->suspend(); }
     QLineEdit::focusInEvent(e);
-    setPlaceholderText("Press hotkey combination or Escape to reset");
+    setPlaceholderText(QString(ChangeShortcutText));
 }
 
 void HotkeyEdit::focusOutEvent(QFocusEvent* e) {
     if (_hotkey != nullptr) { _hotkey->resume(); }
     QLineEdit::focusOutEvent(e);
-    setPlaceholderText(_oldKey.toString(QKeySequence::NativeText));
+    setPlaceholderText(getPlaceholderText(_newKey));
 }
