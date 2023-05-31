@@ -1,5 +1,10 @@
 ## Release Notes ##
 
+### 4.99.28 [2023-05-30] ###
+
+* Hotkey handling improvements under Linux
+
+
 ### 4.99.27 [2023-05-28] ###
 
 * Fixed link detection

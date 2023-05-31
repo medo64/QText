@@ -1,6 +1,6 @@
 APP_PRODUCT = "QText"
 APP_COMPANY = "Josip Medved"
-APP_VERSION = "0.0.0"
+APP_VERSION = "4.99.28"
 APP_COPYRIGHT = "Copyright 2004 Josip Medved <jmedved@jmedved.com>"
 APP_DESCRIPTION = "QText: Note taking utility with auto-save"
 
