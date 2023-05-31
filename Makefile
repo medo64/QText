@@ -91,7 +91,7 @@ test: src/QText.pro
         | GREP_COLOR='01;32' grep --color=always -e '^PASS ' -e '^'
 
 
-package: dist
+package: clean dist
 	$(if $(findstring 0,$(HAS_DPKGDEB)),,$(error Package 'dpkg-deb' not installed))
 	$(if $(findstring 0,$(HAS_LINTIAN)),,$(warning No 'lintian' in path, consider installing 'lintian' package))
 	$(if $(findstring 0,$(HAS_UNCOMMITTED)),,$(warning Uncommitted changes present))
