@@ -86,7 +86,7 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     _tray->show();
 
     //hotkey
-    _hotkey = new Hotkey("QText", Settings::hotkeyUseDConf(), !Settings::hotkeyUseDConf(), this);
+    _hotkey = new Hotkey("QText", Settings::hotkeyForceDConf(), Settings::hotkeyForceXcb(), this);
     _hotkey->registerHotkey(Settings::hotkey());
     connect(_hotkey, &Hotkey::activated, this, &MainWindow::onHotkeyPress);
 

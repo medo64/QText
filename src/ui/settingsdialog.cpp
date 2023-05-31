@@ -40,10 +40,6 @@ SettingsDialog::SettingsDialog(QWidget* parent, Hotkey* hotkey) : QDialog(parent
     _oldTabTextColorPerType = Settings::tabTextColorPerType();
     _oldUseHtmlByDefault = (Settings::defaultFileType() == FileType::Html); //ignoring markdown
 
-#if defined(Q_OS_WIN)
-    ui->checkboxHotkeyUseDConf->setVisible(false);
-#endif
-
     connect(ui->buttonBox, &QDialogButtonBox::clicked, this, &SettingsDialog::onButtonClicked);
     connect(ui->buttonDataPath, &QToolButton::clicked, this, &SettingsDialog::onDataPathClicked);
     connect(ui->buttonFont, &QToolButton::clicked, this, &SettingsDialog::onFontClicked);

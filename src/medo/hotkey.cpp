@@ -7,6 +7,7 @@
 Hotkey::Hotkey(QString name, bool forceDConf, bool forceXcb, QObject* parent)
     : QObject(parent) {
 #if defined(Q_OS_WIN)
+    Q_UNUSED(name);
     Q_UNUSED(forceDConf);
     Q_UNUSED(forceXcb);
     _winHotkey = new WinHotkey(this);
@@ -59,7 +60,7 @@ bool Hotkey::registerHotkey(QKeySequence key) {
 #if defined(Q_OS_WIN)
     if (_winHotkey != nullptr) {
         if (key == 0) { return true; }  // nothing to register
-        _return winHotkey->registerHotkey(key);
+        return _winHotkey->registerHotkey(key);
     }
 #elif defined(Q_OS_LINUX)
     if (_dconfHotkey != nullptr) {
