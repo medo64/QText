@@ -72,13 +72,13 @@ void Setup::nativeAutostartAdd() {
     QFile file(autostartFile);
     if (file.open(QIODevice::WriteOnly)) {
         QTextStream stream(&file);
-        stream << "[Desktop Entry]" << endl;
-        stream << "Name=QText" << endl;
-        stream << "Exec=" << execLine << endl;
-        stream << "Terminal=false" << endl;
-        stream << "Type=Application" << endl;
-        stream << "StartupNotify=false" << endl;
-        stream << "X-GNOME-Autostart-enabled=true" << endl;
+        stream << "[Desktop Entry]" << Qt::endl;
+        stream << "Name=QText" << Qt::endl;
+        stream << "Exec=" << execLine << Qt::endl;
+        stream << "Terminal=false" << Qt::endl;
+        stream << "Type=Application" << Qt::endl;
+        stream << "StartupNotify=false" << Qt::endl;
+        stream << "X-GNOME-Autostart-enabled=true" << Qt::endl;
     }
 }
 
