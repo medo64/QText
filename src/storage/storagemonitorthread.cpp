@@ -44,6 +44,9 @@ void StorageMonitorThread::run() {
         if (isMonitoring) { //collect only when monitoring is not stopped
             for (QString path : _paths) {
                 currPaths.append(findPaths(path));
+#if defined(Q_OS_LINUX)  // no priorities on Linux, so slow it down a bit
+                this->msleep(1);
+#endif
             }
         }
 
@@ -107,7 +110,11 @@ void StorageMonitorThread::run() {
             _mutex.unlock(); //done changing paths
         }
 
+#if defined(Q_OS_LINUX)  // no priorities on Linux, so slow it down a bit
+        this->msleep(1000);
+#else
         this->msleep(250);
+#endif
     }
 }
 
