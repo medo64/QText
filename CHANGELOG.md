@@ -1,5 +1,10 @@
 ## Release Notes ##
 
+### 4.99.29 [2024-03-05]
+
+* Workaround for crash on Wayland
+
+
 ### 4.99.28 [2023-05-30] ###
 
 * Hotkey handling improvements under Linux
