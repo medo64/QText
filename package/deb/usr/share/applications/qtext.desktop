@@ -3,7 +3,7 @@ Name=QText
 GenericName=Notes
 Comment=Note taking utility with auto-save
 TryExec=/opt/qtext/qtext
-Exec=/opt/qtext/qtext %f
+Exec=env QT_QPA_PLATFORM=xcb /opt/qtext/qtext %f
 Icon=qtext
 Type=Application
 Categories=GTK;GNOME;Utility;
