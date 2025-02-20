@@ -7,4 +7,4 @@ Exec=/opt/qtext/qtext %f
 Icon=qtext
 Type=Application
 Categories=GTK;GNOME;Utility;
-
+X-KDE-Shortcuts=Ctrl+Shift+Q
