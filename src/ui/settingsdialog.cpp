@@ -16,7 +16,13 @@ SettingsDialog::SettingsDialog(QWidget* parent, Hotkey* hotkey) : QDialog(parent
     Helpers::setReadonlyPalette(ui->editFontName);
     Helpers::setReadonlyPalette(ui->editFontSize);
 
-    ui->editHotkey->setHotkey(hotkey, Settings::hotkey());
+    if (hotkey != nullptr) {
+        ui->editHotkey->setHotkey(hotkey, Settings::hotkey());
+    } else {
+        ui->editHotkey->setHotkey(hotkey, Settings::defaultHotkey());
+        ui->editHotkey->setEnabled(false);
+        ui->checkboxHotkeyUseDConf->setVisible(false);
+    }
 
     _oldAlwaysOnTop = Settings::alwaysOnTop();
     _oldAutostart = Setup::autostart();

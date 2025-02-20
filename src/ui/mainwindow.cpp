@@ -86,14 +86,16 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     _tray->show();
 
     //hotkey
-    _hotkey = new Hotkey(this);
-    _hotkey->registerHotkey(Settings::hotkey());
-    connect(_hotkey, &Hotkey::activated, this, &MainWindow::onHotkeyPress);
+    if (QString::fromUtf8(getenv("XDG_CURRENT_DESKTOP")).compare("KDE", Qt::CaseSensitive) != 0) {
+        _hotkey = new Hotkey(this);
+        _hotkey->registerHotkey(Settings::hotkey());
+        connect(_hotkey, &Hotkey::activated, this, &MainWindow::onHotkeyPress);
 
-    _dconfHotkey = new DConfHotkey("QText", this);
-    if (Settings::hotkeyUseDConf()) {
-        if (_dconfHotkey->hasRegisteredHotkey() == false) {  // register if not already in settings
-            _dconfHotkey->registerHotkey(Settings::hotkey());
+        if (Settings::hotkeyUseDConf()) {
+            _dconfHotkey = new DConfHotkey("QText", this);
+            if (_dconfHotkey->hasRegisteredHotkey() == false) {  // register if not already in settings
+                _dconfHotkey->registerHotkey(Settings::hotkey());
+            }
         }
     }
 
@@ -1090,20 +1092,26 @@ void MainWindow::applySettings(bool applyShowInTaskbar, bool applyTabTextColorPe
     }
 
     if (applyHotkey) { //just register again with the new key
-        _hotkey->unregisterHotkey();
-        _hotkey->registerHotkey(Settings::hotkey());
-        if (Settings::hotkeyUseDConf()) {
-            _dconfHotkey->registerHotkey(Settings::hotkey());
+        if (_hotkey != nullptr) {
+            _hotkey->unregisterHotkey();
+            _hotkey->registerHotkey(Settings::hotkey());
+        }
+        if (_dconfHotkey != nullptr) {
+            if (Settings::hotkeyUseDConf()) {
+                _dconfHotkey->registerHotkey(Settings::hotkey());
+            }
         }
     }
 
     if (applyDConfHotkey) {
-        if (Settings::hotkeyUseDConf()) {
-            if (!applyHotkey) {  // apply only if not applied already above
-                _dconfHotkey->registerHotkey(Settings::hotkey());
+        if (_dconfHotkey != nullptr) {
+            if (Settings::hotkeyUseDConf()) {
+                if (!applyHotkey) {  // apply only if not applied already above
+                    _dconfHotkey->registerHotkey(Settings::hotkey());
+                }
+            } else {
+                _dconfHotkey->unregisterHotkey();
             }
-        } else {
-            _dconfHotkey->unregisterHotkey();
         }
     }
 
