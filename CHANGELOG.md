@@ -1,5 +1,32 @@
 ## Release Notes ##
 
+### 4.99.30 [2025-02-20] ###
+
+* Added KDE shortcut
+* Added `WaitForDirectory` settings
+
+
+### 4.99.29 [2024-03-05] ###
+
+* Wayland workarounds
+* Slower background scan
+
+
+### 4.99.28 [2023-05-30] ###
+
+* Hotkey handling improvements
+
+
+### 4.99.27 [2023-05-28] ###
+
+* Updated hotkey handling
+* Fixed link detection
+* Updating Linux installation scripts
+
+### 4.99.26 [2022-09-03] ###
+
+* Added font selection
+* Updated Windows installation
 
 ### 0.1.25 [2022-03-05] ###
 

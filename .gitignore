@@ -1,7 +1,8 @@
-/bin
-/dist
-/src/build
-/src/build-*
+bin/
+dist/
+build/
+src/build
+src/build-*
 
 **/*.pro.user
 **/*.pro.user.*
