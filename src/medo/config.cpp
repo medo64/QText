@@ -295,13 +295,7 @@ QString Config::stateFilePathWhenInstalled() {
 
 QString Config::dataDirectory() {
     QMutexLocker locker(&_publicAccessMutex);
-
-    QString dataPath = dataDirectoryPath();
-
-    QDir dataDir (dataPath);
-    if (!dataDir.exists()) { dataDir.mkpath("."); }
-
-    return dataPath;
+    return dataDirectoryPath();
 }
 
 QString Config::dataDirectoryPath() {

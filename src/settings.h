@@ -121,6 +121,10 @@ class Settings {
         static void setWordWrap(bool newWordWrap);
         static bool defaultWordWrap() { return true; }
 
+        static bool waitForDirectory();
+        static void setWaitForDirectory(bool newWaitForDirectory);
+        static bool defaultWaitForDirectory() { return false; }
+
 
     public:
 
