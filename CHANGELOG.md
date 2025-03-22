@@ -1,5 +1,10 @@
 ## Release Notes ##
 
+### 4.99.31 [2024-03-22]
+
+* Fixed Print Preview dialog crash
+
+
 ### 4.99.29 [2024-03-05]
 
 * Workaround for crash on Wayland
