@@ -342,8 +342,11 @@ void Helpers::setReadonlyPalette(QWidget* widget) {
 void Helpers::setupResizableDialog(QWidget* dialog) {
     dialog->setWindowIcon(Icons::appMono());
 
-    for (QAbstractButton* button : dialog->findChild<QDialogButtonBox*>()->buttons()) {
-        button->setIcon(QIcon());
+    QDialogButtonBox* child = dialog->findChild<QDialogButtonBox*>();
+    if (child != nullptr) {
+        for (QAbstractButton* button : child->buttons()) {
+            button->setIcon(QIcon());
+        }
     }
 }
 
