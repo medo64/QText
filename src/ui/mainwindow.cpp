@@ -86,9 +86,18 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     _tray->show();
 
     //hotkey
-    _hotkey = new Hotkey("QText", Settings::hotkeyForceDConf(), Settings::hotkeyForceXcb(), this);
-    _hotkey->registerHotkey(Settings::hotkey());
-    connect(_hotkey, &Hotkey::activated, this, &MainWindow::onHotkeyPress);
+    if (QString::fromUtf8(getenv("XDG_CURRENT_DESKTOP")).compare("KDE", Qt::CaseSensitive) != 0) {
+        _hotkey = new Hotkey(this);
+        _hotkey->registerHotkey(Settings::hotkey());
+        connect(_hotkey, &Hotkey::activated, this, &MainWindow::onHotkeyPress);
+
+        if (Settings::hotkeyUseDConf()) {
+            _dconfHotkey = new DConfHotkey("QText", this);
+            if (_dconfHotkey->hasRegisteredHotkey() == false) {  // register if not already in settings
+                _dconfHotkey->registerHotkey(Settings::hotkey());
+            }
+        }
+    }
 
     //single instance
     connect(SingleInstance::instance(), &SingleInstance::newInstanceDetected, this, &MainWindow::onHotkeyPress);
@@ -1081,8 +1090,28 @@ void MainWindow::applySettings(bool applyShowInTaskbar, bool applyTabTextColorPe
         connect(_storage, &Storage::updatedFolder, this, &MainWindow::onUpdatedFolder);
     }
 
-    if (applyHotkey) {  // hotkey class will sort out unregister first
-        _hotkey->reregisterHotkey(Settings::hotkey());
+    if (applyHotkey) { //just register again with the new key
+        if (_hotkey != nullptr) {
+            _hotkey->unregisterHotkey();
+            _hotkey->registerHotkey(Settings::hotkey());
+        }
+        if (_dconfHotkey != nullptr) {
+            if (Settings::hotkeyUseDConf()) {
+                _dconfHotkey->registerHotkey(Settings::hotkey());
+            }
+        }
+    }
+
+    if (applyDConfHotkey) {
+        if (_dconfHotkey != nullptr) {
+            if (Settings::hotkeyUseDConf()) {
+                if (!applyHotkey) {  // apply only if not applied already above
+                    _dconfHotkey->registerHotkey(Settings::hotkey());
+                }
+            } else {
+                _dconfHotkey->unregisterHotkey();
+            }
+        }
     }
 
     if (applyAlwaysOnTop) { //always on top might require restart (at least on Linux)

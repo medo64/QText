@@ -52,7 +52,10 @@ QStringList Settings::dataPaths() {
     QStringList paths = Config::readMany("DataPath", defaultDataPaths());
     QStringList cleanedPaths;
     for (QString path : paths) {
-        if (path.length() > 0) { cleanedPaths.append(QDir::cleanPath(path)); }
+        if (path.length() > 0) {
+            QDir rootDirectory = path.startsWith("~/") ? QDir::homePath() + path.mid(1) : path;
+            cleanedPaths.append(QDir::cleanPath(rootDirectory.path()));
+        }
     }
     return (cleanedPaths.length() > 0) ? cleanedPaths : defaultDataPaths();
 }
@@ -307,6 +310,15 @@ bool Settings::wordWrap() {
 
 void Settings::setWordWrap(bool newWordWrap) {
     Config::write("WordWrap", newWordWrap);
+}
+
+
+bool Settings::waitForDirectory() {
+    return Config::read("WaitForDirectory", defaultWaitForDirectory());
+}
+
+void Settings::setWaitForDirectory(bool newWaitForDirectory) {
+    Config::write("WaitForDirectory", newWaitForDirectory);
 }
 
 

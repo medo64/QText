@@ -1,4 +1,5 @@
 #include <QCommandLineParser>
+#include <QDir>
 #include "medo/appsetupmutex.h"
 #include "medo/config.h"
 #include "medo/singleinstance.h"
@@ -39,6 +40,21 @@ int main(int argc, char* argv[]) {
     QApplication::connect(State::instance(), &State::writeToConfig, [ = ] (QString key, QString value) { Config::stateWrite("State!" + key, value); });
     QApplication::connect(State::instance(), &State::readFromConfig, [ = ] (QString key) { return Config::stateRead("State!" + key, QString()); });
     QApplication::connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, [ = ] () { Config::quit(); });
+
+    if (Settings::waitForDirectory()) {
+        bool anyFailed = false;
+        do {
+            anyFailed = false;
+            for (QString path : dataPaths) {
+                QDir directory = path;
+                if (!directory.exists()) {
+                    qDebug().noquote() << "Waiting for directory '" << directory << "'";
+                    QThread::msleep(100);
+                    anyFailed = true;
+                }
+            }
+        } while (anyFailed);
+    }
 
     storage = new Storage(dataPaths);
     MainWindow w { storage };
