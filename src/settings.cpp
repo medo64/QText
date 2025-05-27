@@ -1,5 +1,4 @@
 #include <algorithm>
-#include "helpers.h"
 #include "settings.h"
 #include "medo/config.h"
 
@@ -185,17 +184,15 @@ void Settings::setForcePlainCopyPaste(bool newForcePlainCopyPaste) {
 
 QKeySequence Settings::hotkey() {
     QString hotkeyText = Config::read("Hotkey", "");
-    if (hotkeyText.compare("-") == 0) {
-        return 0;  // explicit no shortcut
-    } else if (hotkeyText.length() > 0) {
+    if (hotkeyText.length() > 0) {
         QKeySequence hotkeyKeys = QKeySequence(hotkeyText, QKeySequence::PortableText);
         if (hotkeyKeys.count() > 0) { return QKeySequence { hotkeyKeys[0] }; } //return first key found
     }
-    return defaultHotkey();
+    return  defaultHotkey();
 }
 
 void Settings::setHotkey(QKeySequence newHotkey) {
-    QString hotkeyText { newHotkey == 0 ? "-" : newHotkey.toString(QKeySequence::PortableText) };
+    QString hotkeyText { newHotkey.toString(QKeySequence::PortableText) };
     Config::write("Hotkey", hotkeyText);
 }
 
@@ -209,30 +206,19 @@ void Settings::setHotkeyTogglesVisibility(bool newHotkeyTogglesVisibility) {
 }
 
 
-bool Settings::hotkeyForceDConf() {
-    return Config::read("HotkeyForceDConf", defaultHotkeyForceDConf());
+bool Settings::hotkeyUseDConf() {
+    return Config::read("HotkeyUseDConf", defaultHotkeyUseDConf());
 }
 
-void Settings::setHotkeyForceDConf(bool newHotkeyForceDConf) {
-    Config::write("HotkeyForceDConf", newHotkeyForceDConf);
+void Settings::setHotkeyUseDConf(bool newHotkeyUseDConf) {
+    Config::write("HotkeyUseDConf", newHotkeyUseDConf);
 }
 
-bool Settings::defaultHotkeyForceDConf() {
-    return Helpers::isWayland();
+bool Settings::defaultHotkeyUseDConf() {
+    QString sessionType = getenv("XDG_SESSION_TYPE");
+    return (sessionType.compare("wayland") == 0);
 }
 
-
-bool Settings::hotkeyForceXcb() {
-    return Config::read("HotkeyForceXcb", defaultHotkeyForceXcb());
-}
-
-void Settings::setHotkeyForceXcb(bool newHotkeyForceXcb) {
-    Config::write("HotkeyForceXcb", newHotkeyForceXcb);
-}
-
-bool Settings::defaultHotkeyForceXcb() {
-    return false;
-}
 
 bool Settings::minimizeToTray() {
     return Config::read("MinimizeToTray", defaultMinimizeToTray());

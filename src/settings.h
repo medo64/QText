@@ -83,13 +83,9 @@ class Settings {
         static void setHotkeyTogglesVisibility(bool newHotkeyTogglesVisibility);
         static bool defaultHotkeyTogglesVisibility() { return false; }
 
-        static bool hotkeyForceDConf();
-        static void setHotkeyForceDConf(bool newHotkeyForceDConf);
-        static bool defaultHotkeyForceDConf();
-
-        static bool hotkeyForceXcb();
-        static void setHotkeyForceXcb(bool newHotkeyForceXcb);
-        static bool defaultHotkeyForceXcb();
+        static bool hotkeyUseDConf();
+        static void setHotkeyUseDConf(bool newHotkeyUseDConf);
+        static bool defaultHotkeyUseDConf();
 
         static bool minimizeToTray();
         static void setMinimizeToTray(bool newMinimizeToTray);
