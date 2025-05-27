@@ -1,11 +1,16 @@
 ## Release Notes ##
 
-### 4.99.31 [2024-03-22]
+### 4.99.32 [2025-05-25]
+
+* Fixed `WaitForDirectory` setting
+
+
+### 4.99.31 [2025-03-22]
 
 * Fixed Print Preview dialog crash
 
 
-### 4.99.30 [2024-03-05]
+### 4.99.30 [2025-02-20]
 
 * Added KDE shortcut
 * Added `WaitForDirectory` settings
