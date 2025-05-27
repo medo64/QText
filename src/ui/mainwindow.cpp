@@ -100,7 +100,7 @@ MainWindow::MainWindow(Storage* storage) : QMainWindow(nullptr), ui(new Ui::Main
     }
 
     //single instance
-    connect(SingleInstance::instance(), &SingleInstance::newInstanceDetected, this, &MainWindow::onHotkeyPress);
+    connect(SingleInstance::instance(), &SingleInstance::newInstanceDetected, this, &MainWindow::onTrayShow);
 
     //toolbar setup
     connect(ui->actionNew, &QAction::triggered, this, &MainWindow::onFileNew);
@@ -794,7 +794,7 @@ void MainWindow::onPhoneticSpelling() {
 
 void MainWindow::onTopMost() {
     Settings::setAlwaysOnTop(!Settings::alwaysOnTop());
-    applySettings(false, false, true, false, false, false, false);
+    applySettings(false, false, true, false, false, false, false, false);
     this->show(); //to show window after setWindowFlag
     this->activateWindow();
 }
@@ -806,6 +806,7 @@ void MainWindow::onAppSettings() {
                       dialog->changedTabTextColorPerType(),
                       dialog->changedAlwaysOnTop(),
                       dialog->changedHotkey(),
+                      dialog->changedHotkeyUseDConf(),
                       dialog->changedDataPath(),
                       dialog->changedFont(),
                       dialog->changedForceDarkMode());
@@ -1079,7 +1080,7 @@ void MainWindow::selectFile(FileItem* file) {
     }
 }
 
-void MainWindow::applySettings(bool applyShowInTaskbar, bool applyTabTextColorPerType, bool applyAlwaysOnTop, bool applyHotkey, bool applyDataPath, bool applyFont, bool applyForceDarkMode) {
+void MainWindow::applySettings(bool applyShowInTaskbar, bool applyTabTextColorPerType, bool applyAlwaysOnTop, bool applyHotkey, bool applyDConfHotkey, bool applyDataPath, bool applyFont, bool applyForceDarkMode) {
     if (applyDataPath) {
         _storage->saveAll();
         ui->tabWidget->clear();
